@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/gradient2"
+    android:orientation="horizontal"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ad_voto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="9,5"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ad_tipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRATICO"
+            android:textColor="@color/colorOnBackground"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ad_materia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Elettronica ed Elettrotecnica"
+            android:textColor="@color/colorOnBackground"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ad_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11/04/2002"
+            android:textColor="@color/colorOnBackground" />
+
+    </LinearLayout>
+</LinearLayout>

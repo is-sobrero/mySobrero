@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <edu.mysobrero.AdvancedViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation"
+            android:layout_alignParentTop="true" />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:itemBackground="@color/background"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        app:menu="@menu/bottomnav"
+        app:labelVisibilityMode="selected"
+        />7
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/myToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="10dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="10dp"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/app_name"
+                    android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:src="@drawable/ic_sobrerograd" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="mySobrero"
+                    android:textColor="@color/gradientMiddle"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_settingsgrad"
+                    app:iconPadding="4dp"
+                    app:iconSize="25dp"
+                    app:iconTint="@android:color/transparent"
+                    app:iconTintMode="add" />
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
