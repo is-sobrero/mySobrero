@@ -15,8 +15,13 @@
         android:title="Voti"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/app_bar_settings"
+        android:id="@+id/action_comunicazioni"
         android:icon="@drawable/ic_format_list_bulleted"
-        android:title="Argomenti"
+        android:title="Comunicazioni"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_compiti"
+        android:icon="@drawable/ic_format_list_bulleted"
+        android:title="Compiti"
         app:showAsAction="ifRoom"/>
 </menu>

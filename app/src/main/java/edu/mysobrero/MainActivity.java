@@ -19,11 +19,11 @@ public class MainActivity extends AppCompatActivity {
     NestedScrollView scrollView;
     AppBarLayout appBarLayout;
 
-    FragmentHome frag1 = new FragmentHome();
+    /*FragmentHome frag1 = new FragmentHome();
     FragmentVoti frag2 = new FragmentVoti();
+    FragmentComm frag3 = new FragmentComm();*/
 
     private ViewPager viewPager;
-    private BottomBarAdapter pagerAdapter;
     BottomNavigationView navigation;
 
     @Override
@@ -69,31 +69,13 @@ public class MainActivity extends AppCompatActivity {
                         viewPager.setCurrentItem(1);
                         //scrollView.scrollTo(0,0);
                         return true;
-
+                    case R.id.action_comunicazioni:
+                        viewPager.setCurrentItem(2);
+                        return true;
                 }
                 return false;
             }
         });
-
-
-        /*
-
-        --
-
-
-/*
-
-
-        apriComm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MaterialAlertDialogBuilder(MainActivity.this)
-                        .setTitle("Ultima comunicazione da segreteria")
-                        .setMessage(ultimaComunicazione.contenuto)
-                        .setPositiveButton("Ok", null)
-                        .show();
-            }
-        });*/
     }
 
 
