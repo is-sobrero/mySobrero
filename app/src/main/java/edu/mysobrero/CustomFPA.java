@@ -19,6 +19,7 @@ public class CustomFPA extends FragmentPagerAdapter {
         fragments.add(new FragmentHome());
         fragments.add(new FragmentVoti());
         fragments.add(new FragmentComm());
+        fragments.add(new FragmentArgomenti());
     }
 
     @Override

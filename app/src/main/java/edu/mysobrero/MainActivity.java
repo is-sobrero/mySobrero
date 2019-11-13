@@ -19,10 +19,6 @@ public class MainActivity extends AppCompatActivity {
     NestedScrollView scrollView;
     AppBarLayout appBarLayout;
 
-    /*FragmentHome frag1 = new FragmentHome();
-    FragmentVoti frag2 = new FragmentVoti();
-    FragmentComm frag3 = new FragmentComm();*/
-
     private ViewPager viewPager;
     BottomNavigationView navigation;
 
@@ -40,11 +36,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewpager);
 
 
-
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onScrollChange(NestedScrollView nestedScrollView,int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > 0){
+            public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > 0) {
                     appBarLayout.setElevation(10);
                 } else {
                     appBarLayout.setElevation(0);
@@ -72,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_comunicazioni:
                         viewPager.setCurrentItem(2);
                         return true;
+                    case R.id.action_argomenti:
+                        viewPager.setCurrentItem(3);
+                        return true;
                 }
                 return false;
             }
         });
     }
-
-
-
 }
