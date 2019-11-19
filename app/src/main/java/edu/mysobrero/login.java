@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cat.ereza.customactivityoncrash.config.CaocConfig;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,6 +44,14 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        CaocConfig.Builder.create()
+                .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT)
+                .minTimeBetweenCrashesMs(0)
+                .errorActivity(CrashHandler.class)
+                .apply();
+
+
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -77,6 +86,8 @@ public class login extends AppCompatActivity {
                 }
             }
         }, 2000L);
+
+
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

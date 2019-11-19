@@ -127,7 +127,7 @@
                             app:sriv_left_top_corner_radius="10dp"
                             app:sriv_right_bottom_corner_radius="0dp"
                             app:sriv_right_top_corner_radius="10dp"
-                            tools:srcCompat="@tools:sample/backgrounds/scenic[18]" />
+                            tools:srcCompat="@tools:sample/backgrounds/scenic[7]" />
 
                         <TextView
                             android:id="@+id/art1_titolo"
@@ -373,7 +373,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Ultimo voto preso di %materia%"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    app:autoSizeTextType="uniform" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -473,14 +474,33 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <TextView
-                android:id="@+id/testoComm"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet dio can can ricky rota hard photos"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/testoComm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:text="Votate lista 2"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/openComunicazioni"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:icon="@drawable/ic_arrow_forward_white"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp"
+                    app:iconSize="25dp"
+                    app:iconTint="@android:color/white" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/mittenteComm"

@@ -2,4 +2,5 @@
 <resources>
     <string name="endpointURI">https://reapistaging.altervista.org/api.php</string>
     <string name="preferencesIdentifier">prefMySobrero</string>
+    <string name="hintURI">https://forms.gle/fr7kecHVn1AoexBf9</string>
 </resources>
