@@ -83,7 +83,7 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/settingsButton"
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

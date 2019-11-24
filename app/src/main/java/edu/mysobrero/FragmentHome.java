@@ -1,5 +1,6 @@
 package edu.mysobrero;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
     TextView welcome, info, mittComm, dataComm, comm, art1Titolo, art2Titolo, art3Titolo, lastVoto, lastVotoDesc, compitiCont;
     ImageView art1Img, art2Img, art3Img;
 
-    Button not1, not2, not3;
+    Button not1, not2, not3, openVoti, openCompiti, openComunicazioni;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,20 +39,31 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        String url = "";
-        if (v == not1) url = this.feed.articoli.get(0).link;
-        if (v == not2) url = this.feed.articoli.get(1).link;
-        if (v == not3) url = this.feed.articoli.get(2).link;
-        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                .addDefaultShareMenuItem()
-                .setShowTitle(true)
-                .build();
+        if (v == not1 || v == not2 || v == not3){
+            String url = "";
+            if (v == not1) url = this.feed.articoli.get(0).link;
+            if (v == not2) url = this.feed.articoli.get(1).link;
+            if (v == not3) url = this.feed.articoli.get(2).link;
+            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                    .addDefaultShareMenuItem()
+                    .setShowTitle(true)
+                    .build();
 
-        CustomTabsHelper.addKeepAliveExtra(getContext(), customTabsIntent.intent);
+            CustomTabsHelper.addKeepAliveExtra(getContext(), customTabsIntent.intent);
 
-        CustomTabsHelper.openCustomTab(getContext(), customTabsIntent,
-                Uri.parse(url),
-                new WebViewFallback());
+            CustomTabsHelper.openCustomTab(getContext(), customTabsIntent,
+                    Uri.parse(url),
+                    new WebViewFallback());
+        }
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (v == openVoti) mainActivity.SwitchView(R.id.action_voti);
+        if (v == openComunicazioni) mainActivity.SwitchView(R.id.action_comunicazioni);
+        if (v == openCompiti){
+            Intent intent = new Intent(getActivity(), CompitiActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     @Override
@@ -72,6 +84,9 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
         not1 = getView().findViewById(R.id.art1_btn);
         not2 = getView().findViewById(R.id.art2_btn);
         not3 = getView().findViewById(R.id.art3_btn);
+        openVoti = getView().findViewById(R.id.openVoti);
+        openCompiti = getView().findViewById(R.id.openCompiti);
+        openComunicazioni = getView().findViewById(R.id.openComunicazioni);
 
         welcome.setText("Ciao " + this.response.user.nome + "!");
         info.setText(String.format("Classe %s %s - %s", this.response.user.classe, this.response.user.sezione, this.response.user.corso));
@@ -90,6 +105,9 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
         art3Titolo.setText(this.feed.articoli.get(2).titolo);
         Picasso.get().load(this.feed.articoli.get(2).urlImmagine).into(art3Img);
 
+        openVoti.setOnClickListener(this);
+        openCompiti.setOnClickListener(this);
+        openComunicazioni.setOnClickListener(this);
         not1.setOnClickListener(this);
         not2.setOnClickListener(this);
         not3.setOnClickListener(this);

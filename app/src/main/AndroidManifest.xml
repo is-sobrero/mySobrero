@@ -13,9 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".SettingsActivity"
+            android:label="Impostazioni"></activity>
+        <activity android:name=".CompitiActivity" />
+        <activity
             android:name=".CrashHandler"
-            android:process=":error_activity"
-            >
+            android:process=":error_activity">
             <intent-filter>
                 <action android:name="cat.ereza.customactivityoncrash.ERROR" />
             </intent-filter>

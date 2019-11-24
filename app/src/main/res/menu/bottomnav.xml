@@ -25,4 +25,10 @@
         android:title="Comunicazioni"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_more_horiz"
+        android:title="Altro"
+        app:showAsAction="always"/>
+
 </menu>
