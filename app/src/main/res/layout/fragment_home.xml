@@ -19,7 +19,7 @@
         android:layout_height="150dp"
         android:layout_below="@+id/layout2"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
         app:cardCornerRadius="10dp"
         app:cardPreventCornerOverlap="false">
@@ -27,7 +27,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:background="@drawable/gradient5"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -75,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/comunicazioniCard"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:background="@color/altBackground"
         android:orientation="vertical"
         android:translationZ="0dp">
