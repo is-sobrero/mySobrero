@@ -1,8 +1,13 @@
 # mySobrero
 Repo principale del mySobrero 2.0
 
-## PRIMA DI COMPILARE
+## Per gli studenti del Sobrero
+Rendere mySobrero adatto ai 1300 studenti del Sobrero non è una impresa facile, e anche il minimo contributo è utile. Sarebbe utile andare a compilare questo modulo per supportare lo sviluppo: https://forms.gle/tDt4RZD1XWK5kkH39 (solo con account @sobrero)
+
+## Informazioni utili
 mySobrero si basa su [reAPI](https://github.com/federunco/reAPI), un wrapper per Axios, attualmente in sviluppo. L'endpoint dell'API è temporaneo e non ottimizzato per un altro carico di richieste
 
 ## Come compilare
 Esattamente come qualsiasi app Android.
+
+
