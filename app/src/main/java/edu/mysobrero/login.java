@@ -109,7 +109,7 @@ public class login extends AppCompatActivity {
                 try {
                     String endp = getString(R.string.endpointURI);
                     FeedClass f = new FeedClass();
-                    List<FeedClass.Articolo> listaArticoli = new ArrayList();
+                    List<FeedClass.Articolo> listaArticoli = new ArrayList<>();
                     for (Article a : list){
                         FeedClass.Articolo temp = new FeedClass().new Articolo();
                         temp.link = a.getLink();

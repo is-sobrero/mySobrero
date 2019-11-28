@@ -80,12 +80,21 @@
         android:textColor="@color/colorOnBackground"
         android:textSize="14sp" />
 
+    <LinearLayout
+        android:id="@+id/newListaVoti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
+
     <edu.mysobrero.WrappedListView
         android:id="@+id/listaVoti"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:layout_marginRight="15dp"
+        android:animateLayoutChanges="true"
         android:divider="@android:color/transparent"
-        android:dividerHeight="15dp" />
+        android:dividerHeight="15dp"
+        android:visibility="visible" />
 </LinearLayout>

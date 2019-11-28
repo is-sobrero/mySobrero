@@ -60,7 +60,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_weight="0"
-            android:foreground="@drawable/ic_keyboard_arrow_down"
+            android:foreground="@drawable/ic_arrow_forward_white"
             android:foregroundTint="@android:color/black"
             android:textAlignment="center" />
 

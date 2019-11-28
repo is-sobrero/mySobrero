@@ -16,4 +16,15 @@
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="Compiti" />
+
+    <ListView
+        android:id="@+id/listaCompiti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/compitiToolbar"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp" />
 </RelativeLayout>

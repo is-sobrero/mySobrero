@@ -61,6 +61,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
         if (v == openComunicazioni) mainActivity.SwitchView(R.id.action_comunicazioni);
         if (v == openCompiti){
             Intent intent = new Intent(getActivity(), CompitiActivity.class);
+            intent.putExtra("reapi", response);
             startActivity(intent);
         }
 

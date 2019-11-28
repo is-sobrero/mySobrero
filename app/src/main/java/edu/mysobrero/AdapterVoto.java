@@ -12,6 +12,8 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,17 +45,28 @@ public class AdapterVoto extends ArrayAdapter<REAPIResponse.Voti> implements Fil
         TextView commento = convertView.findViewById(R.id.ad_comm);
         Button expand = convertView.findViewById(R.id.ad_expandButton);
         final LinearLayout expandView = convertView.findViewById(R.id.ad_expandView);
+        final REAPIResponse.Voti c = voti.get(position);
+
         expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (expandView.getVisibility() == View.GONE){
+                /*if (expandView.getVisibility() == View.GONE){
                     expandView.setVisibility(View.VISIBLE);
                 } else {
                     expandView.setVisibility(View.GONE);
-                }
+                }*/
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("Dettagli sul voto")
+                        .setMessage("Materia: " + c.materia +
+                                    "\nValutazione: " + c.voto +
+                                    "\nTipologia: " + c.tipologia +
+                                    "\nData: " + c.data +
+                                    "\nDocente: " + c.docente +
+                                    "\n\n" + c.commento)
+                        .setPositiveButton("Ok", null)
+                        .show();
             }
         });
-        REAPIResponse.Voti c = voti.get(position);
         voto.setText(c.voto);
         materia.setText(c.materia);
         tipo.setText(c.tipologia);

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class FragmentVoti extends Fragment implements AdapterVoto.EventListener 
     List<Float> votiFloat;
     TextView mediaView;
     LineChart chart;
+    LinearLayout listaVoti;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class FragmentVoti extends Fragment implements AdapterVoto.EventListener 
         periodo.setText(response.user.periodo);
         chart =  getView().findViewById(R.id.graficoVoti);
         listaMaterie = getView().findViewById(R.id.listaMaterie);
+        listaVoti = getView().findViewById(R.id.newListaVoti);
         mediaView = getView().findViewById(R.id.mediaVoti);
         materie = new ArrayList<> ();
         voti = new ArrayList<>();
@@ -77,6 +80,12 @@ public class FragmentVoti extends Fragment implements AdapterVoto.EventListener 
         );
         listaMaterie.setAdapter(matAdapter);
         listView.setAdapter(adapter);
+        final int adapterCount = adapter.getCount();
+        for (int i = 0; i < adapterCount; i++) {
+            View item = adapter.getView(i, null, null);
+            listaVoti.addView(item);
+        }
+
         FragmentVoti.this.mediaView.setText("Media attuale: " + calcolaMedia(response.voti));
     }
 
@@ -90,8 +99,8 @@ public class FragmentVoti extends Fragment implements AdapterVoto.EventListener 
         }
         Log.i("MEDIA", String.format("DIO %f", media));
         media /= listaVoti.size();
-        DecimalFormat decimalFormat = new DecimalFormat("#,00");
-        String numberAsString = decimalFormat.format(media);
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        String numberAsString = decimalFormat.format(media).replace(".", ",");
         List<Entry> entries = new ArrayList<Entry>();
         for (int i = 0; i < votiFloat.size(); i++) {
             entries.add(new Entry(i, votiFloat.get(i)));

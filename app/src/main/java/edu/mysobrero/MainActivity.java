@@ -14,7 +14,6 @@ import android.widget.Button;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-
 public class MainActivity extends AppCompatActivity {
     REAPIResponse response;
     FeedClass feed;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         appBarLayout = findViewById(R.id.appBar);
         navigation = findViewById(R.id.bottom_navigation);
         viewPager = findViewById(R.id.viewpager);
-
 
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
                         viewPager.setCurrentItem(0);
@@ -88,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     public void SwitchView(int id){
         navigation.setSelectedItemId(id);
