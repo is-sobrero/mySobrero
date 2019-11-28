@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 29
@@ -29,6 +30,8 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.joooonho:selectableroundedimageview:1.0.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'saschpe.android:customtabs:2.0.0'
@@ -48,3 +51,5 @@ dependencies {
     implementation 'com.prof.rssparser:rssparser:1.4.4'
     implementation 'com.squareup.picasso:picasso:2.71828'
 }
+
+apply plugin: 'com.google.gms.google-services'

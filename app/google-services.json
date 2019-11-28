@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "222236722537",
+    "firebase_url": "https://mysobrero.firebaseio.com",
+    "project_id": "mysobrero",
+    "storage_bucket": "mysobrero.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222236722537:android:8bcf4027356232bddb29f8",
+        "android_client_info": {
+          "package_name": "edu.mysobrero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222236722537-oa4giao53vm8smin80hp5t65pkqg7fn9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaO14vjYJflwKR0jB2cKTgUDJnrihG6ek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222236722537-oa4giao53vm8smin80hp5t65pkqg7fn9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
