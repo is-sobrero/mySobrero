@@ -2,6 +2,7 @@ package edu.mysobrero;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +14,10 @@ TextView crashCause;
 Button restartApp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            setTheme(R.style.AppTheme_Night);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crash);
         CustomActivityOnCrash.getStackTraceFromIntent(getIntent());

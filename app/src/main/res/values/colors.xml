@@ -8,11 +8,15 @@
     <color name="colorOnSecondary">#000</color>
     <color name="colorError">#ff0335</color>
     <color name="colorOnError">#FFFFFF</color>
-    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceNight">#424242</color>
     <color name="colorOnSurface">#212121</color>
     <color name="colorOnBackground">#212121</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorOnSurfaceNight">#fff</color>
+    <color name="colorOnBackgroundNight">#fff</color>
     <color name="gray">#CCC</color>
     <color name="background">#FFF</color>
+    <color name="backgroundNight">#212121</color>
     <color name="altBackground">#EEE</color>
     <color name="gradientStart">#FF0287d1</color>
     <color name="gradientMiddle">#0360e7</color>

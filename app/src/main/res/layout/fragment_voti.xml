@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background"
+    android:background="?android:colorBackground"
     android:orientation="vertical"
     android:paddingLeft="0dp"
     android:paddingTop="0dp"
@@ -21,7 +21,7 @@
         android:text="Tutti i voti"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -42,8 +42,7 @@
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <AutoCompleteTextView
             android:id="@+id/listaMaterie"
@@ -53,7 +52,8 @@
             android:layout_marginRight="15dp"
             android:editable="false"
             android:text="Tutte le materie"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="?attr/colorOnSurface" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

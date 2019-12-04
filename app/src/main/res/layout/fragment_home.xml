@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:paddingLeft="0dp"
-        android:paddingTop="0dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="40dp"
-        android:visibility="visible">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:colorBackground"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="40dp"
+    android:visibility="visible">
 
 
     <androidx.cardview.widget.CardView
@@ -75,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/comunicazioniCard"
         android:layout_marginTop="15dp"
-        android:background="@color/altBackground"
+        android:background="?attr/colorSurface"
         android:orientation="vertical"
         android:translationZ="0dp">
 
@@ -88,7 +87,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp"
             android:text="Ultime dal Sobrero"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -106,7 +105,7 @@
                     android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
-                    app:cardBackgroundColor="@color/background"
+                    app:cardBackgroundColor="?android:colorBackground"
                     app:cardCornerRadius="10dp"
                     app:strokeColor="@color/gray"
                     app:strokeWidth="1dp">
@@ -135,7 +134,7 @@
                             android:layout_margin="10dp"
                             android:text="TESTO DELLA NOTIZIA LUNGO MA LUNGO DAVVERO"
                             android:textAllCaps="true"
-                            android:textColor="@color/colorOnBackground"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -157,7 +156,7 @@
                     android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
-                    app:cardBackgroundColor="@color/background"
+                    app:cardBackgroundColor="?android:colorBackground"
                     app:cardCornerRadius="10dp"
                     app:strokeColor="@color/gray"
                     app:strokeWidth="1dp">
@@ -186,7 +185,7 @@
                             android:layout_margin="10dp"
                             android:text="TESTO DELLA NOTIZIA LUNGO MA LUNGO DAVVERO"
                             android:textAllCaps="true"
-                            android:textColor="@color/colorOnBackground"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -209,7 +208,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    app:cardBackgroundColor="@color/background"
+                    app:cardBackgroundColor="?android:colorBackground"
                     app:cardCornerRadius="10dp"
                     app:strokeColor="@color/gray"
                     app:strokeWidth="1dp">
@@ -238,7 +237,7 @@
                             android:layout_margin="10dp"
                             android:text="TESTO DELLA NOTIZIA LUNGO MA LUNGO DAVVERO"
                             android:textAllCaps="true"
-                            android:textColor="@color/colorOnBackground"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -271,7 +270,7 @@
         android:text="Ciao _NOME_"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -287,7 +286,7 @@
         android:paddingRight="15dp"
         android:text="Classe _XAE_ - _INDIRIZZO_"
         android:textAlignment="center"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="14sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -510,4 +509,4 @@
                 android:textSize="14sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-    </RelativeLayout>
+</RelativeLayout>

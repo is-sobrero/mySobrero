@@ -28,7 +28,7 @@
         android:autoLink="email"
         android:text="Una eccezione non gestita dall'applicazione è stata riscontrata e mySobrero ha dovuto chiudersi. La segnalazione è stata inviata correttamente agli sviluppatori. Se il problema persiste e non viene risolto nei prossimi giorni puoi scrivere una mail a s00802@sobrero.it descrivendo con esattezza l'accaduto e inviando lo screenshot di questo messaggio."
         android:textAlignment="center"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="16sp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="168dp" />
