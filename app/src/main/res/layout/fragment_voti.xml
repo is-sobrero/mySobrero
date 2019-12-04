@@ -36,7 +36,7 @@
         android:paddingRight="15dp"
         android:text="%PERIODO%"
         android:textAlignment="center"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="14sp" />
 
     <com.google.android.material.textfield.TextInputLayout

@@ -24,6 +24,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class FragmentVoti extends Fragment implements AdapterVoto.EventListener {
@@ -95,9 +96,8 @@ public class FragmentVoti extends Fragment implements AdapterVoto.EventListener 
         for (REAPIResponse.Voti votoA: listaVoti){
             float votoF = Float.parseFloat(votoA.voto.replace(",", "."));
             media += votoF;
-            votiFloat.add(votoF);
+            votiFloat.add(0, votoF);
         }
-        Log.i("MEDIA", String.format("DIO %f", media));
         media /= listaVoti.size();
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         String numberAsString = decimalFormat.format(media).replace(".", ",");

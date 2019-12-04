@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import saschpe.android.customtabs.CustomTabsHelper;
@@ -26,7 +27,8 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
     TextView welcome, info, mittComm, dataComm, comm, art1Titolo, art2Titolo, art3Titolo, lastVoto, lastVotoDesc, compitiCont;
     ImageView art1Img, art2Img, art3Img;
 
-    Button not1, not2, not3, openVoti, openCompiti, openComunicazioni;
+    Button not1, not2, not3;
+    MaterialCardView openVoti, openCompiti, openComunicazioni;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,9 +87,9 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
         not1 = getView().findViewById(R.id.art1_btn);
         not2 = getView().findViewById(R.id.art2_btn);
         not3 = getView().findViewById(R.id.art3_btn);
-        openVoti = getView().findViewById(R.id.openVoti);
-        openCompiti = getView().findViewById(R.id.openCompiti);
-        openComunicazioni = getView().findViewById(R.id.openComunicazioni);
+        openVoti = getView().findViewById(R.id.votiCard);
+        openCompiti = getView().findViewById(R.id.compitiCard);
+        openComunicazioni = getView().findViewById(R.id.comunicazioniCard);
 
         welcome.setText("Ciao " + this.response.user.nome + "!");
         info.setText(String.format("Classe %s %s - %s", this.response.user.classe, this.response.user.sezione, this.response.user.corso));

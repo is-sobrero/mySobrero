@@ -10,12 +10,14 @@
         android:id="@+id/compitiToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/background"
+        android:background="?android:colorBackground"
         android:elevation="4dp"
+        android:foregroundTint="?attr/colorOnSurface"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="Compiti" />
+        app:title="Compiti"
+        app:titleTextColor="?attr/colorOnSurface" />
 
     <ListView
         android:id="@+id/listaCompiti"
