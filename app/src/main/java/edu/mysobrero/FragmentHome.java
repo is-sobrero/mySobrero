@@ -3,6 +3,7 @@ package edu.mysobrero;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,9 @@ import saschpe.android.customtabs.WebViewFallback;
 public class FragmentHome extends Fragment implements View.OnClickListener{
     REAPIResponse response;
     FeedClass feed;
+    Evento evento;
 
-    TextView welcome, info, mittComm, dataComm, comm, art1Titolo, art2Titolo, art3Titolo, lastVoto, lastVotoDesc, compitiCont;
+    TextView welcome, info, mittComm, eventoData, eventoDesc, eventoGiorno, comm, art1Titolo, art2Titolo, art3Titolo, lastVoto, lastVotoDesc, compitiCont;
     ImageView art1Img, art2Img, art3Img;
 
     Button not1, not2, not3;
@@ -35,6 +37,8 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         MainActivity mainActivity = (MainActivity) getActivity();
         this.response = mainActivity.response;
+        this.evento = mainActivity.evento;
+        Log.i("EVENTO", evento.evento);
         this.feed = mainActivity.feed;
         return view;
     }
@@ -90,6 +94,13 @@ public class FragmentHome extends Fragment implements View.OnClickListener{
         openVoti = getView().findViewById(R.id.votiCard);
         openCompiti = getView().findViewById(R.id.compitiCard);
         openComunicazioni = getView().findViewById(R.id.comunicazioniCard);
+        eventoData = getView().findViewById(R.id.eventoMese);
+        eventoGiorno = getView().findViewById(R.id.eventoGiorno);
+        eventoDesc = getView().findViewById(R.id.descEvento);
+
+        eventoData.setText(evento.mese);
+        eventoGiorno.setText(evento.giorno);
+        eventoDesc.setText(evento.evento);
 
         welcome.setText("Ciao " + this.response.user.nome + "!");
         info.setText(String.format("Classe %s %s - %s", this.response.user.classe, this.response.user.sezione, this.response.user.corso));

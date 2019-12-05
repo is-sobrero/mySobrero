@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.os.Handler;
 import android.os.StrictMode;
@@ -40,13 +41,23 @@ public class login extends AppCompatActivity {
     ProgressBar progressBar;
     LinearLayout layout;
     SharedPreferences sharedPref;
-    boolean savedData = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-            setTheme(R.style.AppTheme_Night);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String app_theme = sharedPreferences.getString("app_theme", "system");
+        switch (app_theme){
+            case "system":
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) setTheme(R.style.AppTheme_Night);
+                break;
+            case "dark":
+                setTheme(R.style.AppTheme_Night);
+                break;
+            default:
+                setTheme(R.style.AppTheme);
+                break;
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -89,7 +100,7 @@ public class login extends AppCompatActivity {
                     layout.setVisibility(View.VISIBLE);
                 }
             }
-        }, 2000L);
+        }, 1000L);
 
 
 
@@ -109,7 +120,6 @@ public class login extends AppCompatActivity {
         parser.onFinish(new Parser.OnTaskCompleted() {
             @Override
             public void onTaskCompleted(ArrayList<Article> list) {
-                Log.i("RSS", list.get(0).getTitle());
                 try {
                     String endp = getString(R.string.endpointURI);
                     FeedClass f = new FeedClass();
@@ -137,9 +147,11 @@ public class login extends AppCompatActivity {
                                 .show();
                     }
                     if (response.status.code == 0){
+                        Evento e = getEvento(getString(R.string.eventsEP));
                         Intent i = new Intent(login.this, MainActivity.class);
                         i.putExtra("reapi", response);
                         i.putExtra("feed", f);
+                        i.putExtra("event", e);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("username", username);
                         editor.putString("password", password);
@@ -176,6 +188,23 @@ public class login extends AppCompatActivity {
         try (Response response = client.newCall(request).execute()) {
             Gson gson = new Gson();
             REAPIResponse resp = gson.fromJson(response.body().charStream(), REAPIResponse.class);
+            return resp;
+        }
+    }
+
+    Evento getEvento(String url) throws IOException {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
+        OkHttpClient client = builder.build();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            Gson gson = new Gson();
+            Evento resp = gson.fromJson(response.body().charStream(), Evento.class);
             return resp;
         }
     }

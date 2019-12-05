@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">mySobrero</string>
+    <string name="logoutString">Logout effettuato con successo, chiudi l\'app per rieffetturare il login</string>
+    <string name="themeChangeString">Impostazione del tema salvata, per rendere effettive le modifiche riaprire l\'app</string>
 </resources>

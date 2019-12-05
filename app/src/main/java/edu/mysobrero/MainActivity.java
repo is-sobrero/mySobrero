@@ -2,12 +2,15 @@ package edu.mysobrero;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     REAPIResponse response;
     FeedClass feed;
+    Evento evento;
 
     NestedScrollView scrollView;
     AppBarLayout appBarLayout;
@@ -30,13 +34,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-            setTheme(R.style.AppTheme_Night);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String app_theme = sharedPreferences.getString("app_theme", "system");
+        switch (app_theme){
+            case "system":
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) setTheme(R.style.AppTheme_Night);
+                break;
+            case "dark":
+                setTheme(R.style.AppTheme_Night);
+                break;
+            default:
+                setTheme(R.style.AppTheme);
+                break;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
         response = (REAPIResponse) intent.getSerializableExtra("reapi");
+        evento = (Evento) intent.getSerializableExtra("event");
         feed = (FeedClass) intent.getSerializableExtra("feed");
         settings = findViewById(R.id.settingsButton);
         scrollView = findViewById(R.id.nestedScrollView);
@@ -72,23 +87,35 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
-                        viewPager.setCurrentItem(0);
+                        viewPager.setCurrentItem(0, true);
                         //scrollView.scrollTo(0,0);
                         return true;
                     case R.id.action_voti:
-                        viewPager.setCurrentItem(1);
+                        viewPager.setCurrentItem(1, true);
                         //scrollView.scrollTo(0,0);
                         return true;
                     case R.id.action_comunicazioni:
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(2, true);
                         return true;
                     case R.id.action_argomenti:
-                        viewPager.setCurrentItem(3);
+                        viewPager.setCurrentItem(3, true);
                         return true;
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (viewPager.getCurrentItem() != 0) {
+            viewPager.setCurrentItem(0,true);
+            navigation.setSelectedItemId(R.id.action_home);
+        }else{
+            finish();
+        }
+
     }
 
     public void SwitchView(int id){

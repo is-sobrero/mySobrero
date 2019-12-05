@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="endpointURI">https://reapistaging.altervista.org/api.php</string>
+    <string name="eventsEP">http://reapistaging.altervista.org/events.php</string>
     <string name="preferencesIdentifier">prefMySobrero</string>
     <string name="hintURI">https://forms.gle/fr7kecHVn1AoexBf9</string>
 </resources>
