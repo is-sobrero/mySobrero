@@ -1,5 +1,8 @@
 package edu.mysobrero;
 
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -23,8 +27,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class FragmentVoti extends Fragment implements AdapterVoto.EventListener {
@@ -110,9 +112,23 @@ public class FragmentVoti extends Fragment implements AdapterVoto.EventListener 
         chart.getXAxis().setEnabled(false);
         chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String app_theme = sharedPreferences.getString("app_theme", "system");
+        switch (app_theme){
+            case "system":
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) chart.getAxisLeft().setTextColor(Color.WHITE);
+                break;
+            case "dark":
+                chart.getAxisLeft().setTextColor(Color.WHITE);
+                break;
+            default:
+                break;
+        }
         dataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         dataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         dataSet.setLineWidth(3);
+        dataSet.setDrawValues(false);
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
         chart.invalidate();

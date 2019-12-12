@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_argomenti:
                         viewPager.setCurrentItem(3, true);
                         return true;
+                    case R.id.action_more:
+                        viewPager.setCurrentItem(4, true);
+                        return true;
                 }
                 return false;
             }

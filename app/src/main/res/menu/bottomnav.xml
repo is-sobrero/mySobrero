@@ -7,28 +7,27 @@
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home"
         android:title="Home"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_voti"
         android:icon="@drawable/ic_trending_up"
         android:title="Voti"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_argomenti"
         android:icon="@drawable/ic_book"
         android:title="Argomenti"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_comunicazioni"
         android:icon="@drawable/ic_format_list_bulleted"
         android:title="Comunicazioni"
-        app:showAsAction="ifRoom"/>
-<!--
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_more"
         android:icon="@drawable/ic_more_horiz"
         android:title="Altro"
-        app:showAsAction="always"/>-->
+        app:showAsAction="always"/>
 
 </menu>

@@ -13,9 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.api.Distribution;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Float.parseFloat;
 
 public class AdapterVoto extends ArrayAdapter<REAPIResponse.Voti> implements Filterable {
     public AdapterVoto(Context context, int textViewResourceId,
@@ -44,7 +47,7 @@ public class AdapterVoto extends ArrayAdapter<REAPIResponse.Voti> implements Fil
         TextView tipo = convertView.findViewById(R.id.ad_tipo);
         TextView commento = convertView.findViewById(R.id.ad_comm);
         Button expand = convertView.findViewById(R.id.ad_expandButton);
-        final LinearLayout expandView = convertView.findViewById(R.id.ad_expandView);
+        LinearLayout base = convertView.findViewById(R.id.baseView);
         final REAPIResponse.Voti c = voti.get(position);
 
         expand.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +70,16 @@ public class AdapterVoto extends ArrayAdapter<REAPIResponse.Voti> implements Fil
                         .show();
             }
         });
+
+        float v = Float.parseFloat(c.voto.replace(",", "."));
+
+        if (v < 6) {
+            base.setBackgroundResource(R.drawable.gradient6);
+        }
+
+        if (v >= 6 && v < 7){
+            base.setBackgroundResource(R.drawable.gradient7);
+        }
         voto.setText(c.voto);
         materia.setText(c.materia);
         tipo.setText(c.tipologia);

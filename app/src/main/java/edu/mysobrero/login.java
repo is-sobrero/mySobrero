@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -19,8 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
 import okhttp3.HttpUrl;
@@ -29,12 +36,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor;
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 
 public class login extends AppCompatActivity {
+
 
     EditText username, password;
     Button login;
@@ -158,10 +168,27 @@ public class login extends AppCompatActivity {
                         editor.putString("savedCredentials", "yes");
                         editor.commit();
 
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        Date currentTime = Calendar.getInstance().getTime();
+
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("nome", response.user.nome);
+                        user.put("cognome", response.user.cognome);
+                        user.put("classe", response.user.classe + " " + response.user.sezione);
+                        user.put("ultimo accesso", currentTime.toString());
+
+                        db.collection("utenti").document(username)
+                                .set(user, SetOptions.merge());
+
                         startActivity(i);
                         finish();
                     }
                 } catch (Exception e){
+                    new MaterialAlertDialogBuilder(login.this)
+                            .setTitle("Errore nel login!")
+                            .setMessage("Errore sconosciuto: " + e.getLocalizedMessage())
+                            .setPositiveButton("Ok", null)
+                            .show();
                     progressBar.setVisibility(View.GONE);
                     layout.setVisibility(View.VISIBLE);
                     e.printStackTrace();
@@ -169,6 +196,11 @@ public class login extends AppCompatActivity {
             }
             @Override
             public void onError() {
+                new MaterialAlertDialogBuilder(login.this)
+                        .setTitle("Errore nel login!")
+                        .setMessage("Errore durante il download del feed!")
+                        .setPositiveButton("Ok", null)
+                        .show();
                 progressBar.setVisibility(View.GONE);
                 layout.setVisibility(View.VISIBLE);
             }

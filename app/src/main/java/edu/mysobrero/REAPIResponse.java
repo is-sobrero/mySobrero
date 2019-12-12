@@ -35,6 +35,9 @@ public class REAPIResponse implements Serializable {
     @Nullable
     @SerializedName("compiti")
     List<Compiti> compiti;
+    @Nullable
+    @SerializedName("assenze")
+    Assenze assenze;
 
     class AuthenticationHeader implements Serializable {
         @Nullable
@@ -147,6 +150,30 @@ public class REAPIResponse implements Serializable {
         @Nullable
         @SerializedName("data")
          String data;
+    }
+
+    class Assenza implements Serializable{
+        @Nullable
+        @SerializedName("data")
+        String data;
+        @Nullable
+        @SerializedName("motivazione")
+        String motivazione;
+        @Nullable
+        @SerializedName("tipologia")
+        String tipologia;
+        @Nullable
+        @SerializedName("orario")
+        String orario;
+    }
+
+    class Assenze implements Serializable {
+        @Nullable
+        @SerializedName("nongiustificate")
+        List<Assenza> nongiustificate;
+        @Nullable
+        @SerializedName("giustificate")
+        List<Assenza> giustificate;
     }
 }
 

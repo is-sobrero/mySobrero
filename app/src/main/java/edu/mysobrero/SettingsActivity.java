@@ -1,7 +1,9 @@
 package edu.mysobrero;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -42,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             Preference myPref = (Preference) findPreference("logout");
+            Preference feedback = (Preference) findPreference("feedback");
             ListPreference darkMode = findPreference("app_theme");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
@@ -52,6 +55,20 @@ public class SettingsActivity extends AppCompatActivity {
                     View contextView = getActivity().findViewById(R.id.context_view);
                     Snackbar.make(contextView, R.string.logoutString, Snackbar.LENGTH_LONG)
                             .show();
+                    return true;
+                }
+            });
+
+
+
+
+            feedback.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    String url = "https://docs.google.com/forms/u/2/d/e/1FAIpQLSeLfkXyMDGknuunsL97iLu6V9ka2xfRc9IaMj2hIe7U9PTXfw/viewform";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
                     return true;
                 }
             });

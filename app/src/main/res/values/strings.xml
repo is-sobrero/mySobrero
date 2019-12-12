@@ -2,4 +2,7 @@
     <string name="app_name">mySobrero</string>
     <string name="logoutString">Logout effettuato con successo, chiudi l\'app per rieffetturare il login</string>
     <string name="themeChangeString">Impostazione del tema salvata, per rendere effettive le modifiche riaprire l\'app</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
