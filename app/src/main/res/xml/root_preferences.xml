@@ -14,8 +14,6 @@
   ~ limitations under the License.
   -->
 
-
-
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="Aspetto">
@@ -30,10 +28,10 @@
 
     <PreferenceCategory app:title="Sicurezza">
 
-       <!-- <SwitchPreferenceCompat
+       <SwitchPreferenceCompat
             app:key="use_fingerprint"
             app:title="Accedi a mySobrero con l'impronta digitale"
-            app:useSimpleSummaryProvider="true" />-->
+            app:useSimpleSummaryProvider="true" />
 
         <Preference
             app:key="logout"

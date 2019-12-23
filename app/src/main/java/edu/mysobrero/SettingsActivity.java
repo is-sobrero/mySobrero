@@ -3,11 +3,13 @@ package edu.mysobrero;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -46,7 +48,16 @@ public class SettingsActivity extends AppCompatActivity {
             Preference myPref = (Preference) findPreference("logout");
             Preference feedback = (Preference) findPreference("feedback");
             ListPreference darkMode = findPreference("app_theme");
-            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            FingerprintManager fingerprintManager = (FingerprintManager) getContext().getSystemService(Context.FINGERPRINT_SERVICE);
+            if (!fingerprintManager.isHardwareDetected()) {
+                getPreferenceScreen().findPreference("use_fingerprint").setEnabled(false);
+                getPreferenceScreen().findPreference("use_fingerprint").setSummary("Il dispositivo non supporta l'autenticazione tramite biometria");
+
+            } else if (!fingerprintManager.hasEnrolledFingerprints()) {
+                getPreferenceScreen().findPreference("use_fingerprint").setEnabled(false);
+                getPreferenceScreen().findPreference("use_fingerprint").setSummary("Il dispositivo non ha registrato nessun metodo di autenticazione biometrico");
+            }
+                myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     SharedPreferences sharedPref = getContext().getSharedPreferences(getString(R.string.preferencesIdentifier), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();

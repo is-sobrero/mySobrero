@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import com.an.biometric.BiometricCallback;
+import com.an.biometric.BiometricManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -43,7 +46,7 @@ import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor;
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 
-public class login extends AppCompatActivity {
+public class login extends AppCompatActivity implements BiometricCallback {
 
 
     EditText username, password;
@@ -51,11 +54,13 @@ public class login extends AppCompatActivity {
     ProgressBar progressBar;
     LinearLayout layout;
     SharedPreferences sharedPref;
+    String loginWithBiometrics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String app_theme = sharedPreferences.getString("app_theme", "system");
+        loginWithBiometrics = sharedPreferences.getString("use_fingerprint", "no");
         switch (app_theme){
             case "system":
                 if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) setTheme(R.style.AppTheme_Night);
@@ -100,12 +105,24 @@ public class login extends AppCompatActivity {
 
             @Override
             public void run() {
-                if (sharedPref.getString("savedCredentials", "NO").compareTo("yes") == 0){
+                FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
+                boolean readyToBiometrics = fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints();
+                if (readyToBiometrics && sharedPref.getString("savedCredentials", "NO").compareTo("yes") == 0){
                     progressBar.setVisibility(View.VISIBLE);
-                    login(
-                            sharedPref.getString("username", "NO"),
-                            sharedPref.getString("password", "NO")
-                    );
+                    if (loginWithBiometrics.compareTo("yes") == 0) {
+                        new BiometricManager.BiometricBuilder(login.this)
+                                .setTitle("Verifica la tua identità per continuare")
+                                .setDescription("Tocca il sensore di impronte per accedere su mySobrero come " + sharedPref.getString("scName", "%NOME_COGNOME%"))
+                                .setNegativeButtonText("Annulla")
+                                .build()
+                                .authenticate(login.this);
+
+                    } else {
+                        login(
+                                sharedPref.getString("username", "NO"),
+                                sharedPref.getString("password", "NO")
+                        );
+                    }
                 } else {
                     layout.setVisibility(View.VISIBLE);
                 }
@@ -116,6 +133,7 @@ public class login extends AppCompatActivity {
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 login(username.getText().toString(), password.getText().toString());
             }
         });
@@ -165,6 +183,7 @@ public class login extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("username", username);
                         editor.putString("password", password);
+                        editor.putString("scName", response.user.nome + " " + response.user.cognome);
                         editor.putString("savedCredentials", "yes");
                         editor.commit();
 
@@ -239,6 +258,85 @@ public class login extends AppCompatActivity {
             Evento resp = gson.fromJson(response.body().charStream(), Evento.class);
             return resp;
         }
+    }
+
+    @Override
+    public void onSdkVersionNotSupported() {
+        login(
+                sharedPref.getString("username", "NO"),
+                sharedPref.getString("password", "NO")
+        );
+    }
+
+    @Override
+    public void onBiometricAuthenticationNotSupported() {
+        login(
+                sharedPref.getString("username", "NO"),
+                sharedPref.getString("password", "NO")
+        );
+    }
+
+    @Override
+    public void onBiometricAuthenticationNotAvailable() {
+
+    }
+
+    @Override
+    public void onAuthenticationFailed() {
+        layout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAuthenticationCancelled() {
+        layout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAuthenticationSuccessful() {
+        progressBar.setVisibility(View.VISIBLE);
+        login(
+                sharedPref.getString("username", "NO"),
+                sharedPref.getString("password", "NO")
+        );
+    }
+
+    @Override
+    public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+        /*
+         * This method is called when a non-fatal error has occurred during the authentication
+         * process. The callback will be provided with an help code to identify the cause of the
+         * error, along with a help message.*/
+
+    }
+
+    @Override
+    public void onBiometricAuthenticationPermissionNotGranted() {
+        /*
+         *  android.permission.USE_BIOMETRIC permission is not granted to the app
+         */
+    }
+
+
+    @Override
+    public void onBiometricAuthenticationInternalError(String error) {
+        /*
+         *  This method is called if one of the fields such as the title, subtitle,
+         * description or the negative button text is empty
+         */
+    }
+
+    @Override
+    public void onAuthenticationError(int errorCode, CharSequence errString) {
+        /*
+         * When an unrecoverable error has been encountered and the authentication process has
+         * completed without success, then this callback will be triggered. The callback is provided
+         * with an error code to identify the cause of the error, along with the error message.*/
+        new MaterialAlertDialogBuilder(login.this)
+                .setTitle("Errore fatale!")
+                .setMessage("Errore durante l'autenticazione sicura tramite biometria: " + errString.toString())
+                .setPositiveButton("Ok", null)
+                .show();
+        layout.setVisibility(View.VISIBLE);
     }
 
 }
