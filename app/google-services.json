@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "222236722537-7i6pt1hpfukpq5l0nch48it6dl386klb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.mysobrero",
+            "certificate_hash": "c03479d1769be43a6f7e00619272853c19c6cd30"
+          }
+        },
+        {
           "client_id": "222236722537-oa4giao53vm8smin80hp5t65pkqg7fn9.apps.googleusercontent.com",
           "client_type": 3
         }

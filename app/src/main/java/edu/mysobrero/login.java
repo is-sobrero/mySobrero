@@ -54,13 +54,13 @@ public class login extends AppCompatActivity implements BiometricCallback {
     ProgressBar progressBar;
     LinearLayout layout;
     SharedPreferences sharedPref;
-    String loginWithBiometrics;
+    Boolean loginWithBiometrics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String app_theme = sharedPreferences.getString("app_theme", "system");
-        loginWithBiometrics = sharedPreferences.getString("use_fingerprint", "no");
+        loginWithBiometrics = sharedPreferences.getBoolean("use_fingerprint", false);
         switch (app_theme){
             case "system":
                 if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) setTheme(R.style.AppTheme_Night);
@@ -107,9 +107,9 @@ public class login extends AppCompatActivity implements BiometricCallback {
             public void run() {
                 FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
                 boolean readyToBiometrics = fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints();
-                if (readyToBiometrics && sharedPref.getString("savedCredentials", "NO").compareTo("yes") == 0){
+                if (sharedPref.getString("savedCredentials", "NO").compareTo("yes") == 0){
                     progressBar.setVisibility(View.VISIBLE);
-                    if (loginWithBiometrics.compareTo("yes") == 0) {
+                    if (loginWithBiometrics && readyToBiometrics) {
                         new BiometricManager.BiometricBuilder(login.this)
                                 .setTitle("Verifica la tua identità per continuare")
                                 .setDescription("Tocca il sensore di impronte per accedere su mySobrero come " + sharedPref.getString("scName", "%NOME_COGNOME%"))
