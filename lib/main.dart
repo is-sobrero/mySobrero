@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:mysobrero/ColorLoader5.dart';
+import 'package:mysobrero/home.dart';
 import 'dart:convert';
-import 'dart:io';
-
 import 'reapi.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -16,7 +15,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.orange,
+        brightness: Brightness.dark,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Color(0xFF0360e7),
+        accentColor: Color(0xFF0360e7),
+        backgroundColor: Color(0xFF000000)
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -25,31 +31,39 @@ class MyApp extends StatelessWidget {
           systemNavigationBarColor: Colors.black, // navigation bar color
           statusBarIconBrightness: Brightness.dark, // status bar icons' color
           systemNavigationBarIconBrightness: Brightness.dark, //navigation bar icons' color
-        ),
+      ),
         child: Scaffold(
-          body: MyHomePage(title: 'Flutter Demo Home Page'),
+          body: AppLogin(title: 'mySobrero'),
         ),
       ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class AppLogin extends StatefulWidget {
+  AppLogin({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AppLoginState createState() => _AppLoginState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AppLoginState extends State<AppLogin> {
 
-  TextField username;
-  TextField password;
+  final userController = TextEditingController();
+  final pwrdController = TextEditingController();
+
+  final Shader sobreroGradient = LinearGradient(
+    begin: FractionalOffset.topLeft,
+    end: FractionalOffset.bottomRight,
+    colors: <Color>[Color(0xFF0287d1), Color(0xFF0335ff)],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
+  var isLoginVisible = true;
 
   Future<http.Response> requestMethod() async {
-    var username = "3845";
-    var password = "--password--";
+    var username = userController.text;
+    var password = pwrdController.text;
     var url = "https://reapistaging.altervista.org/api.php?uname=$username&password=$password";
     Map<String,String> headers = {
       'Accept': 'application/json',
@@ -57,8 +71,15 @@ class _MyHomePageState extends State<MyHomePage> {
     final responseHTTP = await http.get(url, headers: headers);
     Map responseMap = jsonDecode(responseHTTP.body);
     var response = reAPI.fromJson(responseMap);
+    setState(() {
+      isLoginVisible = true;
+    });
     if (response.status.code == 0){
       print(response.user.nome);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } else {
       showDialog(
         context: context,
@@ -91,58 +112,94 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+    setState(() {
+      isLoginVisible = false;
+    });
 
     requestMethod();
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Accedi a mySobrero',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22
+        child: SizedBox(
+          width: 350,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: isLoginVisible ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 70,
+                height: 70,
+                child: Image.asset('assets/images/logo_sobrero_grad.png'),
               ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'ID Studente'
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
+              isLoginVisible ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                        'Accedi a mySobrero',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          foreground: Paint()..shader = sobreroGradient,
+                        ),
+                      ),
+                  ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'ID Studente'
+                        ),
+                        controller: userController,
+                      ),
+                    ),
+                  TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                    controller: pwrdController,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: RaisedButton(
+                        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                        onPressed: buttonLogin,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7.0))),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        child: const Text(
+                          'LOGIN',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ) : new Container(),
 
-            ),
-            RaisedButton(
-              onPressed: buttonLogin,
-              color: Theme.of(context).primaryColor,
-              textColor: Colors.white,
-              child: const Text(
-                  'ACCEDI',
-              ),
-            ),
+              !isLoginVisible ? Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: ColorLoader5(
+                  dotOneColor: Color(0xFF0287d1),
+                  dotTwoColor: Color(0xFF0360e7),
+                  dotThreeColor: Color(0xFF0335ff),
+                  dotType: DotType.circle,
+                  dotIcon: Icon(Icons.adjust),
+                ),
+              ) : new Container(),
 
-          ],
+            ],
+          ),
         ),
       ),
     );
