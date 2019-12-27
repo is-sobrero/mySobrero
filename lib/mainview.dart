@@ -1,28 +1,43 @@
 import 'package:flutter/material.dart';
+import 'reapi.dart';
 
 class Mainview extends StatefulWidget {
+  reAPI response;
+  Mainview({Key key, @required this.response}) : super(key: key);
   @override
-  _Mainview createState() => _Mainview();
+  _Mainview createState() => _Mainview(response);
 }
 
 class _Mainview extends State<Mainview> {
+  reAPI response;
+  _Mainview(reAPI response){
+    this.response = response;
+  }
   @override
   Widget build(BuildContext context) {
+    final nomeUtente = response.user.nome;
+    final ultimoVoto = response.voti[0].voto;
+    final ultimaMateria = response.voti[0].materia;
+    final countCompiti = response.compiti.length.toString();
+    final classeUtente = response.user.classe + " " + response.user.sezione;
+    final indirizzoUtente = response.user.corso;
     return SingleChildScrollView(
-      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Ciao Federico!',
+                'Ciao $nomeUtente!',
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 24,
                   ),
               ),
-              Text('Classe 4 AE - Elettronica ed Elettrotecnica',),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Text('Classe $classeUtente - $indirizzoUtente',),
+              ),
               Row(
                 children: <Widget>[
                   Expanded(
@@ -48,14 +63,14 @@ class _Mainview extends State<Mainview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                    "9",
+                                    ultimoVoto,
                                   style: new TextStyle(
                                     fontSize: 70,
                                     color: Color(0xFFFFFFFF)
                                   ),
                                 ),
                                 Text(
-                                    "Ultimo voto preso in Elettronica ed Elettrotecnica",
+                                    "Ultimo voto preso in $ultimaMateria",
                                     style: new TextStyle(
                                         color: Color(0xFFFFFFFF)
                                     ),
@@ -91,7 +106,7 @@ class _Mainview extends State<Mainview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  "0",
+                                  countCompiti,
                                   style: new TextStyle(
                                     fontSize: 70,
                                     color: Color(0xFF000000)
@@ -111,13 +126,12 @@ class _Mainview extends State<Mainview> {
                     ),
                     flex: 1,
                   ),
-
                 ],
               ),
+
             ],
           ),
         ),
-      ),
     );
   }
 }

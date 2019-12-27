@@ -73,9 +73,10 @@ class _AppLoginState extends State<AppLogin> {
     var response = reAPI.fromJson(responseMap);
     if (response.status.code == 0){
       print(response.user.nome);
-      Navigator.push(
+
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen(response: response,)),
       );
     } else {
       setState(() {
