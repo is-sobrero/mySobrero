@@ -21,6 +21,8 @@ class _Mainview extends State<Mainview> {
     final countCompiti = response.compiti.length.toString();
     final classeUtente = response.user.classe + " " + response.user.sezione;
     final indirizzoUtente = response.user.corso;
+    final ultimaComunicazione = response.comunicazioni[0].contenuto.substring(0, 100) + "...";
+    final ultimaComMittente = response.comunicazioni[0].mittente;
     return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -128,7 +130,57 @@ class _Mainview extends State<Mainview> {
                   ),
                 ],
               ),
+              Row(
+                children: <Widget>[
 
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: AspectRatio(
+                        aspectRatio: 2,
+                        child: Container(
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(11)),
+                              gradient: LinearGradient(
+                                begin: FractionalOffset.topRight,
+                                end: FractionalOffset.bottomRight,
+                                colors: <Color>[Color(0xFFfa71cd), Color(0xFFc471f5)],
+                              )
+                          )
+                          ,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  ultimaComunicazione,
+                                  style: new TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFFFFFFF)
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12.0),
+                                  child: Text(
+                                    "Ultima comunicazione da $ultimaComMittente",
+                                    style: new TextStyle(
+                                        color: Color(0xFFFFFFFF)
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    flex: 1,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
