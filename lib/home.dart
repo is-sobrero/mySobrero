@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mysobrero/mainview.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -31,9 +32,7 @@ class _HomeState extends State<HomeScreen> {
           });
         },
         children: <Widget>[
-          Container(
-            color: Colors.pink,
-          ),
+          Mainview(),
           Container(
             color: Colors.cyan,
           ),

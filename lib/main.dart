@@ -54,10 +54,10 @@ class _AppLoginState extends State<AppLogin> {
   final pwrdController = TextEditingController();
 
   final Shader sobreroGradient = LinearGradient(
-    begin: FractionalOffset.topLeft,
+    begin: FractionalOffset.topRight,
     end: FractionalOffset.bottomRight,
     colors: <Color>[Color(0xFF0287d1), Color(0xFF0335ff)],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 30.0));
 
   var isLoginVisible = true;
 
@@ -71,9 +71,6 @@ class _AppLoginState extends State<AppLogin> {
     final responseHTTP = await http.get(url, headers: headers);
     Map responseMap = jsonDecode(responseHTTP.body);
     var response = reAPI.fromJson(responseMap);
-    setState(() {
-      isLoginVisible = true;
-    });
     if (response.status.code == 0){
       print(response.user.nome);
       Navigator.push(
@@ -81,6 +78,9 @@ class _AppLoginState extends State<AppLogin> {
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } else {
+      setState(() {
+        isLoginVisible = true;
+      });
       showDialog(
         context: context,
         builder: (BuildContext context) {
