@@ -5,6 +5,7 @@ import 'package:mysobrero/ColorLoader5.dart';
 import 'package:mysobrero/home.dart';
 import 'dart:convert';
 import 'reapi.dart';
+import 'SobreroFeed.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,14 +16,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Colors.orange,
-        brightness: Brightness.dark,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
         primaryColor: Color(0xFF0360e7),
         accentColor: Color(0xFF0360e7),
-        backgroundColor: Color(0xFF000000)
+      ),
+      darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primaryColor: Color(0xFF0360e7),
+          accentColor: Color(0xFF0360e7),
+          scaffoldBackgroundColor: Color(0xFF212121)
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -65,6 +66,7 @@ class _AppLoginState extends State<AppLogin> {
     var username = userController.text;
     var password = pwrdController.text;
     var url = "https://reapistaging.altervista.org/api.php?uname=$username&password=$password";
+    var feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
     Map<String,String> headers = {
       'Accept': 'application/json',
     };
@@ -73,10 +75,12 @@ class _AppLoginState extends State<AppLogin> {
     var response = reAPI.fromJson(responseMap);
     if (response.status.code == 0){
       print(response.user.nome);
-
+      final feedHTTP = await http.get(feedUrl, headers: headers);
+      Map feedMap = jsonDecode(feedHTTP.body);
+      var feed = SobreroFeed.fromJson(feedMap);
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen(response: response,)),
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(response, feed)),
       );
     } else {
       setState(() {

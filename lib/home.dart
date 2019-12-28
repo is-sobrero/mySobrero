@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'reapi.dart';
+import 'SobreroFeed.dart';
 import 'package:mysobrero/mainview.dart';
 
 class HomeScreen extends StatefulWidget {
   reAPI response;
-  HomeScreen({Key key, @required this.response}) : super(key: key);
+  SobreroFeed feed;
+  HomeScreen(reAPI response, SobreroFeed feed){
+    this.response = response;
+    this.feed = feed;
+  }
 
   @override
   State<StatefulWidget> createState() {
-    return _HomeState(response);
+    return _HomeState(response, feed);
   }
 }
 
@@ -16,8 +21,10 @@ class _HomeState extends State<HomeScreen> {
   int _currentIndex = 0;
   PageController pageController = PageController();
   reAPI response;
-  _HomeState(reAPI response){
+  SobreroFeed feed;
+  _HomeState(reAPI response, SobreroFeed feed){
     this.response = response;
+    this.feed = feed;
   }
 
   void onTabTapped(int index) {
@@ -48,6 +55,7 @@ class _HomeState extends State<HomeScreen> {
                         "mySobrero",
                       style: TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Color(0xFF0360e7)
                       ),
                     ),
@@ -75,7 +83,7 @@ class _HomeState extends State<HomeScreen> {
             });
           },
           children: <Widget>[
-            Mainview(response: response),
+            Mainview(response, feed),
             Container(
               color: Colors.cyan,
             ),
@@ -95,8 +103,7 @@ class _HomeState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped, // n
-        // ew
+        onTap: onTabTapped,
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.shifting,
         items: [
@@ -125,4 +132,6 @@ class _HomeState extends State<HomeScreen> {
       ),
     );
   }
+
+
 }
