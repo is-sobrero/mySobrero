@@ -199,7 +199,7 @@ class _Mainview extends State<Mainview> {
               ),
             ),
             Container(
-              color: Color(0x22000000),
+              color: Color(0x2F000000),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -229,7 +229,7 @@ class _Mainview extends State<Mainview> {
                             elevation: 0,
                               margin: EdgeInsets.only(right: 10),
                               clipBehavior: Clip.antiAlias,
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).scaffoldBackgroundColor,
                               child: Container(
                                 width: 300,
                                 child: Column(

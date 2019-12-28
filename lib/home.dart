@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'reapi.dart';
 import 'SobreroFeed.dart';
-import 'package:mysobrero/mainview.dart';
+import 'mainview.dart';
+import 'voti.dart';
 
 class HomeScreen extends StatefulWidget {
   reAPI response;
@@ -25,6 +26,24 @@ class _HomeState extends State<HomeScreen> {
   _HomeState(reAPI response, SobreroFeed feed){
     this.response = response;
     this.feed = feed;
+  }
+
+  BottomNavigationBarItem barIcon (String title, IconData icon){
+    return BottomNavigationBarItem(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      icon: Icon(
+        icon,
+        color: Theme.of(context).textTheme.body1.color,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(color: Theme.of(context).primaryColor),
+      ),
+      activeIcon: Icon(
+        icon,
+        color: Theme.of(context).primaryColor,
+      ),
+    );
   }
 
   void onTabTapped(int index) {
@@ -84,9 +103,7 @@ class _HomeState extends State<HomeScreen> {
           },
           children: <Widget>[
             Mainview(response, feed),
-            Container(
-              color: Colors.cyan,
-            ),
+            VotiView(response.voti),
             Container(
               color: Colors.deepPurple,
             ),
@@ -95,41 +112,24 @@ class _HomeState extends State<HomeScreen> {
             ),
             Container(
               color: Colors.deepPurple,
-            ),
-            Container(
-              color: Colors.cyan,
             ),
           ],
         ),
       ),
+      /*onTap: onTabTapped,
+          currentIndex: _currentIndex,
+      */
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
-        type: BottomNavigationBarType.shifting,
         items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.trending_up),
-            title: new Text('Voti'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              title: Text('Argomenti')
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.format_list_bulleted),
-              title: Text('Comunicazioni')
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz),
-              title: Text('Altro')
-          )
-
+          barIcon("Home", Icons.home),
+          barIcon("Voti", Icons.trending_up),
+          barIcon("Argomenti", Icons.book),
+          barIcon("Comunicazioni", Icons.format_list_bulleted),
+          barIcon("Altro", Icons.more_horiz),
         ],
-      ),
+      )
     );
   }
 
