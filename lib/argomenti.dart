@@ -12,8 +12,6 @@ class ArgomentiView extends StatelessWidget {
     this.regclasse = regclasse;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
