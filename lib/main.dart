@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
-import 'package:mysobrero/ColorLoader5.dart';
-import 'package:mysobrero/home.dart';
+import 'ColorLoader5.dart';
+import 'home.dart';
 import 'dart:convert';
 import 'reapi.dart';
 import 'SobreroFeed.dart';
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'mySobrero',
       theme: ThemeData(
         primaryColor: Color(0xFF0360e7),
         accentColor: Color(0xFF0360e7),
@@ -29,9 +29,7 @@ class MyApp extends StatelessWidget {
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // transparent status bar
-          systemNavigationBarColor: Colors.black, // navigation bar color
-          statusBarIconBrightness: Brightness.dark, // status bar icons' color
-          systemNavigationBarIconBrightness: Brightness.dark, //navigation bar icons' color
+          statusBarIconBrightness: Theme.of(context).brightness, // status bar icons' color
       ),
         child: Scaffold(
           body: AppLogin(title: 'mySobrero'),

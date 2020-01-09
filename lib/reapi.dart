@@ -32,7 +32,7 @@ class reAPI {
       });
     }
     if (json['regclasse'] != null) {
-      regclasse = new List<Null>();
+      regclasse = new List<Regclasse>();
       json['regclasse'].forEach((v) {
         regclasse.add(new Regclasse.fromJson(v));
       });
