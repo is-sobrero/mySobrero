@@ -4,6 +4,7 @@ import 'SobreroFeed.dart';
 import 'mainview.dart';
 import 'voti.dart';
 import 'comunicazioni.dart';
+import 'altro.dart';
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -120,9 +121,7 @@ class _HomeState extends State<HomeScreen> {
               }),
               VotiView(response.voti),
               ComunicazioniView(response.comunicazioni),
-              Container(
-                color: Colors.cyan,
-              ),
+              AltroView(response),
 
             ],
           ),

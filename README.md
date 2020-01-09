@@ -1,16 +1,26 @@
-# mysobrero
+# mySobrero
+Repo principale del mySobrero 2.0
 
-A new Flutter project.
+## Dettagli tecnici
+Il nuovo mySobrero, per rendere lo sviluppo più semplice e veloce, è
+basato sul framework open source [Flutter](https://flutter.dev) di
+Google, che permette di scrivere app per Android, iOS, Web e Computer da
+una unica base di codice. mySobrero si basa su
+[reAPI](https://github.com/federunco/reAPI), un wrapper per Axios,
+attualmente in sviluppo. L'endpoint dell'API è temporaneo e non
+ottimizzato per un altro carico di richieste.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Per gli studenti del Sobrero
+Rendere mySobrero adatto ai 1300 studenti del Sobrero non è una impresa facile, anche il minimo contributo è fondamentale. Sarebbe utile andare a compilare questo modulo per supportare lo sviluppo: https://forms.gle/tDt4RZD1XWK5kkH39 (solo con account @sobrero)
 
-A few resources to get you started if this is your first Flutter project:
+## Come installare l'app senza passare dallo store
+[Clicca qui per la guida su iOS](./guide/sideload-ios.md)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Come compilare
+### Prerequisiti
+- SDK Flutter
+- SDK per la piattaforma di destinazione
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+TODO finire "come compilare"
+

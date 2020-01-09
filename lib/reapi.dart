@@ -50,7 +50,7 @@ class reAPI {
       });
     }
     if (json['compiti'] != null) {
-      compiti = new List<Null>();
+      compiti = new List<Compito>();
       json['compiti'].forEach((v) {
         compiti.add(new Compito.fromJson(v));
       });

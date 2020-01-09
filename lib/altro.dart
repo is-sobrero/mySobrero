@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'reapi.dart';
+import 'assenze.dart';
+
+class AltroView extends StatefulWidget {
+  reAPI response;
+
+  AltroView(reAPI response){
+    this.response = response;
+  }
+  @override
+  _AltroView createState() => _AltroView(response);
+}
+
+class _AltroView extends State<AltroView> {
+  reAPI response;
+  _AltroView(reAPI response){
+    this.response = response;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        child:Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'Altro',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AssenzeView(response.assenze)),
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 0,
+                      margin: EdgeInsets.only(bottom: 10),
+                      clipBehavior: Clip.antiAlias,
+                      color: Color(0xffff9692),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Text(
+                                "Assenze",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                              )
+                            ),
+                          ),
+                          Spacer(),
+                          Image.asset("assets/images/assenze.png", height: 150,)
+                        ],
+                      )
+                    ),
+                  ),
+                  Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 0,
+                      margin: EdgeInsets.only(bottom: 10),
+                      clipBehavior: Clip.antiAlias,
+                      color: Colors.white,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Text(
+                                "Argomenti",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black
+                                )
+                            ),
+                          ),
+                          Spacer(),
+                          Image.asset("assets/images/argomenti.png", height: 150,)
+                        ],
+                      )
+                  )
+                ],
+              ),
+            ),
+          ],
+        )
+    );
+  }
+}

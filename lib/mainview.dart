@@ -328,7 +328,6 @@ class _Mainview extends State<Mainview> {
           enableDefaultShare: true,
           enableUrlBarHiding: true,
           showPageTitle: true,
-          //animation: new CustomTabsAnimation.slideIn(),
           extraCustomTabs: <String>[
             'org.mozilla.firefox',
             'com.microsoft.emmx',
@@ -336,7 +335,6 @@ class _Mainview extends State<Mainview> {
         ),
       );
     } catch (e) {
-      // An exception is thrown if browser app is not installed on Android device.
       debugPrint(e.toString());
     }
   }

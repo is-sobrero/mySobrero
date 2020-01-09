@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'reapi.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -141,7 +140,7 @@ class _VotiView extends State<VotiView> {
     ];
 
     return SingleChildScrollView(
-        child:Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
