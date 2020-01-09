@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'reapi.dart';
 import 'assenze.dart';
+import 'argomenti.dart';
 
 class AltroView extends StatefulWidget {
   reAPI response;
@@ -74,32 +75,40 @@ class _AltroView extends State<AltroView> {
                       )
                     ),
                   ),
-                  Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 0,
-                      margin: EdgeInsets.only(bottom: 10),
-                      clipBehavior: Clip.antiAlias,
-                      color: Colors.white,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Text(
-                                "Argomenti",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black
-                                )
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ArgomentiView(response.regclasse)),
+                      );
+                    },
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        elevation: 0,
+                        margin: EdgeInsets.only(bottom: 10),
+                        clipBehavior: Clip.antiAlias,
+                        color: Colors.white,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Text(
+                                  "Argomenti",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black
+                                  )
+                              ),
                             ),
-                          ),
-                          Spacer(),
-                          Image.asset("assets/images/argomenti.png", height: 150,)
-                        ],
-                      )
+                            Spacer(),
+                            Image.asset("assets/images/argomenti.png", height: 150,)
+                          ],
+                        )
+                    ),
                   )
                 ],
               ),

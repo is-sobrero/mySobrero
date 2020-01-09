@@ -1,18 +1,24 @@
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
+
 import 'package:flutter/material.dart';
 import 'reapi.dart';
 
-class AssenzeView extends StatelessWidget {
-  Assenze assenze;
-
-  AssenzeView(Assenze assenze) {
-    this.assenze = assenze;
+class ArgomentiView extends StatelessWidget {
+  List<Regclasse> regclasse;
+  ArgomentiView(List<Regclasse> regclasse) {
+    this.regclasse = regclasse;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Assenze"),
+        title: Text("Argomenti della settimana"),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         textTheme: Theme.of(context).textTheme,
         iconTheme: Theme.of(context).iconTheme,
@@ -23,26 +29,10 @@ class AssenzeView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: Text(
-                  "Assenze non giustificate",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-              ),
               Column(
-                children: generaAssenze(assenze.nongiustificate, context),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: Text(
-                  "Assenze giustificate",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-              ),
-              Column(
-                children: generaAssenze(assenze.giustificate, context),
-              ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: generaGiornate(context)
+              )
             ],
           ),
         ),
@@ -50,13 +40,9 @@ class AssenzeView extends StatelessWidget {
     );
   }
 
-  List<Widget> generaAssenze(List<Nongiustificate> assenze, BuildContext context) {
+  List<Widget> generaArgomenti(List<Argomento> argomenti, BuildContext context) {
     List<Widget> list = new List<Widget>();
-    for (int i = 0; i < assenze.length; i++) {
-      final String tipologia = assenze[i].tipologia;
-      final String orario = assenze[i].orario;
-      final String data = assenze[i].data;
-      final String motivazione = assenze[i].motivazione;
+    for (int i = 0; i < argomenti.length; i++){
       list.add(
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
@@ -78,14 +64,12 @@ class AssenzeView extends StatelessWidget {
 
                     children: <Widget>[
                       Text(
-                          tipologia == "Assenza"
-                              ? "Assenza del $data"
-                              : "$tipologia alle ore $orario del $data",
+                          argomenti[i].materia,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)
                       ),
                       Text(
-                          "Motivazione: $motivazione",
+                          argomenti[i].descrizione,
                           style: TextStyle(fontSize: 16,)
                       )
                     ],
@@ -97,4 +81,28 @@ class AssenzeView extends StatelessWidget {
     }
     return list;
   }
+
+  List<Widget> generaGiornate(BuildContext context) {
+    initializeDateFormatting('it');
+    List<Widget> list = new List<Widget>();
+    for (int i = 0; i < regclasse.length; i++) {
+      LineSplitter l = new LineSplitter();
+      DateFormat format = new DateFormat("DD/MM/yyyy");
+      var parsedDate = format.parse(l.convert(regclasse[i].data)[0]);
+      String formattedDate = DateFormat('DD MMMM', 'it').format(parsedDate);
+      list.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              formattedDate,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          )
+      );
+      list += generaArgomenti(regclasse[i].argomenti, context);
+    }
+    return list;
+  }
+
+
 }

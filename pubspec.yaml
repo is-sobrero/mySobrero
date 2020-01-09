@@ -21,6 +21,7 @@ dependencies:
   flutter_custom_tabs: ^0.6.0
   cuberto_bottom_bar: ^1.1.0
   fl_chart: ^0.6.3
+  intl: ^0.16.1
 
   expandable: ^4.0.2
   flutter:
