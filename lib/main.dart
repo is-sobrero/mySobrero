@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'ColorLoader5.dart';
 import 'home.dart';
 import 'dart:convert';
@@ -11,6 +12,7 @@ import 'SobreroFeed.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:local_auth/local_auth.dart';
 
 void main(){
   runApp(MyApp());
@@ -70,7 +72,30 @@ class _AppLoginState extends State<AppLogin> {
 
   Future<bool> credSalvate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.getBool('savedCredentials') ?? false;
+    var localAuth = LocalAuthentication();
+    bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+    bool salvate = prefs.getBool('savedCredentials') ?? false;
+    String nomecognome = prefs.getString('user') ?? "[pref key non salvata]";
+    if (canCheckBiometrics) {
+      bool didAuthenticate = await localAuth.authenticateWithBiometrics(
+          localizedReason: 'Autenticati per accedere a mySobrero come $nomecognome',
+          stickyAuth: false,
+          androidAuthStrings: AndroidAuthMessages(
+            cancelButton: "Annulla",
+            fingerprintHint: "",
+            fingerprintNotRecognized: "Impronta non riconosciuta",
+            fingerprintRequiredTitle: "Impronta richeista",
+            fingerprintSuccess: "Autenticazione riuscita",
+            signInTitle: "Accedi a mySobrero",
+          ),
+      );
+      if (didAuthenticate) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return salvate;
   }
   Future<void> loginSalvato() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -96,6 +121,7 @@ class _AppLoginState extends State<AppLogin> {
       prefs.setBool('savedCredentials', true);
       prefs.setString('username', username);
       prefs.setString('password', password);
+      prefs.setString('user', response.user.nome + " " + response.user.cognome);
       String systemPlatform = (Platform.isWindows ? "win32" : "") +
                               (Platform.isAndroid ? "android" : "") +
                               (Platform.isFuchsia ? "fuchsia" : "") +
