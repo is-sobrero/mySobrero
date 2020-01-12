@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
@@ -6,8 +8,13 @@ import 'home.dart';
 import 'dart:convert';
 import 'reapi.dart';
 import 'SobreroFeed.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
-void main() => runApp(MyApp());
+void main(){
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -48,7 +55,8 @@ class AppLogin extends StatefulWidget {
 }
 
 class _AppLoginState extends State<AppLogin> {
-
+  bool loginCalled = false;
+  bool initialCall = true;
   final userController = TextEditingController();
   final pwrdController = TextEditingController();
 
@@ -58,11 +66,20 @@ class _AppLoginState extends State<AppLogin> {
     colors: <Color>[Color(0xFF0287d1), Color(0xFF0335ff)],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 30.0));
 
-  var isLoginVisible = true;
+  var isLoginVisible = false;
 
-  Future<http.Response> requestMethod() async {
-    var username = userController.text;
-    var password = pwrdController.text;
+  Future<bool> credSalvate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getBool('savedCredentials') ?? false;
+  }
+  Future<void> loginSalvato() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final username = await prefs.getString('username') ?? "NO";
+    final password = await prefs.getString('password') ?? "NO";
+    requestMethod(username, password);
+  }
+  Future<http.Response> requestMethod(String username, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = "https://reapistaging.altervista.org/api.php?uname=$username&password=$password";
     var feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
     Map<String,String> headers = {
@@ -76,6 +93,32 @@ class _AppLoginState extends State<AppLogin> {
       final feedHTTP = await http.get(feedUrl, headers: headers);
       Map feedMap = jsonDecode(feedHTTP.body);
       var feed = SobreroFeed.fromJson(feedMap);
+      prefs.setBool('savedCredentials', true);
+      prefs.setString('username', username);
+      prefs.setString('password', password);
+      String systemPlatform = (Platform.isWindows ? "win32" : "") +
+                              (Platform.isAndroid ? "android" : "") +
+                              (Platform.isFuchsia ? "fuchsia" : "") +
+                              (Platform.isIOS ? "iOS" : "") +
+                              (Platform.isLinux ? "linux" : "") +
+                              (Platform.isMacOS ? "macos" : "");
+
+      FirebaseAnalytics analytics = FirebaseAnalytics();
+      analytics.setUserProperty(name: "anno", value: response.user.classe);
+      analytics.setUserProperty(name: "classe", value: response.user.classe + " " + response.user.sezione);
+      analytics.setUserProperty(name: "corso", value: response.user.corso);
+      analytics.setUserProperty(name: "indirizzo", value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
+      analytics.setUserProperty(name: "platform", value: systemPlatform);
+
+
+      Firestore.instance.collection('utenti').document(username)
+          .setData({
+            'classe': response.user.classe + " " + response.user.sezione,
+            'cognome': response.user.cognome,
+            'nome': response.user.nome,
+            'ultimo accesso' : DateTime.now().toIso8601String(),
+            'platform': systemPlatform
+          });
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen(response, feed)),
@@ -108,8 +151,6 @@ class _AppLoginState extends State<AppLogin> {
     return responseHTTP;
   }
 
-
-
   void buttonLogin(){
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
@@ -117,13 +158,34 @@ class _AppLoginState extends State<AppLogin> {
     }
     setState(() {
       isLoginVisible = false;
+      loginCalled = true;
     });
 
-    requestMethod();
+    requestMethod(userController.text, pwrdController.text);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (initialCall){
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        credSalvate().then((res){
+          setState(() {
+            initialCall = false;
+            if (res && !loginCalled){
+              loginSalvato();
+              loginCalled = true;
+              setState(() {
+                isLoginVisible = false;
+                loginCalled = true;
+              });
+            } else {
+              isLoginVisible = true;
+            }
+          });
+        });
+      });
+    }
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -190,7 +252,7 @@ class _AppLoginState extends State<AppLogin> {
                 ],
               ) : new Container(),
 
-              !isLoginVisible ? Padding(
+              (!isLoginVisible && loginCalled) ? Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ColorLoader5(
                   dotOneColor: Color(0xFF0287d1),

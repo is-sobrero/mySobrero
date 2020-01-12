@@ -6,6 +6,9 @@ import 'voti.dart';
 import 'comunicazioni.dart';
 import 'altro.dart';
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 class HomeScreen extends StatefulWidget {
   reAPI response;
@@ -18,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    _firebaseMessaging.requestNotificationPermissions();
     return _HomeState(response, feed);
   }
 }
