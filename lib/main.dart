@@ -13,8 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:flutter/services.dart';
-
 
 void main(){
   runApp(MyApp());
@@ -231,62 +229,59 @@ class _AppLoginState extends State<AppLogin> {
                 height: 70,
                 child: Image.asset('assets/images/logo_sobrero_grad.png'),
               ),
-              AnimatedContainer(
-                duration: Duration(milliseconds: 150),
-                height: isLoginVisible ? 252 : 0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                          'Accedi a mySobrero',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                            foreground: Paint()..shader = sobreroGradient,
-                          ),
-                        ),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'ID Studente'
-                          ),
-                          controller: userController,
+              isLoginVisible ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                        'Accedi a mySobrero',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          foreground: Paint()..shader = sobreroGradient,
                         ),
                       ),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'ID Studente'
+                        ),
+                        controller: userController,
                       ),
-                      controller: pwrdController,
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Center(
-                        child: RaisedButton(
-                          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                          onPressed: buttonLogin,
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(7.0))),
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          child: const Text(
-                            'LOGIN',
-                          ),
+                  TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                    controller: pwrdController,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: RaisedButton(
+                        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                        onPressed: buttonLogin,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7.0))),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        child: const Text(
+                          'LOGIN',
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                ],
+              ) : new Container(),
+
               (!isLoginVisible && loginCalled) ? Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ColorLoader5(

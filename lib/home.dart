@@ -56,10 +56,6 @@ class _HomeState extends State<HomeScreen> {
     );
   }
 
-  void progChange() {
-    print("DIO");
-  }
-
   void onTabTapped(int index) {
     pageController.animateToPage(index,
         duration: Duration(milliseconds: 200), curve: Curves.ease);

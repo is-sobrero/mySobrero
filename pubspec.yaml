@@ -28,6 +28,9 @@ dependencies:
   firebase_analytics: ^5.0.9
   firebase_messaging: ^6.0.9
   local_auth: ^0.6.1
+  device_preview: ^0.2.6
+  auto_size_text: ^2.1.0
+
 
   expandable: ^4.0.2
   flutter:
