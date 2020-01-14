@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mySobrero/compiti.dart';
 import 'reapi.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'SobreroFeed.dart';
@@ -25,12 +26,10 @@ class _Mainview extends State<Mainview> {
   SobreroFeed feed;
   SwitchPageCallback callback;
 
-
   _Mainview(reAPI response, SobreroFeed feed, SwitchPageCallback callback) {
     this.response = response;
     this.feed = feed;
     this.callback = callback;
-
   }
 
   @override
@@ -44,6 +43,7 @@ class _Mainview extends State<Mainview> {
     final ultimaComunicazione =
         response.comunicazioni[0].contenuto.substring(0, 100) + "...";
     final ultimaComMittente = response.comunicazioni[0].mittente;
+    final accountStudente = true;
 
     return SingleChildScrollView(
         /*child: Padding(
@@ -57,6 +57,71 @@ class _Mainview extends State<Mainview> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              !accountStudente
+                  ? Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: Container(
+                                decoration: new BoxDecoration(
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                          color: Color(0xFFFF416C)
+                                              .withOpacity(0.4),
+                                          offset: const Offset(1.1, 1.1),
+                                          blurRadius: 10.0),
+                                    ],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(11)),
+                                    gradient: LinearGradient(
+                                      begin: FractionalOffset.topRight,
+                                      end: FractionalOffset.bottomRight,
+                                      colors: <Color>[
+                                        Color(0xFFFF416C),
+                                        Color(0xFFFF4B2B),
+                                      ],
+                                    )),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      children: <Widget>[
+                                        RichText(
+                                          text: TextSpan(
+                                            style: new TextStyle(
+                                                color: Colors.white),
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(
+                                                  Icons.warning,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    "  Hai eseguito l'accesso al mySobrero con le credenziali per genitori, questo può provocare errori inaspettati. Effettua il logout e riaccedi con le credenziali da studente.",
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 6),
+                                          child: Text(
+                                            "Se non hai a disposizione le credenziali a te riservate puoi andare a richiederle in Segreteria Amministrativa.",
+                                            style: new TextStyle(
+                                                color: Color(0xFFFFFFFF)),
+                                          ),
+                                        )
+                                      ],
+                                    ))),
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    )
+                  : Container(),
               Text(
                 'Ciao $nomeUtente!',
                 style: TextStyle(
@@ -85,8 +150,7 @@ class _Mainview extends State<Mainview> {
                             decoration: new BoxDecoration(
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
-                                      color: Color(0xFFfa709a)
-                                          .withOpacity(0.4),
+                                      color: Color(0xFFfa709a).withOpacity(0.4),
                                       offset: const Offset(1.1, 1.1),
                                       blurRadius: 10.0),
                                 ],
@@ -126,7 +190,73 @@ class _Mainview extends State<Mainview> {
                     flex: 1,
                   ),
                   Expanded(
-                    child: Padding(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return Compiti();
+                        }));
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          Hero(
+                            tag: "compiti_background",
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Container(
+                                  decoration: new BoxDecoration(
+                                      boxShadow: <BoxShadow>[
+                                        BoxShadow(
+                                            color: Color(0xFF43e97b)
+                                                .withOpacity(0.4),
+                                            offset: const Offset(1.1, 1.1),
+                                            blurRadius: 10.0),
+                                      ],
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(11)),
+                                      gradient: LinearGradient(
+                                        begin: FractionalOffset.topRight,
+                                        end: FractionalOffset.bottomRight,
+                                        colors: <Color>[
+                                          Color(0xFF38f9d7),
+                                          Color(0xFF43e97b)
+                                        ],
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      countCompiti,
+                                      style: new TextStyle(
+                                          fontSize: 70,
+                                          color: Color(0xFF000000)),
+                                    ),
+                                    Text(
+                                      "Compiti per i prossimi giorni",
+                                      style: new TextStyle(
+                                          color: Color(0xFF000000)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    /*Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: AspectRatio(
                         aspectRatio: 1,
@@ -170,7 +300,8 @@ class _Mainview extends State<Mainview> {
                           ),
                         ),
                       ),
-                    ),
+                    ),*/
+
                     flex: 1,
                   ),
                 ],
@@ -190,8 +321,7 @@ class _Mainview extends State<Mainview> {
                             decoration: new BoxDecoration(
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
-                                      color: Color(0xFFc471f5)
-                                          .withOpacity(0.4),
+                                      color: Color(0xFFc471f5).withOpacity(0.4),
                                       offset: const Offset(1.1, 1.1),
                                       blurRadius: 10.0),
                                 ],
@@ -237,7 +367,6 @@ class _Mainview extends State<Mainview> {
                   ),
                 ],
               ),
-
             ],
           ),
         ),

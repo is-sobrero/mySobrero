@@ -42,37 +42,40 @@ class _AltroView extends State<AltroView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AssenzeView(response.assenze)),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return AssenzeView(response.assenze);
+                      }));
+
                     },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 0,
-                      margin: EdgeInsets.only(bottom: 10),
-                      clipBehavior: Clip.antiAlias,
-                      color: Color(0xffff9692),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Text(
-                                "Assenze",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black
-                              )
+                    child: Hero(
+                      tag: "assenze_background",
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        elevation: 0,
+                        margin: EdgeInsets.only(bottom: 10),
+                        clipBehavior: Clip.antiAlias,
+                        color: Color(0xffff9692),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Text(
+                                  "Assenze",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black
+                                )
+                              ),
                             ),
-                          ),
-                          Spacer(),
-                          Image.asset("assets/images/assenze.png", height: 150,)
-                        ],
-                      )
+                            Spacer(),
+                            Image.asset("assets/images/assenze.png", height: 150,)
+                          ],
+                        )
+                      ),
                     ),
                   ),
                   GestureDetector(

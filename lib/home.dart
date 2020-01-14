@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'reapi.dart';
+import 'dart:ui';
 import 'SobreroFeed.dart';
 import 'mainview.dart';
 import 'voti.dart';
@@ -73,7 +74,7 @@ class _HomeState extends State<HomeScreen> {
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              new SliverAppBar(
+              /*new SliverPersistentHeader(
                 backgroundColor: Colors.transparent,
                 title: Row(
                   children: <Widget>[
@@ -108,8 +109,17 @@ class _HomeState extends State<HomeScreen> {
                   ],
                 ),
                 floating: true,
+                pinned: true,
+                elevation: 0,
                 forceElevated: innerBoxIsScrolled,
-              ),
+              ),*/
+              SliverPersistentHeader(
+                floating: true,
+                pinned: true,
+                  delegate: _TranslucentSliverAppBarDelegate(
+                    MediaQuery.of(context).padding,
+                  )
+              )
             ];
           },
           body: PageView(
@@ -178,5 +188,89 @@ class _HomeState extends State<HomeScreen> {
             });
           },
         ),);
+  }
+}
+
+class _TranslucentSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+
+  /// This is required to calculate the height of the bar
+  final EdgeInsets safeAreaPadding;
+
+  _TranslucentSliverAppBarDelegate(this.safeAreaPadding);
+
+  @override
+  double get minExtent => safeAreaPadding.top;
+
+  @override
+  double get maxExtent => minExtent + kToolbarHeight;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ClipRect(child: /*BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),*/
+         Opacity(
+            opacity: 0.85,
+            child: Container(
+              // Don't wrap this in any SafeArea widgets, use padding instead
+                padding: EdgeInsets.only(top: safeAreaPadding.top),
+                height: maxExtent,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                // Use Stack and Positioned to create the toolbar slide up effect when scrolled up
+                child: Stack(
+                  overflow: Overflow.clip,
+                  children: <Widget>[
+                    Positioned(
+                      bottom: 0, left: 0, right: 0,
+                      child: AppBar(
+                        brightness: Brightness.light,
+                        primary: false,
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        title: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Image.asset('assets/images/logo_sobrero_grad.png',
+                                  scale: 1.1),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                "mySobrero",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF0360e7)),
+                              ),
+                            ),
+                            Spacer(), // use Spacer
+                            Transform.scale(
+                              scale: 0.8,
+                              child: IconButton(
+                                icon: new Image.asset(
+                                  'assets/images/ic_settings_grad.png',
+                                ),
+                                tooltip: 'Apri le impostazioni dell\'App',
+                                iconSize: 14,
+                                onPressed: () {},
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ),
+                    )
+                  ],
+                )
+            )
+        //)
+    ));
+  }
+
+  @override
+  bool shouldRebuild(_TranslucentSliverAppBarDelegate old) {
+    return maxExtent != old.maxExtent || minExtent != old.minExtent ||
+        safeAreaPadding != old.safeAreaPadding;
   }
 }
