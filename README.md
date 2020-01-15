@@ -1,5 +1,5 @@
 # mySobrero
-[![Codemagic build status](https://api.codemagic.io/apps/5e17a591106f9d174bedb1d1/5e17a591106f9d174bedb1d0/status_badge.svg)](https://codemagic.io/apps/5e17a591106f9d174bedb1d1/5e17a591106f9d174bedb1d0/latest_build)<br>
+[![Build Status](https://travis-ci.org/federunco/mySobrero.svg?branch=flutter)](https://travis-ci.org/federunco/mySobrero)<br>
 Repo principale del mySobrero 2.0
 
 ## Dettagli tecnici
