@@ -236,6 +236,7 @@ class _TranslucentSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                               child: Text(
                                 "mySobrero",
                                 style: TextStyle(
+
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF0360e7)),

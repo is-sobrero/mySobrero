@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           primaryColor: Color(0xFF0360e7),
           accentColor: Color(0xFF0360e7),
-          scaffoldBackgroundColor: Color(0xFF212121)
+          scaffoldBackgroundColor: Color(0xFF212121),
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -79,7 +79,7 @@ class _AppLoginState extends State<AppLogin> {
     bool canCheckBiometrics = await localAuth.canCheckBiometrics;
     bool salvate = prefs.getBool('savedCredentials') ?? false;
     String nomecognome = prefs.getString('user') ?? "[pref key non salvata]";
-    if (canCheckBiometrics) {
+    if (canCheckBiometrics && salvate) {
       bool didAuthenticate = await localAuth.authenticateWithBiometrics(
           localizedReason: 'Autenticati per accedere a mySobrero come $nomecognome',
           stickyAuth: false,
