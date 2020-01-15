@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'fade_slide_transition.dart';
 import 'reapi.dart';
 
@@ -30,6 +31,7 @@ class _AssenzeState extends State<AssenzeView>
   @override
   void initState() {
     super.initState();
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -50,16 +52,20 @@ class _AssenzeState extends State<AssenzeView>
         });
       });
   }
+  Brightness currentBrightness;
+
 
   @override
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
+    if (currentBrightness == Brightness.dark)  FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    currentBrightness = Theme.of(context).brightness;
     return Scaffold(
       body: Stack(
         children: <Widget>[

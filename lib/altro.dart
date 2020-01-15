@@ -85,32 +85,35 @@ class _AltroView extends State<AltroView> {
                         MaterialPageRoute(builder: (context) => ArgomentiView(response.regclasse)),
                       );
                     },
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        elevation: 0,
-                        margin: EdgeInsets.only(bottom: 10),
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.white,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Text(
-                                  "Argomenti",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black
-                                  )
+                    child: Hero(
+                      tag: "argomenti_background",
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          elevation: 0,
+                          margin: EdgeInsets.only(bottom: 10),
+                          clipBehavior: Clip.antiAlias,
+                          color: Color(0xFF5352ed),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Text(
+                                    "Argomenti",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black
+                                    )
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Image.asset("assets/images/argomenti.png", height: 150,)
-                          ],
-                        )
+                              Spacer(),
+                              Image.asset("assets/images/argomenti.png", height: 150,)
+                            ],
+                          )
+                      ),
                     ),
                   )
                 ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mySobrero/compiti.dart';
 import 'reapi.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'SobreroFeed.dart';
 
 typedef SwitchPageCallback = void Function(int page);
@@ -33,6 +34,35 @@ class _Mainview extends State<Mainview> {
     this.callback = callback;
   }
 
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      print(token);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final nomeUtente = response.user.nome;
@@ -44,12 +74,9 @@ class _Mainview extends State<Mainview> {
     final ultimaComunicazione =
         response.comunicazioni[0].contenuto.substring(0, 100) + "...";
     final ultimaComMittente = response.comunicazioni[0].mittente;
-    final accountStudente = true;
+    final accountStudente = response.user.livello == "1";
     bool isWide = MediaQuery.of(context).size.width > 500;
     return SingleChildScrollView(
-        /*child: Padding(
-          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-          child: */
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -157,12 +184,13 @@ class _Mainview extends State<Mainview> {
                                     decoration: new BoxDecoration(
                                         boxShadow: <BoxShadow>[
                                           BoxShadow(
-                                              color: Color(0xFFfa709a).withOpacity(0.4),
+                                              color: Color(0xFFfa709a)
+                                                  .withOpacity(0.4),
                                               offset: const Offset(1.1, 1.1),
                                               blurRadius: 10.0),
                                         ],
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(11)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(11)),
                                         gradient: LinearGradient(
                                           begin: FractionalOffset.topRight,
                                           end: FractionalOffset.bottomRight,
@@ -174,18 +202,21 @@ class _Mainview extends State<Mainview> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             ultimoVoto,
                                             style: new TextStyle(
-                                                fontSize: 70, color: Color(0xFFFFFFFF)),
+                                                fontSize: 70,
+                                                color: Color(0xFFFFFFFF)),
                                           ),
                                           Text(
                                             "Ultimo voto preso in $ultimaMateria",
-                                            style:
-                                            new TextStyle(color: Color(0xFFFFFFFF)),
+                                            style: new TextStyle(
+                                                color: Color(0xFFFFFFFF)),
                                           )
                                         ],
                                       ),
@@ -199,7 +230,8 @@ class _Mainview extends State<Mainview> {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (_) {
                                   return Compiti();
                                 }));
                               },
@@ -217,14 +249,17 @@ class _Mainview extends State<Mainview> {
                                                 BoxShadow(
                                                     color: Color(0xFF43e97b)
                                                         .withOpacity(0.4),
-                                                    offset: const Offset(1.1, 1.1),
+                                                    offset:
+                                                        const Offset(1.1, 1.1),
                                                     blurRadius: 10.0),
                                               ],
-                                              borderRadius:
-                                              BorderRadius.all(Radius.circular(11)),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(11)),
                                               gradient: LinearGradient(
-                                                begin: FractionalOffset.topRight,
-                                                end: FractionalOffset.bottomRight,
+                                                begin:
+                                                    FractionalOffset.topRight,
+                                                end: FractionalOffset
+                                                    .bottomRight,
                                                 colors: <Color>[
                                                   Color(0xFF38f9d7),
                                                   Color(0xFF43e97b)
@@ -241,8 +276,10 @@ class _Mainview extends State<Mainview> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(12.0),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               countCompiti,
@@ -325,21 +362,24 @@ class _Mainview extends State<Mainview> {
                               callback(2);
                             },
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
                               child: Padding(
-                                padding: EdgeInsets.only(left: isWide ? 10.0 : 0),
+                                padding:
+                                    EdgeInsets.only(left: isWide ? 10.0 : 0),
                                 child: AspectRatio(
                                   aspectRatio: 2,
                                   child: Container(
                                     decoration: new BoxDecoration(
                                         boxShadow: <BoxShadow>[
                                           BoxShadow(
-                                              color: Color(0xFFc471f5).withOpacity(0.4),
+                                              color: Color(0xFFc471f5)
+                                                  .withOpacity(0.4),
                                               offset: const Offset(1.1, 1.1),
                                               blurRadius: 10.0),
                                         ],
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(11)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(11)),
                                         gradient: LinearGradient(
                                           begin: FractionalOffset.topRight,
                                           end: FractionalOffset.bottomRight,
@@ -351,8 +391,10 @@ class _Mainview extends State<Mainview> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           AutoSizeText(
                                             ultimaComunicazione,
@@ -365,7 +407,8 @@ class _Mainview extends State<Mainview> {
                                                 color: Color(0xFFFFFFFF)),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(top: 12.0),
+                                            padding: const EdgeInsets.only(
+                                                top: 12.0),
                                             child: AutoSizeText(
                                               "Ultima comunicazione da $ultimaComMittente",
                                               style: new TextStyle(
@@ -387,7 +430,6 @@ class _Mainview extends State<Mainview> {
                   ),
                 ],
               )
-
             ],
           ),
         ),

@@ -27,7 +27,9 @@ dependencies:
   cloud_firestore: ^0.13.0+1
   firebase_analytics: ^5.0.9
   firebase_messaging: ^6.0.9
+  firebase_crashlytics: ^0.1.2+4
   local_auth: ^0.6.1
+  flutter_statusbarcolor: ^0.2.3
   device_preview: ^0.2.6
   auto_size_text: ^2.1.0
 

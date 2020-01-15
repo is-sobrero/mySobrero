@@ -13,8 +13,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main(){
+  Crashlytics.instance.enableInDevMode = true;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(MyApp());
 }
 
@@ -22,11 +25,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if (Theme.of(context).brightness == Brightness.light){
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-          statusBarIconBrightness: Brightness.dark
-      ));
-    }
+
     return MaterialApp(
       title: 'mySobrero',
       theme: ThemeData(
@@ -43,7 +42,6 @@ class MyApp extends StatelessWidget {
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light, // status bar icons' color
         ),
         child: Scaffold(
           body: AppLogin(title: 'mySobrero'),

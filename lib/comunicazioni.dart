@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'reapi.dart';
-import 'package:expandable/expandable.dart';
 
 class ComunicazioniView extends StatefulWidget {
   List<Comunicazioni> comunicazioni;

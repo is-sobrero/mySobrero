@@ -202,6 +202,7 @@ class _TranslucentSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    print("reprint");
     return ClipRect(child: /*BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),*/
          Opacity(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+
 
 class Compiti extends StatefulWidget {
   @override
@@ -15,9 +17,12 @@ class _CompitiState extends State<Compiti> with SingleTickerProviderStateMixin {
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
+  Brightness currentBrightness;
+
   @override
   void initState() {
     super.initState();
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -42,11 +47,13 @@ class _CompitiState extends State<Compiti> with SingleTickerProviderStateMixin {
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
+    if (currentBrightness == Brightness.dark)  FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    currentBrightness = Theme.of(context).brightness;
     return Scaffold(
       body: Stack(
         children: <Widget>[

@@ -183,6 +183,7 @@ class User {
   String sezione;
   String corso;
   String periodo;
+  String livello;
 
   User(
       {this.matricola,
@@ -191,7 +192,9 @@ class User {
         this.classe,
         this.sezione,
         this.corso,
-        this.periodo});
+        this.periodo,
+        this.livello
+      });
 
   User.fromJson(Map<String, dynamic> json) {
     matricola = json['matricola'];
@@ -201,6 +204,7 @@ class User {
     sezione = json['sezione'];
     corso = json['corso'];
     periodo = json['periodo'];
+    livello = json['livello'];
   }
 
   Map<String, dynamic> toJson() {
@@ -212,6 +216,7 @@ class User {
     data['sezione'] = this.sezione;
     data['corso'] = this.corso;
     data['periodo'] = this.periodo;
+    data['livello'] = this.livello;
     return data;
   }
 }
