@@ -89,7 +89,7 @@ class _Mainview extends State<Mainview> {
     final ultimaComunicazione =
         response.comunicazioni[0].contenuto.substring(0, 100) + "...";
     final ultimaComMittente = response.comunicazioni[0].mittente;
-    final accountStudente = response.user.livello == "1";
+    final accountStudente = response.user.livello == "4";
     bool isWide = MediaQuery.of(context).size.width > 500;
     return SingleChildScrollView(
         child: Column(

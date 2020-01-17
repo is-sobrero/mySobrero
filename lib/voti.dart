@@ -19,6 +19,8 @@ class VotiView extends StatefulWidget {
 class _VotiView extends State<VotiView> {
   List<Voti> voti;
   List<double> votiTotali;
+  List<String> materie;
+
   _VotiView(List<Voti> voti) {
     this.voti = voti;
     votiTotali = new List();
@@ -26,18 +28,24 @@ class _VotiView extends State<VotiView> {
       double votoParsed = double.parse(voti[i].voto.replaceAll(",", "."));
       votiTotali.add(votoParsed);
     }
+    materie = new List();
+    materie.add("Tutte le materie");
+    for (int i = 0; i < voti.length; i++) {
+      String m = voti[i].materia;
+      if (!materie.contains(m)) materie.add(m);
+    }
   }
 
-  List<Widget> generaVoti() {
+  List<Widget> generaVoti(List<Voti> valutazioni) {
     double media = 0;
     List<Widget> list = new List<Widget>();
-    for (var i = 0; i < voti.length; i++) {
+    for (var i = 0; i < valutazioni.length; i++) {
       LinearGradient sfondoVoto = LinearGradient(
         begin: FractionalOffset.topRight,
         end: FractionalOffset.bottomRight,
         colors: <Color>[Color(0xFF38f9d7), Color(0xFF43e97b)],
       );
-      double votoParsed = double.parse(voti[i].voto.replaceAll(",", "."));
+      double votoParsed = double.parse(valutazioni[i].voto.replaceAll(",", "."));
       media += votoParsed;
       if (votoParsed >= 6 && votoParsed < 7) {
         sfondoVoto = LinearGradient(
@@ -46,10 +54,11 @@ class _VotiView extends State<VotiView> {
           colors: <Color>[Color(0xFFF9D423), Color(0xFFFF4E50)],
         );
       }
-      final tipologia = voti[i].tipologia;
-      final docente = voti[i].docente;
-      final data = voti[i].data;
-      var commento = voti[i].commento;
+      final tipologia = valutazioni[i].tipologia;
+      final peso = valutazioni[i].peso;
+      final docente = valutazioni[i].docente;
+      final data = valutazioni[i].data;
+      var commento = valutazioni[i].commento;
       if (commento.length == 0) commento = "Nessun commento al voto";
 
       list.add(ExpandableNotifier(
@@ -78,14 +87,14 @@ class _VotiView extends State<VotiView> {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 15),
-                            child: Text(voti[i].voto,
+                            child: Text(valutazioni[i].voto,
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),
                           ),
                           Expanded(
-                              child: Text(voti[i].materia,
+                              child: Text(valutazioni[i].materia,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -121,14 +130,14 @@ class _VotiView extends State<VotiView> {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.only(right: 15),
-                                    child: Text(voti[i].voto,
+                                    child: Text(valutazioni[i].voto,
                                         style: TextStyle(
                                             fontSize: 30,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black)),
                                   ),
                                   Expanded(
-                                      child: Text(voti[i].materia,
+                                      child: Text(valutazioni[i].materia,
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
@@ -140,6 +149,8 @@ class _VotiView extends State<VotiView> {
                               Text("Tipologia: $tipologia",
                                   style: TextStyle(color: Colors.black)),
                               Text("Docente: $docente",
+                                  style: TextStyle(color: Colors.black)),
+                              Text("Peso: $peso",
                                   style: TextStyle(color: Colors.black)),
                               Text("Commento al voto: $commento",
                                   style: TextStyle(color: Colors.black)),
@@ -154,7 +165,7 @@ class _VotiView extends State<VotiView> {
         ),
       ));
     }
-    media /= voti.length;
+    media /= valutazioni.length;
     list.insert(
         0,
         Padding(
@@ -173,6 +184,8 @@ class _VotiView extends State<VotiView> {
         });
   }
 
+  int filterIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     List<FlSpot> votiT = new List();
@@ -184,6 +197,14 @@ class _VotiView extends State<VotiView> {
       const Color(0xff23b6e6),
       const Color(0xff02d39a),
     ];
+
+    List<Voti> currentVoti;
+    if (filterIndex == 0) currentVoti = voti;
+    else {
+      String materia = materie[filterIndex];
+      currentVoti = List();
+      for (int i = 0; i < voti.length; i++) if (voti[i].materia == materia) currentVoti.add(voti[i]);
+    }
 
     return DirectSelectContainer(
       child: SingleChildScrollView(
@@ -224,12 +245,7 @@ class _VotiView extends State<VotiView> {
                             Expanded(
                                 child: Padding(
                                     child: DirectSelectList<String>(
-                                      values: [
-                                        "dio",
-                                        "porco",
-                                        "madonna",
-                                        "lurida"
-                                      ],
+                                      values: materie,
                                       defaultItemIndex: 0,
                                       itemBuilder: (String value) =>
                                           getDropDownMenuItem(value),
@@ -241,6 +257,11 @@ class _VotiView extends State<VotiView> {
                                               width: 1, color: Colors.black12),
                                         ),
                                       ),
+                                      onItemSelectedListener: (string, index, context){
+                                        setState(() {
+                                          filterIndex = index;
+                                        });
+                                      }
                                     ),
                                     padding: EdgeInsets.only(left: 12))),
                             Padding(
@@ -304,7 +325,7 @@ class _VotiView extends State<VotiView> {
                 ),
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: generaVoti())
+                    children: generaVoti(currentVoti))
               ],
             ),
           ),
