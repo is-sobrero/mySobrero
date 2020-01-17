@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'fade_slide_transition.dart';
-import 'reapi.dart';
+import 'reapi2.dart';
 
 class AssenzeView extends StatefulWidget {
   Assenze assenze;
@@ -158,20 +158,22 @@ class _AssenzeState extends State<AssenzeView>
                                 ),
                               ),
                               Column(
-                                children: generaAssenze(assenze.nongiustificate,
-                                    Colors.red, context),
+                                children: assenze.nongiustificate.length > 0 ? generaAssenze(assenze.nongiustificate,
+                                    Colors.red, context) : <Widget>[
+                                      Text("Nessuna assenza da giustificare, ottimo!", textAlign: TextAlign.center,)
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
                                 child: Text(
-                                  "Giustificate",
+                                  assenze.giustificate.length > 25 ? "Ultime 25 giustificate" : "Giustificate",
                                   style: TextStyle(
                                       fontSize: 24,
                                       color: Colors.black),
                                 ),
                               ),
                               Column(
-                                children: generaAssenze(assenze.giustificate,
+                                children: generaAssenze(assenze.giustificate.length > 25 ? assenze.giustificate.sublist(0, 24) : assenze.giustificate,
                                     Colors.black.withAlpha(100), context),
                               ),
                             ],
@@ -190,7 +192,7 @@ class _AssenzeState extends State<AssenzeView>
   }
 
   List<Widget> generaAssenze(
-      List<Nongiustificate> assenze, Color borderColor, BuildContext context) {
+      List<Assenza> assenze, Color borderColor, BuildContext context) {
     List<Widget> list = new List<Widget>();
     for (int i = 0; i < assenze.length; i++) {
       final String tipologia = assenze[i].tipologia;

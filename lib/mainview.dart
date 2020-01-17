@@ -1,37 +1,52 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/compiti.dart';
-import 'reapi.dart';
+import 'reapi2.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'SobreroFeed.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 typedef SwitchPageCallback = void Function(int page);
 
 class Mainview extends StatefulWidget {
-  reAPI response;
+  reAPI2 response;
   SobreroFeed feed;
   SwitchPageCallback callback;
+  List<Compiti> compitiSettimana;
 
-  Mainview(reAPI response, SobreroFeed feed, SwitchPageCallback callback) {
+  Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback) {
     this.response = response;
     this.feed = feed;
     this.callback = callback;
+    this.compitiSettimana = List<Compiti>();
+    DateTime today = DateTime.now();
+    bool okLista = false;
+    var inizioSettimana = today.subtract(new Duration(days: today.weekday - 1));
+    var formatter = new DateFormat('DD/MM/yyyy');
+    for (int i = 0; i < response.compiti.length; i++) {
+      DateTime dataCompito = formatter.parse(response.compiti[i].data);
+      if (dataCompito.compareTo(inizioSettimana) >= 0) okLista = true;
+      if (okLista) this.compitiSettimana.add(response.compiti[i]);
+    }
   }
 
   @override
-  _Mainview createState() => _Mainview(response, feed, callback);
+  _Mainview createState() => _Mainview(response, feed, callback, compitiSettimana);
 }
 
 class _Mainview extends State<Mainview> {
-  reAPI response;
+  reAPI2 response;
   SobreroFeed feed;
   SwitchPageCallback callback;
+  List<Compiti> compitiSettimana;
 
-  _Mainview(reAPI response, SobreroFeed feed, SwitchPageCallback callback) {
+  _Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback, List<Compiti> compitiSettimana) {
     this.response = response;
     this.feed = feed;
     this.callback = callback;
+    this.compitiSettimana = compitiSettimana;
   }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -69,7 +84,7 @@ class _Mainview extends State<Mainview> {
     final ultimoVoto = response.voti[0].voto;
     final ultimaMateria = response.voti[0].materia;
     final countCompiti = response.compiti.length.toString();
-    final classeUtente = response.user.classe + " " + response.user.sezione;
+    final classeUtente = response.user.classe.toString() + " " + response.user.sezione;
     final indirizzoUtente = response.user.corso;
     final ultimaComunicazione =
         response.comunicazioni[0].contenuto.substring(0, 100) + "...";
@@ -214,7 +229,7 @@ class _Mainview extends State<Mainview> {
                                                 color: Color(0xFFFFFFFF)),
                                           ),
                                           Text(
-                                            "Ultimo voto preso in $ultimaMateria",
+                                            "Ultimo voto preso di $ultimaMateria",
                                             style: new TextStyle(
                                                 color: Color(0xFFFFFFFF)),
                                           )
@@ -232,7 +247,7 @@ class _Mainview extends State<Mainview> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
-                                  return Compiti();
+                                  return CompitiView();
                                 }));
                               },
                               child: Stack(
@@ -282,7 +297,7 @@ class _Mainview extends State<Mainview> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              countCompiti,
+                                              compitiSettimana.length.toString(),
                                               style: new TextStyle(
                                                   fontSize: 70,
                                                   color: Color(0xFF000000)),
@@ -473,11 +488,18 @@ class _Mainview extends State<Mainview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Expanded(
-                                  child: Image.network(
+                                  child: /*Image.network(
                                     item.thumbnail,
                                     width: 300.0,
                                     fit: BoxFit.cover,
-                                  ),
+
+                                  ),*/
+                                  CachedNetworkImage(
+                                    imageUrl: item.thumbnail,
+                                    placeholder: (context, url) => CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    fit: BoxFit.cover,
+                                  )
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(15),

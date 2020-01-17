@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'reapi.dart';
+import 'package:intl/intl.dart';
+import 'reapi2.dart';
 
 class ComunicazioniView extends StatefulWidget {
   List<Comunicazioni> comunicazioni;
@@ -35,9 +36,20 @@ class _ComunicazioniView extends State<ComunicazioniView> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
 
                     children: <Widget>[
-                      Text(
-                          comunicazioni[i].mittente,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)
+                      Row(
+                          children: <Widget>[
+                            Text(
+                                toBeginningOfSentenceCase(comunicazioni[i].titolo),
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Chip(
+                                label: Text(comunicazioni[i].mittente, style: TextStyle(color: Colors.white)),
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ]
                       ),
                       Text(
                           comunicazioni[i].contenuto,

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
-
-class Compiti extends StatefulWidget {
+class CompitiView extends StatefulWidget {
   @override
   _CompitiState createState() => _CompitiState();
 }
 
-class _CompitiState extends State<Compiti> with SingleTickerProviderStateMixin {
+class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMixin {
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
 
@@ -89,6 +88,7 @@ class _CompitiState extends State<Compiti> with SingleTickerProviderStateMixin {
                   ),
                 ),
               ),
+
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

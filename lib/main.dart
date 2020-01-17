@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
+import 'package:mySobrero/reapi2.dart';
 import 'ColorLoader5.dart';
 import 'home.dart';
 import 'dart:convert';
-import 'reapi.dart';
 import 'SobreroFeed.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -108,14 +108,15 @@ class _AppLoginState extends State<AppLogin> {
   }
   Future<http.Response> requestMethod(String username, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = "https://reapistaging.altervista.org/api.php?uname=$username&password=$password";
+    //var url = "https://reapistaging.altervista.org/api.php?uname=$username&password=$password";
+    var url = "https://reapistaging.altervista.org/reapi2.php";
     var feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
     Map<String,String> headers = {
       'Accept': 'application/json',
     };
-    final responseHTTP = await http.get(url, headers: headers);
+    final responseHTTP = await http.post(url, headers: headers, body: {'stud_id':username,'password':password});
     Map responseMap = jsonDecode(responseHTTP.body);
-    var response = reAPI.fromJson(responseMap);
+    var response = reAPI2.fromJson(responseMap);
     if (response.status.code == 0){
       print(response.user.nome);
       final feedHTTP = await http.get(feedUrl, headers: headers);
@@ -133,19 +134,20 @@ class _AppLoginState extends State<AppLogin> {
                               (Platform.isMacOS ? "macos" : "");
 
       FirebaseAnalytics analytics = FirebaseAnalytics();
-      analytics.setUserProperty(name: "anno", value: response.user.classe);
-      analytics.setUserProperty(name: "classe", value: response.user.classe + " " + response.user.sezione);
+      analytics.setUserProperty(name: "anno", value: response.user.classe.toString());
+      analytics.setUserProperty(name: "classe", value: response.user.classe.toString() + " " + response.user.sezione);
       analytics.setUserProperty(name: "corso", value: response.user.corso);
       analytics.setUserProperty(name: "indirizzo", value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
       analytics.setUserProperty(name: "platform", value: systemPlatform);
 
       Firestore.instance.collection('utenti').document(username)
           .setData({
-            'classe': response.user.classe + " " + response.user.sezione,
+            'classe': response.user.classe.toString() + " " + response.user.sezione,
             'cognome': response.user.cognome,
             'nome': response.user.nome,
             'ultimo accesso' : DateTime.now().toIso8601String(),
-            'platform': systemPlatform
+            'platform': systemPlatform,
+            'build flavour' : 'production'
           });
       Navigator.pushReplacement(
           context,
@@ -156,25 +158,58 @@ class _AppLoginState extends State<AppLogin> {
         isLoginVisible = true;
       });
       showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text("Errore durante il login"),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(7.0))),
-            content: new Text(response.status.description),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new OutlineButton(
-                child: new Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(10)), //this right here
+              child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                          borderRadius: new BorderRadius.circular(8.0),
+                          child: Image.asset('assets/images/errore.png')
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Text("Errore durante il Login", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, ), textAlign: TextAlign.center,),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 16, bottom: 16),
+                                    child: Text(response.status.description, style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
+                                  ),
+                                  Text("Per fortuna abbiamo messo il pulsante riprova", style: TextStyle(fontSize: 13), textAlign: TextAlign.center,),
+                                ],
+                              ),
+                            ),
+                            OutlineButton(
+                              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(7.0))),
+                              color: Theme.of(context).primaryColor,
+                              child: const Text(
+                                'RIPROVA',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ],
               ),
-            ],
-          );
-        },
-      );
+            );
+          });
     }
     return responseHTTP;
   }
@@ -217,7 +252,7 @@ class _AppLoginState extends State<AppLogin> {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: 350,
+          width: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: isLoginVisible ? CrossAxisAlignment.start : CrossAxisAlignment.center,
@@ -272,7 +307,7 @@ class _AppLoginState extends State<AppLogin> {
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         child: const Text(
-                          'LOGIN',
+                          'ACCEDI',
                         ),
                       ),
                     ),

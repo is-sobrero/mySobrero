@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'reapi.dart';
+import 'reapi2.dart';
 import 'dart:ui';
 import 'SobreroFeed.dart';
 import 'mainview.dart';
@@ -12,10 +13,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 class HomeScreen extends StatefulWidget {
-  reAPI response;
+  reAPI2 response;
   SobreroFeed feed;
 
-  HomeScreen(reAPI response, SobreroFeed feed) {
+  HomeScreen(reAPI2 response, SobreroFeed feed) {
     this.response = response;
     this.feed = feed;
   }
@@ -30,10 +31,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeState extends State<HomeScreen> {
   int _currentIndex = 0;
   PageController pageController = PageController();
-  reAPI response;
+  reAPI2 response;
   SobreroFeed feed;
 
-  _HomeState(reAPI response, SobreroFeed feed) {
+  _HomeState(reAPI2 response, SobreroFeed feed) {
     this.response = response;
     this.feed = feed;
   }
@@ -70,8 +71,8 @@ class _HomeState extends State<HomeScreen> {
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              /*new SliverPersistentHeader(
-                backgroundColor: Colors.transparent,
+              new SliverAppBar(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: Row(
                   children: <Widget>[
                     SizedBox(
@@ -106,16 +107,8 @@ class _HomeState extends State<HomeScreen> {
                 ),
                 floating: true,
                 pinned: true,
-                elevation: 0,
-                forceElevated: innerBoxIsScrolled,
-              ),*/
-              SliverPersistentHeader(
-                floating: true,
-                pinned: true,
-                  delegate: _TranslucentSliverAppBarDelegate(
-                    MediaQuery.of(context).padding,
-                  )
-              )
+                elevation: 5,
+              ),
             ];
           },
           body: PageView(
@@ -136,20 +129,6 @@ class _HomeState extends State<HomeScreen> {
             ],
           ),
         ),
-        /*onTap: onTabTapped,
-          currentIndex: _currentIndex,
-      */
-        /*bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          items: [
-            barIcon("Home", Icons.home),
-            barIcon("Voti", Icons.trending_up),
-            barIcon("Argomenti", Icons.book),
-            barIcon("Comunicazioni", Icons.format_list_bulleted),
-            barIcon("Altro", Icons.more_horiz),
-          ],
-        ));*/
         bottomNavigationBar: CubertoBottomBar(
           inactiveIconColor: Theme.of(context).textTheme.body1.color,
           tabStyle: CubertoTabStyle.STYLE_FADED_BACKGROUND, // By default its CubertoTabStyle.STYLE_NORMAL

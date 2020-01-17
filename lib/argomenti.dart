@@ -1,32 +1,45 @@
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'reapi.dart';
+import 'reapi2.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 
 class ArgomentiView extends StatefulWidget {
-  List<Regclasse> regclasse;
-  ArgomentiView(List<Regclasse> regclasse) {
+  List<Argomenti> regclasse;
+  List<Argomenti> argSettimana;
+  ArgomentiView(List<Argomenti> regclasse) {
     this.regclasse = regclasse;
+    bool okLista = false;
+    this.argSettimana = List<Argomenti>();
+    DateTime today = DateTime.now();
+    var x = today.subtract(new Duration(days: today.weekday - 1));
+    var formatter = new DateFormat('DD/MM/yyyy');
+    String inizioSettimana = formatter.format(x);
+    for (int i = 0; i < regclasse.length; i++){
+      if (regclasse[i].data.split(" ")[0] == inizioSettimana) okLista = true;
+      if (okLista) this.argSettimana.add(regclasse[i]);
+    }
   }
 
   @override
-  _ArgomentiState createState() => _ArgomentiState(regclasse);
+  _ArgomentiState createState() => _ArgomentiState(regclasse, argSettimana);
 }
 
 class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStateMixin {
-  List<Regclasse> regclasse;
-
+  List<Argomenti> regclasse;
+  List<Argomenti> argSettimana;
   Brightness currentBrightness;
 
-  _ArgomentiState(List<Regclasse> regclasse) {
+  _ArgomentiState(List<Argomenti> regclasse, List<Argomenti> argSettimana) {
     this.regclasse = regclasse;
+    this.argSettimana = argSettimana;
   }
 
   final double _listAnimationIntervalStart = 0.65;
@@ -72,6 +85,7 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
+    List<Argomenti> currentSet = argSettimana;
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -151,9 +165,73 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
                           begin: _listAnimationIntervalStart - 0.15,
                           child: Padding(
                             padding: EdgeInsets.only(top: 20),
-                            child: Column(
+                            child: /*Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: generaGiornate(context)
+                              )*/
+                            /*ListView(
+                              primary: false,
+                              shrinkWrap: true,
+                              children: generaGiornate(context),
+                            ),*/
+                              ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                itemCount: currentSet.length,
+                                itemBuilder: (context, index) {
+                                  var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+                                  var tempString = currentSet[index].data.split(" ")[0].split("/");
+                                  String formattedDate = tempString[0] + " " + mesi[int.parse(tempString[1]) - 1];
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10.0),
+                                        child: Text(
+                                          formattedDate,
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                      ListView.builder(
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        itemCount: currentSet[index].argomenti.length,
+                                        itemBuilder: (context2, index2) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 15),
+                                            child: Container(
+                                                decoration: new BoxDecoration(
+                                                    color: Colors.white.withAlpha(20),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                    border: Border.all(width: 1.0, color: Color(0xFFCCCCCC))
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(15.0),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                                                    children: <Widget>[
+                                                      Text(
+                                                          currentSet[index].argomenti[index2].materia,
+                                                          style: TextStyle(
+                                                              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)
+                                                      ),
+                                                      Text(
+                                                          currentSet[index].argomenti[index2].descrizione.replaceAll("#CR#", "\n").trim(),
+                                                          style: TextStyle(fontSize: 16, color: Colors.white)
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  );
+                                },
                               )
 
                           ),
@@ -194,7 +272,7 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
                               fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)
                       ),
                       Text(
-                          argomenti[i].descrizione,
+                          argomenti[i].descrizione.replaceAll("#CR#", "\n").trim(),
                           style: TextStyle(fontSize: 16, color: Colors.white)
                       )
                     ],
@@ -212,9 +290,9 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
     List<Widget> list = new List<Widget>();
     for (int i = 0; i < regclasse.length; i++) {
       LineSplitter l = new LineSplitter();
-      DateFormat format = new DateFormat("DD/MM/yyyy");
-      var parsedDate = format.parse(l.convert(regclasse[i].data)[0]);
-      String formattedDate = DateFormat('DD MMMM', 'it').format(parsedDate);
+      var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+      var tempString = regclasse[i].data.split(" ")[0].split("/");
+      String formattedDate = tempString[0] + " " + mesi[int.parse(tempString[1]) - 1];
       list.add(
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
