@@ -52,14 +52,15 @@ class _AssenzeState extends State<AssenzeView>
         });
       });
   }
-  Brightness currentBrightness;
 
+  Brightness currentBrightness;
 
   @override
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    if (currentBrightness == Brightness.dark)  FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    if (currentBrightness == Brightness.dark)
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     super.dispose();
   }
 
@@ -91,7 +92,8 @@ class _AssenzeState extends State<AssenzeView>
                     title: AnimatedOpacity(
                       opacity: _appBarTitleOpacity,
                       duration: const Duration(milliseconds: 250),
-                      child: Text("Assenze", style: TextStyle(color: Colors.black)),
+                      child: Text("Assenze",
+                          style: TextStyle(color: Colors.black)),
                     ),
                     backgroundColor: Color(0xffff9692),
                     elevation: _appBarElevation,
@@ -153,28 +155,37 @@ class _AssenzeState extends State<AssenzeView>
                                 child: Text(
                                   "Non giustificate",
                                   style: TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.black),
+                                      fontSize: 24, color: Colors.black),
                                 ),
                               ),
                               Column(
-                                children: assenze.nongiustificate.length > 0 ? generaAssenze(assenze.nongiustificate,
-                                    Colors.red, context) : <Widget>[
-                                      Text("Nessuna assenza da giustificare, ottimo!", textAlign: TextAlign.center,)
-                                ],
+                                children: assenze.nongiustificate.length > 0
+                                    ? generaAssenze(assenze.nongiustificate,
+                                        Colors.red, context)
+                                    : <Widget>[
+                                        Text(
+                                          "Nessuna assenza da giustificare, ottimo!",
+                                          textAlign: TextAlign.center,
+                                        )
+                                      ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
                                 child: Text(
-                                  assenze.giustificate.length > 25 ? "Ultime 25 giustificate" : "Giustificate",
+                                  assenze.giustificate.length > 25
+                                      ? "Ultime 25 giustificate"
+                                      : "Giustificate",
                                   style: TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.black),
+                                      fontSize: 24, color: Colors.black),
                                 ),
                               ),
                               Column(
-                                children: generaAssenze(assenze.giustificate.length > 25 ? assenze.giustificate.sublist(0, 24) : assenze.giustificate,
-                                    Colors.black.withAlpha(100), context),
+                                children: generaAssenze(
+                                    assenze.giustificate.length > 25
+                                        ? assenze.giustificate.sublist(0, 24)
+                                        : assenze.giustificate,
+                                    Colors.black.withAlpha(100),
+                                    context),
                               ),
                             ],
                           ),

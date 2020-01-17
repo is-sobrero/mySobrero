@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'reapi2.dart';
 
 class CompitiView extends StatefulWidget {
+  List<Compiti> compiti;
+  List<Compiti> settimana;
+  CompitiView(List<Compiti> compiti, List<Compiti> settimana) {
+    this.compiti = compiti;
+    this.settimana = settimana;
+  }
+
   @override
-  _CompitiState createState() => _CompitiState();
+  _CompitiState createState() => _CompitiState(this.compiti, this.settimana);
 }
 
-class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMixin {
+class _CompitiState extends State<CompitiView>
+    with SingleTickerProviderStateMixin {
+  List<Compiti> compiti;
+  List<Compiti> settimana;
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
 
@@ -17,6 +28,10 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
   double _appBarTitleOpacity = 0.0;
 
   Brightness currentBrightness;
+  _CompitiState(List<Compiti> compiti, List<Compiti> settimana) {
+    this.compiti = compiti;
+    this.settimana = settimana;
+  }
 
   @override
   void initState() {
@@ -46,7 +61,8 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    if (currentBrightness == Brightness.dark)  FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    if (currentBrightness == Brightness.dark)
+      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     super.dispose();
   }
 
@@ -88,7 +104,6 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
                   ),
                 ),
               ),
-
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),
@@ -123,6 +138,53 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
                             ],
                           ),
                         ),
+                        FadeSlideTransition(
+                            controller: _fadeSlideAnimationController,
+                            slideAnimationTween: Tween<Offset>(
+                              begin: Offset(0.0, 0.05),
+                              end: Offset(0.0, 0.0),
+                            ),
+                            begin: _listAnimationIntervalStart - 0.15,
+                            child: Padding(
+                                padding: EdgeInsets.only(top: 20),
+                                child: ListView.builder(
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  itemCount: settimana.length,
+                                  itemBuilder: (context2, index2) {
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+                                      child: Container(
+                                          decoration: new BoxDecoration(
+                                              color: Colors.black.withAlpha(20),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                              border: Border.all(
+                                                  width: 1.0,
+                                                  color: Colors.black)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.stretch,
+                                              children: <Widget>[
+                                                Text(settimana[index2].materia,
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black)),
+                                                Text(settimana[index2].compito,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black))
+                                              ],
+                                            ),
+                                          )),
+                                    );
+                                  },
+                                )))
                       ],
                     ),
                   ),

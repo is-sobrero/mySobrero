@@ -34,6 +34,8 @@ dependencies:
   auto_size_text: ^2.1.0
   cached_network_image: ^2.0.0
   direct_select_flutter: ^1.0.5
+  direct_select: ^1.0.0
+
 
   expandable: ^4.0.2
   flutter:

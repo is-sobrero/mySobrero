@@ -10,18 +10,18 @@ class reAPI2 {
 
   reAPI2(
       {this.version,
-        this.status,
-        this.user,
-        this.argomenti,
-        this.comunicazioni,
-        this.voti,
-        this.compiti,
-        this.assenze});
+      this.status,
+      this.user,
+      this.argomenti,
+      this.comunicazioni,
+      this.voti,
+      this.compiti,
+      this.assenze});
 
   reAPI2.fromJson(Map<String, dynamic> json) {
     version = json['version'];
     status =
-    json['status'] != null ? new Status.fromJson(json['status']) : null;
+        json['status'] != null ? new Status.fromJson(json['status']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['argomenti'] != null) {
       argomenti = new List<Argomenti>();
@@ -48,7 +48,7 @@ class reAPI2 {
       });
     }
     assenze =
-    json['assenze'] != null ? new Assenze.fromJson(json['assenze']) : null;
+        json['assenze'] != null ? new Assenze.fromJson(json['assenze']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -112,14 +112,14 @@ class User {
 
   User(
       {this.matricola,
-        this.nome,
-        this.cognome,
-        this.classe,
-        this.sezione,
-        this.corso,
-        this.livello,
-        this.anno,
-        this.curriculum});
+      this.nome,
+      this.cognome,
+      this.classe,
+      this.sezione,
+      this.corso,
+      this.livello,
+      this.anno,
+      this.curriculum});
 
   User.fromJson(Map<String, dynamic> json) {
     matricola = json['matricola'];
@@ -165,11 +165,11 @@ class Curriculum {
 
   Curriculum(
       {this.classe,
-        this.sezione,
-        this.corso,
-        this.credito,
-        this.esito,
-        this.anno});
+      this.sezione,
+      this.corso,
+      this.credito,
+      this.esito,
+      this.anno});
 
   Curriculum.fromJson(Map<String, dynamic> json) {
     classe = json['classe'];
@@ -282,14 +282,14 @@ class Voti {
 
   Voti(
       {this.data,
-        this.materia,
-        this.tipologia,
-        this.voto,
-        this.commento,
-        this.docente,
-        this.peso,
-        this.firmato,
-        this.firmatoUser});
+      this.materia,
+      this.tipologia,
+      this.voto,
+      this.commento,
+      this.docente,
+      this.peso,
+      this.firmato,
+      this.firmatoUser});
 
   Voti.fromJson(Map<String, dynamic> json) {
     data = json['data'];
@@ -363,7 +363,8 @@ class Assenze {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['nongiustificate'] = this.nongiustificate.map((v) => v.toJson()).toList();
+    data['nongiustificate'] =
+        this.nongiustificate.map((v) => v.toJson()).toList();
     if (this.giustificate != null) {
       data['giustificate'] = this.giustificate.map((v) => v.toJson()).toList();
     }

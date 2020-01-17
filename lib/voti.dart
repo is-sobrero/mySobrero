@@ -6,6 +6,7 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 
+
 class VotiView extends StatefulWidget {
   List<Voti> voti;
 
@@ -38,6 +39,7 @@ class _VotiView extends State<VotiView> {
 
   List<Widget> generaVoti(List<Voti> valutazioni) {
     double media = 0;
+    double sommaPesi = 0;
     List<Widget> list = new List<Widget>();
     for (var i = 0; i < valutazioni.length; i++) {
       LinearGradient sfondoVoto = LinearGradient(
@@ -45,21 +47,42 @@ class _VotiView extends State<VotiView> {
         end: FractionalOffset.bottomRight,
         colors: <Color>[Color(0xFF38f9d7), Color(0xFF43e97b)],
       );
-      double votoParsed = double.parse(valutazioni[i].voto.replaceAll(",", "."));
-      media += votoParsed;
+      double votoParsed =
+          double.parse(valutazioni[i].voto.replaceAll(",", "."));
+      Color coloreTesto = Colors.black;
       if (votoParsed >= 6 && votoParsed < 7) {
         sfondoVoto = LinearGradient(
           begin: FractionalOffset.topRight,
           end: FractionalOffset.bottomRight,
-          colors: <Color>[Color(0xFFF9D423), Color(0xFFFF4E50)],
+          colors: <Color>[Color(0xffFFD200), Color(0xffF7971E)],
         );
       }
+      if (votoParsed < 6) {
+        sfondoVoto = LinearGradient(
+          begin: FractionalOffset.topRight,
+          end: FractionalOffset.bottomRight,
+          colors: <Color>[Color(0xffFF416C), Color(0xffFF4B2B)],
+        );
+        coloreTesto = Colors.white;
+      }
+
       final tipologia = valutazioni[i].tipologia;
       final peso = valutazioni[i].peso;
+      sommaPesi += int.parse(peso);
+      media += votoParsed * int.parse(peso);
       final docente = valutazioni[i].docente;
       final data = valutazioni[i].data;
       var commento = valutazioni[i].commento;
       if (commento.length == 0) commento = "Nessun commento al voto";
+
+      if (peso == "0") {
+        sfondoVoto = LinearGradient(
+          begin: FractionalOffset.topRight,
+          end: FractionalOffset.bottomRight,
+          colors: <Color>[Color(0xff005C97), Color(0xff363795)],
+        );
+        coloreTesto = Colors.white;
+      }
 
       list.add(ExpandableNotifier(
         // <-- Provides ExpandableController to its children
@@ -91,14 +114,14 @@ class _VotiView extends State<VotiView> {
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
+                                    color: coloreTesto)),
                           ),
                           Expanded(
                               child: Text(valutazioni[i].materia,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black)))
+                                      color: coloreTesto)))
                         ],
                       ),
                     ),
@@ -134,26 +157,26 @@ class _VotiView extends State<VotiView> {
                                         style: TextStyle(
                                             fontSize: 30,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black)),
+                                            color: coloreTesto)),
                                   ),
                                   Expanded(
                                       child: Text(valutazioni[i].materia,
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.black)))
+                                              color: coloreTesto)))
                                 ],
                               ),
                               Text("Data voto: $data",
-                                  style: TextStyle(color: Colors.black)),
+                                  style: TextStyle(color: coloreTesto)),
                               Text("Tipologia: $tipologia",
-                                  style: TextStyle(color: Colors.black)),
+                                  style: TextStyle(color: coloreTesto)),
                               Text("Docente: $docente",
-                                  style: TextStyle(color: Colors.black)),
+                                  style: TextStyle(color: coloreTesto)),
                               Text("Peso: $peso",
-                                  style: TextStyle(color: Colors.black)),
+                                  style: TextStyle(color: coloreTesto)),
                               Text("Commento al voto: $commento",
-                                  style: TextStyle(color: Colors.black)),
+                                  style: TextStyle(color: coloreTesto)),
                             ],
                           )),
                     ),
@@ -165,12 +188,12 @@ class _VotiView extends State<VotiView> {
         ),
       ));
     }
-    media /= valutazioni.length;
+    media /= sommaPesi;
     list.insert(
         0,
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
-          child: Text("Media attuale: $media"),
+          child: Text(filterIndex > 0 ? "Media ponderata della materia: $media" : "Media ponderata attuale: $media"),
         ));
     return list;
   }
@@ -199,11 +222,14 @@ class _VotiView extends State<VotiView> {
     ];
 
     List<Voti> currentVoti;
-    if (filterIndex == 0) currentVoti = voti;
+    print(filterIndex);
+    if (filterIndex == 0)
+      currentVoti = voti;
     else {
       String materia = materie[filterIndex];
       currentVoti = List();
-      for (int i = 0; i < voti.length; i++) if (voti[i].materia == materia) currentVoti.add(voti[i]);
+      for (int i = 0; i < voti.length; i++)
+        if (voti[i].materia == materia) currentVoti.add(voti[i]);
     }
 
     return DirectSelectContainer(
@@ -228,54 +254,56 @@ class _VotiView extends State<VotiView> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                       child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: <BoxShadow>[
-                            new BoxShadow(
-                              color: Colors.black.withOpacity(0.06),
-                              spreadRadius: 4,
-                              offset: new Offset(0.0, 0.0),
-                              blurRadius: 15.0,
-                            ),
-                          ],
-                        ),
-                        child: Card(
-                            child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Expanded(
-                                child: Padding(
-                                    child: DirectSelectList<String>(
-                                      values: materie,
-                                      defaultItemIndex: 0,
-                                      itemBuilder: (String value) =>
-                                          getDropDownMenuItem(value),
-                                      focusedItemDecoration: BoxDecoration(
-                                        border: BorderDirectional(
-                                          bottom: BorderSide(
-                                              width: 1, color: Colors.black12),
-                                          top: BorderSide(
-                                              width: 1, color: Colors.black12),
-                                        ),
-                                      ),
-                                      onItemSelectedListener: (string, index, context){
-                                        setState(() {
-                                          filterIndex = index;
-                                        });
-                                      }
-                                    ),
-                                    padding: EdgeInsets.only(left: 12))),
-                            Padding(
-                              padding: EdgeInsets.only(right: 8),
-                              child: Icon(
-                                Icons.unfold_more,
-                                color: Theme.of(context).primaryColor,
+                          decoration: BoxDecoration(
+                            boxShadow: <BoxShadow>[
+                              new BoxShadow(
+                                color: Colors.black.withOpacity(0.06),
+                                spreadRadius: 4,
+                                offset: new Offset(0.0, 0.0),
+                                blurRadius: 15.0,
                               ),
-                            )
-                          ],
-                        ),
+                            ],
+                          ),
+                          child: Card(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Expanded(
+                                    child: Padding(
+                                        child: DirectSelectList<String>(
+                                            values: materie,
+                                            defaultItemIndex: filterIndex,
+                                            itemBuilder: (String value) =>
+                                                getDropDownMenuItem(value),
+                                            focusedItemDecoration:
+                                                BoxDecoration(
+                                              border: BorderDirectional(
+                                                bottom: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.black12),
+                                                top: BorderSide(
+                                                    width: 1,
+                                                    color: Colors.black12),
+                                              ),
+                                            ),
+                                            onItemSelectedListener:
+                                                (string, index, context) {
+                                              setState(() {
+                                                filterIndex = index;
+                                              });
+                                            }),
+                                        padding: EdgeInsets.only(left: 12))),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 8),
+                                  child: Icon(
+                                    Icons.unfold_more,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                )
+                              ],
+                            ),
                             margin: EdgeInsets.zero,
-                        )
-                      ),
+                          )),
                     ),
                   ],
                 ),

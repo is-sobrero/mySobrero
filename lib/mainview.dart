@@ -33,7 +33,8 @@ class Mainview extends StatefulWidget {
   }
 
   @override
-  _Mainview createState() => _Mainview(response, feed, callback, compitiSettimana);
+  _Mainview createState() =>
+      _Mainview(response, feed, callback, compitiSettimana);
 }
 
 class _Mainview extends State<Mainview> {
@@ -42,7 +43,8 @@ class _Mainview extends State<Mainview> {
   SwitchPageCallback callback;
   List<Compiti> compitiSettimana;
 
-  _Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback, List<Compiti> compitiSettimana) {
+  _Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback,
+      List<Compiti> compitiSettimana) {
     this.response = response;
     this.feed = feed;
     this.callback = callback;
@@ -50,7 +52,6 @@ class _Mainview extends State<Mainview> {
   }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
 
   @override
   void initState() {
@@ -83,8 +84,8 @@ class _Mainview extends State<Mainview> {
     final nomeUtente = response.user.nome;
     final ultimoVoto = response.voti[0].voto;
     final ultimaMateria = response.voti[0].materia;
-    final countCompiti = response.compiti.length.toString();
-    final classeUtente = response.user.classe.toString() + " " + response.user.sezione;
+    final classeUtente =
+        response.user.classe.toString() + " " + response.user.sezione.trim();
     final indirizzoUtente = response.user.corso;
     final ultimaComunicazione =
         response.comunicazioni[0].contenuto.substring(0, 100) + "...";
@@ -247,7 +248,7 @@ class _Mainview extends State<Mainview> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
-                                  return CompitiView();
+                                  return CompitiView(response.compiti ,compitiSettimana);
                                 }));
                               },
                               child: Stack(
@@ -297,7 +298,8 @@ class _Mainview extends State<Mainview> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              compitiSettimana.length.toString(),
+                                              compitiSettimana.length
+                                                  .toString(),
                                               style: new TextStyle(
                                                   fontSize: 70,
                                                   color: Color(0xFF000000)),
@@ -488,19 +490,21 @@ class _Mainview extends State<Mainview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Expanded(
-                                  child: /*Image.network(
+                                    child:
+                                        /*Image.network(
                                     item.thumbnail,
                                     width: 300.0,
                                     fit: BoxFit.cover,
 
                                   ),*/
-                                  CachedNetworkImage(
-                                    imageUrl: item.thumbnail,
-                                    placeholder: (context, url) => CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
-                                    fit: BoxFit.cover,
-                                  )
-                                ),
+                                        CachedNetworkImage(
+                                  imageUrl: item.thumbnail,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                )),
                                 Padding(
                                   padding: const EdgeInsets.all(15),
                                   child: Column(
