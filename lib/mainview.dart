@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'SobreroFeed.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import 'skeleton.dart';
 
 typedef SwitchPageCallback = void Function(int page);
 
@@ -82,8 +83,12 @@ class _Mainview extends State<Mainview> {
   @override
   Widget build(BuildContext context) {
     final nomeUtente = response.user.nome;
-    final ultimoVoto = response.voti[0].voto;
-    final ultimaMateria = response.voti[0].materia;
+    var ultimoVoto = "null";
+    var ultimaMateria = "null";
+    if (response.voti.length > 0){
+      ultimoVoto = response.voti[0].voto;
+      ultimaMateria = response.voti[0].materia;
+    }
     final classeUtente =
         response.user.classe.toString() + " " + response.user.sezione.trim();
     final indirizzoUtente = response.user.corso;
@@ -223,14 +228,14 @@ class _Mainview extends State<Mainview> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Text(
+                                          ultimoVoto != "null" ? Text(
                                             ultimoVoto,
                                             style: new TextStyle(
                                                 fontSize: 70,
                                                 color: Color(0xFFFFFFFF)),
-                                          ),
+                                          ) : new Container(),
                                           Text(
-                                            "Ultimo voto preso di $ultimaMateria",
+                                            ultimoVoto != "null" ? "Ultimo voto preso di $ultimaMateria" : "Nessun voto per il periodo corrente",
                                             style: new TextStyle(
                                                 color: Color(0xFFFFFFFF)),
                                           )
@@ -248,7 +253,8 @@ class _Mainview extends State<Mainview> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
-                                  return CompitiView(response.compiti ,compitiSettimana);
+                                  return CompitiView(
+                                      response.compiti, compitiSettimana);
                                 }));
                               },
                               child: Stack(
@@ -317,52 +323,6 @@ class _Mainview extends State<Mainview> {
                                 ],
                               ),
                             ),
-                            /*Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              decoration: new BoxDecoration(
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color: Color(0xFF43e97b)
-                                            .withOpacity(0.4),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 10.0),
-                                  ],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(11)),
-                                  gradient: LinearGradient(
-                                    begin: FractionalOffset.topRight,
-                                    end: FractionalOffset.bottomRight,
-                                    colors: <Color>[
-                                      Color(0xFF38f9d7),
-                                      Color(0xFF43e97b)
-                                    ],
-                                  )),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      countCompiti,
-                                      style: new TextStyle(
-                                          fontSize: 70, color: Color(0xFF000000)),
-                                    ),
-                                    Text(
-                                      "Compiti per i prossimi giorni",
-                                      style:
-                                          new TextStyle(color: Color(0xFF000000)),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),*/
-
                             flex: 1,
                           ),
                         ],
@@ -490,17 +450,10 @@ class _Mainview extends State<Mainview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Expanded(
-                                    child:
-                                        /*Image.network(
-                                    item.thumbnail,
-                                    width: 300.0,
-                                    fit: BoxFit.cover,
-
-                                  ),*/
-                                        CachedNetworkImage(
+                                    child: CachedNetworkImage(
                                   imageUrl: item.thumbnail,
                                   placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
+                                      Skeleton(),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
                                   fit: BoxFit.cover,

@@ -137,13 +137,14 @@ class _AppLoginState extends State<AppLogin> {
           (Platform.isIOS ? "iOS" : "") +
           (Platform.isLinux ? "linux" : "") +
           (Platform.isMacOS ? "macos" : "");
-
+      final cognome = response.user.cognome;
       FirebaseAnalytics analytics = FirebaseAnalytics();
+      analytics.setUserId("UID$username$cognome");
       analytics.setUserProperty(
           name: "anno", value: response.user.classe.toString());
       analytics.setUserProperty(
           name: "classe",
-          value: response.user.classe.toString() + " " + response.user.sezione);
+          value: response.user.classe.toString() + " " + response.user.sezione.trim());
       analytics.setUserProperty(name: "corso", value: response.user.corso);
       analytics.setUserProperty(
           name: "indirizzo",
@@ -151,7 +152,7 @@ class _AppLoginState extends State<AppLogin> {
       analytics.setUserProperty(name: "platform", value: systemPlatform);
 
       Firestore.instance.collection('utenti').document(username).setData({
-        'classe': response.user.classe.toString() + " " + response.user.sezione,
+        'classe': response.user.classe.toString() + " " + response.user.sezione.trim(),
         'cognome': response.user.cognome,
         'nome': response.user.nome,
         'ultimo accesso': DateTime.now().toIso8601String(),
