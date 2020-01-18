@@ -154,6 +154,7 @@ class _ArgomentiState extends State<ArgomentiView>
                                     Theme.of(context).textTheme.title.copyWith(
                                           fontSize: 32.0,
                                           color: Colors.white,
+                                          fontWeight: FontWeight.bold
                                         ),
                               ),
                             ],

@@ -133,6 +133,7 @@ class _CompitiState extends State<CompitiView>
                                     Theme.of(context).textTheme.title.copyWith(
                                           fontSize: 32.0,
                                           color: Colors.black,
+                                          fontWeight: FontWeight.bold
                                         ),
                               ),
                             ],
