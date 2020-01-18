@@ -130,7 +130,6 @@ class _VotiView extends State<VotiView> {
               ),
               expanded: Column(children: [
                 ExpandableButton(
-                  // <-- Collapses when tapped on
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
@@ -189,11 +188,12 @@ class _VotiView extends State<VotiView> {
       ));
     }
     media /= sommaPesi;
+    final finalMedia = media.toStringAsFixed(2);
     list.insert(
         0,
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
-          child: Text(filterIndex > 0 ? "Media ponderata della materia: $media" : "Media ponderata attuale: $media"),
+          child: Text(filterIndex > 0 ? "Media ponderata della materia: $finalMedia" : "Media ponderata attuale: $finalMedia"),
         ));
     return list;
   }
@@ -214,7 +214,7 @@ class _VotiView extends State<VotiView> {
     List<FlSpot> votiT = new List();
     for (int i = 0; i < voti.length; i++) {
       double votoParsed = double.parse(voti[i].voto.replaceAll(",", "."));
-      votiT.add(FlSpot(i.toDouble(), votoParsed));
+      votiT.add(FlSpot(voti.length - i.toDouble(), votoParsed));
     }
     List<Color> gradientColors = [
       const Color(0xff23b6e6),
@@ -249,111 +249,115 @@ class _VotiView extends State<VotiView> {
                     fontSize: 24,
                   ),
                 ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              new BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
-                                spreadRadius: 4,
-                                offset: new Offset(0.0, 0.0),
-                                blurRadius: 15.0,
+                voti.length > 0 ? Column(
+                  children: <Widget>[
+                    Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: <BoxShadow>[
+                                  new BoxShadow(
+                                    color: Colors.black.withOpacity(0.06),
+                                    spreadRadius: 4,
+                                    offset: new Offset(0.0, 0.0),
+                                    blurRadius: 15.0,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Card(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Expanded(
-                                    child: Padding(
-                                        child: DirectSelectList<String>(
-                                            values: materie,
-                                            defaultItemIndex: filterIndex,
-                                            itemBuilder: (String value) =>
-                                                getDropDownMenuItem(value),
-                                            focusedItemDecoration:
+                              child: Card(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    Expanded(
+                                        child: Padding(
+                                            child: DirectSelectList<String>(
+                                                values: materie,
+                                                defaultItemIndex: filterIndex,
+                                                itemBuilder: (String value) =>
+                                                    getDropDownMenuItem(value),
+                                                focusedItemDecoration:
                                                 BoxDecoration(
-                                              border: BorderDirectional(
-                                                bottom: BorderSide(
-                                                    width: 1,
-                                                    color: Colors.black12),
-                                                top: BorderSide(
-                                                    width: 1,
-                                                    color: Colors.black12),
-                                              ),
-                                            ),
-                                            onItemSelectedListener:
-                                                (string, index, context) {
-                                              setState(() {
-                                                filterIndex = index;
-                                              });
-                                            }),
-                                        padding: EdgeInsets.only(left: 12))),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Icon(
-                                    Icons.unfold_more,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                            margin: EdgeInsets.zero,
-                          )),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
-                        height: 150,
-                        child: LineChart(
-                          LineChartData(
-                              titlesData: FlTitlesData(show: false),
-                              gridData: FlGridData(
-                                show: true,
-                                drawVerticalLine: true,
-                                getDrawingHorizontalLine: (value) {
-                                  return const FlLine(
-                                    color: Color(0xff37434d),
-                                    strokeWidth: 1,
-                                  );
-                                },
-                                getDrawingVerticalLine: (value) {
-                                  return const FlLine(
-                                    color: Color(0xff37434d),
-                                    strokeWidth: 1,
-                                  );
-                                },
-                              ),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: votiT,
-                                  isCurved: true,
-                                  colors: gradientColors,
-                                  belowBarData: BarAreaData(
-                                    show: true,
-                                    colors: gradientColors
-                                        .map((color) => color.withOpacity(0.3))
-                                        .toList(),
-                                  ),
-                                )
-                              ]),
+                                                  border: BorderDirectional(
+                                                    bottom: BorderSide(
+                                                        width: 1,
+                                                        color: Colors.black12),
+                                                    top: BorderSide(
+                                                        width: 1,
+                                                        color: Colors.black12),
+                                                  ),
+                                                ),
+                                                onItemSelectedListener:
+                                                    (string, index, context) {
+                                                  setState(() {
+                                                    filterIndex = index;
+                                                  });
+                                                }),
+                                            padding: EdgeInsets.only(left: 12))),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 8),
+                                      child: Icon(
+                                        Icons.unfold_more,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.zero,
+                              )),
                         ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                            height: 150,
+                            child: LineChart(
+                              LineChartData(
+                                  titlesData: FlTitlesData(show: false),
+                                  gridData: FlGridData(
+                                    show: true,
+                                    drawVerticalLine: true,
+                                    getDrawingHorizontalLine: (value) {
+                                      return const FlLine(
+                                        color: Color(0xff37434d),
+                                        strokeWidth: 1,
+                                      );
+                                    },
+                                    getDrawingVerticalLine: (value) {
+                                      return const FlLine(
+                                        color: Color(0xff37434d),
+                                        strokeWidth: 1,
+                                      );
+                                    },
+                                  ),
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      spots: votiT,
+                                      isCurved: true,
+                                      colors: gradientColors,
+                                      belowBarData: BarAreaData(
+                                        show: true,
+                                        colors: gradientColors
+                                            .map((color) => color.withOpacity(0.3))
+                                            .toList(),
+                                      ),
+                                    )
+                                  ]),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: generaVoti(currentVoti))
+                    ),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: generaVoti(currentVoti))
+                  ]
+                ) : new Text("Nessun voto disponibile per il periodo selezionato")
               ],
             ),
           ),

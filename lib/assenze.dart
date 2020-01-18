@@ -210,6 +210,7 @@ class _AssenzeState extends State<AssenzeView>
       final String orario = assenze[i].orario;
       final String data = assenze[i].data;
       final String motivazione = assenze[i].motivazione;
+      final String calcolo = assenze[i].calcolo == "0" ? "No" : "Sì";
       list.add(Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
@@ -217,11 +218,6 @@ class _AssenzeState extends State<AssenzeView>
               color: Colors.black.withAlpha(20),
               borderRadius: BorderRadius.all(Radius.circular(10)),
               border: Border.all(width: 1.0, color: borderColor),
-              /*boxShadow: [BoxShadow(
-                      color: borderColor.withAlpha(100),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                    )]*/
             ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -237,6 +233,8 @@ class _AssenzeState extends State<AssenzeView>
                           fontWeight: FontWeight.bold,
                           color: Colors.black)),
                   Text("Motivazione: $motivazione",
+                      style: TextStyle(fontSize: 16, color: Colors.black)),
+                  Text("Concorre al calcolo: $calcolo",
                       style: TextStyle(fontSize: 16, color: Colors.black))
                 ],
               ),

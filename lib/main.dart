@@ -65,6 +65,12 @@ class _AppLoginState extends State<AppLogin> {
   final userController = TextEditingController();
   final pwrdController = TextEditingController();
 
+  bool get isInDebugMode {
+    bool inDebugMode = false;
+    assert(inDebugMode = true);
+    return inDebugMode;
+  }
+
   final Shader sobreroGradient = LinearGradient(
     begin: FractionalOffset.topRight,
     end: FractionalOffset.bottomRight,
@@ -160,7 +166,7 @@ class _AppLoginState extends State<AppLogin> {
         'nome': response.user.nome,
         'ultimo accesso': DateTime.now().toIso8601String(),
         'platform': systemPlatform,
-        'build flavour': 'production'
+        'build flavour': isInDebugMode ? 'internal' : 'production'
       }, merge: true);
       Navigator.pushReplacement(
         context,

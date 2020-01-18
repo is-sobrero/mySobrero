@@ -9,6 +9,7 @@ import 'altro.dart';
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'custom_icons_icons.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -149,16 +150,16 @@ class _HomeState extends State<HomeScreen> {
             tabColor: Theme.of(context).primaryColor,
           ),
           TabData(
-            iconData: Icons.trending_up,
+            iconData: CustomIcons.chart,
             title: "Valutazioni",
             tabColor: Colors.pink,
           ),
           TabData(
-              iconData: Icons.format_list_bulleted,
+              iconData: Icons.list,
               title: "Comunicazioni",
               tabColor: Colors.amber),
           TabData(
-              iconData: Icons.more_horiz,
+              iconData: CustomIcons.dot,
               title: "Altro",
               tabColor: Colors.teal),
         ],

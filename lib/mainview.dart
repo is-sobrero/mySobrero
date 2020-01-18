@@ -249,14 +249,15 @@ class _Mainview extends State<Mainview> {
                             width: 50,
                             height: 50,
                               color: Theme.of(context).scaffoldBackgroundColor,
-                              child: CachedNetworkImage(
+                              child: _profileURL != null ? CachedNetworkImage(
                                 imageUrl: _profileURL,
                                 placeholder: (context, url) =>
                                     Skeleton(),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
                                 fit: BoxFit.cover,
-                              )),
+                              ) : Image.asset("assets/images/profile.jpg")
+                          ),
                         ),
                       ),
                     ),
