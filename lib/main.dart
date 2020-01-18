@@ -40,9 +40,8 @@ class MyApp extends StatelessWidget {
       ),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark
-        ),
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark),
         child: Scaffold(
           body: AppLogin(title: 'mySobrero'),
         ),
@@ -82,10 +81,11 @@ class _AppLoginState extends State<AppLogin> {
   Future<bool> credSalvate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var localAuth = LocalAuthentication();
+    bool useBiometrics = prefs.getBool('biometric_auth') ?? false;
     bool canCheckBiometrics = await localAuth.canCheckBiometrics;
     bool salvate = prefs.getBool('savedCredentials') ?? false;
     String nomecognome = prefs.getString('user') ?? "[pref key non salvata]";
-    if (canCheckBiometrics && salvate) {
+    if (canCheckBiometrics && salvate && useBiometrics) {
       bool didAuthenticate = await localAuth.authenticateWithBiometrics(
         localizedReason:
             'Autenticati per accedere a mySobrero come $nomecognome',
@@ -117,7 +117,6 @@ class _AppLoginState extends State<AppLogin> {
 
   Future<http.Response> requestMethod(String username, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //var url = "https://reapistaging.altervista.org/api.php?uname=$username&password=$password";
     var url = "https://reapistaging.altervista.org/reapi2.php";
     var feedUrl =
         "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
@@ -150,27 +149,36 @@ class _AppLoginState extends State<AppLogin> {
           name: "anno", value: response.user.classe.toString());
       analytics.setUserProperty(
           name: "classe",
-          value: response.user.classe.toString() + " " + response.user.sezione.trim());
+          value: response.user.classe.toString() +
+              " " +
+              response.user.sezione.trim());
       analytics.setUserProperty(name: "corso", value: response.user.corso);
       analytics.setUserProperty(
           name: "indirizzo",
           value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
       analytics.setUserProperty(name: "platform", value: systemPlatform);
-      final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(username).get();
-      final profileImageUrl = dataRetrieve.data["profileImage"];
-      print("profilo: $profileImageUrl");
+
 
       Firestore.instance.collection('utenti').document(username).setData({
-        'classe': response.user.classe.toString() + " " + response.user.sezione.trim(),
+        'classe': response.user.classe.toString() +
+            " " +
+            response.user.sezione.trim(),
         'cognome': response.user.cognome,
         'nome': response.user.nome,
         'ultimo accesso': DateTime.now().toIso8601String(),
         'platform': systemPlatform,
         'build flavour': isInDebugMode ? 'internal' : 'production'
       }, merge: true);
+      final DocumentSnapshot dataRetrieve = await Firestore.instance
+          .collection('utenti')
+          .document(username)
+          .get();
+      final profileImageUrl = dataRetrieve.data["profileImage"];
+      print("profilo: $profileImageUrl");
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen(response, feed, profileImageUrl)),
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(response, feed, profileImageUrl)),
       );
     } else {
       setState(() {
@@ -261,31 +269,27 @@ class _AppLoginState extends State<AppLogin> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (initialCall) {
-      if (Theme.of(context).brightness == Brightness.dark)
-        FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-      else
-        FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        credSalvate().then((res) {
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      credSalvate().then((res) {
+        if (res) {
           setState(() {
-            initialCall = false;
-            if (res && !loginCalled) {
-              loginSalvato();
-              loginCalled = true;
-              setState(() {
-                isLoginVisible = false;
-                loginCalled = true;
-              });
-            } else {
-              isLoginVisible = true;
-            }
+            loginCalled = true;
+            isLoginVisible = false;
           });
-        });
+          loginSalvato();
+        } else {
+          setState(() {
+            isLoginVisible = true;
+          });
+        }
       });
-    }
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -320,6 +324,7 @@ class _AppLoginState extends State<AppLogin> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                           child: TextField(
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'ID Studente'),

@@ -6,7 +6,6 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 
-
 class VotiView extends StatefulWidget {
   List<Voti> voti;
 

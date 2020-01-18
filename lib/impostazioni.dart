@@ -1,7 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ImpostazioniView extends StatelessWidget {
+class ImpostazioniView extends StatefulWidget {
+  @override
+  _ImpostazioniState createState() => _ImpostazioniState();
+}
+
+class _ImpostazioniState extends State<ImpostazioniView> {
+
+  @override
+  void initState() {
+    super.initState();
+    _configuraSalvate();
+  }
+
+  _configuraSalvate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool bio = await prefs.getBool("biometric_auth") ?? false;
+    setState(() {
+      bioAuth = bio;
+    });
+  }
+
+  bool bioAuth = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,13 +40,20 @@ class ImpostazioniView extends StatelessWidget {
                 SettingsTile.switchTile(
                   title: 'Accedi a mySobrero tramite autenticazione biometrica',
                   leading: Icon(Icons.fingerprint),
-                  switchValue: true,
-                  onToggle: (bool value) {},
+                  switchValue: bioAuth,
+                  onToggle: (bool value) {
+                    _impostaBool("biometric_auth", value);
+                    setState(() {
+                      bioAuth = value;
+                    });
+                  },
                 ),
                 SettingsTile(
                   title: 'Esegui il logout',
                   leading: Icon(Icons.exit_to_app),
-                  onTap: () {},
+                  onTap: () {
+                    _impostaBool("savedCredentials", false);
+                  },
                 ),
               ],
             ),
@@ -46,5 +76,10 @@ class ImpostazioniView extends StatelessWidget {
         )
       ),
     );
+  }
+
+  _impostaBool(String key, bool value) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
   }
 }
