@@ -150,6 +150,9 @@ class _AppLoginState extends State<AppLogin> {
           name: "indirizzo",
           value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
       analytics.setUserProperty(name: "platform", value: systemPlatform);
+      final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(username).get();
+      final profileImageUrl = dataRetrieve.data["profileImage"];
+      print("profilo: $profileImageUrl");
 
       Firestore.instance.collection('utenti').document(username).setData({
         'classe': response.user.classe.toString() + " " + response.user.sezione.trim(),
@@ -158,10 +161,10 @@ class _AppLoginState extends State<AppLogin> {
         'ultimo accesso': DateTime.now().toIso8601String(),
         'platform': systemPlatform,
         'build flavour': 'production'
-      });
+      }, merge: true);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen(response, feed)),
+        MaterialPageRoute(builder: (context) => HomeScreen(response, feed, profileImageUrl)),
       );
     } else {
       setState(() {

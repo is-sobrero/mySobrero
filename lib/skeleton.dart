@@ -12,14 +12,15 @@ class SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin 
 
   Animation gradientPosition;
 
+
   @override
   void initState() {
-    super.initState();
+
     _controller = AnimationController(duration: Duration(milliseconds: 1500), vsync: this);
 
     gradientPosition = Tween<double>(
-      begin: -3,
-      end: 10,
+      begin: 0,
+      end: 2,
     ).animate(
       CurvedAnimation(
           parent: _controller,
@@ -28,8 +29,8 @@ class SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin 
     )..addListener(() {
       setState(() {});
     });
-
     _controller.repeat();
+    super.initState();
   }
 
   @override
@@ -43,10 +44,10 @@ class SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin 
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
-              begin: Alignment(-1, -1),
-              end: Alignment(1, 1),
+              begin: Alignment(-1 + gradientPosition.value, -1),
+              end: Alignment(1 + gradientPosition.value, 1),
               colors: [Colors.black.withAlpha(10), Colors.white.withAlpha(90), Colors.black.withAlpha(10)]
-          )
+          ),
       ),
     );
   }

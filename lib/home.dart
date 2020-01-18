@@ -15,16 +15,18 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 class HomeScreen extends StatefulWidget {
   reAPI2 response;
   SobreroFeed feed;
+  String profileUrl;
 
-  HomeScreen(reAPI2 response, SobreroFeed feed) {
+  HomeScreen(reAPI2 response, SobreroFeed feed, String profileUrl) {
     this.response = response;
     this.feed = feed;
+    this.profileUrl = profileUrl;
   }
 
   @override
   State<StatefulWidget> createState() {
     _firebaseMessaging.requestNotificationPermissions();
-    return _HomeState(response, feed);
+    return _HomeState(response, feed, profileUrl);
   }
 }
 
@@ -33,10 +35,12 @@ class _HomeState extends State<HomeScreen> {
   PageController pageController = PageController();
   reAPI2 response;
   SobreroFeed feed;
+  String profileUrl;
 
-  _HomeState(reAPI2 response, SobreroFeed feed) {
+  _HomeState(reAPI2 response, SobreroFeed feed, String profileUrl) {
     this.response = response;
     this.feed = feed;
+    this.profileUrl = profileUrl;
   }
 
   BottomNavigationBarItem barIcon(String title, IconData icon) {
@@ -125,7 +129,7 @@ class _HomeState extends State<HomeScreen> {
           children: <Widget>[
             Mainview(response, feed, (int page) {
               onTabTapped(page);
-            }),
+            }, profileUrl),
             VotiView(response.voti),
             ComunicazioniView(response.comunicazioni),
             AltroView(response),

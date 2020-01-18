@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>mySobrero utilizza il microfono per personalizzare il profilo</string>
+	<key>NSCameraUsageDescription</key>
+	<string>mySobrero utilizza la fotocamera per personalizzare il profilo</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>mySobrero utilizza il Rullino Foto per personalizzare il profilo</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>mySobrero utilizza Face ID per autenticarti senza inserire la password</string>
 	<key>CFBundleDevelopmentRegion</key>

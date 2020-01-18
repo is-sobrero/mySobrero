@@ -28,6 +28,7 @@ dependencies:
   firebase_analytics: ^5.0.9
   firebase_messaging: ^6.0.9
   firebase_crashlytics: ^0.1.2+4
+  firebase_storage: ^3.1.1
   local_auth: ^0.6.1
   flutter_statusbarcolor: ^0.2.3
   device_preview: ^0.2.6
@@ -35,6 +36,8 @@ dependencies:
   cached_network_image: ^2.0.0
   direct_select_flutter: ^1.0.5
   direct_select: ^1.0.0
+  image_picker: ^0.6.3+1
+  bmprogresshud: ^0.0.5
 
   expandable: ^4.0.2
   flutter:

@@ -8,6 +8,10 @@ import 'SobreroFeed.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'skeleton.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bmprogresshud/bmprogresshud.dart';
 
 typedef SwitchPageCallback = void Function(int page);
 
@@ -16,11 +20,13 @@ class Mainview extends StatefulWidget {
   SobreroFeed feed;
   SwitchPageCallback callback;
   List<Compiti> compitiSettimana;
+  String profileUrl;
 
-  Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback) {
+  Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback, String profileUrl) {
     this.response = response;
     this.feed = feed;
     this.callback = callback;
+    this.profileUrl = profileUrl;
     this.compitiSettimana = List<Compiti>();
     DateTime today = DateTime.now();
     bool okLista = false;
@@ -35,7 +41,7 @@ class Mainview extends StatefulWidget {
 
   @override
   _Mainview createState() =>
-      _Mainview(response, feed, callback, compitiSettimana);
+      _Mainview(response, feed, callback, compitiSettimana, profileUrl);
 }
 
 class _Mainview extends State<Mainview> {
@@ -43,16 +49,43 @@ class _Mainview extends State<Mainview> {
   SobreroFeed feed;
   SwitchPageCallback callback;
   List<Compiti> compitiSettimana;
+  String _profileURL;
 
   _Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback,
-      List<Compiti> compitiSettimana) {
+      List<Compiti> compitiSettimana, String profileUrl) {
     this.response = response;
     this.feed = feed;
     this.callback = callback;
     this.compitiSettimana = compitiSettimana;
+    this._profileURL = profileUrl;
   }
 
+
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
+
+  Future cambiaProfilo() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+    final userName = response.user.matricola;
+    final StorageUploadTask uploadTask = _firebaseStorage.child("profile_$userName.jpg").putFile(
+      image,
+      StorageMetadata(
+        contentType: "image/jpeg",
+      ),
+    );
+    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+    final String url = (await downloadUrl.ref.getDownloadURL());
+    print('URL Is $url');
+
+    setState(() {
+      _profileURL = url;
+    });
+
+    Firestore.instance.collection('utenti').document(response.user.matricola).setData({
+      'profileImage': url,
+    }, merge: true);
+
+  }
 
   @override
   void initState() {
@@ -78,10 +111,12 @@ class _Mainview extends State<Mainview> {
       assert(token != null);
       print(token);
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
+
     final nomeUtente = response.user.nome;
     var ultimoVoto = "null";
     var ultimaMateria = "null";
@@ -171,19 +206,66 @@ class _Mainview extends State<Mainview> {
                       ],
                     )
                   : Container(),
-              Text(
-                'Ciao $nomeUtente!',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 24,
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
-                child: Text(
-                  'Classe $classeUtente - $indirizzoUtente',
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Ciao $nomeUtente!',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 24,
+                            ),
+                          ),
+                          Text(
+                              'Classe $classeUtente - $indirizzoUtente',
+                            ),
+
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        cambiaProfilo();
+    },
+                      child: Container(
+                        decoration: new BoxDecoration(
+                          boxShadow: [BoxShadow(
+                            color: Colors.black.withAlpha(50),
+                            offset: Offset(0, 5),
+                            blurRadius: 10
+                          )],
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                          child: new Container(
+                            width: 50,
+                            height: 50,
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              child: CachedNetworkImage(
+                                imageUrl: _profileURL,
+                                placeholder: (context, url) =>
+                                    Skeleton(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                      ),
+                    ),
+
+
+                  ],
                 ),
               ),
+
               Flex(
                 direction: isWide ? Axis.horizontal : Axis.vertical,
                 children: <Widget>[
