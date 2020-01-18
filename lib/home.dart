@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mySobrero/impostazioni.dart';
 import 'reapi2.dart';
 import 'dart:ui';
 import 'SobreroFeed.dart';
@@ -109,7 +110,12 @@ class _HomeState extends State<HomeScreen> {
                       ),
                       tooltip: 'Apri le impostazioni dell\'App',
                       iconSize: 14,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ImpostazioniView()),
+                        );
+                      },
                     ),
                   ),
                 ],
