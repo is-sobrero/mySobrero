@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -33,6 +34,11 @@ class _CompitiState extends State<CompitiView>
     this.settimana = settimana;
   }
 
+  Map<int, Widget> _children = const <int, Widget> {
+    0: Text('Settimana', style: TextStyle(color: Colors.black)),
+    1: Text('Tutti i compiti', style: TextStyle(color: Colors.black)),
+  };
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +72,8 @@ class _CompitiState extends State<CompitiView>
     super.dispose();
   }
 
+  int selezioneCompiti = 0;
+
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
@@ -94,7 +102,7 @@ class _CompitiState extends State<CompitiView>
                     title: AnimatedOpacity(
                       opacity: _appBarTitleOpacity,
                       duration: const Duration(milliseconds: 250),
-                      child: Text("Compiti"),
+                      child: Text("Compiti", style: TextStyle(color: Colors.black)),
                     ),
                     backgroundColor: Color(0xFF43e97b),
                     elevation: _appBarElevation,
@@ -147,44 +155,71 @@ class _CompitiState extends State<CompitiView>
                             ),
                             begin: _listAnimationIntervalStart - 0.15,
                             child: Padding(
-                                padding: EdgeInsets.only(top: 20),
-                                child: ListView.builder(
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  itemCount: settimana.length,
-                                  itemBuilder: (context2, index2) {
-                                    return Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 15),
-                                      child: Container(
-                                          decoration: new BoxDecoration(
-                                              color: Colors.black.withAlpha(20),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
-                                              border: Border.all(
-                                                  width: 1.0,
-                                                  color: Colors.black)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(15.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
-                                              children: <Widget>[
-                                                Text(settimana[index2].materia,
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black)),
-                                                Text(settimana[index2].compito,
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black))
-                                              ],
-                                            ),
-                                          )),
-                                    );
-                                  },
+                                padding: EdgeInsets.only(top: 10),
+                                child: Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 15),
+                                      child: CupertinoSlidingSegmentedControl(
+                                        thumbColor: Colors.white,
+                                        children: _children,
+                                        onValueChanged: (val){
+                                          setState((){
+                                            selezioneCompiti = val;
+                                          });
+                                        },
+                                        groupValue: selezioneCompiti,
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: selezioneCompiti == 0 ? settimana.length : compiti.length,
+                                      itemBuilder: (context2, index2) {
+                                        List<Compiti> current = selezioneCompiti == 0 ? settimana : compiti;
+                                        int i = selezioneCompiti == 0 ? index2 : current.length - index2 - 1;
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 15),
+                                          child: Container(
+                                              decoration: new BoxDecoration(
+                                                  color: Colors.black.withAlpha(20),
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(10)),
+                                                  border: Border.all(
+                                                      width: 1.0,
+                                                      color: Colors.black)),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(15.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.stretch,
+                                                  children: <Widget>[
+                                                    Text(current[i].materia,
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black)),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(bottom: 7.0),
+                                                      child: Text("Data: " + current[i].data.split(" ")[0],
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: Colors.black)),
+                                                    ),
+                                                    Text(current[i].compito,
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black)),
+
+                                                  ],
+                                                ),
+                                              )),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 )))
                       ],
                     ),

@@ -84,12 +84,10 @@ class _VotiView extends State<VotiView> {
       }
 
       list.add(ExpandableNotifier(
-        // <-- Provides ExpandableController to its children
         child: Column(
           children: [
             Expandable(
               collapsed: ExpandableButton(
-                // <-- Expands when tapped on the cover photo
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(

@@ -194,38 +194,14 @@ class Curriculum {
 
 class Argomenti {
   String data;
-  List<Argomento> argomenti;
-
-  Argomenti({this.data, this.argomenti});
-
-  Argomenti.fromJson(Map<String, dynamic> json) {
-    data = json['data'];
-    if (json['argomenti'] != null) {
-      argomenti = new List<Argomento>();
-      json['argomenti'].forEach((v) {
-        argomenti.add(new Argomento.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['data'] = this.data;
-    if (this.argomenti != null) {
-      data['argomenti'] = this.argomenti.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Argomento {
   String materia;
   String descrizione;
   String oreLezione;
 
-  Argomento({this.materia, this.descrizione, this.oreLezione});
+  Argomenti({this.data, this.materia, this.descrizione, this.oreLezione});
 
-  Argomento.fromJson(Map<String, dynamic> json) {
+  Argomenti.fromJson(Map<String, dynamic> json) {
+    data = json['data'];
     materia = json['materia'];
     descrizione = json['descrizione'];
     oreLezione = json['oreLezione'];
@@ -233,6 +209,7 @@ class Argomento {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['data'] = this.data;
     data['materia'] = this.materia;
     data['descrizione'] = this.descrizione;
     data['oreLezione'] = this.oreLezione;
