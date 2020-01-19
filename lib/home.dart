@@ -71,202 +71,137 @@ class _HomeState extends State<HomeScreen> {
     });
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.dark)
       FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     else
       FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            new SliverAppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              title: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Image.asset('assets/images/logo_sobrero_grad.png',
-                        scale: 1.1),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    child: Text(
-                      "mySobrero",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0360e7)),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              new SliverAppBar(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                title: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Image.asset('assets/images/logo_sobrero_grad.png',
+                          scale: 1.1),
                     ),
-                  ),
-                  Spacer(), // use Spacer
-                  Transform.scale(
-                    scale: 0.8,
-                    child: IconButton(
-                      icon: new Image.asset(
-                        'assets/images/ic_settings_grad.png',
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text(
+                        "mySobrero",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0360e7)),
                       ),
-                      tooltip: 'Apri le impostazioni dell\'App',
-                      iconSize: 14,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ImpostazioniView()),
-                        );
-                      },
                     ),
-                  ),
-                ],
+                    Spacer(), // use Spacer
+                    Transform.scale(
+                      scale: 0.8,
+                      child: IconButton(
+                        icon: new Image.asset(
+                          'assets/images/ic_settings_grad.png',
+                        ),
+                        tooltip: 'Apri le impostazioni dell\'App',
+                        iconSize: 14,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ImpostazioniView()),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                floating: true,
+                pinned: true,
+                elevation: 5,
               ),
-              floating: true,
-              pinned: true,
-              elevation: 5,
+            ];
+          },
+          body: PageView(
+            controller: pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            children: <Widget>[
+              Mainview(response, feed, (int page) {
+                onTabTapped(page);
+              }, profileUrl),
+              VotiView(response.voti),
+              ComunicazioniView(response.comunicazioni),
+              AltroView(response),
+            ],
+          ),
+        ),
+        bottomNavigationBar: CubertoBottomBar(
+          inactiveIconColor: Theme.of(context).textTheme.body1.color,
+          tabStyle: CubertoTabStyle
+              .STYLE_FADED_BACKGROUND,
+          selectedTab:
+              _currentIndex,
+          tabs: [
+            TabData(
+              iconData: Icons.home,
+              title: "Home",
+              tabColor: Theme.of(context).primaryColor,
             ),
-          ];
-        },
-        body: PageView(
-          controller: pageController,
-          onPageChanged: (index) {
+            TabData(
+              iconData: CustomIcons.chart,
+              title: "Valutazioni",
+              tabColor: Colors.pink,
+            ),
+            TabData(
+                iconData: Icons.list,
+                title: "Comunicazioni",
+                tabColor: Colors.amber),
+            TabData(
+                iconData: CustomIcons.dot,
+                title: "Altro",
+                tabColor: Colors.teal),
+          ],
+          onTabChangedListener: (position, title, color) {
             setState(() {
-              _currentIndex = index;
+              pageController.animateToPage(position,
+                  duration: Duration(milliseconds: 200), curve: Curves.ease);
+              setState(() {
+                _currentIndex = position;
+              });
             });
           },
-          children: <Widget>[
-            Mainview(response, feed, (int page) {
-              onTabTapped(page);
-            }, profileUrl),
-            VotiView(response.voti),
-            ComunicazioniView(response.comunicazioni),
-            AltroView(response),
-          ],
         ),
       ),
-      bottomNavigationBar: CubertoBottomBar(
-        inactiveIconColor: Theme.of(context).textTheme.body1.color,
-        tabStyle: CubertoTabStyle
-            .STYLE_FADED_BACKGROUND, // By default its CubertoTabStyle.STYLE_NORMAL
-        selectedTab:
-            _currentIndex, // By default its 0, Current page which is fetched when a tab is clickd, should be set here so as the change the tabs, and the same can be done if willing to programmatically change the tab.
-        tabs: [
-          TabData(
-            iconData: Icons.home,
-            title: "Home",
-            tabColor: Theme.of(context).primaryColor,
-          ),
-          TabData(
-            iconData: CustomIcons.chart,
-            title: "Valutazioni",
-            tabColor: Colors.pink,
-          ),
-          TabData(
-              iconData: Icons.list,
-              title: "Comunicazioni",
-              tabColor: Colors.amber),
-          TabData(
-              iconData: CustomIcons.dot,
-              title: "Altro",
-              tabColor: Colors.teal),
-        ],
-        onTabChangedListener: (position, title, color) {
-          setState(() {
-            pageController.animateToPage(position,
-                duration: Duration(milliseconds: 200), curve: Curves.ease);
-            setState(() {
-              _currentIndex = position;
-            });
-          });
-        },
-      ),
     );
-  }
-}
-
-class _TranslucentSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  /// This is required to calculate the height of the bar
-  final EdgeInsets safeAreaPadding;
-
-  _TranslucentSliverAppBarDelegate(this.safeAreaPadding);
-
-  @override
-  double get minExtent => safeAreaPadding.top;
-
-  @override
-  double get maxExtent => minExtent + kToolbarHeight;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    print("reprint");
-    return ClipRect(
-        child:
-            /*BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),*/
-            Opacity(
-                opacity: 0.85,
-                child: Container(
-                    // Don't wrap this in any SafeArea widgets, use padding instead
-                    padding: EdgeInsets.only(top: safeAreaPadding.top),
-                    height: maxExtent,
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    // Use Stack and Positioned to create the toolbar slide up effect when scrolled up
-                    child: Stack(
-                      overflow: Overflow.clip,
-                      children: <Widget>[
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: AppBar(
-                            primary: false,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            title: Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: Image.asset(
-                                      'assets/images/logo_sobrero_grad.png',
-                                      scale: 1.1),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Text(
-                                    "mySobrero",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0360e7)),
-                                  ),
-                                ),
-                                Spacer(), // use Spacer
-                                Transform.scale(
-                                  scale: 0.8,
-                                  child: IconButton(
-                                    icon: new Image.asset(
-                                      'assets/images/ic_settings_grad.png',
-                                    ),
-                                    tooltip: 'Apri le impostazioni dell\'App',
-                                    iconSize: 14,
-                                    onPressed: () {},
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ))
-                //)
-                ));
-  }
-
-  @override
-  bool shouldRebuild(_TranslucentSliverAppBarDelegate old) {
-    return maxExtent != old.maxExtent ||
-        minExtent != old.minExtent ||
-        safeAreaPadding != old.safeAreaPadding;
   }
 }

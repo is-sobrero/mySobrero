@@ -84,8 +84,9 @@ class _AppLoginState extends State<AppLogin> {
     bool useBiometrics = prefs.getBool('biometric_auth') ?? false;
     bool canCheckBiometrics = await localAuth.canCheckBiometrics;
     bool salvate = prefs.getBool('savedCredentials') ?? false;
+    List<BiometricType> availableBiometrics = await localAuth.getAvailableBiometrics();
     String nomecognome = prefs.getString('user') ?? "[pref key non salvata]";
-    if (canCheckBiometrics && salvate && useBiometrics) {
+    if (canCheckBiometrics && salvate && useBiometrics && availableBiometrics.length > 0) {
       bool didAuthenticate = await localAuth.authenticateWithBiometrics(
         localizedReason:
             'Autenticati per accedere a mySobrero come $nomecognome',
@@ -157,8 +158,6 @@ class _AppLoginState extends State<AppLogin> {
           name: "indirizzo",
           value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
       analytics.setUserProperty(name: "platform", value: systemPlatform);
-
-
       Firestore.instance.collection('utenti').document(username).setData({
         'classe': response.user.classe.toString() +
             " " +
