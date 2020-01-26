@@ -11,7 +11,7 @@ import 'skeleton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bmprogresshud/bmprogresshud.dart';
+import 'globals.dart' as globals;
 
 typedef SwitchPageCallback = void Function(int page);
 
@@ -38,11 +38,15 @@ class Mainview extends StatefulWidget {
       if (okLista) this.compitiSettimana.add(response.compiti[i]);
     }
   }
+  static _Mainview of(BuildContext context) => context.findAncestorStateOfType<_Mainview>();
+
 
   @override
   _Mainview createState() =>
       _Mainview(response, feed, callback, compitiSettimana, profileUrl);
 }
+
+final stateMain = new GlobalKey<_Mainview>();
 
 class _Mainview extends State<Mainview> {
   reAPI2 response;
@@ -59,7 +63,6 @@ class _Mainview extends State<Mainview> {
     this.compitiSettimana = compitiSettimana;
     this._profileURL = profileUrl;
   }
-
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
@@ -78,7 +81,7 @@ class _Mainview extends State<Mainview> {
     print('URL Is $url');
 
     setState(() {
-      _profileURL = url;
+      globals.profileURL = url;
     });
 
     Firestore.instance.collection('utenti').document(response.user.matricola).setData({
@@ -249,8 +252,8 @@ class _Mainview extends State<Mainview> {
                             width: 50,
                             height: 50,
                               color: Theme.of(context).scaffoldBackgroundColor,
-                              child: _profileURL != null ? CachedNetworkImage(
-                                imageUrl: _profileURL,
+                              child: globals.profileURL != null ? CachedNetworkImage(
+                                imageUrl: globals.profileURL,
                                 placeholder: (context, url) =>
                                     Skeleton(),
                                 errorWidget: (context, url, error) =>

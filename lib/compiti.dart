@@ -105,7 +105,7 @@ class _CompitiState extends State<CompitiView>
                       child: Text("Compiti", style: TextStyle(color: Colors.black)),
                     ),
                     backgroundColor: Color(0xFF43e97b),
-                    elevation: _appBarElevation,
+                    elevation: 10,
                     leading: BackButton(
                       color: Colors.black,
                     ),

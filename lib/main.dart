@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'globals.dart' as globals;
 
 void main() {
   Crashlytics.instance.enableInDevMode = true;
@@ -173,6 +174,7 @@ class _AppLoginState extends State<AppLogin> {
           .get();
       final profileImageUrl = dataRetrieve.data["profileImage"];
       print("profilo: $profileImageUrl");
+      globals.profileURL = profileImageUrl;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

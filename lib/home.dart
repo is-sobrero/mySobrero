@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'reapi2.dart';
@@ -123,7 +124,10 @@ class _HomeState extends State<HomeScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ImpostazioniView()),
+                            MaterialPageRoute(builder: (context) => ImpostazioniView(response, profileUrl, (url){
+                              profileUrl = url;
+                              print("Nuova url: $url");
+                            })),
                           );
                         },
                       ),
