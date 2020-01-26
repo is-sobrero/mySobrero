@@ -9,10 +9,6 @@ import 'reapi2.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
-import 'package:direct_select_flutter/direct_select_container.dart';
-import 'package:direct_select_flutter/direct_select_item.dart';
-import 'package:direct_select_flutter/direct_select_list.dart';
-
 class ArgomentiView extends StatefulWidget {
   List<Argomenti> regclasse;
   List<Argomenti> argSettimana;
@@ -113,8 +109,7 @@ class _ArgomentiState extends State<ArgomentiView>
     List<Argomenti> currentSet =
         selezioneArgomenti == 0 ? argSettimana : regclasse;
     return Scaffold(
-      body: DirectSelectContainer(
-        child: Stack(
+      body: Stack(
           children: <Widget>[
             Hero(
               tag: "argomenti_background",
@@ -234,38 +229,37 @@ class _ArgomentiState extends State<ArgomentiView>
                                                   children: <Widget>[
                                                     Expanded(
                                                         child: Padding(
-                                                            child: DirectSelectList<String>(
-                                                                values: materie,
-                                                                defaultItemIndex: filterIndex,
-                                                                itemBuilder: (String value) =>
-                                                                    getDropDownMenuItem(value),
-                                                                focusedItemDecoration:
-                                                                    BoxDecoration(
-                                                                  border: BorderDirectional(
-                                                                    bottom: BorderSide(
-                                                                        width: 1,
-                                                                        color: Colors.black12),
-                                                                    top: BorderSide(
-                                                                        width: 1,
-                                                                        color: Colors.black12),
-                                                                  ),
-                                                                ),
-                                                                onItemSelectedListener:
-                                                                    (string, index, context) {
-                                                                  setState(() {
-                                                                    filterIndex = index;
-                                                                  });
-                                                                }),
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 12))),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(right: 8),
-                                                      child: Icon(
-                                                        Icons.unfold_more,
-                                                        color: Theme.of(context).primaryColor,
-                                                      ),
-                                                    )
+                                                padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+                                                child: Theme(
+                                                  data: Theme.of(context).copyWith(
+                                                    brightness: Brightness.dark,
+                                                    canvasColor: Color(0xFF212121)
+                                                  ),
+                                                  child: DropdownButtonHideUnderline(
+                                                    child: DropdownButton<String>(
+                                                      isExpanded: true,
+                                                      hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis),
+                                                      value: materie[filterIndex],
+                                                      onChanged: (String Value) {
+                                                        setState(() {
+                                                          filterIndex = materie.indexOf(Value);
+                                                        });
+                                                      },
+                                                      items: materie.map((String user) {
+                                                        return DropdownMenuItem<String>(
+                                                          value: user,
+                                                          child:
+                                                          Text(
+                                                            user,
+                                                            overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),)
+
                                                   ],
                                                 ),
                                                 margin: EdgeInsets.zero,
@@ -409,17 +403,7 @@ class _ArgomentiState extends State<ArgomentiView>
             ),
           ],
         ),
-      ),
     );
-  }
-
-  DirectSelectItem<String> getDropDownMenuItem(String value) {
-    return DirectSelectItem<String>(
-        itemHeight: 56,
-        value: value,
-        itemBuilder: (context, value) {
-          return Text(value);
-        });
   }
 
   int filterIndex = 0;

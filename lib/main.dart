@@ -14,7 +14,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 void main() {
   Crashlytics.instance.enableInDevMode = true;
