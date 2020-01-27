@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mySobrero/reapi2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +10,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'globals.dart' as globals;
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class ImpostazioniView extends StatefulWidget {
   reAPI2 response;
@@ -57,6 +61,8 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
       });
   }
 
+  int lenBio;
+
   @override
   void dispose() {
     _fadeSlideAnimationController.dispose();
@@ -65,11 +71,17 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   }
 
   _configuraSalvate() async {
+    var localAuth = LocalAuthentication();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool bio = await prefs.getBool("biometric_auth") ?? false;
+    List<BiometricType> availableBiometrics = await localAuth.getAvailableBiometrics();
     setState(() {
       bioAuth = bio;
+      lenBio = availableBiometrics.length;
+
     });
+    if (lenBio == 0) _impostaBool("biometric_auth", false);
+
   }
 
   final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
@@ -101,6 +113,8 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
 
   bool bioAuth = false;
   String _profileURL;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -218,13 +232,61 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                     SettingsButton(Icons.exit_to_app, "Logout", "Cancella l'account memorizzato dall'app", () {
                                       _impostaBool("savedCredentials", false);
                                     }),
-                                    ToggleButton(Icons.fingerprint, "Usa autenticazione biometrica", "Accedi all'app tramite autenticazione biometrica", () {
+                                    ToggleButton(Icons.fingerprint, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
                                       setState(() {
                                           bioAuth = !bioAuth;
                                         _impostaBool("biometric_auth", bioAuth);
                                       });
-                                    }, bioAuth),
-                                    SettingsButton(Icons.info, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {}),
+                                    }, bioAuth, lenBio > 0),
+                                    SettingsButton(Icons.info, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {
+                                      showDialog(context: context, builder: (BuildContext builder) {
+                                        final ThemeData themeData = Theme.of(context);
+                                        final TextStyle linkStyle = themeData.textTheme.body1.copyWith(color: themeData.accentColor);
+
+                                        return AlertDialog(
+                                          title: Text("Informazioni su mySobrero"),
+                                            actions: <Widget>[
+                                              // usually buttons at the bottom of the dialog
+                                              new FlatButton(
+                                                child: new Text("CHIUDI", style: TextStyle(color: Theme.of(context).primaryColor)),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          content: Column (
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                             RichText(
+                                                text: TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                      text: 'mySobrero 2.0 - L\'app pensata appositamente per gli studenti del Sobrero - sviluppata da Federico Runco (4 AE - ',
+                                                    ),
+                                                    _LinkTextSpan(
+                                                        style: linkStyle,
+                                                        url: 'mailto:s00802@sobrero.it',
+                                                        text: 's00802@sobrero.it'
+                                                    ),
+                                                    TextSpan(
+                                                      text: ').\n\nIl codice sorgente dell\'applicazione è disponibile su Github ',
+                                                    ),
+                                                    _LinkTextSpan(
+                                                      style: linkStyle,
+                                                      url: 'https://github.com/federunco/mySobrero',
+                                                      text: 'a questo indirizzo'
+                                                    ),
+                                                    TextSpan(
+                                                      text: '.',
+                                                    ),
+                                                  ],
+
+                                              ),
+                                            ),
+                                          ],)
+                                        );
+                                      });
+                                    }),
                                   ],
                                 )))
                       ],
@@ -256,6 +318,7 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+
       textColor: Theme.of(context).primaryColor,
       padding: EdgeInsets.fromLTRB(0, 15.0, 0 , 15),
       onPressed: this.onPressed,
@@ -283,15 +346,17 @@ class ToggleButton extends StatelessWidget {
   final String caption;
   final Function onPressed;
   final bool booleanState;
+  final bool enabled;
 
-  ToggleButton(this.icon, this.title, this.caption, this.onPressed, this.booleanState);
+
+  ToggleButton(this.icon, this.title, this.caption, this.onPressed, this.booleanState, this.enabled);
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       textColor: Theme.of(context).primaryColor,
       padding: EdgeInsets.fromLTRB(0, 15.0, 0 , 15),
-      onPressed: this.onPressed,
+      onPressed: enabled ? this.onPressed : null,
       child: Row(
         children: <Widget>[
           Icon(this.icon),
@@ -306,7 +371,7 @@ class ToggleButton extends StatelessWidget {
           ),
           Spacer(),
           Switch(
-            value: booleanState,
+            value: enabled ? booleanState : false,
             inactiveThumbColor: Theme.of(context).primaryColor,
             inactiveTrackColor: Theme.of(context).primaryColor.withAlpha(120),
           )
@@ -314,5 +379,29 @@ class ToggleButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _LinkTextSpan extends TextSpan {
+
+  // Beware!
+  //
+  // This class is only safe because the TapGestureRecognizer is not
+  // given a deadline and therefore never allocates any resources.
+  //
+  // In any other situation -- setting a deadline, using any of the less trivial
+  // recognizers, etc -- you would have to manage the gesture recognizer's
+  // lifetime and call dispose() when the TextSpan was no longer being rendered.
+  //
+  // Since TextSpan itself is @immutable, this means that you would have to
+  // manage the recognizer from outside the TextSpan, e.g. in the State of a
+  // stateful widget that then hands the recognizer to the TextSpan.
+
+  _LinkTextSpan({ TextStyle style, String url, String text }) : super(
+      style: style,
+      text: text ?? url,
+      recognizer: TapGestureRecognizer()..onTap = () {
+        launch(url, forceSafariVC: false);
+      }
+  );
 }
 
