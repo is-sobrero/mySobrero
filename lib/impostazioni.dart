@@ -218,7 +218,13 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                     SettingsButton(Icons.exit_to_app, "Logout", "Cancella l'account memorizzato dall'app", () {
                                       _impostaBool("savedCredentials", false);
                                     }),
-                                    SettingsButton(Icons.info, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {})
+                                    ToggleButton(Icons.fingerprint, "Usa autenticazione biometrica", "Accedi all'app tramite autenticazione biometrica", () {
+                                      setState(() {
+                                          bioAuth = !bioAuth;
+                                        _impostaBool("biometric_auth", bioAuth);
+                                      });
+                                    }, bioAuth),
+                                    SettingsButton(Icons.info, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {}),
                                   ],
                                 )))
                       ],
@@ -231,7 +237,6 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
         ],
       ),
     );
-
   }
 
   _impostaBool(String key, bool value) async {
@@ -252,7 +257,7 @@ class SettingsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       textColor: Theme.of(context).primaryColor,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.fromLTRB(0, 15.0, 0 , 15),
       onPressed: this.onPressed,
       child: Row(
         children: <Widget>[
@@ -271,3 +276,43 @@ class SettingsButton extends StatelessWidget {
     );
   }
 }
+
+class ToggleButton extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String caption;
+  final Function onPressed;
+  final bool booleanState;
+
+  ToggleButton(this.icon, this.title, this.caption, this.onPressed, this.booleanState);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      textColor: Theme.of(context).primaryColor,
+      padding: EdgeInsets.fromLTRB(0, 15.0, 0 , 15),
+      onPressed: this.onPressed,
+      child: Row(
+        children: <Widget>[
+          Icon(this.icon),
+          SizedBox(width: 20.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(this.title),
+              SizedBox(height: 5.0),
+              Text(this.caption, style: Theme.of(context).textTheme.caption),
+            ],
+          ),
+          Spacer(),
+          Switch(
+            value: booleanState,
+            inactiveThumbColor: Theme.of(context).primaryColor,
+            inactiveTrackColor: Theme.of(context).primaryColor.withAlpha(120),
+          )
+        ],
+      ),
+    );
+  }
+}
+

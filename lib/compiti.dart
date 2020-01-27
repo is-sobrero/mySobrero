@@ -105,7 +105,7 @@ class _CompitiState extends State<CompitiView>
                       child: Text("Compiti", style: TextStyle(color: Colors.black)),
                     ),
                     backgroundColor: Color(0xFF43e97b),
-                    elevation: 10,
+                    elevation: _appBarElevation,
                     leading: BackButton(
                       color: Colors.black,
                     ),
@@ -171,7 +171,7 @@ class _CompitiState extends State<CompitiView>
                                         groupValue: selezioneCompiti,
                                       ),
                                     ),
-                                    ListView.builder(
+                                    (selezioneCompiti == 0 ? settimana.length : compiti.length) > 0 ? ListView.builder(
                                       primary: false,
                                       shrinkWrap: true,
                                       itemCount: selezioneCompiti == 0 ? settimana.length : compiti.length,
@@ -218,6 +218,18 @@ class _CompitiState extends State<CompitiView>
                                               )),
                                         );
                                       },
+                                    ) : 
+                                    Column(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset("assets/images/empty_state.png", width: 300,),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 15.0),
+                                          child: Text("Nessun compito da visualizzare per il periodo selezionato", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                        )
+                                      ],
                                     ),
                                   ],
                                 )))

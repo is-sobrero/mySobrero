@@ -65,30 +65,6 @@ class _Mainview extends State<Mainview> {
   }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
-
-  Future cambiaProfilo() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 70);
-    final userName = response.user.matricola;
-    final StorageUploadTask uploadTask = _firebaseStorage.child("profile_$userName.jpg").putFile(
-      image,
-      StorageMetadata(
-        contentType: "image/jpeg",
-      ),
-    );
-    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
-    final String url = (await downloadUrl.ref.getDownloadURL());
-    print('URL Is $url');
-
-    setState(() {
-      globals.profileURL = url;
-    });
-
-    Firestore.instance.collection('utenti').document(response.user.matricola).setData({
-      'profileImage': url,
-    }, merge: true);
-
-  }
 
   @override
   void initState() {
@@ -227,18 +203,11 @@ class _Mainview extends State<Mainview> {
                               fontSize: 24,
                             ),
                           ),
-                          Text(
-                              'Classe $classeUtente - $indirizzoUtente',
-                            ),
-
+                          Text('Classe $classeUtente - $indirizzoUtente',),
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: (){
-                        cambiaProfilo();
-    },
-                      child: Container(
+                   Container(
                         decoration: new BoxDecoration(
                           boxShadow: [BoxShadow(
                             color: Colors.black.withAlpha(50),
@@ -263,7 +232,6 @@ class _Mainview extends State<Mainview> {
                           ),
                         ),
                       ),
-                    ),
 
 
                   ],
