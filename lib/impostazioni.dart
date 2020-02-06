@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mySobrero/reapi2.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'fade_slide_transition.dart';
@@ -231,6 +232,8 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                     ),
                                     SettingsButton(Icons.exit_to_app, "Logout", "Cancella l'account memorizzato dall'app", () {
                                       _impostaBool("savedCredentials", false);
+                                      final QuickActions quickActions =  QuickActions();
+                                      quickActions.setShortcutItems(<ShortcutItem>[]);
                                     }),
                                     ToggleButton(Icons.fingerprint, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
                                       setState(() {
@@ -361,18 +364,18 @@ class ToggleButton extends StatelessWidget {
         children: <Widget>[
           Icon(this.icon),
           SizedBox(width: 20.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(this.title),
-              SizedBox(height: 5.0),
-              Text(this.caption, style: Theme.of(context).textTheme.caption),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(this.title),
+                SizedBox(height: 5.0),
+                Text(this.caption, style: Theme.of(context).textTheme.caption, softWrap: true,),
+              ],
+            ),
           ),
-          Spacer(),
           Switch(
             value: enabled ? booleanState : false,
-            inactiveThumbColor: Theme.of(context).primaryColor,
             inactiveTrackColor: Theme.of(context).primaryColor.withAlpha(120),
           )
         ],

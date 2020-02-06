@@ -19,6 +19,11 @@ class _VotiView extends State<VotiView> {
   List<double> votiTotali;
   List<String> materie;
 
+  Map<int, Widget> _children = const <int, Widget> {
+    0: Text('1^ Quad.',),
+    1: Text('2^ Quad.',),
+  };
+
   _VotiView(List<Voti> voti) {
     this.voti = voti;
     votiTotali = new List();
@@ -191,127 +196,130 @@ class _VotiView extends State<VotiView> {
     }
 
     return SingleChildScrollView(
-          child: Column(
+          child: SafeArea(
+            top: false,
+            child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Tutti i voti',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 24,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Tutti i voti',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                    ),
                   ),
-                ),
-                voti.length > 0
-                    ? Column(children: <Widget>[
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    boxShadow: <BoxShadow>[
-                                      new BoxShadow(
-                                        color: Colors.black.withOpacity(0.06),
-                                        spreadRadius: 4,
-                                        offset: new Offset(0.0, 0.0),
-                                        blurRadius: 15.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Card(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-                                              child: DropdownButtonHideUnderline(
-                                                child: DropdownButton<String>(
-                                                      isExpanded: true,
-                                                      hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
-                                                      value: materie[filterIndex],
-                                                      onChanged: (String Value) {
-                                                        setState(() {
-                                                          filterIndex = materie.indexOf(Value);
-                                                        });
-                                                        },
-                                                      items: materie.map((String user) {
-                                                        return DropdownMenuItem<String>(
-                                                          value: user,
-                                                          child:
-                                                              Text(
-                                                                user,
-                                                                overflow: TextOverflow.ellipsis,
-                                                              ),
-                                                        );
-                                                      }).toList(),
-                                                    ),
-                                              ),
-                                            ),
-                                                ),
-
+                  voti.length > 0
+                      ? Column(children: <Widget>[
+                          Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: <BoxShadow>[
+                                        new BoxShadow(
+                                          color: Colors.black.withOpacity(0.06),
+                                          spreadRadius: 4,
+                                          offset: new Offset(0.0, 0.0),
+                                          blurRadius: 15.0,
+                                        ),
                                       ],
                                     ),
-                                    margin: EdgeInsets.zero,
-                                  )),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Container(
-                                height: 150,
-                                child: LineChart(
-                                  LineChartData(
-                                      titlesData: FlTitlesData(show: false),
-                                      gridData: FlGridData(
-                                        show: true,
-                                        drawVerticalLine: true,
-                                        getDrawingHorizontalLine: (value) {
-                                          return const FlLine(
-                                            color: Color(0xff37434d),
-                                            strokeWidth: 1,
-                                          );
-                                        },
-                                        getDrawingVerticalLine: (value) {
-                                          return const FlLine(
-                                            color: Color(0xff37434d),
-                                            strokeWidth: 1,
-                                          );
-                                        },
+                                    child: Card(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+                                                child: DropdownButtonHideUnderline(
+                                                  child: DropdownButton<String>(
+                                                        isExpanded: true,
+                                                        hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
+                                                        value: materie[filterIndex],
+                                                        onChanged: (String Value) {
+                                                          setState(() {
+                                                            filterIndex = materie.indexOf(Value);
+                                                          });
+                                                          },
+                                                        items: materie.map((String user) {
+                                                          return DropdownMenuItem<String>(
+                                                            value: user,
+                                                            child:
+                                                                Text(
+                                                                  user,
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                ),
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                ),
+                                              ),
+                                                  ),
+
+                                        ],
                                       ),
-                                      lineBarsData: [
-                                        LineChartBarData(
-                                          spots: votiT,
-                                          isCurved: true,
-                                          colors: gradientColors,
-                                          belowBarData: BarAreaData(
-                                            show: true,
-                                            colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
-                                          ),
-                                        )
-                                      ]),
-                                ),
+                                      margin: EdgeInsets.zero,
+                                    )),
                               ),
                             ],
                           ),
-                        ),
-                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: generaVoti(currentVoti))
-                      ])
-                    : new Text("Nessun voto disponibile per il periodo selezionato")
-              ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Container(
+                                  height: 150,
+                                  child: LineChart(
+                                    LineChartData(
+                                        titlesData: FlTitlesData(show: false),
+                                        gridData: FlGridData(
+                                          show: true,
+                                          drawVerticalLine: true,
+                                          getDrawingHorizontalLine: (value) {
+                                            return const FlLine(
+                                              color: Color(0xff37434d),
+                                              strokeWidth: 1,
+                                            );
+                                          },
+                                          getDrawingVerticalLine: (value) {
+                                            return const FlLine(
+                                              color: Color(0xff37434d),
+                                              strokeWidth: 1,
+                                            );
+                                          },
+                                        ),
+                                        lineBarsData: [
+                                          LineChartBarData(
+                                            spots: votiT,
+                                            isCurved: true,
+                                            colors: gradientColors,
+                                            belowBarData: BarAreaData(
+                                              show: true,
+                                              colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+                                            ),
+                                          )
+                                        ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Column(crossAxisAlignment: CrossAxisAlignment.start, children: generaVoti(currentVoti))
+                        ])
+                      : new Text("Nessun voto disponibile per il periodo selezionato")
+                ],
+              ),
             ),
-          ),
         ],
       ),
+          ),
     );
   }
 }

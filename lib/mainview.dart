@@ -112,240 +112,167 @@ class _Mainview extends State<Mainview> {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              !accountStudente
-                  ? Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
-                            child: Container(
-                                decoration: new BoxDecoration(
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                          color: Color(0xFFFF416C)
-                                              .withOpacity(0.4),
-                                          offset: const Offset(1.1, 1.1),
-                                          blurRadius: 10.0),
-                                    ],
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(11)),
-                                    gradient: LinearGradient(
-                                      begin: FractionalOffset.topRight,
-                                      end: FractionalOffset.bottomRight,
-                                      colors: <Color>[
-                                        Color(0xFFFF416C),
-                                        Color(0xFFFF4B2B),
-                                      ],
-                                    )),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        RichText(
-                                          text: TextSpan(
-                                            style: new TextStyle(
-                                                color: Colors.white),
-                                            children: [
-                                              WidgetSpan(
-                                                child: Icon(
-                                                  Icons.warning,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text:
-                                                    "  Hai eseguito l'accesso al mySobrero con le credenziali per genitori, questo può provocare errori inaspettati. Effettua il logout e riaccedi con le credenziali da studente.",
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 6),
-                                          child: Text(
-                                            "Se non hai a disposizione le credenziali a te riservate puoi andare a richiederle in Segreteria Amministrativa.",
-                                            style: new TextStyle(
-                                                color: Color(0xFFFFFFFF)),
-                                          ),
-                                        )
-                                      ],
-                                    ))),
-                          ),
-                          flex: 1,
-                        ),
-                      ],
-                    )
-                  : Container(),
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Ciao $nomeUtente!',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 24,
-                            ),
-                          ),
-                          Text('Classe $classeUtente - $indirizzoUtente',),
-                        ],
-                      ),
-                    ),
-                   Container(
-                        decoration: new BoxDecoration(
-                          boxShadow: [BoxShadow(
-                            color: Colors.black.withAlpha(50),
-                            offset: Offset(0, 5),
-                            blurRadius: 10
-                          )],
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipOval(
-                          child: new Container(
-                            width: 50,
-                            height: 50,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              child: globals.profileURL != null ? CachedNetworkImage(
-                                imageUrl: globals.profileURL,
-                                placeholder: (context, url) =>
-                                    Skeleton(),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ) : Image.asset("assets/images/profile.jpg")
-                          ),
-                        ),
-                      ),
-
-
-                  ],
-                ),
-              ),
-
-              Flex(
-                direction: isWide ? Axis.horizontal : Axis.vertical,
-                children: <Widget>[
-                  Expanded(
-                    flex: isWide ? 1 : 0,
-                    child: Container(
-                      child: Row(
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                !accountStudente
+                    ? Row(
                         children: <Widget>[
                           Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                callback(1);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Container(
-                                    decoration: new BoxDecoration(
-                                        boxShadow: <BoxShadow>[
-                                          BoxShadow(
-                                              color: Color(0xFFfa709a)
-                                                  .withOpacity(0.4),
-                                              offset: const Offset(1.1, 1.1),
-                                              blurRadius: 10.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Container(
+                                  decoration: new BoxDecoration(
+                                      boxShadow: <BoxShadow>[
+                                        BoxShadow(
+                                            color: Color(0xFFFF416C)
+                                                .withOpacity(0.4),
+                                            offset: const Offset(1.1, 1.1),
+                                            blurRadius: 10.0),
+                                      ],
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(11)),
+                                      gradient: LinearGradient(
+                                        begin: FractionalOffset.topRight,
+                                        end: FractionalOffset.bottomRight,
+                                        colors: <Color>[
+                                          Color(0xFFFF416C),
+                                          Color(0xFFFF4B2B),
                                         ],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(11)),
-                                        gradient: LinearGradient(
-                                          begin: FractionalOffset.topRight,
-                                          end: FractionalOffset.bottomRight,
-                                          colors: <Color>[
-                                            Color(0xFFfee140),
-                                            Color(0xFFfa709a)
-                                          ],
-                                        )),
-                                    child: Padding(
+                                      )),
+                                  child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          ultimoVoto != "null" ? Text(
-                                            ultimoVoto,
-                                            style: new TextStyle(
-                                                fontSize: 70,
-                                                color: Color(0xFFFFFFFF)),
-                                          ) : new Container(),
-                                          Text(
-                                            ultimoVoto != "null" ? "Ultimo voto preso di $ultimaMateria" : "Nessun voto per il periodo corrente",
-                                            style: new TextStyle(
-                                                color: Color(0xFFFFFFFF)),
+                                          RichText(
+                                            text: TextSpan(
+                                              style: new TextStyle(
+                                                  color: Colors.white),
+                                              children: [
+                                                WidgetSpan(
+                                                  child: Icon(
+                                                    Icons.warning,
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      "  Hai eseguito l'accesso al mySobrero con le credenziali per genitori, questo può provocare errori inaspettati. Effettua il logout e riaccedi con le credenziali da studente.",
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 6),
+                                            child: Text(
+                                              "Se non hai a disposizione le credenziali a te riservate puoi andare a richiederle in Segreteria Amministrativa.",
+                                              style: new TextStyle(
+                                                  color: Color(0xFFFFFFFF)),
+                                            ),
                                           )
                                         ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                      ))),
                             ),
                             flex: 1,
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) {
-                                  return CompitiView(
-                                      response.compiti, compitiSettimana);
-                                }));
-                              },
-                              child: Stack(
-                                children: <Widget>[
-                                  Hero(
-                                    tag: "compiti_background",
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 5),
-                                      child: AspectRatio(
-                                        aspectRatio: 1,
-                                        child: Container(
-                                          decoration: new BoxDecoration(
-                                              boxShadow: <BoxShadow>[
-                                                BoxShadow(
-                                                    color: Color(0xFF43e97b)
-                                                        .withOpacity(0.4),
-                                                    offset:
-                                                        const Offset(1.1, 1.1),
-                                                    blurRadius: 10.0),
-                                              ],
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(11)),
-                                              gradient: LinearGradient(
-                                                begin:
-                                                    FractionalOffset.topRight,
-                                                end: FractionalOffset
-                                                    .bottomRight,
-                                                colors: <Color>[
-                                                  Color(0xFF38f9d7),
-                                                  Color(0xFF43e97b)
-                                                ],
-                                              )),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
+                        ],
+                      )
+                    : Container(),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Ciao $nomeUtente!',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text('Classe $classeUtente - $indirizzoUtente',),
+                          ],
+                        ),
+                      ),
+                     Container(
+                          decoration: new BoxDecoration(
+                            boxShadow: [BoxShadow(
+                              color: Colors.black.withAlpha(50),
+                              offset: Offset(0, 5),
+                              blurRadius: 10
+                            )],
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child: new Container(
+                              width: 50,
+                              height: 50,
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                child: globals.profileURL != null ? CachedNetworkImage(
+                                  imageUrl: globals.profileURL,
+                                  placeholder: (context, url) =>
+                                      Skeleton(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ) : Image.asset("assets/images/profile.jpg")
+                            ),
+                          ),
+                        ),
+
+
+                    ],
+                  ),
+                ),
+
+                Flex(
+                  direction: isWide ? Axis.horizontal : Axis.vertical,
+                  children: <Widget>[
+                    Expanded(
+                      flex: isWide ? 1 : 0,
+                      child: Container(
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  callback(1);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: Container(
+                                      decoration: new BoxDecoration(
+                                          boxShadow: <BoxShadow>[
+                                            BoxShadow(
+                                                color: Color(0xFFfa709a)
+                                                    .withOpacity(0.4),
+                                                offset: const Offset(1.1, 1.1),
+                                                blurRadius: 10.0),
+                                          ],
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(11)),
+                                          gradient: LinearGradient(
+                                            begin: FractionalOffset.topRight,
+                                            end: FractionalOffset.bottomRight,
+                                            colors: <Color>[
+                                              Color(0xFFfee140),
+                                              Color(0xFFfa709a)
+                                            ],
+                                          )),
                                       child: Padding(
                                         padding: const EdgeInsets.all(12.0),
                                         child: Column(
@@ -354,24 +281,177 @@ class _Mainview extends State<Mainview> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Text(
-                                              compitiSettimana.length
-                                                  .toString(),
+                                            ultimoVoto != "null" ? Text(
+                                              ultimoVoto,
                                               style: new TextStyle(
-                                                  fontSize: 70,
-                                                  color: Color(0xFF000000)),
-                                            ),
-                                            Text(
-                                              "Compiti per i prossimi giorni",
+                                                  fontSize: 65,
+                                                  color: Color(0xFFFFFFFF)),
+                                            ) : new Container(),
+                                            AutoSizeText(
+                                              ultimoVoto != "null" ? "Ultimo voto preso di $ultimaMateria" : "Nessun voto per il periodo corrente",
                                               style: new TextStyle(
-                                                  color: Color(0xFF000000)),
+                                                  color: Color(0xFFFFFFFF)),
+                                              minFontSize: 10,
                                             )
                                           ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
+                                ),
+                              ),
+                              flex: 1,
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (_) {
+                                    return CompitiView(
+                                        response.compiti, compitiSettimana);
+                                  }));
+                                },
+                                child: Stack(
+                                  children: <Widget>[
+                                    Hero(
+                                      tag: "compiti_background",
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 5),
+                                        child: AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            decoration: new BoxDecoration(
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Color(0xFF43e97b)
+                                                          .withOpacity(0.4),
+                                                      offset:
+                                                          const Offset(1.1, 1.1),
+                                                      blurRadius: 10.0),
+                                                ],
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(11)),
+                                                gradient: LinearGradient(
+                                                  begin:
+                                                      FractionalOffset.topRight,
+                                                  end: FractionalOffset
+                                                      .bottomRight,
+                                                  colors: <Color>[
+                                                    Color(0xFF38f9d7),
+                                                    Color(0xFF43e97b)
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                compitiSettimana.length
+                                                    .toString(),
+                                                style: new TextStyle(
+                                                    fontSize: 70,
+                                                    color: Color(0xFF000000)),
+                                              ),
+                                              Text(
+                                                "Compiti per i prossimi giorni",
+                                                style: new TextStyle(
+                                                    color: Color(0xFF000000)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              flex: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: isWide ? 1 : 0,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                callback(2);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(left: isWide ? 10.0 : 0),
+                                  child: AspectRatio(
+                                    aspectRatio: 2,
+                                    child: Container(
+                                      decoration: new BoxDecoration(
+                                          boxShadow: <BoxShadow>[
+                                            BoxShadow(
+                                                color: Color(0xFFc471f5)
+                                                    .withOpacity(0.4),
+                                                offset: const Offset(1.1, 1.1),
+                                                blurRadius: 10.0),
+                                          ],
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(11)),
+                                          gradient: LinearGradient(
+                                            begin: FractionalOffset.topRight,
+                                            end: FractionalOffset.bottomRight,
+                                            colors: <Color>[
+                                              Color(0xFFfa71cd),
+                                              Color(0xFFc471f5)
+                                            ],
+                                          )),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            AutoSizeText(
+                                              ultimaComunicazione,
+                                              minFontSize: 12,
+                                              maxLines: 4,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: new TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFFFFFFFF)),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 12.0),
+                                              child: AutoSizeText(
+                                                "Ultima comunicazione da $ultimaComMittente",
+                                                style: new TextStyle(
+                                                    color: Color(0xFFFFFFFF)),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             flex: 1,
@@ -379,86 +459,10 @@ class _Mainview extends State<Mainview> {
                         ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: isWide ? 1 : 0,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              callback(2);
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(left: isWide ? 10.0 : 0),
-                                child: AspectRatio(
-                                  aspectRatio: 2,
-                                  child: Container(
-                                    decoration: new BoxDecoration(
-                                        boxShadow: <BoxShadow>[
-                                          BoxShadow(
-                                              color: Color(0xFFc471f5)
-                                                  .withOpacity(0.4),
-                                              offset: const Offset(1.1, 1.1),
-                                              blurRadius: 10.0),
-                                        ],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(11)),
-                                        gradient: LinearGradient(
-                                          begin: FractionalOffset.topRight,
-                                          end: FractionalOffset.bottomRight,
-                                          colors: <Color>[
-                                            Color(0xFFfa71cd),
-                                            Color(0xFFc471f5)
-                                          ],
-                                        )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          AutoSizeText(
-                                            ultimaComunicazione,
-                                            minFontSize: 12,
-                                            maxLines: 4,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: new TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xFFFFFFFF)),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 12.0),
-                                            child: AutoSizeText(
-                                              "Ultima comunicazione da $ultimaComMittente",
-                                              style: new TextStyle(
-                                                  color: Color(0xFFFFFFFF)),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
         Container(
@@ -468,11 +472,14 @@ class _Mainview extends State<Mainview> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 20, bottom: 15),
-                child: Text("Ultime dal Sobrero",
-                    style:
-                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 20, bottom: 15),
+                  child: Text("Ultime dal Sobrero",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                ),
               ),
               Container(
                 height: 400,

@@ -14,6 +14,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:launch_review/launch_review.dart';
+import 'package:package_info/package_info.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'globals.dart' as globals;
 
 void main() {
@@ -70,14 +74,6 @@ class _AppLoginState extends State<AppLogin> {
     return inDebugMode;
   }
 
-  final Shader sobreroGradient = LinearGradient(
-    begin: FractionalOffset.topRight,
-    end: FractionalOffset.bottomRight,
-    colors: <Color>[Color(0xFF0287d1), Color(0xFF0335ff)],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 30.0));
-
-  var isLoginVisible = false;
-
   Future<bool> credSalvate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var localAuth = LocalAuthentication();
@@ -89,7 +85,7 @@ class _AppLoginState extends State<AppLogin> {
     if (canCheckBiometrics && salvate && useBiometrics && availableBiometrics.length > 0) {
       bool didAuthenticate = await localAuth.authenticateWithBiometrics(
         localizedReason:
-            'Autenticati per accedere a mySobrero come $nomecognome',
+        'Autenticati per accedere a mySobrero come $nomecognome',
         stickyAuth: false,
         androidAuthStrings: AndroidAuthMessages(
           cancelButton: "Annulla",
@@ -109,6 +105,131 @@ class _AppLoginState extends State<AppLogin> {
     return salvate;
   }
 
+  versionCheck(context) async {
+
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    double currentVersion = double.parse(info.buildNumber);
+    print("Versione app corrente: $currentVersion");
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+    await remoteConfig.activateFetched();
+    final serverVersion = double.parse(remoteConfig.getString('verupdate_prompt'));
+    print("Versione app disponibile sul server: $serverVersion");
+    if (serverVersion > currentVersion){
+      print("Aggiornamento disponibile");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)), //this right here
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                      borderRadius: new BorderRadius.circular(8.0),
+                      child: Image.asset('assets/images/update.png')),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                "Aggiornamento dell'app disponibile",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(top: 16, bottom: 16),
+                                child: Text(
+                                  "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.\nRicorda che la versione attuale dell'applicazione potrebbe non funzionare più nei prossimi giorni",
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              OutlineButton(
+                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  ragionaLogin();
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(7.0))),
+                                color: Theme.of(context).primaryColor,
+                                child: const Text(
+                                  'OK',
+                                ),
+                              ),
+                              Container(width: 10,),
+                              OutlineButton(
+                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                onPressed: () {
+                                  LaunchReview.launch();
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(7.0))),
+                                color: Theme.of(context).primaryColor,
+                                child: const Text(
+                                  'AGGIORNA',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
+    } else {
+      ragionaLogin();
+    }
+  }
+
+  final Shader sobreroGradient = LinearGradient(
+    begin: FractionalOffset.topRight,
+    end: FractionalOffset.bottomRight,
+    colors: <Color>[Color(0xFF0287d1), Color(0xFF0335ff)],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 30.0));
+
+  var isLoginVisible = false;
+
+  ragionaLogin() async {
+    bool cred = await credSalvate();
+    if (cred) {
+      setState(() {
+        loginCalled = true;
+        isLoginVisible = false;
+      });
+      loginSalvato();
+    } else {
+      setState(() {
+        isLoginVisible = true;
+      });
+    }
+  }
+
   Future<void> loginSalvato() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final username = await prefs.getString('username') ?? "NO";
@@ -125,7 +246,7 @@ class _AppLoginState extends State<AppLogin> {
       'Accept': 'application/json',
     };
     final responseHTTP = await http.post(url,
-        headers: headers, body: {'stud_id': username, 'password': password});
+        headers: headers, body: {'stud_id': username, 'password': password, 'v3':'v3'});
     Map responseMap = jsonDecode(responseHTTP.body);
     var response = reAPI2.fromJson(responseMap);
     if (response.status.code == 0) {
@@ -175,6 +296,12 @@ class _AppLoginState extends State<AppLogin> {
       final profileImageUrl = dataRetrieve.data["profileImage"];
       print("profilo: $profileImageUrl");
       globals.profileURL = profileImageUrl;
+      final QuickActions quickActions =  QuickActions();
+      quickActions.setShortcutItems(<ShortcutItem>[
+        const ShortcutItem(type: 'action_voti', localizedTitle: 'Voti'),
+        const ShortcutItem(type: 'action_compiti', localizedTitle: 'Compiti'),
+        const ShortcutItem(type: 'action_comunicazioni', localizedTitle: 'Comunicazioni')
+      ]);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -271,21 +398,8 @@ class _AppLoginState extends State<AppLogin> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      credSalvate().then((res) {
-        if (res) {
-          setState(() {
-            loginCalled = true;
-            isLoginVisible = false;
-          });
-          loginSalvato();
-        } else {
-          setState(() {
-            isLoginVisible = true;
-          });
-        }
-      });
-    });
+    versionCheck(context);
+
   }
 
   @override

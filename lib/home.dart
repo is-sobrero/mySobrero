@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'reapi2.dart';
@@ -32,6 +31,7 @@ class HomeScreen extends StatefulWidget {
     return _HomeState(response, feed, profileUrl);
   }
 }
+
 
 class _HomeState extends State<HomeScreen> {
   int _currentIndex = 0;
@@ -82,10 +82,6 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (Theme.of(context).brightness == Brightness.dark)
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-    else
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -97,8 +93,8 @@ class _HomeState extends State<HomeScreen> {
                 title: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 40,
-                      height: 40,
+                      width: 35,
+                      height: 35,
                       child: Image.asset('assets/images/logo_sobrero_grad.png',
                           scale: 1.1),
                     ),
@@ -107,8 +103,8 @@ class _HomeState extends State<HomeScreen> {
                       child: Text(
                         "mySobrero",
                         style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
                             color: Color(0xFF0360e7)),
                       ),
                     ),
@@ -134,8 +130,8 @@ class _HomeState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                floating: true,
                 pinned: true,
+                forceElevated: innerBoxIsScrolled,
                 elevation: 5,
               ),
             ];

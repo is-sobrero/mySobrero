@@ -89,19 +89,20 @@ class _AssenzeState extends State<AssenzeView>
                 child: PreferredSize(
                   preferredSize: Size.fromHeight(_preferredAppBarHeight),
                   child: AppBar(
-                    title: AnimatedOpacity(
-                      opacity: _appBarTitleOpacity,
-                      duration: const Duration(milliseconds: 250),
-                      child: Text("Assenze",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    backgroundColor: Color(0xffff9692),
-                    elevation: _appBarElevation,
-                    leading: BackButton(
-                      color: Colors.black,
+                      title: AnimatedOpacity(
+                        opacity: _appBarTitleOpacity,
+                        duration: const Duration(milliseconds: 250),
+                        child: Text("Assenze",
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                      backgroundColor: Color(0xffff9692),
+                      elevation: 0,
+                      leading: BackButton(
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ),
+
               ),
               Expanded(
                 child: ScrollConfiguration(

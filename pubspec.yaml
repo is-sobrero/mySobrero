@@ -37,10 +37,11 @@ dependencies:
   direct_select_flutter: ^1.0.5
   direct_select: ^1.0.0
   image_picker: ^0.6.3+1
-  bmprogresshud: ^0.0.5
-  settings_ui: ^0.2.0
-
+  package_info: ^0.4.0+13
+  firebase_remote_config: ^0.3.0+1
   expandable: ^4.0.2
+  launch_review: ^1.0.1
+  quick_actions: ^0.4.0+1
   flutter:
     sdk: flutter
 
@@ -77,6 +78,9 @@ flutter:
     - family:  CustomIcons
       fonts:
         - asset: assets/fonts/CustomIcons.ttf
+
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
