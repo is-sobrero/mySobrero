@@ -288,7 +288,7 @@ packages:
       name: launch_review
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0"
   local_auth:
     dependency: "direct main"
     description:
@@ -359,13 +359,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  quick_actions:
-    dependency: "direct main"
-    description:
-      name: quick_actions
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0+1"
   quiver:
     dependency: transitive
     description:

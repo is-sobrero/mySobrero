@@ -17,7 +17,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:quick_actions/quick_actions.dart';
 import 'globals.dart' as globals;
 
 void main() {
@@ -296,12 +295,7 @@ class _AppLoginState extends State<AppLogin> {
       final profileImageUrl = dataRetrieve.data["profileImage"];
       print("profilo: $profileImageUrl");
       globals.profileURL = profileImageUrl;
-      final QuickActions quickActions =  QuickActions();
-      quickActions.setShortcutItems(<ShortcutItem>[
-        const ShortcutItem(type: 'action_voti', localizedTitle: 'Voti'),
-        const ShortcutItem(type: 'action_compiti', localizedTitle: 'Compiti'),
-        const ShortcutItem(type: 'action_comunicazioni', localizedTitle: 'Comunicazioni')
-      ]);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

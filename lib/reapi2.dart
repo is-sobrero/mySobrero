@@ -7,6 +7,7 @@ class reAPI2 {
   List<Voti> voti;
   List<Compiti> compiti;
   Assenze assenze;
+  List<Pagella> pagelle;
 
   reAPI2(
       {this.version,
@@ -16,7 +17,8 @@ class reAPI2 {
       this.comunicazioni,
       this.voti,
       this.compiti,
-      this.assenze});
+      this.assenze,
+      this.pagelle});
 
   reAPI2.fromJson(Map<String, dynamic> json) {
     version = json['version'];
@@ -47,8 +49,14 @@ class reAPI2 {
         compiti.add(new Compiti.fromJson(v));
       });
     }
-    assenze =
-        json['assenze'] != null ? new Assenze.fromJson(json['assenze']) : null;
+    assenze = json['assenze'] != null ? new Assenze.fromJson(json['assenze']) : null;
+
+    if (json['pagelle'] != null) {
+      pagelle = new List<Pagella>();
+      json['pagelle'].forEach((v) {
+        pagelle.add(new Pagella.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -375,5 +383,59 @@ class Assenza {
     data['orario'] = this.orario;
     data['calcolo'] = this.calcolo;
     return data;
+  }
+}
+
+class Pagella {
+  String periodo;
+  String esito;
+  String giudizio;
+  double media;
+  List<VotoPagella> materie;
+
+  Pagella({
+    this.periodo,
+    this.esito,
+    this.giudizio,
+    this.media,
+    this.materie
+  });
+
+  Pagella.fromJson(Map<String, dynamic> json) {
+    periodo = json['periodo'];
+    esito = json['esito'];
+    giudizio = json['giudizio'];
+    media = json['media'];
+    if (json['materie'] != null) {
+      materie = new List<VotoPagella>();
+      json['materie'].forEach((v) {
+        materie.add(new VotoPagella.fromJson(v));
+      });
+    }
+  }
+
+/*Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['code'] = this.code;
+    data['description'] = this.description;
+    return data;
+  }*/
+}
+
+class VotoPagella {
+  String materia;
+  int assenze;
+  int voto;
+
+  VotoPagella({
+    this.materia,
+    this.assenze,
+    this.voto,
+  });
+
+  VotoPagella.fromJson(Map<String, dynamic> json) {
+    materia = json['materia'];
+    assenze = json['assenze'];
+    voto = json['voto'];
   }
 }
