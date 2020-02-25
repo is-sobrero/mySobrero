@@ -152,7 +152,7 @@ class _AltroView extends State<AltroView> {
                     decoration: new BoxDecoration(
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                            color: Color(0xFF5352ed).withOpacity(0.2),
+                            color: Color(0xff38ada9).withOpacity(0.2),
                             offset: const Offset(1.1, 1.1),
                             blurRadius: 10.0),
                       ],

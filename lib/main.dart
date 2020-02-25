@@ -122,82 +122,85 @@ class _AppLoginState extends State<AppLogin> {
             return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)), //this right here
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                      borderRadius: new BorderRadius.circular(8.0),
-                      child: Image.asset('assets/images/update.png')),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Aggiornamento dell'app disponibile",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(top: 16, bottom: 16),
-                                child: Text(
-                                  "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.\nRicorda che la versione attuale dell'applicazione potrebbe non funzionare più nei prossimi giorni",
-                                  style: TextStyle(fontSize: 16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 200),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                        borderRadius: new BorderRadius.circular(8.0),
+                        child: Image.asset('assets/images/update.png')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  "Aggiornamento dell'app disponibile",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              OutlineButton(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  ragionaLogin();
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(7.0))),
-                                color: Theme.of(context).primaryColor,
-                                child: const Text(
-                                  'OK',
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.only(top: 16, bottom: 16),
+                                  child: Text(
+                                    "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.\nRicorda che la versione attuale dell'applicazione potrebbe non funzionare più nei prossimi giorni",
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                              Container(width: 10,),
-                              OutlineButton(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                onPressed: () {
-                                  LaunchReview.launch();
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(7.0))),
-                                color: Theme.of(context).primaryColor,
-                                child: const Text(
-                                  'AGGIORNA',
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                OutlineButton(
+                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    ragionaLogin();
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(7.0))),
+                                  color: Theme.of(context).primaryColor,
+                                  child: const Text(
+                                    'OK',
+                                  ),
+                                ),
+                                Container(width: 10,),
+                                OutlineButton(
+                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  onPressed: () {
+                                    LaunchReview.launch();
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(7.0))),
+                                  color: Theme.of(context).primaryColor,
+                                  child: const Text(
+                                    'AGGIORNA',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           });
@@ -311,64 +314,67 @@ class _AppLoginState extends State<AppLogin> {
             return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)), //this right here
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                      borderRadius: new BorderRadius.circular(8.0),
-                      child: Image.asset('assets/images/errore.png')),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Errore durante il Login",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 16, bottom: 16),
-                                child: Text(
-                                  response.status.description,
-                                  style: TextStyle(fontSize: 16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 200),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                        borderRadius: new BorderRadius.circular(8.0),
+                        child: Image.asset('assets/images/errore.png')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  "Errore durante il Login",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
-                              ),
-                              Text(
-                                "Per fortuna abbiamo messo il pulsante riprova",
-                                style: TextStyle(fontSize: 13),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 16, bottom: 16),
+                                  child: Text(
+                                    response.status.description,
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Text(
+                                  "Per fortuna abbiamo messo il pulsante riprova",
+                                  style: TextStyle(fontSize: 13),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        OutlineButton(
-                          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(7.0))),
-                          color: Theme.of(context).primaryColor,
-                          child: const Text(
-                            'RIPROVA',
+                          OutlineButton(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(7.0))),
+                            color: Theme.of(context).primaryColor,
+                            child: const Text(
+                              'RIPROVA',
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           });

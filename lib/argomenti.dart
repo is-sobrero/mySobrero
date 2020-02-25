@@ -15,15 +15,18 @@ class ArgomentiView extends StatefulWidget {
 
   ArgomentiView(List<Argomenti> regclasse) {
     this.regclasse = regclasse;
-    bool okLista = false;
     this.argSettimana = List<Argomenti>();
     DateTime today = DateTime.now();
     var x = today.subtract(new Duration(days: today.weekday - 1));
-    var formatter = new DateFormat('DD/MM/yyyy');
-    String inizioSettimana = formatter.format(x);
+    var formatter = new DateFormat('dd/MM/yyyy');
+    print("Inizio settimana: ${formatter.format(x)}");
     for (int i = 0; i < regclasse.length; i++) {
-      if (regclasse[i].data.split(" ")[0] == inizioSettimana) okLista = true;
-      if (okLista) this.argSettimana.add(regclasse[i]);
+      var currentGiorno = formatter.parse(regclasse[i].data.split(" ")[0]);
+      if (currentGiorno.compareTo(x) >= 0){
+        this.argSettimana.add(regclasse[i]);
+        print("curr: ${formatter.format(currentGiorno)}");
+
+      }
     }
   }
 

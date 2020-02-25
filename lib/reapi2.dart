@@ -231,6 +231,7 @@ class Comunicazioni {
   String contenuto;
   String letta;
   String titolo;
+  List<Allegato> allegati;
 
   Comunicazioni(
       {this.data, this.mittente, this.contenuto, this.letta, this.titolo});
@@ -241,6 +242,12 @@ class Comunicazioni {
     contenuto = json['contenuto'];
     letta = json['letta'];
     titolo = json['titolo'];
+    if (json['allegati'] != null) {
+      allegati = new List<Allegato>();
+      json['allegati'].forEach((v) {
+        allegati.add(new Allegato.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -421,6 +428,22 @@ class Pagella {
     return data;
   }*/
 }
+
+class Allegato {
+  String url;
+  String nome;
+
+  Allegato({
+    this.url,
+    this.nome,
+  });
+
+  Allegato.fromJson(Map<String, dynamic> json) {
+    url = json['url'];
+    nome = json['nome'];
+  }
+}
+
 
 class VotoPagella {
   String materia;

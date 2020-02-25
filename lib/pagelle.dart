@@ -211,7 +211,7 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                                                           color: Colors.white)),
                                                   child: Padding(
                                                     padding: const EdgeInsets.all(15.0),
-                                                    child: Column(
+                                                    child: /*Column(
                                                       crossAxisAlignment:
                                                       CrossAxisAlignment.stretch,
                                                       children: <Widget>[
@@ -233,6 +233,24 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                                                                 fontSize: 16,
                                                                 color: Colors.white)),
 
+                                                      ],
+                                                    ),*/
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right: 15),
+                                                          child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.white)),
+                                                        ),
+                                                        Expanded(child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(mat.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                                                            Text("Ore di assenza: ${mat.assenze}",
+                                                                style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    color: Colors.white)),
+                                                          ],
+                                                        ))
                                                       ],
                                                     ),
                                                   )),

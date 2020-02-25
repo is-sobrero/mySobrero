@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'reapi2.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class ComunicazioniView extends StatefulWidget {
   List<Comunicazioni> comunicazioni;
@@ -16,6 +18,33 @@ class _ComunicazioniView extends State<ComunicazioniView> {
   List<Comunicazioni> comunicazioni;
   _ComunicazioniView(List<Comunicazioni> comunicazioni) {
     this.comunicazioni = comunicazioni;
+  }
+
+  _launchURL(String uri) async {
+    if (await canLaunch(uri)) {
+      await launch(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+
+
+  List<Widget> generaAllegati(List<Allegato> allegati){
+    List<Widget> list = new List<Widget>();
+    for (int i = 0; i<allegati.length; i++){
+      list.add(ActionChip(
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () {
+          _launchURL(allegati[i].url);
+        },
+        avatar: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          child: Icon(Icons.file_download, color: Colors.white,),
+        ),
+        label: Text(allegati[i].nome, style: TextStyle(color: Colors.white),),
+      ));
+    }
+    return list;
   }
 
   List<Widget> generaComunicazioni() {
@@ -41,7 +70,7 @@ class _ComunicazioniView extends State<ComunicazioniView> {
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold)),
                     ),
-                    Container(
+                    /*Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           color: Theme.of(context).primaryColor,
@@ -51,7 +80,7 @@ class _ComunicazioniView extends State<ComunicazioniView> {
                               const EdgeInsets.fromLTRB(14.0, 5.0, 14.0, 5.0),
                           child: Text(comunicazioni[i].mittente,
                               style: TextStyle(color: Colors.white)),
-                        )),
+                        )),*/
                   ]),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -59,6 +88,10 @@ class _ComunicazioniView extends State<ComunicazioniView> {
                         style: TextStyle(
                           fontSize: 16,
                         )),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: generaAllegati(comunicazioni[i].allegati)
                   )
                 ],
               ),

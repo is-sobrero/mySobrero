@@ -290,8 +290,9 @@ class _Mainview extends State<Mainview> {
                                             AutoSizeText(
                                               ultimoVoto != "null" ? "Ultimo voto preso di $ultimaMateria" : "Nessun voto per il periodo corrente",
                                               style: new TextStyle(
-                                                  color: Color(0xFFFFFFFF)),
-                                              minFontSize: 10,
+                                                  color: Color(0xFFFFFFFF), fontSize: 14),
+                                              maxLines: 2,
+                                              minFontSize: 7,
                                             )
                                           ],
                                         ),
@@ -490,55 +491,64 @@ class _Mainview extends State<Mainview> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctxt, int index) {
                       final item = feed.items[index];
-                      return Card(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Theme.of(context).textTheme.body1.color,
-                              width: 1,
+                      return SafeArea(
+                        bottom: false,
+                        left: index == 0,
+                        right: index == feed.items.length -1,
+                        top: false,
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Theme.of(context).textTheme.body1.color,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          elevation: 0,
-                          margin: EdgeInsets.only(right: 10),
-                          clipBehavior: Clip.antiAlias,
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          child: Container(
-                            width: 300,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                new Expanded(
-                                    child: CachedNetworkImage(
-                                  imageUrl: item.thumbnail,
-                                  placeholder: (context, url) =>
-                                      Skeleton(),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                  fit: BoxFit.cover,
-                                )),
-                                Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        item.title.toUpperCase(),
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                            elevation: 0,
+                            margin: EdgeInsets.only(right: 10),
+                            clipBehavior: Clip.antiAlias,
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            child: Container(
+                              width: 300,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  new Expanded(
+                                      child: CachedNetworkImage(
+                                    imageUrl: item.thumbnail,
+                                    placeholder: (context, url) =>
+                                        Skeleton(),
+                                    errorWidget: (context, url, error) =>
+                                        Image.asset(
+                                            "assets/images/errore.png",
+                                          fit: BoxFit.cover
                                         ),
-                                      ),
-                                      OutlineButton(
-                                          child: Text("LEGGI"),
-                                          onPressed: () =>
-                                              openURL(context, item.link))
-                                    ],
+                                    fit: BoxFit.cover,
+                                  )),
+                                  Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          item.title.toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        OutlineButton(
+                                            child: Text("LEGGI"),
+                                            onPressed: () =>
+                                                openURL(context, item.link))
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ));
+                                ],
+                              ),
+                            )),
+                      );
                     }),
               )
             ],
