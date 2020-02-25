@@ -9,7 +9,6 @@ import 'comunicazioni.dart';
 import 'altro.dart';
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'custom_icons_icons.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -33,7 +32,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 
-class _HomeState extends State<HomeScreen> {
+class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   int _currentIndex = 0;
   PageController pageController = PageController();
   reAPI2 response;
@@ -80,21 +79,67 @@ class _HomeState extends State<HomeScreen> {
     return true;
   }
 
+  int scrollThreshold = 50;
+  double scroll = 0;
+
+  bool elaboraScroll(ScrollNotification scrollNotification){
+    if (scrollNotification is ScrollUpdateNotification) {
+      setState(() {
+        scroll = scrollNotification.metrics.pixels;
+        if (scroll < 0) scroll = 0;
+        else if (scroll > scrollThreshold) scroll = 1;
+        else scroll /= scrollThreshold;
+      });
+    }
+    return true;
+  }
+
+  void initState(){
+    super.initState();
+  }
+
+  void dispose() {
+    super.dispose();
+  }
+
+  double map(double x, double in_min, double in_max, double out_min, double out_max)
+  {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              new SliverAppBar(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: Row(
+        appBar: PreferredSize(
+          preferredSize: Size(double.infinity, 55),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black12.withAlpha((31 * scroll).toInt()),
+                    spreadRadius: 5,
+                    blurRadius: 10
+                )
+              ],
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
+                  width: 4
+                )
+              ),
+              color: Theme.of(context).scaffoldBackgroundColor
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                child: Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 35,
-                      height: 35,
+                      width:  35,
+                      height:  35,
                       child: Image.asset('assets/images/logo_sobrero_grad.png',
                           scale: 1.1),
                     ),
@@ -103,14 +148,14 @@ class _HomeState extends State<HomeScreen> {
                       child: Text(
                         "mySobrero",
                         style: TextStyle(
-                            fontSize: 17,
+                            fontSize:  17,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF0360e7)),
                       ),
                     ),
                     Spacer(), // use Spacer
                     Transform.scale(
-                      scale: 0.8,
+                      scale:  0.8,
                       child: IconButton(
                         icon: new Image.asset(
                           'assets/images/ic_settings_grad.png',
@@ -130,31 +175,39 @@ class _HomeState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                pinned: false,
-                floating: true,
-                snap: true,
-                forceElevated: innerBoxIsScrolled,
-                elevation: 5,
               ),
-            ];
-          },
-          body: PageView(
-            controller: pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            children: <Widget>[
-              Mainview(response, feed, (int page) {
-                onTabTapped(page);
-              }, profileUrl),
-              VotiView(response.voti),
-              ComunicazioniView(response.comunicazioni),
-              AltroView(response),
-            ],
+            ),
           ),
         ),
+        body: PageView(
+              controller: pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              children: <Widget>[
+                NotificationListener<ScrollNotification>(
+                  onNotification: elaboraScroll,
+                  child: Mainview(response, feed, (int page) {
+                    onTabTapped(page);
+                  }, profileUrl),
+                ),
+                NotificationListener<ScrollNotification>(
+                  onNotification: elaboraScroll,
+                  child:VotiView(response.voti),
+                ),
+                NotificationListener<ScrollNotification>(
+                  onNotification: elaboraScroll,
+                  child:ComunicazioniView(response.comunicazioni),
+                ),
+                NotificationListener<ScrollNotification>(
+                  onNotification: elaboraScroll,
+                  child: AltroView(response),
+                ),
+              ],
+          ),
+
         bottomNavigationBar: CubertoBottomBar(
           inactiveIconColor: Theme.of(context).textTheme.body1.color,
           tabStyle: CubertoTabStyle

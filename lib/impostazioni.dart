@@ -374,7 +374,9 @@ class ToggleButton extends StatelessWidget {
           ),
           Switch(
             value: enabled ? booleanState : false,
-            inactiveTrackColor: Theme.of(context).primaryColor.withAlpha(120),
+            onChanged: enabled ? (val){
+
+            } : null,
           )
         ],
       ),
