@@ -183,6 +183,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
               controller: pageController,
               onPageChanged: (index) {
                 setState(() {
+                  print(response.voti2q.length);
                   _currentIndex = index;
                 });
               },
@@ -195,11 +196,11 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                 ),
                 NotificationListener<ScrollNotification>(
                   onNotification: elaboraScroll,
-                  child:VotiView(response.voti),
+                  child: VotiView(response.voti1q, response.voti2q),
                 ),
                 NotificationListener<ScrollNotification>(
                   onNotification: elaboraScroll,
-                  child:ComunicazioniView(response.comunicazioni),
+                  child: ComunicazioniView(response.comunicazioni),
                 ),
                 NotificationListener<ScrollNotification>(
                   onNotification: elaboraScroll,

@@ -5,6 +5,8 @@ class reAPI2 {
   List<Argomenti> argomenti;
   List<Comunicazioni> comunicazioni;
   List<Voti> voti;
+  List<Voti> voti1q;
+  List<Voti> voti2q;
   List<Compiti> compiti;
   Assenze assenze;
   List<Pagella> pagelle;
@@ -41,6 +43,18 @@ class reAPI2 {
       voti = new List<Voti>();
       json['voti'].forEach((v) {
         voti.add(new Voti.fromJson(v));
+      });
+    }
+    if (json['voti1q'] != null) {
+      voti1q = new List<Voti>();
+      json['voti1q'].forEach((v) {
+        voti1q.add(new Voti.fromJson(v));
+      });
+    }
+    if (json['voti2q'] != null) {
+      voti2q = new List<Voti>();
+      json['voti2q'].forEach((v) {
+        voti2q.add(new Voti.fromJson(v));
       });
     }
     if (json['compiti'] != null) {
