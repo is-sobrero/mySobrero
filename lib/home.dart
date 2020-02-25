@@ -119,7 +119,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black12.withAlpha((31 * scroll).toInt()),
+                    color: Theme.of(context).primaryColor.withAlpha((77 * scroll).toInt()),
                     spreadRadius: 5,
                     blurRadius: 10
                 )
@@ -183,7 +183,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
               controller: pageController,
               onPageChanged: (index) {
                 setState(() {
-                  print(response.voti2q.length);
+                  scroll = 0;
                   _currentIndex = index;
                 });
               },

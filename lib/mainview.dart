@@ -115,7 +115,7 @@ class _Mainview extends State<Mainview> {
         SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

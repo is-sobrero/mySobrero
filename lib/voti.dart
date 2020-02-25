@@ -4,7 +4,6 @@ import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 
-
 class VotiView extends StatefulWidget {
   List<Voti> voti1q, voti2q;
 
@@ -202,7 +201,7 @@ class _VotiView extends State<VotiView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

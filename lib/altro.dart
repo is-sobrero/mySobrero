@@ -27,7 +27,7 @@ class _AltroView extends State<AltroView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
