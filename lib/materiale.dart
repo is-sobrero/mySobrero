@@ -305,7 +305,18 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                         ),
                                                                       );
                                                                     }
-                                                                    return CircularProgressIndicator(backgroundColor: Colors.white,);
+                                                                    return Padding(
+                                                                      padding: const EdgeInsets.all(15.0),
+                                                                      child: Column(
+                                                                        children: <Widget>[
+                                                                          CupertinoActivityIndicator(radius: 20),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(top: 8.0),
+                                                                            child: Text("Sto caricando i contenuti...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    );
                                                                 }
                                                                 )
                                                               ],
