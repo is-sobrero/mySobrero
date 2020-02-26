@@ -246,8 +246,10 @@ class _AppLoginState extends State<AppLogin> {
     Map<String, String> headers = {
       'Accept': 'application/json',
     };
-    final responseHTTP = await http.post(url,
-        headers: headers, body: {'stud_id': username, 'password': password, 'v3':'v3'});
+    final responseHTTP = await http.post(
+        url,
+        headers: headers,
+        body: {'stud_id': username, 'password': password});
     Map responseMap = jsonDecode(responseHTTP.body);
     var response = reAPI2.fromJson(responseMap);
     if (response.status.code == 0) {

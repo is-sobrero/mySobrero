@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'reapi2.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class MaterialeView extends StatefulWidget {
 
@@ -53,6 +56,24 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
     if (currentBrightness == Brightness.dark)
       FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     super.dispose();
+  }
+
+  Future<List<File>> _ottieniFile(String session, String idDocente, String idCartella) async {
+    final endpointCartella = 'https://reapistaging.altervista.org/api/v3/getContenutiCartella/';
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+    };
+    final response = await http.post(
+        endpointCartella,
+        headers: headers,
+        body: {'session': session, 'idDocente':idDocente, 'idCartella': idCartella});
+    print(response.body);
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body)["files"];
+      return jsonResponse.map((file) => new File.fromJson(file)).toList();
+    } else {
+      throw Exception('Impossibile caricare il contenuto della cartella (${json.decode(response.body)["status"]["description"]})');
+    }
   }
 
   @override
@@ -223,7 +244,25 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                Text("test")
+                                                                FutureBuilder<List<File>>(
+                                                                  future: _ottieniFile(widget.userID, reMateriale[index].docente, reMateriale[index].cartelle[i].id.toString()),
+                                                                  builder: (context, snapshot){
+                                                                    if (snapshot.hasData){
+                                                                      return Text ("HO I DATI");
+                                                                    } else if (snapshot.hasError) {
+                                                                      return Padding(
+                                                                        padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                                        child: Column(
+                                                                          children: <Widget>[
+                                                                            Icon(Icons.error_outline, size: 40, color: Colors.white,),
+                                                                            Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                          ],
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                    return CircularProgressIndicator();
+                                                                }
+                                                                )
                                                               ],
                                                             ),
                                                           ),

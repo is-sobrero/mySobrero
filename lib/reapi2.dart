@@ -509,3 +509,14 @@ class Cartella {
     descrizione = json['descrizione'];
   }
 }
+
+class File {
+  String nome;
+  String url;
+  String filename;
+  File.fromJson(Map<String, dynamic> json) {
+    nome = json['nome'];
+    url = json['url'];
+    filename = json['filename'];
+  }
+}
