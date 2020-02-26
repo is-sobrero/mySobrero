@@ -3,6 +3,7 @@ import 'package:mySobrero/pagelle.dart';
 import 'reapi2.dart';
 import 'assenze.dart';
 import 'argomenti.dart';
+import 'materiale.dart';
 
 class AltroView extends StatefulWidget {
   reAPI2 response;
@@ -143,7 +144,7 @@ class _AltroView extends State<AltroView> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            PagelleView(response.pagelle)),
+                            MaterialeView(reMateriale: response.materiale)),
                   );
                 },
                 child: Hero(

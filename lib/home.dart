@@ -84,16 +84,12 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
   bool elaboraScroll(ScrollNotification scrollNotification){
     if (scrollNotification is ScrollUpdateNotification) {
-      LabeledGlobalKey<RawGestureDetectorState> chiave = scrollNotification.context.widget.key;
-      RawGestureDetectorState stato = chiave.currentState;
-      if (stato.widget.gestures.keys.toString() == "(VerticalDragGestureRecognizer)"){
         double oldScroll = scroll;
         scroll = scrollNotification.metrics.pixels;
         if (scroll < 0) scroll = 0;
         else if (scroll > scrollThreshold) scroll = 1;
         else scroll /= scrollThreshold;
         if (oldScroll - scroll != 0) setState(() {});
-      }
     }
     return true;
   }
@@ -181,6 +177,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
           ),
         ),
         body: PageView(
+
               controller: pageController,
               onPageChanged: (index) {
                 setState(() {

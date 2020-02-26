@@ -10,6 +10,7 @@ class reAPI2 {
   List<Compiti> compiti;
   Assenze assenze;
   List<Pagella> pagelle;
+  List<MaterialeDocente> materiale;
 
   reAPI2(
       {this.version,
@@ -24,8 +25,7 @@ class reAPI2 {
 
   reAPI2.fromJson(Map<String, dynamic> json) {
     version = json['version'];
-    status =
-        json['status'] != null ? new Status.fromJson(json['status']) : null;
+    status = json['status'] != null ? new Status.fromJson(json['status']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['argomenti'] != null) {
       argomenti = new List<Argomenti>();
@@ -474,5 +474,30 @@ class VotoPagella {
     materia = json['materia'];
     assenze = json['assenze'];
     voto = json['voto'];
+  }
+}
+
+class MaterialeDocente {
+  String docente;
+  String id;
+  List<Cartella> cartelle;
+  MaterialeDocente.fromJson(Map<String, dynamic> json){
+    if (json['cartelle'] != null) {
+      id = json['id'];
+      docente = json['docente'];
+      cartelle = new List<Cartella>();
+      json['cartelle'].forEach((v) {
+        cartelle.add(new Cartella.fromJson(v));
+      });
+    }
+  }
+}
+
+class Cartella {
+  int id;
+  String descrizione;
+  Cartella.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    descrizione = json['descrizione'];
   }
 }
