@@ -11,6 +11,7 @@ class reAPI2 {
   Assenze assenze;
   List<Pagella> pagelle;
   List<MaterialeDocente> materiale;
+  String session;
 
   reAPI2(
       {this.version,
@@ -71,6 +72,13 @@ class reAPI2 {
         pagelle.add(new Pagella.fromJson(v));
       });
     }
+    if (json['materiale'] != null) {
+      materiale = new List<MaterialeDocente>();
+      json['materiale'].forEach((v) {
+        materiale.add(new MaterialeDocente.fromJson(v));
+      });
+    }
+    session = json['session'];
   }
 
   Map<String, dynamic> toJson() {

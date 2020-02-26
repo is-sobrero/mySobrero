@@ -144,7 +144,7 @@ class _AltroView extends State<AltroView> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            MaterialeView(reMateriale: response.materiale)),
+                            MaterialeView(reMateriale: response.materiale, userID: response.session,)),
                   );
                 },
                 child: Hero(

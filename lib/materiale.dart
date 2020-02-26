@@ -1,3 +1,4 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
@@ -7,8 +8,9 @@ import 'reapi2.dart';
 class MaterialeView extends StatefulWidget {
 
   final List<MaterialeDocente> reMateriale;
+  final String userID;
 
-  MaterialeView({Key key, @required this.reMateriale}) : super(key: key);
+  MaterialeView({Key key, @required this.reMateriale, @required this.userID}) : super(key: key);
 
   @override
   _MaterialeState createState() => _MaterialeState();
@@ -124,10 +126,127 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                             ),
                             begin: _listAnimationIntervalStart - 0.15,
                             child: Padding(
+
                                 padding: EdgeInsets.only(top: 10),
                                 child: Column(
                                   children: <Widget>[
-
+                                    ListView.builder(
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      itemCount: reMateriale.length,
+                                      itemBuilder: (context, index){
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 10, top: 5),
+                                              child: Text(
+                                                  reMateriale[index].docente,
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    color: Colors.white)
+                                              ),
+                                            ),
+                                            ListView.builder(
+                                              primary: false,
+                                              shrinkWrap: true,
+                                              itemCount: reMateriale[index].cartelle.length,
+                                              itemBuilder: (ctx, i){
+                                                //return Text(reMateriale[index].cartelle[i].descrizione);
+                                                return Padding(
+                                                  padding: const EdgeInsets.only(bottom: 15),
+                                                  child: ExpandableNotifier(
+                                                      child: Expandable(
+                                                        collapsed: ExpandableButton(
+                                                            child: Container(
+                                                              decoration: new BoxDecoration(
+                                                                  color: Colors.white.withAlpha(20),
+                                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                  border: Border.all(width: 1.0, color: Colors.white)),
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(15),
+                                                                child: Row(
+                                                                  children: <Widget>[
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(right: 5),
+                                                                      child: Icon(Icons.folder_open),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                          reMateriale[index].cartelle[i].descrizione,
+                                                                          style: TextStyle(
+                                                                              fontSize: 18,
+                                                                              fontWeight:
+                                                                              FontWeight.bold,
+                                                                              color: Colors.white
+                                                                          )
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            )
+                                                        ),
+                                                        expanded: ExpandableButton(
+                                                          child: Container(
+                                                            decoration: new BoxDecoration(
+                                                                color: Colors.white.withAlpha(20),
+                                                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                border: Border.all(width: 1.0, color: Colors.white)),
+                                                            child: Column(
+                                                              children: <Widget>[
+                                                                Container(
+                                                                  decoration: new BoxDecoration(
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                  ),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.all(15),
+                                                                    child: Row(
+                                                                      children: <Widget>[
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(right: 5),
+                                                                          child: Icon(Icons.folder_open, color: Colors.black,),
+                                                                        ),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              reMateriale[index].cartelle[i].descrizione,
+                                                                              style: TextStyle(
+                                                                                  fontSize: 18,
+                                                                                  fontWeight:
+                                                                                  FontWeight.bold,
+                                                                                  color: Colors.black
+                                                                              )
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text("test")
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                  )
+                                                );
+                                              },
+                                            )
+                                            /*ExpandableNotifier(
+                                              child: Expandable(
+                                                collapsed: ExpandableButton(
+                                                  child: Text("ESPANDAMI")
+                                                ),
+                                                expanded: ExpandableButton(
+                                                  child: Text("COMPRIMIMI"),
+                                                ),
+                                              )
+                                            )*/
+                                          ],
+                                        );
+                                      },
+                                    )
                                   ],
                                 )))
                       ],

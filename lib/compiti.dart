@@ -179,8 +179,7 @@ class _CompitiState extends State<CompitiView>
                                         List<Compiti> current = selezioneCompiti == 0 ? settimana : compiti;
                                         int i = selezioneCompiti == 0 ? index2 : current.length - index2 - 1;
                                         return Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 15),
+                                          padding: const EdgeInsets.only(bottom: 15),
                                           child: Container(
                                               decoration: new BoxDecoration(
                                                   color: Colors.black.withAlpha(20),
