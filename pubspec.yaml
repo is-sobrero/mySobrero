@@ -41,6 +41,7 @@ dependencies:
   firebase_remote_config: ^0.3.0+1
   expandable: ^4.0.2
   launch_review: ^2.0.0
+  async: ^2.4.0
 
   flutter:
     sdk: flutter
