@@ -521,11 +521,6 @@ class _Mainview extends State<Mainview> {
                                     placeholder: (context, url) =>
                                         Skeleton(),
                                     errorWidget: (context, url, error) =>
-                                        /*Image.asset(
-                                            "assets/images/error-image-generic.png",
-                                          width: 300,
-                                          fit: BoxFit.cover
-                                        ),*/
                                         Container(
                                           color: Theme.of(context).textTheme.body1.color.withAlpha(40),
                                           width: 300,

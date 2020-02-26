@@ -262,6 +262,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                                 text: TextSpan(
                                                   children: <TextSpan>[
                                                     TextSpan(
+                                                      style: Theme.of(context).textTheme.body1,
                                                       text: 'mySobrero 2.0 - L\'app pensata appositamente per gli studenti del Sobrero - sviluppata da Federico Runco (4 AE - ',
                                                     ),
                                                     _LinkTextSpan(
@@ -270,6 +271,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                                         text: 's00802@sobrero.it'
                                                     ),
                                                     TextSpan(
+                                                      style: Theme.of(context).textTheme.body1,
                                                       text: ').\n\nIl codice sorgente dell\'applicazione è disponibile su Github ',
                                                     ),
                                                     _LinkTextSpan(
@@ -278,6 +280,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                                       text: 'a questo indirizzo'
                                                     ),
                                                     TextSpan(
+                                                      style: Theme.of(context).textTheme.body1,
                                                       text: '.',
                                                     ),
                                                   ],
