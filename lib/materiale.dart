@@ -42,10 +42,11 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
       vsync: this,
     )..forward();
     _scrollController = ScrollController()..addListener(() {
-        setState(() {
-          _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
-          _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
-        });
+      double oldElevation = _appBarElevation;
+      double oldOpacity = _appBarTitleOpacity;
+      _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
+      _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
+      if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
     });
     reMateriale = widget.reMateriale;
   }

@@ -45,20 +45,13 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
       duration: Duration(milliseconds: 1500),
       vsync: this,
     )..forward();
-    _scrollController = ScrollController()
-      ..addListener(() {
-        setState(() {
-          _appBarElevation =
-              _scrollController.offset > _scrollController.initialScrollOffset
-                  ? 4.0
-                  : 0.0;
-          _appBarTitleOpacity = _scrollController.offset >
-                  _scrollController.initialScrollOffset +
-                      _preferredAppBarHeight / 2
-              ? 1.0
-              : 0.0;
-        });
-      });
+    _scrollController = ScrollController()..addListener(() {
+      double oldElevation = _appBarElevation;
+      double oldOpacity = _appBarTitleOpacity;
+      _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
+      _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
+      if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
+    });
   }
 
   @override
