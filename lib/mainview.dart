@@ -485,6 +485,7 @@ class _Mainview extends State<Mainview> {
               Container(
                 height: 400,
                 child: ListView.builder(
+                  //key: GlobalKey<RawGestureDetectorState>("DIO"),
                     padding:
                         const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                     itemCount: feed.items.length,
@@ -520,7 +521,8 @@ class _Mainview extends State<Mainview> {
                                         Skeleton(),
                                     errorWidget: (context, url, error) =>
                                         Image.asset(
-                                            "assets/images/errore.png",
+                                            "assets/images/error-image-generic.png",
+                                          width: 300,
                                           fit: BoxFit.cover
                                         ),
                                     fit: BoxFit.cover,

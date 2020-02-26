@@ -84,12 +84,16 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
   bool elaboraScroll(ScrollNotification scrollNotification){
     if (scrollNotification is ScrollUpdateNotification) {
-      setState(() {
+      LabeledGlobalKey<RawGestureDetectorState> chiave = scrollNotification.context.widget.key;
+      RawGestureDetectorState stato = chiave.currentState;
+      if (stato.widget.gestures.keys.toString() == "(VerticalDragGestureRecognizer)"){
+        double oldScroll = scroll;
         scroll = scrollNotification.metrics.pixels;
         if (scroll < 0) scroll = 0;
         else if (scroll > scrollThreshold) scroll = 1;
         else scroll /= scrollThreshold;
-      });
+        if (oldScroll - scroll != 0) setState(() {});
+      }
     }
     return true;
   }
@@ -106,7 +110,6 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -154,9 +157,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                       ),
                     ),
                     Spacer(), // use Spacer
-                    Transform.scale(
-                      scale:  0.8,
-                      child: IconButton(
+                    IconButton(
                         icon: new Image.asset(
                           'assets/images/ic_settings_grad.png',
                         ),
@@ -172,7 +173,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                           );
                         },
                       ),
-                    ),
+
                   ],
                 ),
               ),
