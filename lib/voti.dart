@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mySobrero/situazione.dart';
 import 'reapi2.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -205,12 +206,33 @@ class _VotiView extends State<VotiView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    'Tutti i voti',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
-                    ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Tutti i voti',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 24,
+                        ),
+                      ),
+                      Spacer(),
+                      FlatButton(
+                        child: Row(
+                          children: <Widget>[
+                            Text("Vai alla situazione", style: TextStyle(color: Theme.of(context).primaryColor),),
+                            Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor,)
+                          ],
+                        ),
+                        onPressed: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SituazioneView()),
+                          );
+                        },
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      )
+                    ],
                   ),
                   Center(
                     child: Padding(
@@ -260,6 +282,7 @@ class _VotiView extends State<VotiView> {
                                         padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<String>(
+                                            icon: Icon(Icons.unfold_more, color: Theme.of(context).primaryColor),
                                             isExpanded: true,
                                             hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
                                             value: materie[filterIndex],
@@ -286,6 +309,7 @@ class _VotiView extends State<VotiView> {
                                   ],
                                 ),
                                 margin: EdgeInsets.zero,
+
                               )),
                         ),
                       ],
