@@ -79,23 +79,37 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
     return true;
   }
 
-  int scrollThreshold = 50;
+  int scrollThreshold = 100;
   double scroll = 0;
 
-  bool elaboraScroll(ScrollNotification scrollNotification){
+  bool elaboraScroll(ScrollNotification scrollNotification) {
     if (scrollNotification is ScrollUpdateNotification) {
-        double oldScroll = scroll;
-        scroll = scrollNotification.metrics.pixels;
-        if (scroll < 0) scroll = 0;
-        else if (scroll > scrollThreshold) scroll = 1;
-        else scroll /= scrollThreshold;
-        if (oldScroll - scroll != 0) setState(() {});
+      double oldScroll = scroll;
+      scroll = scrollNotification.metrics.pixels;
+      if (scroll < 0)
+        scroll = 0;
+      else if (scroll > scrollThreshold)
+        scroll = 1;
+      else
+        scroll /= scrollThreshold;
+      if (oldScroll - scroll != 0) setState(() {});
     }
     return true;
   }
 
+  Mainview _mainViewInstance;
+  VotiView _votiViewInstance;
+  ComunicazioniView _comunicazioniViewInstance;
+  AltroView _altroViewInstance;
+
   void initState(){
     super.initState();
+    _mainViewInstance = Mainview(response, feed, (int page) {
+        onTabTapped(page);
+      }, profileUrl);
+    _votiViewInstance = VotiView(response.voti1q, response.voti2q);
+    _comunicazioniViewInstance = ComunicazioniView(response.comunicazioni);
+    _altroViewInstance = AltroView(response);
   }
 
   void dispose() {
@@ -186,7 +200,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             ),
           ),
         ),
-        body: PageView(
+        body: /*PageView(
 
               controller: pageController,
               onPageChanged: (index) {
@@ -215,7 +229,28 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                   child: AltroView(response),
                 ),
               ],
-          ),
+          ),*/
+        PageView.builder(
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              scroll = 0;
+              _currentIndex = index;
+            });
+          },
+            itemCount: 4,
+          itemBuilder: (context, i){
+            var schermata;
+            if (i == 0) schermata =  _mainViewInstance;
+            if (i == 1) schermata = _votiViewInstance;
+            if (i == 2) schermata = _comunicazioniViewInstance;
+            if (i == 3) schermata = _altroViewInstance;
+            return NotificationListener<ScrollNotification>(
+              onNotification: elaboraScroll,
+              child: schermata,
+            );
+          }
+        ),
 
         bottomNavigationBar: CubertoBottomBar(
           inactiveIconColor: Theme.of(context).textTheme.body1.color,

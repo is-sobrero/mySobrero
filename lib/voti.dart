@@ -343,7 +343,7 @@ class _VotiView extends State<VotiView> {
                                   lineBarsData: [
                                     LineChartBarData(
                                       spots: votiT,
-                                      isCurved: true,
+                                      isCurved: false,
                                       colors: gradientColors,
                                       belowBarData: BarAreaData(
                                         show: true,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mySobrero/pagelle.dart';
+import 'package:mySobrero/ricercaaule.dart';
 import 'reapi2.dart';
 import 'assenze.dart';
 import 'argomenti.dart';
@@ -192,7 +193,7 @@ class _AltroView extends State<AltroView> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PagelleView(response.pagelle)),
+                    MaterialPageRoute(builder: (context) => RicercaAuleView()),
                   );
                 },
                 child: Hero(
@@ -201,7 +202,7 @@ class _AltroView extends State<AltroView> {
                     decoration: new BoxDecoration(
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                            color: Color(0xff38ada9).withOpacity(0.2),
+                            color: Color(0xffF86925).withOpacity(0.2),
                             offset: const Offset(1.1, 1.1),
                             blurRadius: 10.0),
                       ],
@@ -213,7 +214,7 @@ class _AltroView extends State<AltroView> {
                         elevation: 0,
                         margin: EdgeInsets.only(bottom: 10),
                         clipBehavior: Clip.antiAlias,
-                        color: Color(0xff38ada9),
+                        color: Color(0xffF86925),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -227,9 +228,9 @@ class _AltroView extends State<AltroView> {
                             ),
                             Spacer(),
                             Image.asset(
-                              "assets/images/pagelle.png",
+                              "assets/images/ricercaaule.png",
                               height: 150,
-                              width: 200,
+                              width: 170,
                             )
                           ],
                         )),
