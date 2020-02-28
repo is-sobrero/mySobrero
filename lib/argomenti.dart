@@ -129,8 +129,7 @@ class _ArgomentiState extends State<ArgomentiView>
                       title: AnimatedOpacity(
                         opacity: _appBarTitleOpacity,
                         duration: const Duration(milliseconds: 250),
-                        child: Text("Argomenti",
-                            style: TextStyle(color: Colors.white)),
+                        child: Text("Argomenti", style: TextStyle(color: Colors.white)),
                       ),
                       backgroundColor: Color(0xFF5352ed),
                       elevation: _appBarElevation,
@@ -246,7 +245,7 @@ class _ArgomentiState extends State<ArgomentiView>
                                                           value: user,
                                                           child:
                                                           Text(
-                                                            user,
+                                                              user,
                                                             overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)
                                                           ),
                                                         );

@@ -3,11 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'reapi2.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:async/async.dart';
 
 class RicercaAuleView extends StatefulWidget {
 
@@ -21,6 +19,28 @@ class FilterEntry {
   const FilterEntry(this.name, this.offset);
   final String name;
   final int offset;
+}
+
+class Aula {
+  String id;
+  String locale;
+  String denominazione;
+  bool computer;
+  bool ethernet;
+  bool prese;
+  String piano;
+  String plesso;
+
+  Aula.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    locale = json['locale'];
+    denominazione = json['denominazione'];
+    computer = json['computer'];
+    ethernet = json['ethernet'];
+    prese = json['prese'];
+    piano = json['piano'];
+    plesso = json['plesso'];
+  }
 }
 
 class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProviderStateMixin {
@@ -60,26 +80,22 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
       FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     super.dispose();
   }
-/*
-  Future<List<File>> _ottieniFile(String session, String idDocente, String idCartella) async {
-    final endpointCartella = 'https://reapistaging.altervista.org/api/v3/getContenutiCartella/';
+
+  Future<List<Aula>> _ottieniAule(String query, int filter) async {
+    final endpointCartella = 'https://reapistaging.altervista.org/api/v3/searchAule/?params=$filter&q=${Uri.encodeComponent(query)}';
     Map<String, String> headers = {
       'Accept': 'application/json',
     };
-    final response = await http.post(
-        endpointCartella,
-        headers: headers,
-        body: {'session': session, 'idDocente':idDocente, 'idCartella': idCartella});
-    print({'session': session, 'idDocente':idDocente, 'idCartella': idCartella}.toString());
+    final response = await http.get(endpointCartella, headers: headers);
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body)["files"];
-      return jsonResponse.map((file) => new File.fromJson(file)).toList();
+      List jsonResponse = json.decode(response.body)["results"];
+      return jsonResponse.map((aula) => new Aula.fromJson(aula)).toList();
     } else {
-      throw Exception('Impossibile caricare il contenuto della cartella (${json.decode(response.body)["status"]["description"]})');
+      throw Exception('Impossibile ricercare le aule (${json.decode(response.body)["status"]["description"]})');
     }
   }
 
-  _launchURL(String uri) async {
+  /*_launchURL(String uri) async {
     if (await canLaunch(uri)) {
       await launch(uri);
     } else {
@@ -112,6 +128,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
               } else {
                 filterIndex &= ~(1 << entry.offset);
               }
+              _risultatoAule = _ottieniAule(_searchController.text, filterIndex);
             });
           },
         ),
@@ -119,6 +136,8 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
     }
   }
 
+  Future<List<Aula>> _risultatoAule;
+  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
@@ -194,32 +213,131 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Theme(
-                                      data: Theme.of(context).copyWith(
-                                          accentColor: Colors.white,
-                                          primaryColor: Colors.white,
-                                          hintColor: Colors.white
-                                      ),
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Aula da cercare',
-                                          suffixIcon: IconButton(
-                                            icon: Icon(Icons.search),
-                                            color: Colors.white,
-                                            onPressed: (){
-
-                                            },
-                                          )
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                                accentColor: Colors.white,
+                                                primaryColor: Colors.white,
+                                                hintColor: Colors.white
+                                            ),
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'Aula da cercare',
+                                              ),
+                                              controller: _searchController,
+                                              //controller: pwrdController,
+                                            ),
+                                          ),
                                         ),
-                                        //controller: pwrdController,
-                                      ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Container(
+                                            height: 60,
+                                            width: 60,
+                                            child: OutlineButton(
+                                              child: Icon(Icons.search),
+                                              highlightedBorderColor: Colors.white,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _risultatoAule = _ottieniAule(_searchController.text, filterIndex);
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Wrap(
                                       children: filterWidgets.toList(),
                                       runSpacing: 0,
                                       spacing: 0,
                                     ),
+
+                                    FutureBuilder<List<Aula>>(
+                                        future: _risultatoAule,
+                                        builder: (context, snapshot){
+                                          switch (snapshot.connectionState){
+                                            case ConnectionState.none:
+                                              return Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Icon(Icons.search, size: 40, color: Colors.white,),
+                                                      Text("Premi il tasto di ricerca per iniziare", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            case ConnectionState.active:
+                                            case ConnectionState.waiting:
+                                              return Padding(
+                                                padding: const EdgeInsets.all(15.0),
+                                                child: Center(
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      CupertinoActivityIndicator(radius: 20),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(top: 8.0),
+                                                        child: Text("Sto cercando le aule...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            case ConnectionState.done:
+                                              if (snapshot.hasData)
+                                                return snapshot.data.length > 0 ? Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(bottom: 10),
+                                                      child: Text(
+                                                        "Risultati ricerca",
+                                                        style: TextStyle(
+                                                            fontSize: 24,
+                                                            color: Colors.white),
+                                                      ),
+                                                    ),
+                                                    ListView.builder(
+                                                      primary: false,
+                                                      shrinkWrap: true,
+                                                      itemCount: snapshot.data.length,
+                                                      itemBuilder: (c, i2){
+                                                        return Text(snapshot.data[i2].denominazione);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ) : Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        Icon(Icons.cloud_queue, size: 40, color: Colors.white,),
+                                                        Text("Nessuna aula che rispetti i criteri trovata", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              if (snapshot.hasError)
+                                                return Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        Icon(Icons.error_outline, size: 40, color: Colors.white,),
+                                                        Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                          }
+                                          return null;
+                                        }
+                                    )
                                   ],
                                 )))
                       ],
