@@ -220,7 +220,8 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                             data: Theme.of(context).copyWith(
                                                 accentColor: Colors.white,
                                                 primaryColor: Colors.white,
-                                                hintColor: Colors.white
+                                                hintColor: Colors.white,
+                                                cursorColor: Colors.white
                                             ),
                                             child: TextField(
                                               decoration: InputDecoration(
@@ -307,7 +308,109 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                       shrinkWrap: true,
                                                       itemCount: snapshot.data.length,
                                                       itemBuilder: (c, i2){
-                                                        return Text(snapshot.data[i2].denominazione);
+                                                        //return Text(snapshot.data[i2].denominazione);
+                                                        IconData descriptiveIcon = snapshot.data[i2].denominazione.contains("Lab") ? Icons.work : Icons.location_city;
+                                                        descriptiveIcon = snapshot.data[i2].denominazione.contains("Palestra") ? Icons.directions_run : descriptiveIcon;
+                                                        return Padding(
+                                                            padding: const EdgeInsets.only(bottom: 15),
+                                                            child: ExpandableNotifier(
+                                                                child: Expandable(
+                                                                  collapsed: ExpandableButton(
+                                                                      child: Container(
+                                                                        decoration: new BoxDecoration(
+                                                                            color: Colors.white.withAlpha(20),
+                                                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                            border: Border.all(width: 1.0, color: Colors.white)),
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.all(15),
+                                                                          child: Row(
+                                                                            children: <Widget>[
+                                                                              Padding(
+                                                                                padding: const EdgeInsets.only(right: 5),
+                                                                                child: Icon(descriptiveIcon, color: Colors.white),
+                                                                              ),
+                                                                              Expanded(
+                                                                                child: Text(
+                                                                                    snapshot.data[i2].denominazione,
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 18,
+                                                                                        fontWeight:
+                                                                                        FontWeight.bold,
+                                                                                        color: Colors.white
+                                                                                    )
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                  ),
+                                                                  expanded: Container(
+                                                                    decoration: new BoxDecoration(
+                                                                        color: Colors.white.withAlpha(20),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                        border: Border.all(width: 1.0, color: Colors.white)),
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: <Widget>[
+                                                                        ExpandableButton(
+                                                                          child: Container(
+                                                                            decoration: new BoxDecoration(
+                                                                              color: Colors.white,
+                                                                              borderRadius: BorderRadius.all(Radius.circular(9)),
+                                                                            ),
+                                                                            child: Padding(
+                                                                              padding: const EdgeInsets.all(15),
+                                                                              child: Row(
+                                                                                children: <Widget>[
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.only(right: 5),
+                                                                                    child: Icon(descriptiveIcon, color: Colors.black,),
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: Text(
+                                                                                        snapshot.data[i2].denominazione,
+                                                                                        style: TextStyle(
+                                                                                            fontSize: 18,
+                                                                                            fontWeight:
+                                                                                            FontWeight.bold,
+                                                                                            color: Colors.black
+                                                                                        )
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+                                                                          child: Column(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: <Widget>[
+                                                                              Text("Piano aula: ${snapshot.data[i2].piano}"),
+                                                                              Text("Locale aula: ${snapshot.data[i2].locale}"),
+                                                                              Text(
+                                                                                ("Aula dotata di " + (snapshot.data[i2].prese ? "prese, " : "") +
+                                                                                  (snapshot.data[i2].ethernet ? "attacchi ethernet, " : "") +
+                                                                                  (snapshot.data[i2].computer ? "computer, " : ""))
+                                                                              ),
+                                                                              Chip(
+                                                                                backgroundColor: Color(0xffd35400),
+                                                                                avatar: Icon(Icons.place, color: Colors.white, size: 20,),
+                                                                                label: Text("Visualizza sulla mappa", style: TextStyle(color: Colors.white)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+
+                                                                      ],
+                                                                    ),
+                                                                  ),
+
+                                                                )
+                                                            )
+                                                        );
                                                       },
                                                     ),
                                                   ],

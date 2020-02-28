@@ -229,7 +229,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                   child: Container(
                                                                     decoration: new BoxDecoration(
                                                                         color: Colors.white,
-                                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(9)),
                                                                     ),
                                                                     child: Padding(
                                                                       padding: const EdgeInsets.all(15),
