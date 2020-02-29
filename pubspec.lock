@@ -462,6 +462,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "17.4.51"
+  syncfusion_flutter_gauges:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_gauges
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "17.4.51-beta"
   synchronized:
     dependency: transitive
     description:
@@ -518,6 +532,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0+2"
+  utf:
+    dependency: transitive
+    description:
+      name: utf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0+5"
   uuid:
     dependency: transitive
     description:

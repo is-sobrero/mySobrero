@@ -7,7 +7,6 @@ import 'reapi2.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:async/async.dart';
 
 class MaterialeView extends StatefulWidget {
 

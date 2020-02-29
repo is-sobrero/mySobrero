@@ -17,6 +17,8 @@ class VotiView extends StatefulWidget {
   _VotiView createState() => _VotiView(voti1q, voti2q);
 }
 
+
+
 class _VotiView extends State<VotiView> {
   List<Voti> voti, voti1q, voti2q;
   List<double> votiTotali;
@@ -39,6 +41,42 @@ class _VotiView extends State<VotiView> {
       String m = voti1q[i].materia;
       if (!materie.contains(m)) materie.add(m);
     }
+  }
+  
+  Map<String, double> sommaVoti1Q = new Map<String, double>();
+  Map<String, double> sommaVoti2Q = new Map<String, double>();
+  Map<String, int> countVoti1Q = new Map<String, int>();
+  Map<String, int> countVoti2Q = new Map<String, int>();
+
+  Map<String, double> situazione1Q = new Map<String, double>();
+  Map<String, double> situazione2Q = new Map<String, double>();
+
+  void initState(){
+    super.initState();
+    for (int i = 0; i < voti1q.length; i++) {
+      double votoParsed = double.parse(voti1q[i].voto.replaceAll(",", "."));
+      if (!sommaVoti1Q.containsKey(voti1q[i].materia)) {
+        sommaVoti1Q[voti1q[i].materia] = 0;
+        countVoti1Q[voti1q[i].materia] = 0;
+      }
+      sommaVoti1Q[voti1q[i].materia] += votoParsed * int.parse(voti1q[i].peso);
+      countVoti1Q[voti1q[i].materia] += int.parse(voti1q[i].peso);
+    }
+    sommaVoti1Q.forEach((key, value){
+      situazione1Q[key] = sommaVoti1Q[key] / countVoti1Q[key];
+    });
+    for (int i = 0; i < voti2q.length; i++) {
+      double votoParsed = double.parse(voti2q[i].voto.replaceAll(",", "."));
+      if (!sommaVoti2Q.containsKey(voti2q[i].materia)) {
+        sommaVoti2Q[voti2q[i].materia] = 0;
+        countVoti2Q[voti2q[i].materia] = 0;
+      }
+      sommaVoti2Q[voti2q[i].materia] += votoParsed * int.parse(voti2q[i].peso);
+      countVoti2Q[voti2q[i].materia] += int.parse(voti2q[i].peso);
+    }
+    sommaVoti2Q.forEach((key, value){
+      situazione2Q[key] = sommaVoti2Q[key] / countVoti2Q[key];
+    });
   }
 
   List<Widget> generaVoti(List<Voti> valutazioni) {
@@ -174,7 +212,6 @@ class _VotiView extends State<VotiView> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Color> gradientColors = [
       const Color(0xff23b6e6),
       const Color(0xff02d39a),
@@ -226,7 +263,9 @@ class _VotiView extends State<VotiView> {
                         onPressed: (){
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SituazioneView()),
+                            MaterialPageRoute(builder: (context) => SituazioneView(
+                              situazione1Q: situazione1Q, situazione2Q: situazione2Q
+                            )),
                           );
                         },
                         padding: EdgeInsets.zero,
