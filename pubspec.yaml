@@ -43,7 +43,7 @@ dependencies:
   launch_review: ^2.0.0
   async: ^2.4.0
   flutter_svg: ^0.17.2
-  syncfusion_flutter_gauges: ^17.4.51-beta
+  percent_indicator: ^2.1.1
 
   flutter:
     sdk: flutter

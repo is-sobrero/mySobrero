@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class SituazioneView extends StatefulWidget {
   Map<String, double> situazione1Q, situazione2Q;
@@ -81,41 +81,27 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
       padding: const EdgeInsets.only(bottom: 15),
       child: Row(
         children: <Widget>[
-          Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                width: 75,
-                height: 75,
-                child: SfRadialGauge(
-                  axes: <RadialAxis>[RadialAxis(
-                      showLabels: false,
-                      startAngle: 270, endAngle: 270,
-                      showTicks: false,
-                      axisLineStyle: AxisLineStyle(thickness: 7),
-                      pointers: <GaugePointer>[RangePointer(
-                        value: voto * 10,
-                        width: 7,
-                        cornerStyle: CornerStyle.bothCurve,
-                        gradient: SweepGradient(
-                            colors: selezionato,
-                            stops: <double>[0.25, 0.75]
-                        ),
-                      )]
-                  )],
-                ),
-              ),
-              Container(
-                  width: 50,
-                  child: AutoSizeText(
-                    voto.toStringAsFixed(1),
-                    minFontSize: 8,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 25, ),
-                    textAlign: TextAlign.center,
-                  )
-              )
-            ],
+          new CircularPercentIndicator(
+            radius: 75,
+            lineWidth: 8,
+            percent: 0.3,
+            animation: true,
+            animationDuration: 1200,
+            circularStrokeCap: CircularStrokeCap.round,
+            center: Container(
+                width: 50,
+                child: AutoSizeText(
+                  voto.toStringAsFixed(1),
+                  minFontSize: 8,
+                  maxLines: 1,
+                  style: TextStyle(fontSize: 25, ),
+                  textAlign: TextAlign.center,
+                )
+            ),
+            backgroundColor: Colors.black26,
+            linearGradient: LinearGradient(
+              colors: selezionato
+            ),
           ),
           Expanded(
             child: Padding(
@@ -145,6 +131,8 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                     duration: const Duration(milliseconds: 250),
                     child: Text(
                       "Situazione attuale",
+                      style: TextStyle(
+                      color: Theme.of(context).textTheme.body1.color),
                     ),
                   ),
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,

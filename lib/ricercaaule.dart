@@ -103,10 +103,11 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   }*/
 
   final List<FilterEntry> _cast = <FilterEntry>[
-    const FilterEntry('Ethernet', 0),
-    const FilterEntry('LIM', 1),
-    const FilterEntry('Computer', 2),
-    const FilterEntry('Prese', 3),
+    const FilterEntry('Prese', 0),
+    const FilterEntry('Computer', 1),
+    const FilterEntry('Ethernet', 2),
+    const FilterEntry('Proiettore', 3),
+    const FilterEntry('LIM', 4)
   ];
 
   int filterIndex = 0;
@@ -301,7 +302,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                     Padding(
                                                       padding: const EdgeInsets.only(bottom: 10),
                                                       child: Text(
-                                                        "Risultati ricerca",
+                                                        "Risultati ricerca (${snapshot.data.length} aule trovate)",
                                                         style: TextStyle(
                                                             fontSize: 24,
                                                             color: Colors.white),
@@ -428,6 +429,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                                                   (snapshot.data[i2].computer ? "computer, " : "")),
                                                                                   style: TextStyle(color: Colors.white)
                                                                               ),
+                                                                              Text("Plesso: ${snapshot.data[i2].plesso}", style: TextStyle(color: Colors.white)),
                                                                             ],
                                                                           ),
                                                                         ),
