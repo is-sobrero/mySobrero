@@ -118,6 +118,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
         child: FilterChip(
           backgroundColor: Color(0xffd35400),
           selectedColor: Color(0xfff39c12),
+          checkmarkColor: Colors.white,
           label: Text(entry.name, style: TextStyle(color: Colors.white)),
           selected: (filterIndex >> entry.offset & 1) > 0,
           onSelected: (bool value) {
@@ -216,17 +217,19 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                       children: <Widget>[
                                         Expanded(
                                           child: Theme(
-                                            data: Theme.of(context).copyWith(
-                                                accentColor: Colors.white,
-                                                primaryColor: Colors.white,
+                                            data: ThemeData(
                                                 hintColor: Colors.white,
-                                                cursorColor: Colors.white,
-                                              brightness: Brightness.dark
+                                                primaryColor: Colors.white,
                                             ),
                                             child: TextField(
+                                              cursorColor: Colors.white,
+                                              style: new TextStyle(color: Colors.white),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                                                 labelText: 'Aula da cercare',
+                                                enabledBorder: const OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.white, width: 2),
+                                                ),
                                               ),
                                               controller: _searchController,
                                               //controller: pwrdController,
@@ -236,8 +239,8 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                           child: Container(
-                                            height: 60,
-                                            width: 60,
+                                            height:  57,
+                                            width: 57,
                                             child: OutlineButton(
                                               borderSide: BorderSide(color: Colors.white, width: 2),
                                               child: Icon(Icons.search, color:  Colors.white,),
