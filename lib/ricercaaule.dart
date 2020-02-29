@@ -76,8 +76,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    if (currentBrightness == Brightness.dark)
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 

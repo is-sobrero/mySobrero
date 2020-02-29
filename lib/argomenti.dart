@@ -84,8 +84,7 @@ class _ArgomentiState extends State<ArgomentiView>
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    if (currentBrightness == Brightness.light)
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 

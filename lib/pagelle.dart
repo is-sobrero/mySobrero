@@ -58,8 +58,7 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    if (currentBrightness == Brightness.light)
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 

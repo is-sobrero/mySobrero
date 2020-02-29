@@ -55,8 +55,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    if (currentBrightness == Brightness.dark)
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 
