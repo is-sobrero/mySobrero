@@ -5,7 +5,7 @@ import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RicercaAuleView extends StatefulWidget {
 
@@ -221,11 +221,12 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                 accentColor: Colors.white,
                                                 primaryColor: Colors.white,
                                                 hintColor: Colors.white,
-                                                cursorColor: Colors.white
+                                                cursorColor: Colors.white,
+                                              brightness: Brightness.dark
                                             ),
                                             child: TextField(
                                               decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
+                                                border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                                                 labelText: 'Aula da cercare',
                                               ),
                                               controller: _searchController,
@@ -239,7 +240,8 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                             height: 60,
                                             width: 60,
                                             child: OutlineButton(
-                                              child: Icon(Icons.search),
+                                              borderSide: BorderSide(color: Colors.white, width: 2),
+                                              child: Icon(Icons.search, color:  Colors.white,),
                                               highlightedBorderColor: Colors.white,
                                               onPressed: (){
                                                 setState(() {
@@ -361,21 +363,49 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                                             ),
                                                                             child: Padding(
                                                                               padding: const EdgeInsets.all(15),
-                                                                              child: Row(
+                                                                              child: Column(
                                                                                 children: <Widget>[
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.only(right: 5),
-                                                                                    child: Icon(descriptiveIcon, color: Colors.black,),
+                                                                                  Row(
+                                                                                    children: <Widget>[
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.only(right: 5),
+                                                                                        child: Icon(descriptiveIcon, color: Colors.black,),
+                                                                                      ),
+                                                                                      Expanded(
+                                                                                        child: Text(
+                                                                                            snapshot.data[i2].denominazione,
+                                                                                            style: TextStyle(
+                                                                                                fontSize: 18,
+                                                                                                fontWeight:
+                                                                                                FontWeight.bold,
+                                                                                                color: Colors.black
+                                                                                            )
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
                                                                                   ),
-                                                                                  Expanded(
-                                                                                    child: Text(
-                                                                                        snapshot.data[i2].denominazione,
-                                                                                        style: TextStyle(
-                                                                                            fontSize: 18,
-                                                                                            fontWeight:
-                                                                                            FontWeight.bold,
-                                                                                            color: Colors.black
-                                                                                        )
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.only(top: 15, bottom: 15),
+                                                                                    child: Center(
+                                                                                      child: SvgPicture.network(
+                                                                                        'http://reapistaging.altervista.org/api/v3/getMappa/?aula=${snapshot.data[i2].locale}&piano=${snapshot.data[i2].locale.substring(0,0)}',
+                                                                                        fit: BoxFit.contain,
+                                                                                        height: 120,
+                                                                                        placeholderBuilder: (BuildContext context) => Container(
+                                                                                            padding: const EdgeInsets.all(30.0),
+                                                                                            child: Center(
+                                                                                              child: Column(
+                                                                                                children: <Widget>[
+                                                                                                  CupertinoActivityIndicator(radius: 20),
+                                                                                                  Padding(
+                                                                                                    padding: const EdgeInsets.only(top: 8.0),
+                                                                                                    child: Text("Sto caricando la mappa...", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
                                                                                   ),
                                                                                 ],
@@ -384,21 +414,17 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                                           ),
                                                                         ),
                                                                         Padding(
-                                                                          padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+                                                                          padding: const EdgeInsets.all(15),
                                                                           child: Column(
                                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                                             children: <Widget>[
-                                                                              Text("Piano aula: ${snapshot.data[i2].piano}"),
-                                                                              Text("Locale aula: ${snapshot.data[i2].locale}"),
+                                                                              Text("Piano aula: ${snapshot.data[i2].piano}", style: TextStyle(color: Colors.white)),
+                                                                              Text("Locale aula: ${snapshot.data[i2].locale}", style: TextStyle(color: Colors.white)),
                                                                               Text(
                                                                                 ("Aula dotata di " + (snapshot.data[i2].prese ? "prese, " : "") +
                                                                                   (snapshot.data[i2].ethernet ? "attacchi ethernet, " : "") +
-                                                                                  (snapshot.data[i2].computer ? "computer, " : ""))
-                                                                              ),
-                                                                              Chip(
-                                                                                backgroundColor: Color(0xffd35400),
-                                                                                avatar: Icon(Icons.place, color: Colors.white, size: 20,),
-                                                                                label: Text("Visualizza sulla mappa", style: TextStyle(color: Colors.white)),
+                                                                                  (snapshot.data[i2].computer ? "computer, " : "")),
+                                                                                  style: TextStyle(color: Colors.white)
                                                                               ),
                                                                             ],
                                                                           ),

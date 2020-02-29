@@ -39,7 +39,7 @@ class _ComunicazioniView extends State<ComunicazioniView> {
         },
         avatar: CircleAvatar(
           backgroundColor: Colors.transparent,
-          child: Icon(Icons.file_download, color: Colors.white,),
+          child: Icon(Icons.attach_file, color: Colors.white, size: 20),
         ),
         label: Text(allegati[i].nome, style: TextStyle(color: Colors.white),),
       ));
