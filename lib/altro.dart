@@ -16,7 +16,10 @@ class AltroView extends StatefulWidget {
   _AltroView createState() => _AltroView(response);
 }
 
-class _AltroView extends State<AltroView> {
+class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<AltroView>{
+  @override
+  bool get wantKeepAlive => true;
+
   reAPI2 response;
   _AltroView(reAPI2 response) {
     this.response = response;

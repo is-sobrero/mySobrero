@@ -45,7 +45,10 @@ class Mainview extends StatefulWidget {
 
 final stateMain = new GlobalKey<_Mainview>();
 
-class _Mainview extends State<Mainview> {
+class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainview>{
+  @override
+  bool get wantKeepAlive => true;
+
   reAPI2 response;
   SobreroFeed feed;
   SwitchPageCallback callback;

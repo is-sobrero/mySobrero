@@ -14,7 +14,10 @@ class ComunicazioniView extends StatefulWidget {
   _ComunicazioniView createState() => _ComunicazioniView(comunicazioni);
 }
 
-class _ComunicazioniView extends State<ComunicazioniView> {
+class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliveClientMixin<ComunicazioniView>{
+  @override
+  bool get wantKeepAlive => true;
+
   List<Comunicazioni> comunicazioni;
   _ComunicazioniView(List<Comunicazioni> comunicazioni) {
     this.comunicazioni = comunicazioni;

@@ -19,7 +19,10 @@ class VotiView extends StatefulWidget {
 
 
 
-class _VotiView extends State<VotiView> {
+class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiView>{
+  @override
+  bool get wantKeepAlive => true;
+
   List<Voti> voti, voti1q, voti2q;
   List<double> votiTotali;
   List<String> materie;
