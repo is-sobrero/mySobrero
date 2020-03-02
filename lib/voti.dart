@@ -17,8 +17,6 @@ class VotiView extends StatefulWidget {
   _VotiView createState() => _VotiView(voti1q, voti2q);
 }
 
-
-
 class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiView>{
   @override
   bool get wantKeepAlive => true;
@@ -51,8 +49,8 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   Map<String, int> countVoti1Q = new Map<String, int>();
   Map<String, int> countVoti2Q = new Map<String, int>();
 
-  Map<String, double> situazione1Q = new Map<String, double>();
-  Map<String, double> situazione2Q = new Map<String, double>();
+  Map<String, SituazioneElement> situazione1Q = new Map<String, SituazioneElement>();
+  Map<String, SituazioneElement> situazione2Q = new Map<String, SituazioneElement>();
 
   void initState(){
     super.initState();
@@ -66,7 +64,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       countVoti1Q[voti1q[i].materia] += int.parse(voti1q[i].peso);
     }
     sommaVoti1Q.forEach((key, value){
-      situazione1Q[key] = sommaVoti1Q[key] / countVoti1Q[key];
+      situazione1Q[key] =  SituazioneElement(countVoti1Q[key].toInt() ~/ 100, sommaVoti1Q[key] / countVoti1Q[key]);
     });
     for (int i = 0; i < voti2q.length; i++) {
       double votoParsed = double.parse(voti2q[i].voto.replaceAll(",", "."));
@@ -78,7 +76,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       countVoti2Q[voti2q[i].materia] += int.parse(voti2q[i].peso);
     }
     sommaVoti2Q.forEach((key, value){
-      situazione2Q[key] = sommaVoti2Q[key] / countVoti2Q[key];
+      situazione2Q[key] = SituazioneElement(countVoti2Q[key].toInt() ~/ 100, sommaVoti2Q[key] / countVoti2Q[key]);
     });
   }
 

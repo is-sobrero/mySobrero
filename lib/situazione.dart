@@ -3,8 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+class SituazioneElement{
+  int numeroVoti;
+  double media;
+  SituazioneElement(this.numeroVoti, this.media);
+}
+
 class SituazioneView extends StatefulWidget {
-  Map<String, double> situazione1Q, situazione2Q;
+  Map<String, SituazioneElement> situazione1Q, situazione2Q;
   SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q}) : super(key: key);
 
   @override
@@ -73,10 +79,17 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
   final List<Color> insufficienza = <Color>[Color(0xffFF416C), Color(0xffFF4B2B)];
 
 
-  Widget _templateVoto(String materia, double voto){
+  Map <String, int> obbiettivi = {
+    "Sistemi Elettronici Automatici" : 9
+  };
+
+  Widget _templateVoto(String materia, double voto, int numVoti){
     List<Color> selezionato = sufficienza;
     if (voto < 7) selezionato = limite;
     if (voto < 6) selezionato = insufficienza;
+
+    bool esisteObbiettivo = obbiettivi.containsKey(materia);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Row(
@@ -106,7 +119,14 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Text(materia, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(materia, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  esisteObbiettivo ?
+                    Text(ottieniVotiXMedia(voto, numVoti, obbiettivi[materia])) : Text("Tocca per impostare obbiettivo")
+                ],
+              ),
             ),
           )
         ],
@@ -114,9 +134,32 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     );
   }
 
+  String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){
+    int volte = 0;
+    double paramSoglia = 0.7;
+    double finalVoto = -1;
+    do {
+      volte++;
+      double sogliaMinima = obbiettivo - (1-paramSoglia);
+      finalVoto = sogliaMinima * (countVoti + volte) - mediaAttuale * countVoti;
+      finalVoto /= volte.toDouble();
+    } while ((finalVoto < 1 || finalVoto > 10) && volte < 10);
+
+    if (volte == 10){
+      return "Impossibile raggiungere l'obbiettivo stabilito matematicamente";
+    }
+
+    String fineFrase = volte == 1 ? "a" : "e";
+    if (mediaAttuale >= obbiettivo){
+      return "Non prendere per $volte volt$fineFrase meno di ${finalVoto.toStringAsFixed(2)}";
+    } else {
+      return "Prendi per $volte volt$fineFrase almeno ${finalVoto.toStringAsFixed(2)}";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, double> currentPeriodo = selezionePeriodo == 0 ? widget.situazione1Q : widget.situazione2Q;
+    final Map<String, SituazioneElement> currentPeriodo = selezionePeriodo == 0 ? widget.situazione1Q : widget.situazione2Q;
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -154,6 +197,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                       20,
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Row(
                           children: <Widget>[
@@ -162,6 +206,13 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                               style: Theme.of(context).textTheme.title.copyWith(fontSize: 32.0, fontWeight: FontWeight.bold),
                             ),
                           ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            "Arrotondamento impostato a 0.7",
+                            style: Theme.of(context).textTheme.subtitle.copyWith(fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Padding(
                             padding: EdgeInsets.only(top: 10),
@@ -187,8 +238,9 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                                     itemCount: currentPeriodo.values.length,
                                     itemBuilder: (context, index){
                                       String materia = currentPeriodo.keys.elementAt(index);
-                                      double voto = currentPeriodo.values.elementAt(index);
-                                      return _templateVoto(materia, voto);
+                                      double voto = currentPeriodo.values.elementAt(index).media;
+                                      int numVoti = currentPeriodo.values.elementAt(index).numeroVoti;
+                                      return _templateVoto(materia, voto, numVoti);
                                     }
                                 )
                               ],
