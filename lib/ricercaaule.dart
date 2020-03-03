@@ -81,7 +81,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   }
 
   Future<List<Aula>> _ottieniAule(String query, int filter) async {
-    final endpointCartella = 'https://reapistaging.altervista.org/api/v3/searchAule/?params=$filter&q=${Uri.encodeComponent(query)}';
+    final endpointCartella = 'https://reapistaging.altervista.org/api/v3/searchAule?params=$filter&q=${Uri.encodeComponent(query)}';
     Map<String, String> headers = {
       'Accept': 'application/json',
     };
@@ -93,14 +93,6 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
       throw Exception('Impossibile ricercare le aule (${json.decode(response.body)["status"]["description"]})');
     }
   }
-
-  /*_launchURL(String uri) async {
-    if (await canLaunch(uri)) {
-      await launch(uri);
-    } else {
-      throw 'Could not launch $uri';
-    }
-  }*/
 
   final List<FilterEntry> _cast = <FilterEntry>[
     const FilterEntry('Prese', 0),
@@ -394,7 +386,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                                                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                                                                                     child: Center(
                                                                                       child: SvgPicture.network(
-                                                                                        'http://reapistaging.altervista.org/api/v3/getMappa/?aula=${snapshot.data[i2].locale}&piano=${snapshot.data[i2].locale.substring(0,0)}',
+                                                                                        'http://reapistaging.altervista.org/api/v3/getMappa?aula=${snapshot.data[i2].locale}&piano=${snapshot.data[i2].locale.substring(0,0)}',
                                                                                         fit: BoxFit.contain,
                                                                                         height: 120,
                                                                                         placeholderBuilder: (BuildContext context) => Container(

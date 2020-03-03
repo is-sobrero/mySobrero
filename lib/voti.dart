@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mySobrero/situazione.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'reapi2.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -52,6 +57,21 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   Map<String, SituazioneElement> situazione1Q = new Map<String, SituazioneElement>();
   Map<String, SituazioneElement> situazione2Q = new Map<String, SituazioneElement>();
 
+  Map<String, int> obbiettivi = Map<String, int>();
+  bool ottenutoObbiettivi = false;
+
+  Future<bool> ottieniObbiettivi() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final username = await prefs.getString('username') ?? "NO";
+    final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(username).get();
+    if (dataRetrieve.data["obbiettivi"].toString() != "null") {
+      print("HO GLI OBBIETTIVI");
+      Map<String, dynamic> _tempObbiettivi = jsonDecode(dataRetrieve.data["obbiettivi"].toString());
+      _tempObbiettivi.forEach((key, value){
+        obbiettivi[key] = int.parse(value.toString());
+      });
+    }
+  }
   void initState(){
     super.initState();
     for (int i = 0; i < voti1q.length; i++) {
@@ -77,6 +97,11 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     }
     sommaVoti2Q.forEach((key, value){
       situazione2Q[key] = SituazioneElement(countVoti2Q[key].toInt() ~/ 100, sommaVoti2Q[key] / countVoti2Q[key]);
+    });
+    ottieniObbiettivi().then((res){
+      setState(() {
+        ottenutoObbiettivi = true;
+      });
     });
   }
 
@@ -232,7 +257,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       double votoParsed = double.parse(currentVoti[i].voto.replaceAll(",", "."));
       votiT.add(FlSpot(200-(j++).toDouble(), votoParsed));
     }
-
+    Color linkDis = ottenutoObbiettivi ? Theme.of(context).primaryColor : Theme.of(context).disabledColor;
     return SingleChildScrollView(
           child: SafeArea(
             top: false,
@@ -257,18 +282,31 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                       FlatButton(
                         child: Row(
                           children: <Widget>[
-                            Text("Vai alla situazione", style: TextStyle(color: Theme.of(context).primaryColor),),
-                            Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor,)
+                            Text(ottenutoObbiettivi ? "Vai alla situazione" : "Caricando gli obbiettivi", style: TextStyle(color: linkDis),),
+                            ottenutoObbiettivi ? Icon(Icons.arrow_forward_ios, color: linkDis,) : Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: SpinKitDualRing(
+                                color: Theme.of(context).disabledColor,
+                                size: 20,
+                                lineWidth: 3,
+                              ),
+                            ),
                           ],
                         ),
-                        onPressed: (){
+                        onPressed: ottenutoObbiettivi ? (){
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => SituazioneView(
-                              situazione1Q: situazione1Q, situazione2Q: situazione2Q
+                              situazione1Q: situazione1Q, situazione2Q: situazione2Q,
+                              obbiettivi: obbiettivi, onObbiettiviChange: (_nob){
+                                print("changeObbiettivi");
+                                setState(() {
+                                  obbiettivi = _nob;
+                                });
+                              },
                             )),
                           );
-                        },
+                        } : null,
                         padding: EdgeInsets.zero,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       )

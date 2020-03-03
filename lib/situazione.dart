@@ -136,7 +136,10 @@ class _dObbiettivoState extends State<DialogoObbiettivo> {
 
 class SituazioneView extends StatefulWidget {
   Map<String, SituazioneElement> situazione1Q, situazione2Q;
-  SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q}) : super(key: key);
+  Map<String, int> obbiettivi;
+  Function(Map<String, int>) onObbiettiviChange;
+
+  SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q, @required this.obbiettivi, @required this.onObbiettiviChange}) : super(key: key);
 
   @override
   _SituazioneView createState() => _SituazioneView();
@@ -150,8 +153,6 @@ class SituaMateria{
     this.media = media;
   }
 }
-
-
 
 class _SituazioneView extends State<SituazioneView> with SingleTickerProviderStateMixin {
   final double _preferredAppBarHeight = 56.0;
@@ -189,6 +190,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
         _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
         if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
       });
+    obbiettivi = widget.obbiettivi;
   }
 
   @override
@@ -205,10 +207,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
   final List<Color> insufficienza = <Color>[Color(0xffFF416C), Color(0xffFF4B2B)];
 
 
-  Map <String, int> obbiettivi = {
-    "Sistemi Elettronici Automatici" : 9,
-    "Telecomunicazioni" : 9
-  };
+  Map <String, int> obbiettivi = Map<String, int>();
 
   Widget _templateVoto(String materia, double voto, int numVoti){
     List<Color> selezionato = sufficienza;
@@ -224,7 +223,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
           new CircularPercentIndicator(
             radius: 75,
             lineWidth: 8,
-            percent: 0.3,
+            percent: voto/10,
             animation: true,
             animationDuration: 1200,
             circularStrokeCap: CircularStrokeCap.round,
@@ -271,6 +270,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
           nuovoObbiettivoCallback: (obbiettivo){
             setState(() {
               obbiettivi[materia] = obbiettivo;
+              widget.onObbiettiviChange(obbiettivi);
             });
             showDialog(
               barrierDismissible: false,
@@ -292,7 +292,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     Firestore.instance.collection('utenti').document(username).setData({
       'obbiettivi' : json
     }, merge: true);
-    await Future.delayed(Duration(seconds: 2));
+    //await Future.delayed(Duration(seconds: 2));
     return true;
   }
 
