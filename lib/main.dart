@@ -282,6 +282,7 @@ class _AppLoginState extends State<AppLogin> {
           name: "indirizzo",
           value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
       analytics.setUserProperty(name: "platform", value: systemPlatform);
+      final PackageInfo info = await PackageInfo.fromPlatform();
       Firestore.instance.collection('utenti').document(username).setData({
         'classe': response.user.classe.toString() +
             " " +
@@ -290,7 +291,8 @@ class _AppLoginState extends State<AppLogin> {
         'nome': response.user.nome,
         'ultimo accesso': DateTime.now().toIso8601String(),
         'platform': systemPlatform,
-        'build flavour': isInDebugMode ? 'internal' : 'production'
+        'build flavour': isInDebugMode ? 'internal' : 'production',
+        'version' : info.buildNumber
       }, merge: true);
       final DocumentSnapshot dataRetrieve = await Firestore.instance
           .collection('utenti')

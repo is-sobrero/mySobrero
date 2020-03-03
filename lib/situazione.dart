@@ -9,6 +9,126 @@ class SituazioneElement{
   SituazioneElement(this.numeroVoti, this.media);
 }
 
+class DialogoObbiettivo extends StatefulWidget {
+  String materia;
+  Function(int) nuovoObbiettivoCallback;
+
+  DialogoObbiettivo({Key key, @required this.materia, @required this.nuovoObbiettivoCallback}) : super(key: key);
+
+  @override
+  _dObbiettivoState createState() => _dObbiettivoState();
+}
+
+class _dObbiettivoState extends State<DialogoObbiettivo> {
+  final List<Color> sufficienza = <Color>[Color(0xff23b6e6), Color(0xff02d39a)];
+  final List<Color> limite = <Color>[Color(0xffFFD200), Color(0xffF7971E)];
+  final List<Color> insufficienza = <Color>[Color(0xffFF416C), Color(0xffFF4B2B)];
+
+  int voto = 6;
+
+  @override
+  Widget build(BuildContext context){
+    if (voto < 1) voto = 1;
+    if (voto > 10) voto = 10;
+    List<Color> selezionato = sufficienza;
+    if (voto < 7) selezionato = limite;
+    if (voto < 6) selezionato = insufficienza;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: <Widget>[
+                    AutoSizeText(
+                      "Imposta obbiettivo per ${widget.materia}",
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          color: Theme.of(context).primaryColor,
+                          onPressed: (){
+                            setState(() {
+                              voto--;
+                            });
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircularPercentIndicator(
+                            radius: 75,
+                            lineWidth: 8,
+                            percent: voto / 10,
+                            animation: true,
+                            animationDuration: 300,
+                            animateFromLastPercent: true,
+                            circularStrokeCap: CircularStrokeCap.round,
+                            center: Container(
+                                width: 50,
+                                child: AutoSizeText(
+                                  voto.toString(),
+                                  minFontSize: 8,
+                                  maxLines: 1,
+                                  style: TextStyle(fontSize: 25, ),
+                                  textAlign: TextAlign.center,
+                                )
+                            ),
+                            backgroundColor: Colors.black26,
+                            linearGradient: LinearGradient(
+                                colors: selezionato
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          color: Theme.of(context).primaryColor,
+                          onPressed: (){
+                            setState(() {
+                              voto++;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              OutlineButton(
+                padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                onPressed: () {
+                  widget.nuovoObbiettivoCallback(voto);
+                  Navigator.of(context).pop();
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                    BorderRadius.all(Radius.circular(7.0))),
+                color: Theme.of(context).primaryColor,
+                child: const Text(
+                  'IMPOSTA OBBIETTIVO',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class SituazioneView extends StatefulWidget {
   Map<String, SituazioneElement> situazione1Q, situazione2Q;
   SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q}) : super(key: key);
@@ -25,6 +145,8 @@ class SituaMateria{
     this.media = media;
   }
 }
+
+
 
 class _SituazioneView extends State<SituazioneView> with SingleTickerProviderStateMixin {
   final double _listAnimationIntervalStart = 0.65;
@@ -80,7 +202,8 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
 
 
   Map <String, int> obbiettivi = {
-    "Sistemi Elettronici Automatici" : 9
+    "Sistemi Elettronici Automatici" : 9,
+    "Telecomunicazioni" : 9
   };
 
   Widget _templateVoto(String materia, double voto, int numVoti){
@@ -91,7 +214,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     bool esisteObbiettivo = obbiettivi.containsKey(materia);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.only(top: 7.5, bottom: 7.5),
       child: Row(
         children: <Widget>[
           new CircularPercentIndicator(
@@ -134,6 +257,23 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     );
   }
 
+  Dialog cambiaObbiettivo(String materia){
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), //this right here
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 200),
+        child: DialogoObbiettivo(
+          materia: materia,
+          nuovoObbiettivoCallback: (obbiettivo){
+            setState(() {
+              obbiettivi[materia] = obbiettivo;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
   String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){
     int volte = 0;
     double paramSoglia = 0.7;
@@ -151,9 +291,9 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
 
     String fineFrase = volte == 1 ? "a" : "e";
     if (mediaAttuale >= obbiettivo){
-      return "Non prendere per $volte volt$fineFrase meno di ${finalVoto.toStringAsFixed(2)}";
+      return "Non prendere per $volte volt$fineFrase meno di ${finalVoto.toStringAsFixed(2)} per mantenere la media superiore a $obbiettivo";
     } else {
-      return "Prendi per $volte volt$fineFrase almeno ${finalVoto.toStringAsFixed(2)}";
+      return "Prendi per $volte volt$fineFrase almeno ${finalVoto.toStringAsFixed(2)} per avere $obbiettivo di media";
     }
   }
 
@@ -240,7 +380,17 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                                       String materia = currentPeriodo.keys.elementAt(index);
                                       double voto = currentPeriodo.values.elementAt(index).media;
                                       int numVoti = currentPeriodo.values.elementAt(index).numeroVoti;
-                                      return _templateVoto(materia, voto, numVoti);
+                                      return InkWell(
+                                            child: _templateVoto(materia, voto, numVoti),
+                                            onTap: (){
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context){
+                                                    return cambiaObbiettivo(materia);
+                                                  }
+                                              );
+                                            }
+                                      );
                                     }
                                 )
                               ],
