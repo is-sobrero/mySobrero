@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SituazioneElement{
   int numeroVoti;
@@ -149,7 +153,6 @@ class SituaMateria{
 
 
 class _SituazioneView extends State<SituazioneView> with SingleTickerProviderStateMixin {
-  final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
 
   AnimationController _fadeSlideAnimationController;
@@ -268,10 +271,20 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
             setState(() {
               obbiettivi[materia] = obbiettivo;
             });
+            aggiornaObbiettivi(jsonEncode(obbiettivi));
           },
         ),
       ),
     );
+  }
+
+  void aggiornaObbiettivi (String json) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final username = await prefs.getString('username') ?? "NO";
+    Firestore.instance.collection('utenti').document(username).setData({
+      'obbiettivi' : json
+    }, merge: true);
+
   }
 
   String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){
@@ -301,30 +314,28 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
   Widget build(BuildContext context) {
     final Map<String, SituazioneElement> currentPeriodo = selezionePeriodo == 0 ? widget.situazione1Q : widget.situazione2Q;
     return Scaffold(
+      appBar: AppBar(
+        title: AnimatedOpacity(
+          opacity: _appBarTitleOpacity,
+          duration: const Duration(milliseconds: 250),
+          child: Text(
+            "Situazione attuale",
+            style: TextStyle(
+                color: Theme.of(context).textTheme.body1.color),
+          ),
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: _appBarElevation,
+        leading: BackButton(
+          color: Theme.of(context).textTheme.body1.color,
+        ),
+      ),
       body: Stack(
         children: <Widget>[
           Container(color: Theme.of(context).scaffoldBackgroundColor),
           SafeArea(
+            bottom: false,
             child: Column(children: <Widget>[
-              PreferredSize(
-                preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                child: AppBar(
-                  title: AnimatedOpacity(
-                    opacity: _appBarTitleOpacity,
-                    duration: const Duration(milliseconds: 250),
-                    child: Text(
-                      "Situazione attuale",
-                      style: TextStyle(
-                      color: Theme.of(context).textTheme.body1.color),
-                    ),
-                  ),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  elevation: _appBarElevation,
-                  leading: BackButton(
-                    color: Theme.of(context).textTheme.body1.color,
-                  ),
-                ),
-              ),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),
