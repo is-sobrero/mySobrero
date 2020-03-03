@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'globals.dart' as globals;
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mySobrero/hud.dart';
 
 
 class ImpostazioniView extends StatefulWidget {
@@ -86,8 +87,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
   reAPI2 response;
 
-  Future cambiaProfilo() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+  Future<bool> cambiaProfilo(image) async {
     final userName = response.user.matricola;
     final StorageUploadTask uploadTask = _firebaseStorage.child("profile_$userName.jpg").putFile(
       image,
@@ -95,9 +95,9 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
         contentType: "image/jpeg",
       ),
     );
+
     final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
     final String url = (await downloadUrl.ref.getDownloadURL());
-    print('URL Is $url');
 
     setState(() {
       globals.profileURL = url;
@@ -108,6 +108,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
       'profileImage': url,
     }, merge: true);
 
+    return true;
   }
 
   bool bioAuth = false;
@@ -219,7 +220,23 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                                 size: 20,
                                               ),
                                               onPressed: () {
-                                                cambiaProfilo();
+                                                /*showDialog(
+                                                    barrierDismissible: false,
+                                                    context: context,
+                                                    builder: (context){
+                                                      return dialogoHUD(future:  cambiaProfilo(), titolo: "Aggiornamento dell'immagine di profilo in coros...",);
+                                                    }
+                                                )*/
+                                                ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 70).then((file){
+                                                  if (file != null)
+                                                  showDialog(
+                                                    barrierDismissible: false,
+                                                    context: context,
+                                                    builder: (context){
+                                                      return dialogoHUD(future:  cambiaProfilo(file), titolo: "Aggiornamento dell'immagine di profilo in corso...",);
+                                                    }
+                                                  );
+                                                });
                                               },
                                             ))
                                       ],

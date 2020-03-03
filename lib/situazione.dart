@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mySobrero/hud.dart';
 
 class SituazioneElement{
   int numeroVoti;
@@ -114,8 +115,8 @@ class _dObbiettivoState extends State<DialogoObbiettivo> {
               OutlineButton(
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                 onPressed: () {
-                  widget.nuovoObbiettivoCallback(voto);
                   Navigator.of(context).pop();
+                  widget.nuovoObbiettivoCallback(voto);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius:
@@ -271,20 +272,28 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
             setState(() {
               obbiettivi[materia] = obbiettivo;
             });
-            aggiornaObbiettivi(jsonEncode(obbiettivi));
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context){
+                return dialogoHUD(future: aggiornaObbiettivi(jsonEncode(obbiettivi)), titolo: "Aggiornamento obbiettivi in corso...",);
+              }
+            );
+            //aggiornaObbiettivi(jsonEncode(obbiettivi));
           },
         ),
       ),
     );
   }
 
-  void aggiornaObbiettivi (String json) async {
+  Future<bool> aggiornaObbiettivi (String json) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final username = await prefs.getString('username') ?? "NO";
     Firestore.instance.collection('utenti').document(username).setData({
       'obbiettivi' : json
     }, merge: true);
-
+    await Future.delayed(Duration(seconds: 2));
+    return true;
   }
 
   String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){

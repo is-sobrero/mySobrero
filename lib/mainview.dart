@@ -95,7 +95,31 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
 
   @override
   Widget build(BuildContext context) {
-
+    Widget immagineProfilo = Container(
+      decoration: new BoxDecoration(
+        boxShadow: [BoxShadow(
+            color: Colors.black.withAlpha(50),
+            offset: Offset(0, 5),
+            blurRadius: 10
+        )],
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: new Container(
+            width: 50,
+            height: 50,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: globals.profileURL != null ? CachedNetworkImage(
+              imageUrl: globals.profileURL,
+              placeholder: (context, url) =>
+                  Skeleton(),
+              errorWidget: (context, url, error) =>
+                  Icon(Icons.error),
+              fit: BoxFit.cover,
+            ) : Image.asset("assets/images/profile.jpg")
+        ),
+      ),
+    );
     final nomeUtente = response.user.nome;
     var ultimoVoto = "null";
     var ultimaMateria = "null";
@@ -210,33 +234,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                           ],
                         ),
                       ),
-                     Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: [BoxShadow(
-                              color: Colors.black.withAlpha(50),
-                              offset: Offset(0, 5),
-                              blurRadius: 10
-                            )],
-                            shape: BoxShape.circle,
-                          ),
-                          child: ClipOval(
-                            child: new Container(
-                              width: 50,
-                              height: 50,
-                                color: Theme.of(context).scaffoldBackgroundColor,
-                                child: globals.profileURL != null ? CachedNetworkImage(
-                                  imageUrl: globals.profileURL,
-                                  placeholder: (context, url) =>
-                                      Skeleton(),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                  fit: BoxFit.cover,
-                                ) : Image.asset("assets/images/profile.jpg")
-                            ),
-                          ),
-                        ),
-
-
+                     immagineProfilo
                     ],
                   ),
                 ),
