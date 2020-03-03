@@ -142,7 +142,18 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
+    AppBar titolo = AppBar(
+      title: AnimatedOpacity(
+        opacity: _appBarTitleOpacity,
+        duration: const Duration(milliseconds: 250),
+        child: Text("Ricerca aule", style: TextStyle(color: Colors.white)),
+      ),
+      backgroundColor: Color(0xffF86925),
+      elevation: _appBarElevation,
+      leading: BackButton(color: Colors.white,),
+    );
     return Scaffold(
+      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
       body: Stack(
         children: <Widget>[
           Hero(
@@ -150,8 +161,9 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
             child: Container(color: Color(0xffF86925),),
           ),
           SafeArea(
+            bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
-              FadeSlideTransition(
+              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
                 controller: _fadeSlideAnimationController,
                 slideAnimationTween: Tween<Offset>(
                   begin: Offset(0.0, 0.5),
@@ -161,18 +173,9 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                 end: _listAnimationIntervalStart,
                 child: PreferredSize(
                   preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: AppBar(
-                    title: AnimatedOpacity(
-                      opacity: _appBarTitleOpacity,
-                      duration: const Duration(milliseconds: 250),
-                      child: Text("Ricerca aule", style: TextStyle(color: Colors.white)),
-                    ),
-                    backgroundColor: Color(0xffF86925),
-                    elevation: _appBarElevation,
-                    leading: BackButton(color: Colors.white,),
-                  ),
+                  child: titolo,
                 ),
-              ),
+              ) : Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

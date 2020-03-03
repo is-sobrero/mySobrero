@@ -101,9 +101,22 @@ class _ArgomentiState extends State<ArgomentiView>
   Widget build(BuildContext context) {
     String dataTemporanea = "";
     currentBrightness = Theme.of(context).brightness;
-    List<Argomenti> currentSet =
-        selezioneArgomenti == 0 ? argSettimana : regclasse;
+    List<Argomenti> currentSet = selezioneArgomenti == 0 ? argSettimana : regclasse;
+    AppBar titolo = AppBar(
+      title: AnimatedOpacity(
+        opacity: _appBarTitleOpacity,
+        duration: const Duration(milliseconds: 250),
+        child: Text("Argomenti", style: TextStyle(color: Colors.white)),
+      ),
+      backgroundColor: Color(0xFF5352ed),
+      elevation: _appBarElevation,
+      brightness: Brightness.dark,
+      leading: BackButton(
+        color: Colors.white,
+      ),
+    );
     return Scaffold(
+      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
       body: Stack(
           children: <Widget>[
             Hero(
@@ -113,8 +126,9 @@ class _ArgomentiState extends State<ArgomentiView>
               ),
             ),
             SafeArea(
+              bottom: !_fadeSlideAnimationController.isCompleted,
               child: Column(children: <Widget>[
-                FadeSlideTransition(
+                !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
                   controller: _fadeSlideAnimationController,
                   slideAnimationTween: Tween<Offset>(
                     begin: Offset(0.0, 0.5),
@@ -124,21 +138,9 @@ class _ArgomentiState extends State<ArgomentiView>
                   end: _listAnimationIntervalStart,
                   child: PreferredSize(
                     preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                    child: AppBar(
-                      title: AnimatedOpacity(
-                        opacity: _appBarTitleOpacity,
-                        duration: const Duration(milliseconds: 250),
-                        child: Text("Argomenti", style: TextStyle(color: Colors.white)),
-                      ),
-                      backgroundColor: Color(0xFF5352ed),
-                      elevation: _appBarElevation,
-                      brightness: Brightness.dark,
-                      leading: BackButton(
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: titolo,
                   ),
-                ),
+                ) : Container(),
                 Expanded(
                   child: ScrollConfiguration(
                     behavior: ScrollBehavior(),

@@ -59,7 +59,21 @@ class _AssenzeState extends State<AssenzeView>
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
+    AppBar titolo = AppBar(
+      title: AnimatedOpacity(
+        opacity: _appBarTitleOpacity,
+        duration: const Duration(milliseconds: 250),
+        child: Text("Assenze",
+            style: TextStyle(color: Colors.black)),
+      ),
+      backgroundColor: Color(0xffff9692),
+      elevation: _appBarElevation,
+      leading: BackButton(
+        color: Colors.black,
+      ),
+    );
     return Scaffold(
+      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
       body: Stack(
         children: <Widget>[
           Hero(
@@ -69,8 +83,9 @@ class _AssenzeState extends State<AssenzeView>
             ),
           ),
           SafeArea(
+            bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
-              FadeSlideTransition(
+              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
                 controller: _fadeSlideAnimationController,
                 slideAnimationTween: Tween<Offset>(
                   begin: Offset(0.0, 0.5),
@@ -94,8 +109,7 @@ class _AssenzeState extends State<AssenzeView>
                       ),
                     ),
                   ),
-
-              ),
+              ) : new Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

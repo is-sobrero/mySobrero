@@ -68,8 +68,21 @@ class _CompitiState extends State<CompitiView>
 
   @override
   Widget build(BuildContext context) {
+    AppBar titolo = AppBar(
+      title: AnimatedOpacity(
+        opacity: _appBarTitleOpacity,
+        duration: const Duration(milliseconds: 250),
+        child: Text("Compiti", style: TextStyle(color: Colors.black)),
+      ),
+      backgroundColor: Color(0xFF43e97b),
+      elevation: _appBarElevation,
+      leading: BackButton(
+        color: Colors.black,
+      ),
+    );
     currentBrightness = Theme.of(context).brightness;
     return Scaffold(
+      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
       body: Stack(
         children: <Widget>[
           Hero(
@@ -79,8 +92,9 @@ class _CompitiState extends State<CompitiView>
             ),
           ),
           SafeArea(
+            bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
-              FadeSlideTransition(
+              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
                 controller: _fadeSlideAnimationController,
                 slideAnimationTween: Tween<Offset>(
                   begin: Offset(0.0, 0.5),
@@ -90,20 +104,9 @@ class _CompitiState extends State<CompitiView>
                 end: _listAnimationIntervalStart,
                 child: PreferredSize(
                   preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: AppBar(
-                    title: AnimatedOpacity(
-                      opacity: _appBarTitleOpacity,
-                      duration: const Duration(milliseconds: 250),
-                      child: Text("Compiti", style: TextStyle(color: Colors.black)),
-                    ),
-                    backgroundColor: Color(0xFF43e97b),
-                    elevation: _appBarElevation,
-                    leading: BackButton(
-                      color: Colors.black,
-                    ),
-                  ),
+                  child: titolo,
                 ),
-              ),
+              ) : new Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

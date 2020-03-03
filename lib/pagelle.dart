@@ -76,7 +76,22 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
     if (selezionaPagella == pagelle.length) selectedPagella = null;
     else selectedPagella = pagelle[selezionaPagella];
     currentBrightness = Theme.of(context).brightness;
+    AppBar titolo = AppBar(
+      title: AnimatedOpacity(
+        opacity: _appBarTitleOpacity,
+        duration: const Duration(milliseconds: 250),
+        child: Text("Pagelle",
+            style: TextStyle(color: Colors.white)),
+      ),
+      backgroundColor: Color(0xff38ada9),
+      elevation: _appBarElevation,
+      brightness: Brightness.dark,
+      leading: BackButton(
+        color: Colors.white,
+      ),
+    );
     return Scaffold(
+      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
       body: Stack(
           children: <Widget>[
             Hero(
@@ -86,8 +101,9 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
               ),
             ),
             SafeArea(
+              bottom: !_fadeSlideAnimationController.isCompleted,
               child: Column(children: <Widget>[
-                FadeSlideTransition(
+                !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
                   controller: _fadeSlideAnimationController,
                   slideAnimationTween: Tween<Offset>(
                     begin: Offset(0.0, 0.5),
@@ -97,33 +113,15 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                   end: _listAnimationIntervalStart,
                   child: PreferredSize(
                     preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                    child: AppBar(
-                      title: AnimatedOpacity(
-                        opacity: _appBarTitleOpacity,
-                        duration: const Duration(milliseconds: 250),
-                        child: Text("Pagelle",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      backgroundColor: Color(0xff38ada9),
-                      elevation: _appBarElevation,
-                      brightness: Brightness.dark,
-                      leading: BackButton(
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: titolo,
                   ),
-                ),
+                ) : Container(),
                 Expanded(
                   child: ScrollConfiguration(
                     behavior: ScrollBehavior(),
                     child: SingleChildScrollView(
                       controller: _scrollController,
-                      padding: const EdgeInsets.fromLTRB(
-                        20,
-                        10,
-                        20,
-                        20,
-                      ),
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
                       child: Column(
                         children: <Widget>[
                           FadeSlideTransition(

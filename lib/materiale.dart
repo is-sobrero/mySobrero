@@ -87,7 +87,18 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
+    AppBar titolo = AppBar(
+      title: AnimatedOpacity(
+        opacity: _appBarTitleOpacity,
+        duration: const Duration(milliseconds: 250),
+        child: Text("Materiale didattico", style: TextStyle(color: Colors.white)),
+      ),
+      backgroundColor: Color(0xffe55039),
+      elevation: _appBarElevation,
+      leading: BackButton(color: Colors.white,),
+    );
     return Scaffold(
+      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
       body: Stack(
         children: <Widget>[
           Hero(
@@ -95,8 +106,9 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
             child: Container(color: Color(0xffe55039),),
           ),
           SafeArea(
+            bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
-              FadeSlideTransition(
+              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
                 controller: _fadeSlideAnimationController,
                 slideAnimationTween: Tween<Offset>(
                   begin: Offset(0.0, 0.5),
@@ -106,18 +118,9 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                 end: _listAnimationIntervalStart,
                 child: PreferredSize(
                   preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: AppBar(
-                    title: AnimatedOpacity(
-                      opacity: _appBarTitleOpacity,
-                      duration: const Duration(milliseconds: 250),
-                      child: Text("Materiale didattico", style: TextStyle(color: Colors.white)),
-                    ),
-                    backgroundColor: Color(0xffe55039),
-                    elevation: _appBarElevation,
-                    leading: BackButton(color: Colors.white,),
-                  ),
+                  child: titolo
                 ),
-              ),
+              ) : Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),
