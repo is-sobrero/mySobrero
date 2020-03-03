@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'reapi2.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
+
 
 class VotiView extends StatefulWidget {
   List<Voti> voti1q, voti2q;
@@ -72,6 +75,112 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       });
     }
   }
+
+  Widget _generaTileVoto(Voti voto){
+    LinearGradient sfondoVoto = LinearGradient(
+      begin: FractionalOffset.topRight,
+      end: FractionalOffset.bottomRight,
+      colors: <Color>[Color(0xFF38f9d7), Color(0xFF43e97b)],
+    );
+    double votoParsed = double.parse(voto.voto.replaceAll(",", "."));
+    Color coloreTesto = Colors.black;
+    if (votoParsed >= 6 && votoParsed < 7) {
+      sfondoVoto = LinearGradient(
+        begin: FractionalOffset.topRight,
+        end: FractionalOffset.bottomRight,
+        colors: <Color>[Color(0xffFFD200), Color(0xffF7971E)],
+      );
+    }
+    if (votoParsed < 6) {
+      sfondoVoto = LinearGradient(
+        begin: FractionalOffset.topRight,
+        end: FractionalOffset.bottomRight,
+        colors: <Color>[Color(0xffFF416C), Color(0xffFF4B2B)],
+      );
+      coloreTesto = Colors.white;
+    }
+
+    var commento = voto.commento;
+    if (commento.length == 0) commento = "Nessun commento al voto";
+
+    if (voto.peso == "0") {
+      sfondoVoto = LinearGradient(
+        begin: FractionalOffset.topRight,
+        end: FractionalOffset.bottomRight,
+        colors: <Color>[Color(0xff005C97), Color(0xff363795)],
+      );
+      coloreTesto = Colors.white;
+    }
+
+    return ExpandableNotifier(
+      child: Column(
+        children: [
+          Expandable(
+            collapsed: ExpandableButton(
+              child: Container(
+                  decoration: new BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(11)),
+                    gradient: sfondoVoto,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Text(voto.voto, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
+                        ),
+                        Expanded(child: Text(voto.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
+                      ],
+                    ),
+                  ),
+                ),
+
+            ),
+            expanded: Column(children: [
+              ExpandableButton(
+                  child: Container(
+                    decoration: new BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(11)),
+                      gradient: sfondoVoto,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+                      ],
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: Text(voto.voto, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
+                                ),
+                                Expanded(child: Text(voto.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
+                              ],
+                            ),
+                            Text("Data voto: ${voto.data}", style: TextStyle(color: coloreTesto)),
+                            Text("Tipologia: ${voto.tipologia}", style: TextStyle(color: coloreTesto)),
+                            Text("Docente: ${voto.docente}", style: TextStyle(color: coloreTesto)),
+                            Text("Peso: ${voto.peso}", style: TextStyle(color: coloreTesto)),
+                            Text("Commento al voto: $commento", style: TextStyle(color: coloreTesto)),
+                          ],
+                        )),
+                  ),
+
+              ),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
   void initState(){
     super.initState();
     for (int i = 0; i < voti1q.length; i++) {
@@ -235,6 +344,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   }
 
   int filterIndex = 0;
+  int crossCount;
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +352,9 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       const Color(0xff23b6e6),
       const Color(0xff02d39a),
     ];
-
+    bool isWide = MediaQuery.of(context).size.width > 500;
+    int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
+    columnCount = MediaQuery.of(context).size.width > 800 ? 3 : columnCount;
     List<Voti> currentVoti;
     List<Voti> periodoSelezionato = selezionePeriodo == 0 ? voti1q : voti2q;
     if (filterIndex == 0) currentVoti = periodoSelezionato;
@@ -258,6 +370,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       votiT.add(FlSpot(200-(j++).toDouble(), votoParsed));
     }
     Color linkDis = ottenutoObbiettivi ? Theme.of(context).primaryColor : Theme.of(context).disabledColor;
+
     return SingleChildScrollView(
           child: SafeArea(
             top: false,
@@ -269,71 +382,78 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row(
+                  Stack(
                     children: <Widget>[
-                      Text(
-                        'Tutti i voti',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 24,
-                        ),
-                      ),
-                      Spacer(),
-                      FlatButton(
-                        child: Row(
-                          children: <Widget>[
-                            Text(ottenutoObbiettivi ? "Vai alla situazione" : "Caricando gli obbiettivi", style: TextStyle(color: linkDis),),
-                            ottenutoObbiettivi ? Icon(Icons.arrow_forward_ios, color: linkDis,) : Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: SpinKitDualRing(
-                                color: Theme.of(context).disabledColor,
-                                size: 20,
-                                lineWidth: 3,
-                              ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Tutti i voti',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 24,
                             ),
-                          ],
-                        ),
-                        onPressed: ottenutoObbiettivi ? (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SituazioneView(
-                              situazione1Q: situazione1Q, situazione2Q: situazione2Q,
-                              obbiettivi: obbiettivi, onObbiettiviChange: (_nob){
-                                print("changeObbiettivi");
+                          ),
+                          Spacer(),
+                          FlatButton(
+                            child: Row(
+                              children: <Widget>[
+                                Text(ottenutoObbiettivi ? "Vai alla situazione" : "Caricando gli obbiettivi", style: TextStyle(color: linkDis),),
+                                ottenutoObbiettivi ? Icon(Icons.arrow_forward_ios, color: linkDis,) : Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: SpinKitDualRing(
+                                    color: Theme.of(context).disabledColor,
+                                    size: 20,
+                                    lineWidth: 3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onPressed: ottenutoObbiettivi ? (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => SituazioneView(
+                                  situazione1Q: situazione1Q, situazione2Q: situazione2Q,
+                                  obbiettivi: obbiettivi, onObbiettiviChange: (_nob){
+                                    print("changeObbiettivi");
+                                    setState(() {
+                                      obbiettivi = _nob;
+                                    });
+                                  },
+                                )),
+                              );
+                            } : null,
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: isWide ? 0 : 40.0),
+                        child: Center(
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.only(bottom: 5, top: 3),
+                            child: CupertinoSlidingSegmentedControl(
+                              children: _children,
+                              onValueChanged: (val) {
+                                List<Voti> periodoSelezionato = val == 0 ? voti1q : voti2q;
+                                materie = new List();
+                                materie.add("Tutte le materie");
+                                for (int i = 0; i < periodoSelezionato.length; i++) {
+                                  String m = periodoSelezionato[i].materia;
+                                  if (!materie.contains(m)) materie.add(m);
+                                }
                                 setState(() {
-                                  obbiettivi = _nob;
+                                  filterIndex = 0;
+                                  selezionePeriodo = val;
                                 });
                               },
-                            )),
-                          );
-                        } : null,
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      )
-                    ],
-                  ),
-                  Center(
-                    child: Padding(
-                      padding:
-                      const EdgeInsets.only(bottom: 5, top: 3),
-                      child: CupertinoSlidingSegmentedControl(
-                        children: _children,
-                        onValueChanged: (val) {
-                          List<Voti> periodoSelezionato = val == 0 ? voti1q : voti2q;
-                          materie = new List();
-                          materie.add("Tutte le materie");
-                          for (int i = 0; i < periodoSelezionato.length; i++) {
-                            String m = periodoSelezionato[i].materia;
-                            if (!materie.contains(m)) materie.add(m);
-                          }
-                          setState(() {
-                            filterIndex = 0;
-                            selezionePeriodo = val;
-                          });
-                        },
-                        groupValue: selezionePeriodo,
+                              groupValue: selezionePeriodo,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   currentVoti.length > 0 ? Column(children: <Widget>[
                       Column(
@@ -402,18 +522,19 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                             child: LineChart(
                               LineChartData(
                                   titlesData: FlTitlesData(show: false),
+                                  borderData: FlBorderData(show: false),
                                   gridData: FlGridData(
                                     show: true,
                                     drawVerticalLine: true,
                                     getDrawingHorizontalLine: (value) {
-                                      return const FlLine(
-                                        color: Color(0xff37434d),
+                                      return  FlLine(
+                                        color: Theme.of(context).textTheme.body1.color.withAlpha(100),
                                         strokeWidth: 1,
                                       );
                                     },
                                     getDrawingVerticalLine: (value) {
-                                      return const FlLine(
-                                        color: Color(0xff37434d),
+                                      return FlLine(
+                                        color: Theme.of(context).textTheme.body1.color.withAlpha(100),
                                         strokeWidth: 1,
                                       );
                                     },
@@ -421,6 +542,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                                   lineBarsData: [
                                     LineChartBarData(
                                       spots: votiT,
+                                      curveSmoothness: 0.5,
                                       isCurved: false,
                                       colors: gradientColors,
                                       belowBarData: BarAreaData(
@@ -434,7 +556,23 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                         ],
                       ),
                     ),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: generaVoti(currentVoti))
+                    WaterfallFlow.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      itemCount: currentVoti.length,
+                      itemBuilder: (context, i){
+                        return _generaTileVoto(currentVoti[i]);
+                        },
+                      gridDelegate: SliverWaterfallFlowDelegate(
+                        crossAxisCount: columnCount,
+                        mainAxisSpacing: 10.0,
+                        crossAxisSpacing: 10.0,
+                          lastChildLayoutTypeBuilder: (index) => index == currentVoti.length
+                          ? LastChildLayoutType.foot
+                              : LastChildLayoutType.none,
+                          ),
+                        ),
+
                   ]) : new Text("Nessun voto disponibile per il periodo selezionato")
                 ],
               ),

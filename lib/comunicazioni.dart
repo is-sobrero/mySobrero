@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 import 'reapi2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -50,63 +51,46 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
     return list;
   }
 
-  List<Widget> generaComunicazioni() {
-    List<Widget> list = new List<Widget>();
-    for (int i = 0; i < comunicazioni.length; i++) {
-      list.add(Padding(
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Container(
-            decoration: new BoxDecoration(
-                color: Theme.of(context).textTheme.body1.color.withAlpha(20),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                border: Border.all(width: 1.0, color: Color(0xFFCCCCCC))),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Wrap(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Text(
-                          toBeginningOfSentenceCase(comunicazioni[i].titolo),
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold)),
-                    ),
-                    /*Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(14.0, 5.0, 14.0, 5.0),
-                          child: Text(comunicazioni[i].mittente,
-                              style: TextStyle(color: Colors.white)),
-                        )),*/
-                  ]),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(comunicazioni[i].contenuto,
-                        style: TextStyle(
-                          fontSize: 16,
-                        )),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: generaAllegati(comunicazioni[i].allegati)
-                  )
-                ],
+  Widget _generaComunicazione(Comunicazioni comunicazione){
+    return Container(
+        decoration: new BoxDecoration(
+            color: Theme.of(context).textTheme.body1.color.withAlpha(20),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            border: Border.all(width: 1.0, color: Color(0xFFCCCCCC))),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Wrap(children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(
+                      toBeginningOfSentenceCase(comunicazione.titolo),
+                      style: TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.bold)),
+                ),
+              ]),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(comunicazione.contenuto,
+                    style: TextStyle(
+                      fontSize: 16,
+                    )),
               ),
-            )),
-      ));
-    }
-
-    return list;
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: generaAllegati(comunicazione.allegati)
+              )
+            ],
+          ),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
+    int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
+    columnCount = MediaQuery.of(context).size.width > 800 ? 3 : columnCount;
     return SingleChildScrollView(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +110,23 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
                   ),
                 ),
               ),
-              Column(children: generaComunicazioni())
+              //Column(children: generaComunicazioni())
+              WaterfallFlow.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: comunicazioni.length,
+                itemBuilder: (context, i){
+                  return _generaComunicazione(comunicazioni[i]);
+                },
+                gridDelegate: SliverWaterfallFlowDelegate(
+                  crossAxisCount: columnCount,
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
+                  lastChildLayoutTypeBuilder: (index) => index == comunicazioni.length
+                      ? LastChildLayoutType.foot
+                      : LastChildLayoutType.none,
+                ),
+              ),
             ],
           ),
         ),

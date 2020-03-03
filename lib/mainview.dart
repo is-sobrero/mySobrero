@@ -127,14 +127,12 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
       ultimoVoto = response.voti[0].voto;
       ultimaMateria = response.voti[0].materia;
     }
-    final classeUtente =
-        response.user.classe.toString() + " " + response.user.sezione.trim();
+    final classeUtente = response.user.classe.toString() + " " + response.user.sezione.trim();
     final indirizzoUtente = response.user.corso;
-    final ultimaComunicazione =
-        response.comunicazioni[0].contenuto.substring(0, 100) + "...";
+    final ultimaComunicazione = response.comunicazioni[0].contenuto.substring(0, 100) + "...";
     final ultimaComMittente = response.comunicazioni[0].mittente;
     final accountStudente = response.user.livello == "4";
-    bool isWide = MediaQuery.of(context).size.width > 500;
+    bool isWide = MediaQuery.of(context).size.width > 550;
 
     return SingleChildScrollView(
         child: Column(
