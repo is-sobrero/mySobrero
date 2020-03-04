@@ -354,7 +354,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     ];
     bool isWide = MediaQuery.of(context).size.width > 500;
     int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
-    columnCount = MediaQuery.of(context).size.width > 800 ? 3 : columnCount;
+    columnCount = MediaQuery.of(context).size.width > 900 ? 3 : columnCount;
     List<Voti> currentVoti;
     List<Voti> periodoSelezionato = selezionePeriodo == 0 ? voti1q : voti2q;
     if (filterIndex == 0) currentVoti = periodoSelezionato;

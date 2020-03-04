@@ -90,47 +90,49 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
   @override
   Widget build(BuildContext context) {
     int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
-    columnCount = MediaQuery.of(context).size.width > 800 ? 3 : columnCount;
+    columnCount = MediaQuery.of(context).size.width > 900 ? 3 : columnCount;
     return SingleChildScrollView(
-        child: Column(
+        child: SafeArea(
+          top: false,
+          child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  'Tutte le comunicazioni',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 24,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    'Tutte le comunicazioni',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-              ),
-              //Column(children: generaComunicazioni())
-              WaterfallFlow.builder(
-                primary: false,
-                shrinkWrap: true,
-                itemCount: comunicazioni.length,
-                itemBuilder: (context, i){
-                  return _generaComunicazione(comunicazioni[i]);
-                },
-                gridDelegate: SliverWaterfallFlowDelegate(
-                  crossAxisCount: columnCount,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  lastChildLayoutTypeBuilder: (index) => index == comunicazioni.length
-                      ? LastChildLayoutType.foot
-                      : LastChildLayoutType.none,
+                WaterfallFlow.builder(
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: comunicazioni.length,
+                  itemBuilder: (context, i){
+                    return _generaComunicazione(comunicazioni[i]);
+                  },
+                  gridDelegate: SliverWaterfallFlowDelegate(
+                    crossAxisCount: columnCount,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                    lastChildLayoutTypeBuilder: (index) => index == comunicazioni.length
+                        ? LastChildLayoutType.foot
+                        : LastChildLayoutType.none,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
       ],
-    ));
+    ),
+        ));
   }
 }

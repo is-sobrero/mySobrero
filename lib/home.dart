@@ -137,66 +137,62 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                     blurRadius: 12
                 )
               ],
-/*
-                border: Border(
-                    bottom: BorderSide(
-                        color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
-                        width: 4
-                    )
-                ),
-*/
               color: Theme.of(context).scaffoldBackgroundColor
             ),
-            child: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width:  35,
-                          height:  35,
-                          child: Image.asset('assets/images/logo_sobrero_grad.png',
-                              scale: 1.1),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: Text(
-                            "mySobrero",
-                            style: TextStyle(
-                                fontSize:  17,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF0360e7)),
-                          ),
-                        ),
-                        Spacer(), // use Spacer
-                        IconButton(
-                            icon: new Image.asset(
-                              'assets/images/ic_settings_grad.png',
+            child: Column(
+              children: <Widget>[
+                SafeArea(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width:  35,
+                              height:  35,
+                              child: Image.asset('assets/images/logo_sobrero_grad.png',
+                                  scale: 1.1),
                             ),
-                            tooltip: 'Apri le impostazioni dell\'App',
-                            iconSize: 14,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ImpostazioniView(response, profileUrl, (url){
-                                  profileUrl = url;
-                                  print("Nuova url: $url");
-                                })),
-                              );
-                            },
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                "mySobrero",
+                                style: TextStyle(
+                                    fontSize:  17,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF0360e7)),
+                              ),
+                            ),
+                            Spacer(), // use Spacer
+                            IconButton(
+                                icon: new Image.asset(
+                                  'assets/images/ic_settings_grad.png',
+                                ),
+                                tooltip: 'Apri le impostazioni dell\'App',
+                                iconSize: 14,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ImpostazioniView(response, profileUrl, (url){
+                                      profileUrl = url;
+                                      print("Nuova url: $url");
+                                    })),
+                                  );
+                                },
+                              ),
 
-                      ],
-                    ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    height: 4,
-                    color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
-                  )
-                ],
-              ),
+                ),
+                Container(
+                  height: 4,
+                  color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
+                )
+              ],
             ),
           ),
         ),

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/compiti.dart';
 import 'reapi2.dart';
@@ -9,6 +12,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'skeleton.dart';
 import 'globals.dart' as globals;
+import 'package:route_transitions/route_transitions.dart';
+
 
 typedef SwitchPageCallback = void Function(int page);
 
@@ -66,6 +71,18 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  String infoAggiuntiveTXT;
+
+  Future<String> ottieniInformazioniAggiuntive() async{
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+    await remoteConfig.activateFetched();
+    final notice = jsonDecode(remoteConfig.getString('notice_setting'));
+    if (notice["enabled"] == true){
+      return notice["description"];
+    } else return null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,6 +108,11 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
       print(token);
     });
 
+    ottieniInformazioniAggiuntive().then((notice){
+      setState((){
+        infoAggiuntiveTXT = notice;
+      });
+    });
   }
 
   @override
@@ -236,7 +258,61 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                     ],
                   ),
                 ),
-
+                infoAggiuntiveTXT != null ? Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                            decoration: new BoxDecoration(
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Color(0xFFff5858).withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(11)),
+                                gradient: LinearGradient(
+                                  begin: FractionalOffset.topRight,
+                                  end: FractionalOffset.bottomRight,
+                                  colors: <Color>[
+                                    Color(0xFFff5858),
+                                    Color(0xFFf09819),
+                                  ],
+                                )),
+                            child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                        style: new TextStyle(
+                                            color: Colors.white,
+                                        ),
+                                        children: [
+                                          WidgetSpan(
+                                            child: Icon(
+                                              Icons.info_outline,
+                                              size: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: "  " + infoAggiuntiveTXT,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ) : Container(),
                 Flex(
                   direction: isWide ? Axis.horizontal : Axis.vertical,
                   children: <Widget>[
@@ -307,10 +383,11 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(context,
-                                      MaterialPageRoute(builder: (_) {
-                                    return CompitiView(
-                                        response.compiti, compitiSettimana);
-                                  }));
+                                      PageRouteTransition(
+                                        builder: (_) => CompitiView(response.compiti, compitiSettimana),
+                                        animationType: AnimationType.fade,
+                                        curves: Curves.easeInOut,
+                                  ));
                                 },
                                 child: Stack(
                                   children: <Widget>[
