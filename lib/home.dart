@@ -148,11 +148,14 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
                         child: Row(
                           children: <Widget>[
-                            SizedBox(
-                              width:  35,
-                              height:  35,
-                              child: Image.asset('assets/images/logo_sobrero_grad.png',
-                                  scale: 1.1),
+                            Hero(
+                              tag: "main_logosobre",
+                              child: SizedBox(
+                                width:  35,
+                                height:  35,
+                                child: Image.asset('assets/images/logo_sobrero_grad.png',
+                                    scale: 1.1),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 5.0),

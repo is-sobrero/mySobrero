@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:mySobrero/reapi2.dart';
+import 'package:route_transitions/route_transitions.dart';
 import 'ColorLoader5.dart';
 import 'home.dart';
 import 'dart:convert';
@@ -18,10 +19,13 @@ import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'globals.dart' as globals;
+import 'package:flutter/scheduler.dart' show timeDilation;
+
 
 void main() {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  //timeDilation = 5.0;
   runApp(MyApp());
 }
 
@@ -302,10 +306,23 @@ class _AppLoginState extends State<AppLogin> {
       print("profilo: $profileImageUrl");
       globals.profileURL = profileImageUrl;
 
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => HomeScreen(response, feed, profileImageUrl)),
+        PageRouteBuilder(
+            pageBuilder: (_, __, ___)  => HomeScreen(response, feed, profileImageUrl),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
+              var offsetAnimation = animation.drive(tween);
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+
+        )
       );
     } else {
       setState(() {
@@ -417,10 +434,13 @@ class _AppLoginState extends State<AppLogin> {
                 ? CrossAxisAlignment.start
                 : CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                width: 70,
-                height: 70,
-                child: Image.asset('assets/images/logo_sobrero_grad.png'),
+              Hero(
+                tag: "main_logosobre",
+                child: SizedBox(
+                  width: 70,
+                  height: 70,
+                  child: Image.asset('assets/images/logo_sobrero_grad.png'),
+                ),
               ),
               isLoginVisible
                   ? Column(

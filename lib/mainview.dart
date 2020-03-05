@@ -382,12 +382,28 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context,
-                                      PageRouteTransition(
-                                        builder: (_) => CompitiView(response.compiti, compitiSettimana),
-                                        animationType: AnimationType.fade,
-                                        curves: Curves.easeInOut,
-                                  ));
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (ctx, a, sa){
+                                        return CompitiView(response.compiti, compitiSettimana);
+                                      },
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child){
+                                        if (animation.status == AnimationStatus.reverse) {
+
+                                          return FadeTransition(
+                                            opacity: animation,
+                                            child: child,
+                                          );
+                                        } else {
+                                          return FadeTransition(
+                                            opacity: animation,
+                                            child: child,
+                                          );
+                                        }
+                                      }
+                                    )
+                                  );
                                 },
                                 child: Stack(
                                   children: <Widget>[
