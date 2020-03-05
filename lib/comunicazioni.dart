@@ -52,16 +52,48 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
   }
 
   Widget _generaComunicazione(Comunicazioni comunicazione){
+    String realDestinatario = "Dirigente";
+    if (comunicazione.mittente.toUpperCase() != "DIRIGENTE") realDestinatario = "Gianni Rossi";
     return Container(
         decoration: new BoxDecoration(
-            color: Theme.of(context).textTheme.body1.color.withAlpha(20),
+            //color: Theme.of(context).textTheme.body1.color.withAlpha(20),
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(width: 1.0, color: Color(0xFFCCCCCC))),
+            //border: Border.all(width: 0.0, color: Color(0xFFCCCCCC)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12.withAlpha(12),
+              blurRadius: 10,
+              spreadRadius: 10
+            )
+          ]
+        ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Row(
+                  children: <Widget>[
+                    comunicazione.mittente.toUpperCase() == "DIRIGENTE" ?
+                    CircleAvatar(
+                      backgroundImage: AssetImage("assets/images/rota.png"),
+                      radius: 15,
+                    ) :
+                    CircleAvatar(
+                      child: Text("GR"),
+                      backgroundColor: Theme.of(context).primaryColor,
+                      radius: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(toBeginningOfSentenceCase(realDestinatario)),
+                    )
+                  ],
+                ),
+              ),
               Wrap(children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(right: 8),

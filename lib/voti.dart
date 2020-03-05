@@ -113,9 +113,8 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     }
 
     return ExpandableNotifier(
-      child: Column(
-        children: [
-          Expandable(
+      child: Container (
+        child: Expandable(
             collapsed: ExpandableButton(
               child: Container(
                   decoration: new BoxDecoration(
@@ -176,7 +175,11 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
               ),
             ]),
           ),
-        ],
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+          ],
+        ),
       ),
     );
   }
@@ -479,26 +482,30 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
                                         child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            icon: Icon(Icons.unfold_more, color: Theme.of(context).primaryColor),
-                                            isExpanded: true,
-                                            hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
-                                            value: materie[filterIndex],
-                                            onChanged: (String Value) {
-                                              setState(() {
-                                                filterIndex = materie.indexOf(Value);
-                                              });
-                                            },
-                                            items: materie.map((String user) {
-                                              return DropdownMenuItem<String>(
-                                                value: user,
-                                                child:
-                                                Text(
-                                                  user,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              );
-                                            }).toList(),
+                                          child: Container(
+                                            child: DropdownButton<String>(
+                                              icon: Icon(Icons.unfold_more, color: Theme.of(context).primaryColor),
+                                              isExpanded: false,
+                                              hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
+                                              value: materie[filterIndex],
+                                              onChanged: (String Value) {
+                                                setState(() {
+                                                  filterIndex = materie.indexOf(Value);
+                                                });
+                                              },
+                                              items: materie.map((String user) {
+                                                return DropdownMenuItem<String>(
+                                                  value: user,
+                                                  child:
+                                                  Container(
+                                                    child: Text(
+                                                      user,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
                                           ),
                                         ),
                                       ),

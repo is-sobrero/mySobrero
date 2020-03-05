@@ -250,13 +250,12 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             );
           }
         ),
-
         bottomNavigationBar: CubertoBottomBar(
           inactiveIconColor: Theme.of(context).textTheme.body1.color,
-          tabStyle: CubertoTabStyle
-              .STYLE_FADED_BACKGROUND,
-          selectedTab:
-              _currentIndex,
+          tabStyle: CubertoTabStyle.STYLE_FADED_BACKGROUND,
+          selectedTab: _currentIndex,
+          barBackgroundColor: Theme.of(context).cardColor,
+          tabColor: Theme.of(context).primaryColor,
           tabs: [
             TabData(
               iconData: Icons.home,
@@ -279,11 +278,8 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
           ],
           onTabChangedListener: (position, title, color) {
             setState(() {
-              pageController.animateToPage(position,
-                  duration: Duration(milliseconds: 200), curve: Curves.ease);
-              setState(() {
-                _currentIndex = position;
-              });
+              pageController.animateToPage(position, duration: Duration(milliseconds: 200), curve: Curves.ease);
+              _currentIndex = position;
             });
           },
         ),

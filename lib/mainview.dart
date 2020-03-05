@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/compiti.dart';
+import 'package:mySobrero/expandedsection.dart';
 import 'reapi2.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,8 +13,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'skeleton.dart';
 import 'globals.dart' as globals;
-import 'package:route_transitions/route_transitions.dart';
-
 
 typedef SwitchPageCallback = void Function(int page);
 
@@ -71,7 +70,8 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  String infoAggiuntiveTXT;
+  String infoAggiuntiveTXT = "";
+  bool disponibiliInfo = false;
 
   Future<String> ottieniInformazioniAggiuntive() async{
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
@@ -110,7 +110,8 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
 
     ottieniInformazioniAggiuntive().then((notice){
       setState((){
-        infoAggiuntiveTXT = notice;
+        infoAggiuntiveTXT = notice.toString();
+        disponibiliInfo = true;
       });
     });
   }
@@ -258,61 +259,67 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                     ],
                   ),
                 ),
-                infoAggiuntiveTXT != null ? Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Container(
-                            decoration: new BoxDecoration(
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Color(0xFFff5858).withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 10.0),
-                                ],
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(11)),
-                                gradient: LinearGradient(
-                                  begin: FractionalOffset.topRight,
-                                  end: FractionalOffset.bottomRight,
-                                  colors: <Color>[
-                                    Color(0xFFff5858),
-                                    Color(0xFFf09819),
-                                  ],
-                                )),
-                            child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    RichText(
-                                      textAlign: TextAlign.left,
-                                      text: TextSpan(
-                                        style: new TextStyle(
-                                            color: Colors.white,
-                                        ),
-                                        children: [
-                                          WidgetSpan(
-                                            child: Icon(
-                                              Icons.info_outline,
-                                              size: 20,
+                Padding(
+                  padding: EdgeInsets.only(bottom: disponibiliInfo ? 10 : 0),
+                  child: Container(
+                    decoration: new BoxDecoration(
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Color(0xFFff5858).withOpacity(0.4),
+                              offset: const Offset(1.1, 1.1),
+                              blurRadius: 10.0),
+                        ],
+                        ),
+                    child: ExpandedSection(
+                      expand: disponibiliInfo,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                                decoration: new BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(11)),
+                                    gradient: LinearGradient(
+                                      begin: FractionalOffset.topRight,
+                                      end: FractionalOffset.bottomRight,
+                                      colors: <Color>[
+                                        Color(0xFFff5858),
+                                        Color(0xFFf09819),
+                                      ],
+                                    )),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        RichText(
+                                          textAlign: TextAlign.left,
+                                          text: TextSpan(
+                                            style: new TextStyle(
                                               color: Colors.white,
                                             ),
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(
+                                                  Icons.info_outline,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "  " + infoAggiuntiveTXT,
+                                              ),
+                                            ],
                                           ),
-                                          TextSpan(
-                                            text: "  " + infoAggiuntiveTXT,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ))),
+                                        ),
+                                      ],
+                                    ))),
+                            flex: 1,
+                          ),
+                        ],
                       ),
-                      flex: 1,
                     ),
-                  ],
-                ) : Container(),
+                  ),
+                ),
                 Flex(
                   direction: isWide ? Axis.horizontal : Axis.vertical,
                   children: <Widget>[
@@ -384,24 +391,9 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (ctx, a, sa){
-                                        return CompitiView(response.compiti, compitiSettimana);
-                                      },
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child){
-                                        if (animation.status == AnimationStatus.reverse) {
-
-                                          return FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          );
-                                        } else {
-                                          return FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          );
-                                        }
-                                      }
+                                    MaterialPageRoute(
+                                      builder: (_) => CompitiView(response.compiti, compitiSettimana),
+                                      fullscreenDialog: true,
                                     )
                                   );
                                 },
@@ -579,8 +571,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                 height: 400,
                 child: ListView.builder(
                   //key: GlobalKey<RawGestureDetectorState>("DIO"),
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                     itemCount: feed.items.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctxt, int index) {
@@ -610,8 +601,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                   new Expanded(
                                       child: CachedNetworkImage(
                                     imageUrl: item.thumbnail,
-                                    placeholder: (context, url) =>
-                                        Skeleton(),
+                                    placeholder: (context, url) => Skeleton(),
                                     errorWidget: (context, url, error) =>
                                         Container(
                                           color: Theme.of(context).textTheme.body1.color.withAlpha(40),

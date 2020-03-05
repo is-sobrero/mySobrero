@@ -57,9 +57,13 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return AssenzeView(response.assenze);
-                        }));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => AssenzeView(response.assenze),
+                                fullscreenDialog: true
+                            )
+                        );
                       },
                       child: Hero(
                         tag: "assenze_background",
@@ -106,8 +110,9 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  ArgomentiView(response.argomenti)),
+                              builder: (context) => ArgomentiView(response.argomenti),
+                              fullscreenDialog: true
+                          ),
                         );
                       },
                       child: Hero(
@@ -156,8 +161,9 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  MaterialeView(reMateriale: response.materiale, userID: response.session,)),
+                              builder: (context) => MaterialeView(reMateriale: response.materiale, userID: response.session,),
+                              fullscreenDialog: true
+                          ),
                         );
                       },
                       child: Hero(
@@ -205,7 +211,10 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RicercaAuleView()),
+                          MaterialPageRoute(
+                              builder: (context) => RicercaAuleView(),
+                            fullscreenDialog: true
+                          ),
                         );
                       },
                       child: Hero(
@@ -254,8 +263,9 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  PagelleView(response.pagelle)),
+                              builder: (context) => PagelleView(response.pagelle),
+                              fullscreenDialog: true
+                          ),
                         );
                       },
                       child: Hero(

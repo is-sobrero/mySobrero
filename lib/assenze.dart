@@ -72,17 +72,13 @@ class _AssenzeState extends State<AssenzeView>
         color: Colors.black,
       ),
     );
-    return Scaffold(
-      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
-      body: Stack(
-        children: <Widget>[
-          Hero(
-            tag: "assenze_background",
-            child: Container(
-              color: Color(0xffff9692),
-            ),
-          ),
-          SafeArea(
+
+    return Hero(
+        tag: "assenze_background",
+        child: Scaffold(
+          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          backgroundColor: Color(0xffff9692),
+          body: SafeArea(
             bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
               !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
@@ -96,19 +92,19 @@ class _AssenzeState extends State<AssenzeView>
                 child: PreferredSize(
                   preferredSize: Size.fromHeight(_preferredAppBarHeight),
                   child: AppBar(
-                      title: AnimatedOpacity(
-                        opacity: _appBarTitleOpacity,
-                        duration: const Duration(milliseconds: 250),
-                        child: Text("Assenze",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                      backgroundColor: Color(0xffff9692),
-                      elevation: 0,
-                      leading: BackButton(
-                        color: Colors.black,
-                      ),
+                    title: AnimatedOpacity(
+                      opacity: _appBarTitleOpacity,
+                      duration: const Duration(milliseconds: 250),
+                      child: Text("Assenze",
+                          style: TextStyle(color: Colors.black)),
+                    ),
+                    backgroundColor: Color(0xffff9692),
+                    elevation: 0,
+                    leading: BackButton(
+                      color: Colors.black,
                     ),
                   ),
+                ),
               ) : new Container(),
               Expanded(
                 child: ScrollConfiguration(
@@ -139,9 +135,9 @@ class _AssenzeState extends State<AssenzeView>
                                     .textTheme
                                     .title
                                     .copyWith(
-                                        fontSize: 32.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                    fontSize: 32.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -168,13 +164,13 @@ class _AssenzeState extends State<AssenzeView>
                               Column(
                                 children: assenze.nongiustificate.length > 0
                                     ? generaAssenze(assenze.nongiustificate,
-                                        Colors.red, context)
+                                    Colors.red, context)
                                     : <Widget>[
-                                        Text(
-                                          "Nessuna assenza da giustificare, ottimo!",
-                                          textAlign: TextAlign.center,
-                                        )
-                                      ],
+                                  Text(
+                                    "Nessuna assenza da giustificare, ottimo!",
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
@@ -204,8 +200,7 @@ class _AssenzeState extends State<AssenzeView>
               ),
             ]),
           ),
-        ],
-      ),
+        )
     );
   }
 

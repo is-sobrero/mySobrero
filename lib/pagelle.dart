@@ -90,118 +90,113 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
         color: Colors.white,
       ),
     );
-    return Scaffold(
-      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
-      body: Stack(
-          children: <Widget>[
-            Hero(
-              tag: "pagelle_background",
-              child: Container(
-                color: Color(0xff38ada9),
-              ),
-            ),
-            SafeArea(
-              bottom: !_fadeSlideAnimationController.isCompleted,
-              child: Column(children: <Widget>[
-                !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
-                  controller: _fadeSlideAnimationController,
-                  slideAnimationTween: Tween<Offset>(
-                    begin: Offset(0.0, 0.5),
-                    end: Offset(0.0, 0.0),
-                  ),
-                  begin: 0.0,
-                  end: _listAnimationIntervalStart,
-                  child: PreferredSize(
-                    preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                    child: titolo,
-                  ),
-                ) : Container(),
-                Expanded(
-                  child: ScrollConfiguration(
-                    behavior: ScrollBehavior(),
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
-                      child: Column(
-                        children: <Widget>[
-                          FadeSlideTransition(
-                            controller: _fadeSlideAnimationController,
-                            slideAnimationTween: Tween<Offset>(
-                              begin: Offset(0.0, 0.5),
-                              end: Offset(0.0, 0.0),
-                            ),
-                            begin: 0.0,
-                            end: _listAnimationIntervalStart,
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  "Pagelle",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .copyWith(
-                                          fontSize: 32.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
+    return Hero(
+        tag: "pagelle_background",
+        child: Scaffold(
+          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          backgroundColor: Color(0xff38ada9),
+          body: SafeArea(
+            bottom: !_fadeSlideAnimationController.isCompleted,
+            child: Column(children: <Widget>[
+              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
+                controller: _fadeSlideAnimationController,
+                slideAnimationTween: Tween<Offset>(
+                  begin: Offset(0.0, 0.5),
+                  end: Offset(0.0, 0.0),
+                ),
+                begin: 0.0,
+                end: _listAnimationIntervalStart,
+                child: PreferredSize(
+                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
+                  child: titolo,
+                ),
+              ) : Container(),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: ScrollBehavior(),
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
+                    child: Column(
+                      children: <Widget>[
+                        FadeSlideTransition(
+                          controller: _fadeSlideAnimationController,
+                          slideAnimationTween: Tween<Offset>(
+                            begin: Offset(0.0, 0.5),
+                            end: Offset(0.0, 0.0),
                           ),
-                          FadeSlideTransition(
-                            controller: _fadeSlideAnimationController,
-                            slideAnimationTween: Tween<Offset>(
-                              begin: Offset(0.0, 0.005),
-                              end: Offset(0.0, 0.0),
-                            ),
-                            begin: _listAnimationIntervalStart - 0.15,
-                            child: Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Column(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 15),
-                                      child: CupertinoSlidingSegmentedControl(
-                                        backgroundColor: Colors.black.withAlpha(50),
-                                        thumbColor: Colors.black54,
-                                        children: _children,
-                                        onValueChanged: (val) {
-                                          setState(() {
-                                            selezionaPagella = val;
-                                          });
-                                        },
-                                        groupValue: selezionaPagella,
-                                      ),
+                          begin: 0.0,
+                          end: _listAnimationIntervalStart,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                "Pagelle",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .title
+                                    .copyWith(
+                                    fontSize: 32.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        FadeSlideTransition(
+                          controller: _fadeSlideAnimationController,
+                          slideAnimationTween: Tween<Offset>(
+                            begin: Offset(0.0, 0.005),
+                            end: Offset(0.0, 0.0),
+                          ),
+                          begin: _listAnimationIntervalStart - 0.15,
+                          child: Padding(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding:
+                                    const EdgeInsets.only(bottom: 15),
+                                    child: CupertinoSlidingSegmentedControl(
+                                      backgroundColor: Colors.black.withAlpha(50),
+                                      thumbColor: Colors.black54,
+                                      children: _children,
+                                      onValueChanged: (val) {
+                                        setState(() {
+                                          selezionaPagella = val;
+                                        });
+                                      },
+                                      groupValue: selezionaPagella,
                                     ),
-                                    selectedPagella != null ? Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // TODO inserire pagelle
-                                        Text("Media totale: ${selectedPagella.media}", style: TextStyle(
+                                  ),
+                                  selectedPagella != null ? Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // TODO inserire pagelle
+                                      Text("Media totale: ${selectedPagella.media}", style: TextStyle(
+                                          fontSize: 20, color: Colors.white),),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Text("Esito: ${selectedPagella.esito != "" ?  selectedPagella.esito  : "Non specificato"}", style: TextStyle(
                                             fontSize: 20, color: Colors.white),),
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Text("Esito: ${selectedPagella.esito != "" ?  selectedPagella.esito  : "Non specificato"}", style: TextStyle(
-                                              fontSize: 20, color: Colors.white),),
-                                        ),
-                                        ListView.builder(
-                                          primary: false,
-                                          shrinkWrap: true,
-                                          itemCount: selectedPagella.materie.length,
-                                          itemBuilder: (context, index) {
-                                            VotoPagella mat = selectedPagella.materie[index];
-                                            return Padding(
-                                              padding: const EdgeInsets.only(bottom: 15),
-                                              child: Container(
-                                                  decoration: new BoxDecoration(
-                                                      color: Colors.white.withAlpha(20),
-                                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                      border: Border.all(
-                                                          width: 1.0,
-                                                          color: Colors.white)),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(15.0),
-                                                    child: /*Column(
+                                      ),
+                                      ListView.builder(
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        itemCount: selectedPagella.materie.length,
+                                        itemBuilder: (context, index) {
+                                          VotoPagella mat = selectedPagella.materie[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 15),
+                                            child: Container(
+                                                decoration: new BoxDecoration(
+                                                    color: Colors.white.withAlpha(20),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                    border: Border.all(
+                                                        width: 1.0,
+                                                        color: Colors.white)),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(15.0),
+                                                  child: /*Column(
                                                       crossAxisAlignment:
                                                       CrossAxisAlignment.stretch,
                                                       children: <Widget>[
@@ -225,43 +220,42 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
 
                                                       ],
                                                     ),*/
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(right: 15),
-                                                          child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.white)),
-                                                        ),
-                                                        Expanded(child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Text(mat.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                                                            Text("Ore di assenza: ${mat.assenze}",
-                                                                style: TextStyle(
-                                                                    fontSize: 16,
-                                                                    color: Colors.white)),
-                                                          ],
-                                                        ))
-                                                      ],
-                                                    ),
-                                                  )),
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ) : new Text("Pagella non disponibile per il periodo selezionato", style: TextStyle(
-                                        fontSize: 20, color: Colors.black),),
-                                  ],
-                                )),
-                          )
-                        ],
-                      ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(right: 15),
+                                                        child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.white)),
+                                                      ),
+                                                      Expanded(child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(mat.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                                                          Text("Ore di assenza: ${mat.assenze}",
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: Colors.white)),
+                                                        ],
+                                                      ))
+                                                    ],
+                                                  ),
+                                                )),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ) : new Text("Pagella non disponibile per il periodo selezionato", style: TextStyle(
+                                      fontSize: 20, color: Colors.black),),
+                                ],
+                              )),
+                        )
+                      ],
                     ),
                   ),
                 ),
-              ]),
-            ),
-          ],
-        ),
+              ),
+            ]),
+          ),
+        )
     );
   }
 

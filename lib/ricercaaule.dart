@@ -144,15 +144,12 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
       elevation: _appBarElevation,
       leading: BackButton(color: Colors.white,),
     );
-    return Scaffold(
-      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
-      body: Stack(
-        children: <Widget>[
-          Hero(
-            tag: "ricercaaule_background",
-            child: Container(color: Color(0xffF86925),),
-          ),
-          SafeArea(
+    return Hero(
+        tag: "ricercaaule_background",
+        child: Scaffold(
+          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          backgroundColor: Color(0xffF86925),
+          body: SafeArea(
             bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
               !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
@@ -214,8 +211,8 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                         Expanded(
                                           child: Theme(
                                             data: ThemeData(
-                                                hintColor: Colors.white,
-                                                primaryColor: Colors.white,
+                                              hintColor: Colors.white,
+                                              primaryColor: Colors.white,
                                             ),
                                             child: TextField(
                                               cursorColor: Colors.white,
@@ -390,18 +387,18 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                                                         fit: BoxFit.contain,
                                                                                         height: 120,
                                                                                         placeholderBuilder: (BuildContext context) => Container(
-                                                                                            padding: const EdgeInsets.all(30.0),
-                                                                                            child: Center(
-                                                                                              child: Column(
-                                                                                                children: <Widget>[
-                                                                                                  CupertinoActivityIndicator(radius: 20),
-                                                                                                  Padding(
-                                                                                                    padding: const EdgeInsets.only(top: 8.0),
-                                                                                                    child: Text("Sto caricando la mappa...", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
+                                                                                          padding: const EdgeInsets.all(30.0),
+                                                                                          child: Center(
+                                                                                            child: Column(
+                                                                                              children: <Widget>[
+                                                                                                CupertinoActivityIndicator(radius: 20),
+                                                                                                Padding(
+                                                                                                  padding: const EdgeInsets.only(top: 8.0),
+                                                                                                  child: Text("Sto caricando la mappa...", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
+                                                                                                ),
+                                                                                              ],
                                                                                             ),
+                                                                                          ),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -419,9 +416,9 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                                               Text("Piano aula: ${snapshot.data[i2].piano}", style: TextStyle(color: Colors.white)),
                                                                               Text("Locale aula: ${snapshot.data[i2].locale}", style: TextStyle(color: Colors.white)),
                                                                               Text(
-                                                                                ("Aula dotata di " + (snapshot.data[i2].prese ? "prese, " : "") +
-                                                                                  (snapshot.data[i2].ethernet ? "attacchi ethernet, " : "") +
-                                                                                  (snapshot.data[i2].computer ? "computer, " : "")),
+                                                                                  ("Aula dotata di " + (snapshot.data[i2].prese ? "prese, " : "") +
+                                                                                      (snapshot.data[i2].ethernet ? "attacchi ethernet, " : "") +
+                                                                                      (snapshot.data[i2].computer ? "computer, " : "")),
                                                                                   style: TextStyle(color: Colors.white)
                                                                               ),
                                                                               Text("Plesso: ${snapshot.data[i2].plesso}", style: TextStyle(color: Colors.white)),
@@ -475,8 +472,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
               ),
             ]),
           ),
-        ],
-      ),
+        )
     );
   }
 }

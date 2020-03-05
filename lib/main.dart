@@ -1,12 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
+import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/reapi2.dart';
-import 'package:route_transitions/route_transitions.dart';
-import 'ColorLoader5.dart';
 import 'home.dart';
 import 'dart:convert';
 import 'SobreroFeed.dart';
@@ -21,11 +21,10 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'globals.dart' as globals;
 import 'package:flutter/scheduler.dart' show timeDilation;
 
-
 void main() {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  //timeDilation = 5.0;
+  //timeDilation = 3.0;
   runApp(MyApp());
 }
 
@@ -37,12 +36,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xFF0360e7),
         accentColor: Color(0xFF0360e7),
+        scaffoldBackgroundColor: Colors.white
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Color(0xFF0360e7),
         accentColor: Color(0xFF0360e7),
-        scaffoldBackgroundColor: Color(0xFF212121),
+        scaffoldBackgroundColor: Color(0xff121212),
+        backgroundColor: Colors.blue,
+        cardColor: Color(0xff212121),
+        bottomAppBarColor: Color(0xff242424),
+        canvasColor: Color(0xff242424)
       ),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -235,6 +239,8 @@ class _AppLoginState extends State<AppLogin> {
     }
   }
 
+  bool _controlloSB = true;
+
   Future<void> loginSalvato() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final username = await prefs.getString('username') ?? "NO";
@@ -305,7 +311,7 @@ class _AppLoginState extends State<AppLogin> {
       final profileImageUrl = dataRetrieve.data["profileImage"];
       print("profilo: $profileImageUrl");
       globals.profileURL = profileImageUrl;
-
+      _controlloSB = false;
       Navigator.push(
         context,
         PageRouteBuilder(
@@ -419,20 +425,18 @@ class _AppLoginState extends State<AppLogin> {
   void initState() {
     super.initState();
     versionCheck(context);
-
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_controlloSB) FlutterStatusbarcolor.setStatusBarWhiteForeground(Theme.of(context).brightness == Brightness.dark);
     return Scaffold(
       body: Center(
         child: SizedBox(
           width: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: isLoginVisible
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Hero(
                 tag: "main_logosobre",
@@ -442,73 +446,73 @@ class _AppLoginState extends State<AppLogin> {
                   child: Image.asset('assets/images/logo_sobrero_grad.png'),
                 ),
               ),
-              isLoginVisible
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text(
-                            'Accedi a mySobrero',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                              foreground: Paint()..shader = sobreroGradient,
-                            ),
+              ExpandedSection(
+                expand: isLoginVisible,
+                child:  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          'Accedi a mySobrero',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            foreground: Paint()..shader = sobreroGradient,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'ID Studente'),
-                            controller: userController,
-                          ),
-                        ),
-                        TextField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Password',
-                          ),
-                          controller: pwrdController,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Center(
-                            child: RaisedButton(
-                              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                              onPressed: buttonLogin,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(7.0))),
-                              color: Theme.of(context).primaryColor,
-                              textColor: Colors.white,
-                              child: const Text(
-                                'ACCEDI',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : new Container(),
-              (!isLoginVisible && loginCalled)
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: ColorLoader5(
-                        dotOneColor: Color(0xFF0287d1),
-                        dotTwoColor: Color(0xFF0360e7),
-                        dotThreeColor: Color(0xFF0335ff),
-                        dotType: DotType.circle,
-                        dotIcon: Icon(Icons.adjust),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'ID Studente'),
+                          controller: userController,
+                        ),
+                      ),
+                      TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Password',
+                        ),
+                        controller: pwrdController,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Center(
+                          child: RaisedButton(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                            onPressed: buttonLogin,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(7.0))),
+                            color: Theme.of(context).primaryColor,
+                            textColor: Colors.white,
+                            child: const Text(
+                              'ACCEDI',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+              ),
+              ExpandedSection(
+                expand: (!isLoginVisible && loginCalled),
+                child: Padding(
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 5),
+                    child: SpinKitDualRing(
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                        lineWidth: 5,
                     )
-                  : new Container(),
+                ),
+              ),
             ],
           ),
         ),

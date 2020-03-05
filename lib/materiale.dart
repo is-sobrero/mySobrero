@@ -97,15 +97,12 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
       elevation: _appBarElevation,
       leading: BackButton(color: Colors.white,),
     );
-    return Scaffold(
-      appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
-      body: Stack(
-        children: <Widget>[
-          Hero(
-            tag: "materiale_background",
-            child: Container(color: Color(0xffe55039),),
-          ),
-          SafeArea(
+    return Hero(
+        tag: "materiale_background",
+        child: Scaffold(
+          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          backgroundColor: Color(0xffe55039),
+          body: SafeArea(
             bottom: !_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
               !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
@@ -117,8 +114,8 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                 begin: 0.0,
                 end: _listAnimationIntervalStart,
                 child: PreferredSize(
-                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: titolo
+                    preferredSize: Size.fromHeight(_preferredAppBarHeight),
+                    child: titolo
                 ),
               ) : Container(),
               Expanded(
@@ -175,8 +172,8 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                               child: Text(
                                                   reMateriale[index].docente,
                                                   style: TextStyle(
-                                                    fontSize: 24,
-                                                    color: Colors.white)
+                                                      fontSize: 24,
+                                                      color: Colors.white)
                                               ),
                                             ),
                                             ListView.builder(
@@ -186,40 +183,40 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                               itemBuilder: (ctx, i){
                                                 //return Text(reMateriale[index].cartelle[i].descrizione);
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(bottom: 15),
-                                                  child: ExpandableNotifier(
-                                                      child: Expandable(
-                                                        collapsed: ExpandableButton(
-                                                            child: Container(
-                                                              decoration: new BoxDecoration(
-                                                                  color: Colors.white.withAlpha(20),
-                                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                                  border: Border.all(width: 1.0, color: Colors.white)),
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(15),
-                                                                child: Row(
-                                                                  children: <Widget>[
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(right: 5),
-                                                                      child: Icon(Icons.folder_open, color: Colors.white),
-                                                                    ),
-                                                                    Expanded(
-                                                                      child: Text(
-                                                                          reMateriale[index].cartelle[i].descrizione,
-                                                                          style: TextStyle(
-                                                                              fontSize: 18,
-                                                                              fontWeight:
-                                                                              FontWeight.bold,
-                                                                              color: Colors.white
-                                                                          )
+                                                    padding: const EdgeInsets.only(bottom: 15),
+                                                    child: ExpandableNotifier(
+                                                        child: Expandable(
+                                                          collapsed: ExpandableButton(
+                                                              child: Container(
+                                                                decoration: new BoxDecoration(
+                                                                    color: Colors.white.withAlpha(20),
+                                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                    border: Border.all(width: 1.0, color: Colors.white)),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(15),
+                                                                  child: Row(
+                                                                    children: <Widget>[
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(right: 5),
+                                                                        child: Icon(Icons.folder_open, color: Colors.white),
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      Expanded(
+                                                                        child: Text(
+                                                                            reMateriale[index].cartelle[i].descrizione,
+                                                                            style: TextStyle(
+                                                                                fontSize: 18,
+                                                                                fontWeight:
+                                                                                FontWeight.bold,
+                                                                                color: Colors.white
+                                                                            )
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            )
-                                                        ),
-                                                        expanded: Container(
+                                                              )
+                                                          ),
+                                                          expanded: Container(
                                                             decoration: new BoxDecoration(
                                                                 color: Colors.white.withAlpha(20),
                                                                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -229,8 +226,8 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                 ExpandableButton(
                                                                   child: Container(
                                                                     decoration: new BoxDecoration(
-                                                                        color: Colors.white,
-                                                                        borderRadius: BorderRadius.all(Radius.circular(9)),
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.all(Radius.circular(9)),
                                                                     ),
                                                                     child: Padding(
                                                                       padding: const EdgeInsets.all(15),
@@ -257,75 +254,75 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                   ),
                                                                 ),
                                                                 FutureBuilder<List<File>>(
-                                                                  future: _ottieniFile(widget.userID, reMateriale[index].id, reMateriale[index].cartelle[i].id.toString()),
-                                                                  builder: (context, snapshot){
-                                                                    if (snapshot.hasData){
-                                                                      return snapshot.data.length > 0 ?ListView.builder(
-                                                                        primary: false,
-                                                                        shrinkWrap: true,
-                                                                        itemCount: snapshot.data.length,
-                                                                        itemBuilder: (c, i2){
-                                                                          //return Text(snapshot.data[i2].nome);
-                                                                          return FlatButton(
-                                                                              padding: EdgeInsets.zero,
-                                                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                                              child: Padding(
-                                                                                padding: const EdgeInsets.all(15.0),
-                                                                                child: Row(
-                                                                                  children: <Widget>[
-                                                                                    Padding(
-                                                                                      padding: const EdgeInsets.only(right: 8.0),
-                                                                                      child: Icon(Icons.insert_drive_file, color: Colors.white),
-                                                                                    ),
-                                                                                    Expanded(child: Text(snapshot.data[i2].nome, style: TextStyle(color: Colors.white),)),
-                                                                                  ],
+                                                                    future: _ottieniFile(widget.userID, reMateriale[index].id, reMateriale[index].cartelle[i].id.toString()),
+                                                                    builder: (context, snapshot){
+                                                                      if (snapshot.hasData){
+                                                                        return snapshot.data.length > 0 ?ListView.builder(
+                                                                          primary: false,
+                                                                          shrinkWrap: true,
+                                                                          itemCount: snapshot.data.length,
+                                                                          itemBuilder: (c, i2){
+                                                                            //return Text(snapshot.data[i2].nome);
+                                                                            return FlatButton(
+                                                                                padding: EdgeInsets.zero,
+                                                                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(15.0),
+                                                                                  child: Row(
+                                                                                    children: <Widget>[
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.only(right: 8.0),
+                                                                                        child: Icon(Icons.insert_drive_file, color: Colors.white),
+                                                                                      ),
+                                                                                      Expanded(child: Text(snapshot.data[i2].nome, style: TextStyle(color: Colors.white),)),
+                                                                                    ],
+                                                                                  ),
                                                                                 ),
-                                                                              ),
-                                                                              onPressed: (){
-                                                                                _launchURL(snapshot.data[i2].url);
-                                                                              }
-                                                                          );
-                                                                        },
-                                                                      ) : Padding(
-                                                                            padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                                                                            child: Column(
-                                                                              children: <Widget>[
-                                                                                Icon(Icons.cloud_queue, size: 40, color: Colors.white,),
-                                                                                Text("La cartella è vuota", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                                                                              ],
-                                                                            ),
-                                                                          );
-                                                                    } else if (snapshot.hasError) {
+                                                                                onPressed: (){
+                                                                                  _launchURL(snapshot.data[i2].url);
+                                                                                }
+                                                                            );
+                                                                          },
+                                                                        ) : Padding(
+                                                                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                                          child: Column(
+                                                                            children: <Widget>[
+                                                                              Icon(Icons.cloud_queue, size: 40, color: Colors.white,),
+                                                                              Text("La cartella è vuota", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                            ],
+                                                                          ),
+                                                                        );
+                                                                      } else if (snapshot.hasError) {
+                                                                        return Padding(
+                                                                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                                          child: Column(
+                                                                            children: <Widget>[
+                                                                              Icon(Icons.error_outline, size: 40, color: Colors.white,),
+                                                                              Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                            ],
+                                                                          ),
+                                                                        );
+                                                                      }
                                                                       return Padding(
-                                                                        padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                                        padding: const EdgeInsets.all(15.0),
                                                                         child: Column(
                                                                           children: <Widget>[
-                                                                            Icon(Icons.error_outline, size: 40, color: Colors.white,),
-                                                                            Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                            CupertinoActivityIndicator(radius: 20),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(top: 8.0),
+                                                                              child: Text("Sto caricando i contenuti...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                            ),
                                                                           ],
                                                                         ),
                                                                       );
                                                                     }
-                                                                    return Padding(
-                                                                      padding: const EdgeInsets.all(15.0),
-                                                                      child: Column(
-                                                                        children: <Widget>[
-                                                                          CupertinoActivityIndicator(radius: 20),
-                                                                          Padding(
-                                                                            padding: const EdgeInsets.only(top: 8.0),
-                                                                            child: Text("Sto caricando i contenuti...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    );
-                                                                }
                                                                 )
                                                               ],
                                                             ),
                                                           ),
 
-                                                      )
-                                                  )
+                                                        )
+                                                    )
                                                 );
                                               },
                                             )
@@ -352,8 +349,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
               ),
             ]),
           ),
-        ],
-      ),
+        )
     );
   }
 }
