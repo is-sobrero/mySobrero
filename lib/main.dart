@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -25,13 +26,15 @@ void main() {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   //timeDilation = 3.0;
-  runApp(MyApp());
+  runApp( MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'mySobrero',
       theme: ThemeData(
         primaryColor: Color(0xFF0360e7),
@@ -53,7 +56,7 @@ class MyApp extends StatelessWidget {
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.dark),
         child: Scaffold(
-          body: AppLogin(title: 'mySobrero'),
+            body: AppLogin(title: 'mySobrero'),
         ),
       ),
     );

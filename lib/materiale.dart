@@ -189,7 +189,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                       decoration: BoxDecoration(
                                                         boxShadow: [
                                                           BoxShadow(
-                                                              color: Colors.black.withAlpha(12),
+                                                              color: Colors.black.withAlpha(20),
                                                               blurRadius: 10,
                                                               spreadRadius: 10
                                                           )

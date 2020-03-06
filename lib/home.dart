@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'reapi2.dart';
 import 'dart:ui';
@@ -10,6 +11,7 @@ import 'altro.dart';
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'custom_icons_icons.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -76,6 +78,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
       onTabTapped(0);
       return false;
     }
+    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
     return true;
   }
 
@@ -250,38 +253,57 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             );
           }
         ),
-        bottomNavigationBar: CubertoBottomBar(
-          inactiveIconColor: Theme.of(context).textTheme.body1.color,
-          tabStyle: CubertoTabStyle.STYLE_FADED_BACKGROUND,
-          selectedTab: _currentIndex,
-          barBackgroundColor: Theme.of(context).cardColor,
-          tabColor: Theme.of(context).primaryColor,
-          tabs: [
-            TabData(
-              iconData: Icons.home,
-              title: "Home",
-              tabColor: Theme.of(context).primaryColor,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  blurRadius: 10,
+                  spreadRadius: 10,
+                )
+              ]
+          ),
+          child: SafeArea(
+            bottom: true,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20,5,20,5),
+              child: GNav(
+                  gap: 8,
+                  color: Theme.of(context).disabledColor,
+                  activeColor: Theme.of(context).primaryColor,
+                  iconSize: 24,
+                  tabBackgroundColor: Colors.transparent,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  duration: Duration(milliseconds: 300),
+                  tabs: [
+                    GButton(
+                      icon: Icons.home,
+                      text: 'Home',
+                    ),
+                    GButton(
+                      icon: CustomIcons.chart,
+                      text: 'Voti',
+                    ),
+                    GButton(
+                      icon: Icons.list,
+                      text: 'Comunicazioni',
+                    ),
+                    GButton(
+                      icon: CustomIcons.dot,
+                      text: 'Altro',
+                    )
+                  ],
+                  selectedIndex: _currentIndex,
+                  onTabChange: (index) {
+                    print(index);
+                    setState(() {
+                      _currentIndex = index;
+                      pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
+                    });
+                  }),
             ),
-            TabData(
-              iconData: CustomIcons.chart,
-              title: "Valutazioni",
-              tabColor: Colors.pink,
-            ),
-            TabData(
-                iconData: Icons.list,
-                title: "Comunicazioni",
-                tabColor: Colors.amber),
-            TabData(
-                iconData: CustomIcons.dot,
-                title: "Altro",
-                tabColor: Colors.teal),
-          ],
-          onTabChangedListener: (position, title, color) {
-            setState(() {
-              pageController.animateToPage(position, duration: Duration(milliseconds: 200), curve: Curves.ease);
-              _currentIndex = position;
-            });
-          },
+          ),
         ),
       ),
     );

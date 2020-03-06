@@ -104,7 +104,7 @@ class _ArgomentiState extends State<ArgomentiView>
               color: Color(0xFF5352ed),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withAlpha(12),
+                    color: Colors.black.withAlpha(30),
                     blurRadius: 10,
                     spreadRadius: 10
                 )

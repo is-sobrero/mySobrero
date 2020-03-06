@@ -173,7 +173,7 @@ class _CompitiState extends State<CompitiView>
                                                     borderRadius: BorderRadius.all(Radius.circular(10)),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                          color: Colors.black12.withAlpha(12),
+                                                          color: Colors.black12.withAlpha(30),
                                                           blurRadius: 10,
                                                           spreadRadius: 10
                                                       )

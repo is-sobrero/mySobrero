@@ -112,6 +112,9 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
         child: FilterChip(
           backgroundColor: Color(0xffd35400),
           selectedColor: Color(0xfff39c12),
+          elevation: 5,
+          shadowColor: Colors.transparent,
+          shape: StadiumBorder(side: BorderSide(color: Color(0xffd35400), width: 3)),
           checkmarkColor: Colors.white,
           label: Text(entry.name, style: TextStyle(color: Colors.white)),
           selected: (filterIndex >> entry.offset & 1) > 0,
@@ -249,10 +252,13 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                         ),
                                       ],
                                     ),
-                                    Wrap(
-                                      children: filterWidgets.toList(),
-                                      runSpacing: 0,
-                                      spacing: 0,
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Wrap(
+                                        children: filterWidgets.toList(),
+                                        runSpacing: 0,
+                                        spacing: 0,
+                                      ),
                                     ),
 
                                     FutureBuilder<List<Aula>>(
@@ -319,7 +325,7 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                               decoration: BoxDecoration(
                                                                   boxShadow: [
                                                                     BoxShadow(
-                                                                        color: Colors.black.withAlpha(12),
+                                                                        color: Colors.black.withAlpha(20),
                                                                         blurRadius: 10,
                                                                         spreadRadius: 10
                                                                     )

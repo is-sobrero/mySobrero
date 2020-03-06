@@ -556,31 +556,28 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
           ),
         ),
         Container(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Color(0x2F000000)
-              : Color(0x10000000),
+          color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF212121) : Color(0xFFF2f2f2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 20, bottom: 15),
+                  padding: const EdgeInsets.only(left: 15, top: 20,),
                   child: Text("Ultime dal Sobrero",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 ),
               ),
               Container(
-                height: 400,
+                height: 450,
                 child: ListView.builder(
                   //key: GlobalKey<RawGestureDetectorState>("DIO"),
-                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 16),
                     itemCount: feed.items.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctxt, int index) {
                       final item = feed.items[index];
-                      return SafeArea(
+                      /*return SafeArea(
                         bottom: false,
                         left: index == 0,
                         right: index == feed.items.length -1,
@@ -639,6 +636,72 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                 ],
                               ),
                             )),
+                      );*/
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Theme.of(context).cardColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withAlpha(30),
+                                blurRadius: 10,
+                                spreadRadius: 5
+                              )
+                            ]
+                          ),
+                          width: 300,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Stack(
+                              //crossAxisAlignment: CrossAxisAlignment.start,
+                              alignment: Alignment.bottomLeft,
+                              children: <Widget>[
+                                Positioned.fill(
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.thumbnail,
+                                    placeholder: (context, url) => Skeleton(),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                            color: Theme.of(context).textTheme.body1.color.withAlpha(40),
+                                            width: 300,
+                                            child: Center(child: Icon(Icons.broken_image, size: 70))
+                                        ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Container(
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [Colors.black87, Colors.transparent],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter
+                                    )
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(15,30,15,25),
+                                    child: Text(
+                                      item.title,
+                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24),
+                                    ),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: (){
+                                        openURL(context, item.link);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       );
                     }),
               )

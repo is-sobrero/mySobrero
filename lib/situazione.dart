@@ -7,6 +7,8 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mySobrero/hud.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+
 
 class SituazioneElement{
   int numeroVoti;
@@ -242,6 +244,41 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
               colors: selezionato
             ),
           ),
+            /*Container(
+              width: 75,
+              height: 75,
+              child: SleekCircularSlider(
+                appearance: CircularSliderAppearance(
+                  startAngle: 270,
+                  angleRange: 360,
+                  customWidths: CustomSliderWidths(
+                      trackWidth: 3,
+                      progressBarWidth: 8,
+                      shadowWidth: 15
+                  ),
+                  customColors: CustomSliderColors(
+                      progressBarColors: selezionato,
+                      shadowColor: selezionato[0],
+                      shadowMaxOpacity: 0.2,
+                      trackColor: Theme.of(context).textTheme.body1.color.withAlpha(100)
+                  )
+                ),
+                innerWidget: (value) => Center(
+                  child: Container(
+                      width: 50,
+                      child: AutoSizeText(
+                        value.toStringAsFixed(1),
+                        minFontSize: 8,
+                        maxLines: 1,
+                        style: TextStyle(fontSize: 25, ),
+                        textAlign: TextAlign.center,
+                      )
+                  ),
+                ),
+                min: 0,
+                max: 10,
+                initialValue: voto,
+              ),*/
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 10),
