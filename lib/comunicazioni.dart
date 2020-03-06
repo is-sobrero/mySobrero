@@ -77,15 +77,28 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
                 padding: const EdgeInsets.only(bottom: 5),
                 child: Row(
                   children: <Widget>[
-                    comunicazione.mittente.toUpperCase() == "DIRIGENTE" ?
-                    CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/rota.png"),
-                      radius: 15,
-                    ) :
-                    CircleAvatar(
-                      child: Text("GR"),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      radius: 15,
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withAlpha(50),
+                                blurRadius: 10,
+                                spreadRadius: 4,
+                                offset: Offset(0, 2)
+                            )
+                          ]
+                      ),
+                      child: comunicazione.mittente.toUpperCase() == "DIRIGENTE" ?
+                      CircleAvatar(
+                        backgroundImage: AssetImage("assets/images/rota.png"),
+                        radius: 15,
+                      ) :
+                      CircleAvatar(
+                        child: Text("GR"),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        radius: 15,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),

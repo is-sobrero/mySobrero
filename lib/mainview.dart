@@ -146,9 +146,13 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
     final nomeUtente = response.user.nome;
     var ultimoVoto = "null";
     var ultimaMateria = "null";
-    if (response.voti.length > 0){
-      ultimoVoto = response.voti[0].voto;
-      ultimaMateria = response.voti[0].materia;
+    if (response.voti1q.length > 0){
+      ultimoVoto = response.voti1q[0].voto;
+      ultimaMateria = response.voti1q[0].materia;
+    }
+    if (response.voti2q.length > 0){
+      ultimoVoto = response.voti2q[0].voto;
+      ultimaMateria = response.voti2q[0].materia;
     }
     final classeUtente = response.user.classe.toString() + " " + response.user.sezione.trim();
     final indirizzoUtente = response.user.corso;

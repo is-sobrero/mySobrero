@@ -80,8 +80,7 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
       title: AnimatedOpacity(
         opacity: _appBarTitleOpacity,
         duration: const Duration(milliseconds: 250),
-        child: Text("Pagelle",
-            style: TextStyle(color: Colors.white)),
+        child: Text("Pagelle", style: TextStyle(color: Colors.white)),
       ),
       backgroundColor: Color(0xff38ada9),
       elevation: _appBarElevation,
@@ -191,35 +190,17 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                                                 decoration: new BoxDecoration(
                                                     color: Colors.white.withAlpha(20),
                                                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    border: Border.all(
-                                                        width: 1.0,
-                                                        color: Colors.white)),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Color(0xff38ada9),
+                                                          blurRadius: 10,
+                                                          spreadRadius: 10
+                                                      )
+                                                    ],
+                                                ),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(15.0),
-                                                  child: /*Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.stretch,
-                                                      children: <Widget>[
-                                                        Text(mat.materia,
-                                                            style: TextStyle(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                FontWeight.bold,
-                                                                color: Colors.white)),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(bottom: 7.0),
-                                                          child: Text("Voto: ${mat.voto}",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors.white)),
-                                                        ),
-                                                        Text("Ore di assenza: ${mat.assenze}",
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors.white)),
-
-                                                      ],
-                                                    ),*/
+                                                  child:
                                                   Row(
                                                     children: <Widget>[
                                                       Padding(

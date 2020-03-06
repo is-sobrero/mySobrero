@@ -95,7 +95,43 @@ class _ArgomentiState extends State<ArgomentiView>
 
   int selezioneArgomenti = 0;
 
-
+  Widget _generaTileArgomento(Argomenti argomento){
+    return Padding(
+      padding:
+      const EdgeInsets.only(bottom: 15),
+      child: Container(
+          decoration: new BoxDecoration(
+              color: Color(0xFF5352ed),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withAlpha(12),
+                    blurRadius: 10,
+                    spreadRadius: 10
+                )
+              ],
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment:
+              CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(argomento.materia,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight:
+                        FontWeight.bold,
+                        color: Colors.white)),
+                Text(
+                    argomento.descrizione.trim(),
+                    style: TextStyle(fontSize: 16, color: Colors.white)
+                ),
+              ],
+            ),
+          )),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -316,74 +352,12 @@ class _ArgomentiState extends State<ArgomentiView>
                                                     color: Colors.white),
                                               ),
                                             ) : Container(),
-                                            mostra ? Padding(
-                                              padding:
-                                              const EdgeInsets.only(bottom: 15),
-                                              child: Container(
-                                                  decoration: new BoxDecoration(
-                                                      color: Colors.white.withAlpha(20),
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(10)),
-                                                      border: Border.all(
-                                                          width: 1.0,
-                                                          color: Colors.white)),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(15.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.stretch,
-                                                      children: <Widget>[
-                                                        Text(currentSet[index].materia,
-                                                            style: TextStyle(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                FontWeight.bold,
-                                                                color: Colors.white)),
-                                                        Text(currentSet[index].descrizione.trim(),
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors.white)),
-
-                                                      ],
-                                                    ),
-                                                  )),
-                                            ) : Container()
+                                            mostra ? _generaTileArgomento(currentSet[index]) : Container()
                                           ],
                                         );
                                       }
                                       dataTemporanea = currentSet[index].data;
-                                      return mostra ? Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 15),
-                                        child: Container(
-                                            decoration: new BoxDecoration(
-                                                color: Colors.white.withAlpha(20),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10)),
-                                                border: Border.all(
-                                                    width: 1.0,
-                                                    color: Colors.white)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(15.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                                children: <Widget>[
-                                                  Text(currentSet[index].materia,
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.white)),
-                                                  Text(currentSet[index].descrizione.trim(),
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white)),
-
-                                                ],
-                                              ),
-                                            )),
-                                      ) : Container();
+                                      return mostra ? _generaTileArgomento(currentSet[index]) : Container();
                                     },
                                   ),
                                 ],

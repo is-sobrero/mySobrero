@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:intl/number_symbols_data.dart';
 import 'fade_slide_transition.dart';
 import 'reapi2.dart';
 
@@ -213,13 +214,22 @@ class _AssenzeState extends State<AssenzeView>
       final String data = assenze[i].data;
       final String motivazione = assenze[i].motivazione;
       final String calcolo = assenze[i].calcolo == "0" ? "No" : "Sì";
+      final Color scaffoldColor = borderColor == Colors.black.withAlpha(100) ? Color(0xffff9692) : borderColor;
+      final Color onScaffoldColor = scaffoldColor == borderColor ? Colors.white : Colors.black;
       list.add(Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
             decoration: new BoxDecoration(
-              color: Colors.black.withAlpha(20),
+              color: borderColor == Colors.black.withAlpha(100) ? Color(0xffff9692) : borderColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(width: 1.0, color: borderColor),
+              //border: Border.all(width: 1.0, color: borderColor),
+                boxShadow: [
+                  BoxShadow(
+                      color: borderColor.withAlpha(20),
+                      blurRadius: 10,
+                      spreadRadius: 10
+                  )
+                ]
             ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -233,11 +243,11 @@ class _AssenzeState extends State<AssenzeView>
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black)),
+                          color: onScaffoldColor)),
                   Text("Motivazione: $motivazione",
-                      style: TextStyle(fontSize: 16, color: Colors.black)),
+                      style: TextStyle(fontSize: 16, color: onScaffoldColor)),
                   Text("Concorre al calcolo: $calcolo",
-                      style: TextStyle(fontSize: 16, color: Colors.black))
+                      style: TextStyle(fontSize: 16, color: onScaffoldColor))
                 ],
               ),
             )),

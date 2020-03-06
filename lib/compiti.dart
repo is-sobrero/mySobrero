@@ -109,12 +109,7 @@ class _CompitiState extends State<CompitiView>
                     behavior: ScrollBehavior(),
                     child: SingleChildScrollView(
                       controller: _scrollController,
-                      padding: const EdgeInsets.fromLTRB(
-                        20,
-                        10,
-                        20,
-                        20,
-                      ),
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
                       child: Column(
                         children: <Widget>[
                           FadeSlideTransition(
@@ -174,12 +169,16 @@ class _CompitiState extends State<CompitiView>
                                             padding: const EdgeInsets.only(bottom: 15),
                                             child: Container(
                                                 decoration: new BoxDecoration(
-                                                    color: Colors.black.withAlpha(20),
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(10)),
-                                                    border: Border.all(
-                                                        width: 1.0,
-                                                        color: Colors.black)),
+                                                    color: Color(0xFF43e97b),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.black12.withAlpha(12),
+                                                          blurRadius: 10,
+                                                          spreadRadius: 10
+                                                      )
+                                                    ]
+                                                ),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(15.0),
                                                   child: Column(

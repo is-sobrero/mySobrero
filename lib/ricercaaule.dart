@@ -1,6 +1,7 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:http/http.dart' as http;
@@ -277,7 +278,11 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                 child: Center(
                                                   child: Column(
                                                     children: <Widget>[
-                                                      CupertinoActivityIndicator(radius: 20),
+                                                      SpinKitDualRing(
+                                                        color: Colors.white,
+                                                        size: 40,
+                                                        lineWidth: 5,
+                                                      ),
                                                       Padding(
                                                         padding: const EdgeInsets.only(top: 8.0),
                                                         child: Text("Sto cercando le aule...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
@@ -310,127 +315,145 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                                         descriptiveIcon = snapshot.data[i2].denominazione.contains("Palestra") ? Icons.directions_run : descriptiveIcon;
                                                         return Padding(
                                                             padding: const EdgeInsets.only(bottom: 15),
-                                                            child: ExpandableNotifier(
-                                                                child: Expandable(
-                                                                  collapsed: ExpandableButton(
-                                                                      child: Container(
-                                                                        decoration: new BoxDecoration(
-                                                                            color: Colors.white.withAlpha(20),
-                                                                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                                            border: Border.all(width: 1.0, color: Colors.white)),
-                                                                        child: Padding(
-                                                                          padding: const EdgeInsets.all(15),
-                                                                          child: Row(
-                                                                            children: <Widget>[
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.only(right: 5),
-                                                                                child: Icon(descriptiveIcon, color: Colors.white),
-                                                                              ),
-                                                                              Expanded(
-                                                                                child: Text(
-                                                                                    snapshot.data[i2].denominazione,
-                                                                                    style: TextStyle(
-                                                                                        fontSize: 18,
-                                                                                        fontWeight:
-                                                                                        FontWeight.bold,
-                                                                                        color: Colors.white
-                                                                                    )
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      )
-                                                                  ),
-                                                                  expanded: Container(
-                                                                    decoration: new BoxDecoration(
-                                                                        color: Colors.white.withAlpha(20),
-                                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                                        border: Border.all(width: 1.0, color: Colors.white)),
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: <Widget>[
-                                                                        ExpandableButton(
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Colors.black.withAlpha(12),
+                                                                        blurRadius: 10,
+                                                                        spreadRadius: 10
+                                                                    )
+                                                                  ],
+                                                              ),
+                                                              child: ExpandableNotifier(
+                                                                  child: Container(
+                                                                    child: Expandable(
+                                                                      collapsed: ExpandableButton(
                                                                           child: Container(
                                                                             decoration: new BoxDecoration(
-                                                                              color: Colors.white,
-                                                                              borderRadius: BorderRadius.all(Radius.circular(9)),
+                                                                                color: Color(0xffF86925),
+                                                                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                                //border: Border.all(width: 1.0, color: Colors.white)
                                                                             ),
                                                                             child: Padding(
                                                                               padding: const EdgeInsets.all(15),
-                                                                              child: Column(
+                                                                              child: Row(
                                                                                 children: <Widget>[
-                                                                                  Row(
-                                                                                    children: <Widget>[
-                                                                                      Padding(
-                                                                                        padding: const EdgeInsets.only(right: 5),
-                                                                                        child: Icon(descriptiveIcon, color: Colors.black,),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        child: Text(
-                                                                                            snapshot.data[i2].denominazione,
-                                                                                            style: TextStyle(
-                                                                                                fontSize: 18,
-                                                                                                fontWeight:
-                                                                                                FontWeight.bold,
-                                                                                                color: Colors.black
-                                                                                            )
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
                                                                                   Padding(
-                                                                                    padding: const EdgeInsets.only(top: 15, bottom: 15),
-                                                                                    child: Center(
-                                                                                      child: SvgPicture.network(
-                                                                                        'http://reapistaging.altervista.org/api/v3/getMappa?aula=${snapshot.data[i2].locale}&piano=${snapshot.data[i2].locale.substring(0,0)}',
-                                                                                        fit: BoxFit.contain,
-                                                                                        height: 120,
-                                                                                        placeholderBuilder: (BuildContext context) => Container(
-                                                                                          padding: const EdgeInsets.all(30.0),
-                                                                                          child: Center(
-                                                                                            child: Column(
-                                                                                              children: <Widget>[
-                                                                                                CupertinoActivityIndicator(radius: 20),
-                                                                                                Padding(
-                                                                                                  padding: const EdgeInsets.only(top: 8.0),
-                                                                                                  child: Text("Sto caricando la mappa...", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
+                                                                                    padding: const EdgeInsets.only(right: 5),
+                                                                                    child: Icon(descriptiveIcon, color: Colors.white),
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: Text(
+                                                                                        snapshot.data[i2].denominazione,
+                                                                                        style: TextStyle(
+                                                                                            fontSize: 18,
+                                                                                            fontWeight:
+                                                                                            FontWeight.bold,
+                                                                                            color: Colors.white
+                                                                                        )
                                                                                     ),
                                                                                   ),
                                                                                 ],
                                                                               ),
                                                                             ),
-                                                                          ),
+                                                                          )
+                                                                      ),
+                                                                      expanded: Container(
+                                                                        decoration: new BoxDecoration(
+                                                                            color: Color(0xffF86925),
+                                                                            borderRadius: BorderRadius.all(Radius.circular(10)),
                                                                         ),
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.all(15),
-                                                                          child: Column(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            children: <Widget>[
-                                                                              Text("Piano aula: ${snapshot.data[i2].piano}", style: TextStyle(color: Colors.white)),
-                                                                              Text("Locale aula: ${snapshot.data[i2].locale}", style: TextStyle(color: Colors.white)),
-                                                                              Text(
-                                                                                  ("Aula dotata di " + (snapshot.data[i2].prese ? "prese, " : "") +
-                                                                                      (snapshot.data[i2].ethernet ? "attacchi ethernet, " : "") +
-                                                                                      (snapshot.data[i2].computer ? "computer, " : "")),
-                                                                                  style: TextStyle(color: Colors.white)
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: <Widget>[
+                                                                            ExpandableButton(
+                                                                              child: Container(
+                                                                                decoration: new BoxDecoration(
+                                                                                  color: Colors.white,
+                                                                                  borderRadius: BorderRadius.all(Radius.circular(9)),
+                                                                                ),
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(15),
+                                                                                  child: Column(
+                                                                                    children: <Widget>[
+                                                                                      Row(
+                                                                                        children: <Widget>[
+                                                                                          Padding(
+                                                                                            padding: const EdgeInsets.only(right: 5),
+                                                                                            child: Icon(descriptiveIcon, color: Colors.black,),
+                                                                                          ),
+                                                                                          Expanded(
+                                                                                            child: Text(
+                                                                                                snapshot.data[i2].denominazione,
+                                                                                                style: TextStyle(
+                                                                                                    fontSize: 18,
+                                                                                                    fontWeight:
+                                                                                                    FontWeight.bold,
+                                                                                                    color: Colors.black
+                                                                                                )
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.only(top: 15, bottom: 15),
+                                                                                        child: Center(
+                                                                                          child: SvgPicture.network(
+                                                                                            'http://reapistaging.altervista.org/api/v3/getMappa?aula=${snapshot.data[i2].locale}&piano=${snapshot.data[i2].locale.substring(0,0)}',
+                                                                                            fit: BoxFit.contain,
+                                                                                            height: 120,
+                                                                                            placeholderBuilder: (BuildContext context) => Container(
+                                                                                              padding: const EdgeInsets.all(30.0),
+                                                                                              child: Center(
+                                                                                                child: Column(
+                                                                                                  children: <Widget>[
+                                                                                                    SpinKitDualRing(
+                                                                                                      color: Colors.black,
+                                                                                                      size: 40,
+                                                                                                      lineWidth: 5,
+                                                                                                    ),
+                                                                                                    Padding(
+                                                                                                      padding: const EdgeInsets.only(top: 8.0),
+                                                                                                      child: Text("Sto caricando la mappa...", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
                                                                               ),
-                                                                              Text("Plesso: ${snapshot.data[i2].plesso}", style: TextStyle(color: Colors.white)),
-                                                                            ],
-                                                                          ),
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.all(15),
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: <Widget>[
+                                                                                  Text("Piano aula: ${snapshot.data[i2].piano}", style: TextStyle(color: Colors.white)),
+                                                                                  Text("Locale aula: ${snapshot.data[i2].locale}", style: TextStyle(color: Colors.white)),
+                                                                                  Text(
+                                                                                      ("Aula dotata di " + (snapshot.data[i2].prese ? "prese, " : "") +
+                                                                                          (snapshot.data[i2].ethernet ? "attacchi ethernet, " : "") +
+                                                                                          (snapshot.data[i2].computer ? "computer, " : "")),
+                                                                                      style: TextStyle(color: Colors.white)
+                                                                                  ),
+                                                                                  Text("Plesso: ${snapshot.data[i2].plesso}", style: TextStyle(color: Colors.white)),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+
+                                                                          ],
                                                                         ),
+                                                                      ),
 
-                                                                      ],
                                                                     ),
-                                                                  ),
-
-                                                                )
+                                                                  )
+                                                              ),
                                                             )
                                                         );
                                                       },
