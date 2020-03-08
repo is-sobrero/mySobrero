@@ -39,4 +39,11 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 </manifest>

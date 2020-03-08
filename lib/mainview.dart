@@ -185,8 +185,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                   decoration: new BoxDecoration(
                                       boxShadow: <BoxShadow>[
                                         BoxShadow(
-                                            color: Color(0xFFFF416C)
-                                                .withOpacity(0.4),
+                                            color: Color(0xFFFF416C).withOpacity(0.4),
                                             offset: const Offset(1.1, 1.1),
                                             blurRadius: 10.0),
                                       ],
@@ -348,8 +347,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                       decoration: new BoxDecoration(
                                           boxShadow: <BoxShadow>[
                                             BoxShadow(
-                                                color: Color(0xFFfa709a)
-                                                    .withOpacity(0.4),
+                                                color: Color(0xFFfa709a).withOpacity(0.4),
                                                 offset: const Offset(1.1, 1.1),
                                                 blurRadius: 10.0),
                                           ],
@@ -593,7 +591,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
           ),
         ),
         Container(
-          color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF212121) : Color(0xFFF2f2f2),
+          color: Theme.of(context).brightness == Brightness.dark ? Color(0xFF212121) : Color(0xFFfafafa),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -608,134 +606,79 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
               Container(
                 height: 450,
                 child: ListView.builder(
-                  //key: GlobalKey<RawGestureDetectorState>("DIO"),
                     padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 16),
                     itemCount: feed.items.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctxt, int index) {
                       final item = feed.items[index];
-                      /*return SafeArea(
+                      return SafeArea(
                         bottom: false,
                         left: index == 0,
                         right: index == feed.items.length -1,
                         top: false,
-                        child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: Theme.of(context).textTheme.body1.color,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Theme.of(context).cardColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withAlpha(30),
+                                  blurRadius: 10,
+                                  spreadRadius: 5
+                                )
+                              ]
                             ),
-                            elevation: 0,
-                            margin: EdgeInsets.only(right: 10),
-                            clipBehavior: Clip.antiAlias,
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            child: Container(
-                              width: 300,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            width: 300,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Stack(
+                                //crossAxisAlignment: CrossAxisAlignment.start,
+                                alignment: Alignment.bottomLeft,
                                 children: <Widget>[
-                                  new Expanded(
-                                      child: CachedNetworkImage(
-                                    imageUrl: item.thumbnail,
-                                    placeholder: (context, url) => Skeleton(),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                          color: Theme.of(context).textTheme.body1.color.withAlpha(40),
-                                          width: 300,
-                                          child: Center(
-                                            child: Icon(Icons.broken_image, size: 70)
-                                          )
-                                        ),
-                                    fit: BoxFit.cover,
-                                  )),
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          item.title.toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
+                                  Positioned.fill(
+                                    child: CachedNetworkImage(
+                                      imageUrl: item.thumbnail,
+                                      placeholder: (context, url) => Skeleton(),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                              color: Theme.of(context).textTheme.body1.color.withAlpha(40),
+                                              width: 300,
+                                              child: Center(child: Icon(Icons.broken_image, size: 70))
                                           ),
-                                        ),
-                                        OutlineButton(
-                                            child: Text("LEGGI"),
-                                            onPressed: () =>
-                                                openURL(context, item.link))
-                                      ],
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
+                                  Container(
+                                    width: 300,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [Colors.black87, Colors.transparent],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter
+                                      )
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(15,30,15,25),
+                                      child: Text(
+                                        item.title,
+                                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: (){
+                                          openURL(context, item.link);
+                                        },
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
-                            )),
-                      );*/
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Theme.of(context).cardColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withAlpha(30),
-                                blurRadius: 10,
-                                spreadRadius: 5
-                              )
-                            ]
-                          ),
-                          width: 300,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Stack(
-                              //crossAxisAlignment: CrossAxisAlignment.start,
-                              alignment: Alignment.bottomLeft,
-                              children: <Widget>[
-                                Positioned.fill(
-                                  child: CachedNetworkImage(
-                                    imageUrl: item.thumbnail,
-                                    placeholder: (context, url) => Skeleton(),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                            color: Theme.of(context).textTheme.body1.color.withAlpha(40),
-                                            width: 300,
-                                            child: Center(child: Icon(Icons.broken_image, size: 70))
-                                        ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Container(
-                                  width: 300,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [Colors.black87, Colors.transparent],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter
-                                    )
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(15,30,15,25),
-                                    child: Text(
-                                      item.title,
-                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Positioned.fill(
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: (){
-                                        openURL(context, item.link);
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
                             ),
                           ),
                         ),

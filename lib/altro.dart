@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mySobrero/carriera.dart';
 import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/ricercaaule.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -121,7 +122,7 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                           decoration: new BoxDecoration(
                             boxShadow: <BoxShadow>[
                               BoxShadow(
-                                  color: Color(0xFF5352ed).withOpacity(0.2),
+                                  color: Color(0xFF5352ed).withOpacity(0.4),
                                   offset: const Offset(1.1, 1.1),
                                   blurRadius: 10.0),
                             ],
@@ -172,7 +173,7 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                           decoration: new BoxDecoration(
                             boxShadow: <BoxShadow>[
                               BoxShadow(
-                                  color: Color(0xffe55039).withOpacity(0.2),
+                                  color: Color(0xffe55039).withOpacity(0.4),
                                   offset: const Offset(1.1, 1.1),
                                   blurRadius: 10.0),
                             ],
@@ -263,6 +264,58 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                              builder: (context) => CarrieraView(curriculum: response.user.curriculum,),
+                              fullscreenDialog: true
+                          ),
+                        );
+                      },
+                      child: Hero(
+                        tag: "carriera_background",
+                        child: Container(
+                          decoration: new BoxDecoration(
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Color(0xff45BF6D).withOpacity(0.4),
+                                  offset: const Offset(1.1, 1.1),
+                                  blurRadius: 10.0),
+                            ],
+                          ),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              elevation: 0,
+                              margin: EdgeInsets.only(bottom: 10),
+                              clipBehavior: Clip.antiAlias,
+                              color: Color(0xff45BF6D),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: Text("Carriera scolastica",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    "assets/images/carriera.png",
+                                    height: 150,
+                                    fit: BoxFit.fitWidth,
+                                    width: 150,
+                                  )
+                                ],
+                              )),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
                               builder: (context) => PagelleView(response.pagelle),
                               fullscreenDialog: true
                           ),
@@ -274,7 +327,7 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                           decoration: new BoxDecoration(
                             boxShadow: <BoxShadow>[
                               BoxShadow(
-                                  color: Color(0xff38ada9).withOpacity(0.2),
+                                  color: Color(0xff38ada9).withOpacity(0.4),
                                   offset: const Offset(1.1, 1.1),
                                   blurRadius: 10.0),
                             ],
