@@ -7,7 +7,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mySobrero/hud.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 
 class SituazioneElement{
