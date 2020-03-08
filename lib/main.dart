@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -114,6 +115,8 @@ class _AppLoginState extends State<AppLogin> {
     return salvate;
   }
 
+  bool isBeta = false;
+
   versionCheck(context) async {
 
     final PackageInfo info = await PackageInfo.fromPlatform();
@@ -124,10 +127,12 @@ class _AppLoginState extends State<AppLogin> {
     await remoteConfig.activateFetched();
     final serverVersion = double.parse(remoteConfig.getString('verupdate_prompt'));
     print("Versione app disponibile sul server: $serverVersion");
+    if (serverVersion < currentVersion) isBeta = true;
     if (serverVersion > currentVersion){
       print("Aggiornamento disponibile");
       showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return Dialog(
               shape: RoundedRectangleBorder(
@@ -162,7 +167,7 @@ class _AppLoginState extends State<AppLogin> {
                                   padding:
                                   const EdgeInsets.only(top: 16, bottom: 16),
                                   child: Text(
-                                    "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.\nRicorda che la versione attuale dell'applicazione potrebbe non funzionare più nei prossimi giorni",
+                                    "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.",
                                     style: TextStyle(fontSize: 16),
                                     textAlign: TextAlign.center,
                                   ),
@@ -175,32 +180,38 @@ class _AppLoginState extends State<AppLogin> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
-                                OutlineButton(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    ragionaLogin();
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(7.0))),
-                                  color: Theme.of(context).primaryColor,
-                                  child: const Text(
-                                    'OK',
+                                Theme.of(context).platform != TargetPlatform.iOS ? Expanded(
+                                  flex: 1,
+                                  child: OutlineButton(
+                                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                    onPressed: () {
+                                      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(7.0))),
+                                    color: Theme.of(context).primaryColor,
+                                    child: const AutoSizeText(
+                                      'CHIUDI APP',
+                                      maxLines: 1,
+                                    ),
                                   ),
-                                ),
-                                Container(width: 10,),
-                                OutlineButton(
-                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  onPressed: () {
-                                    LaunchReview.launch();
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(7.0))),
-                                  color: Theme.of(context).primaryColor,
-                                  child: const Text(
-                                    'AGGIORNA',
+                                ) : new Container(),
+                                Container(width: Theme.of(context).platform != TargetPlatform.iOS ? 10 : 0,),
+                                Expanded(
+                                  flex: 1,
+                                  child: OutlineButton(
+                                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                    onPressed: () {
+                                      LaunchReview.launch();
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(7.0))),
+                                    color: Theme.of(context).primaryColor,
+                                    child: const Text(
+                                      'AGGIORNA',
+                                    ),
                                   ),
                                 ),
                               ],
@@ -318,7 +329,13 @@ class _AppLoginState extends State<AppLogin> {
       Navigator.push(
         context,
         PageRouteBuilder(
-            pageBuilder: (_, __, ___)  => HomeScreen(response, feed, profileImageUrl),
+            pageBuilder: (_, __, ___)  =>
+                HomeScreen(
+                  response: response,
+                  profileUrl: profileImageUrl,
+                  feed: feed,
+                  isBeta: isBeta,
+                ),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               var begin = Offset(0.0, 1.0);

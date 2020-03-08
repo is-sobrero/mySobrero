@@ -36,16 +36,29 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
   List<Widget> generaAllegati(List<Allegato> allegati){
     List<Widget> list = new List<Widget>();
     for (int i = 0; i<allegati.length; i++){
-      list.add(ActionChip(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          _launchURL(allegati[i].url);
-        },
-        avatar: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: Icon(Icons.attach_file, color: Colors.white, size: 20),
+      list.add(Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(500),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).primaryColor.withAlpha(50),
+              blurRadius: 10,
+              spreadRadius: 1,
+              offset: Offset(0,3)
+            )
+          ]
         ),
-        label: Text(allegati[i].nome, style: TextStyle(color: Colors.white),),
+        child: ActionChip(
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () {
+            _launchURL(allegati[i].url);
+          },
+          avatar: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            child: Icon(Icons.attach_file, color: Colors.white, size: 20),
+          ),
+          label: Text(allegati[i].nome, style: TextStyle(color: Colors.white),),
+        ),
       ));
     }
     return list;
@@ -95,14 +108,14 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
                         radius: 15,
                       ) :
                       CircleAvatar(
-                        child: Text("GR"),
+                        child: Text("GR", style: TextStyle(color: Colors.white)),
                         backgroundColor: Theme.of(context).primaryColor,
                         radius: 15,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(toBeginningOfSentenceCase(realDestinatario)),
+                      child: Text(toBeginningOfSentenceCase(realDestinatario), style: TextStyle(fontWeight: FontWeight.bold),),
                     )
                   ],
                 ),
@@ -123,9 +136,12 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
                       fontSize: 16,
                     )),
               ),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: generaAllegati(comunicazione.allegati)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: generaAllegati(comunicazione.allegati)
+                ),
               )
             ],
           ),

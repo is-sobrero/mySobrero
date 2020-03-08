@@ -8,7 +8,6 @@ import 'mainview.dart';
 import 'voti.dart';
 import 'comunicazioni.dart';
 import 'altro.dart';
-import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'custom_icons_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -19,18 +18,13 @@ class HomeScreen extends StatefulWidget {
   reAPI2 response;
   SobreroFeed feed;
   String profileUrl;
+  bool isBeta = false;
 
-  HomeScreen(reAPI2 response, SobreroFeed feed, String profileUrl) {
-    this.response = response;
-    this.feed = feed;
-    this.profileUrl = profileUrl;
-  }
+  HomeScreen({Key key, @required this.response, @required this.feed, @required this.profileUrl, @required this.isBeta}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    _firebaseMessaging.requestNotificationPermissions();
-    return _HomeState(response, feed, profileUrl);
-  }
+  State<StatefulWidget> createState() => _HomeState();
+
 }
 
 
@@ -40,12 +34,6 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   reAPI2 response;
   SobreroFeed feed;
   String profileUrl;
-
-  _HomeState(reAPI2 response, SobreroFeed feed, String profileUrl) {
-    this.response = response;
-    this.feed = feed;
-    this.profileUrl = profileUrl;
-  }
 
   BottomNavigationBarItem barIcon(String title, IconData icon) {
     return BottomNavigationBarItem(
@@ -107,6 +95,9 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
   void initState(){
     super.initState();
+    response = widget.response;
+    feed = widget.feed;
+    profileUrl = widget.profileUrl;
     _mainViewInstance = Mainview(response, feed, (int page) {
         onTabTapped(page);
       }, profileUrl);
@@ -126,6 +117,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -143,63 +135,74 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
               color: Theme.of(context).scaffoldBackgroundColor
             ),
             child: Column(
-              children: <Widget>[
-                SafeArea(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
-                        child: Row(
-                          children: <Widget>[
-                            Hero(
-                              tag: "main_logosobre",
-                              child: SizedBox(
-                                width:  35,
-                                height:  35,
-                                child: Image.asset('assets/images/logo_sobrero_grad.png',
-                                    scale: 1.1),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Text(
-                                "mySobrero",
-                                style: TextStyle(
-                                    fontSize:  17,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFF0360e7)),
-                              ),
-                            ),
-                            Spacer(), // use Spacer
-                            IconButton(
-                                icon: new Image.asset(
-                                  'assets/images/ic_settings_grad.png',
+                  children: <Widget>[
+                    SafeArea(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                            child: Row(
+                              children: <Widget>[
+                                Hero(
+                                  tag: "main_logosobre",
+                                  child: SizedBox(
+                                    width:  35,
+                                    height:  35,
+                                    child: Image.asset('assets/images/logo_sobrero_grad.png',
+                                        scale: 1.1),
+                                  ),
                                 ),
-                                tooltip: 'Apri le impostazioni dell\'App',
-                                iconSize: 14,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ImpostazioniView(response, profileUrl, (url){
-                                      profileUrl = url;
-                                      print("Nuova url: $url");
-                                    })),
-                                  );
-                                },
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        "mySobrero",
+                                        style: TextStyle(
+                                            fontSize:  17,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF0360e7)),
+                                      ),
+                                      widget.isBeta ? Text(
+                                        " beta",
+                                        style: TextStyle(
+                                            fontSize:  17,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color(0xFF0360e7)),
+                                      ) : Container(),
+                                    ],
+                                  ),
+                                ),
+                                Spacer(), // use Spacer
+                                IconButton(
+                                    icon: new Image.asset(
+                                      'assets/images/ic_settings_grad.png',
+                                    ),
+                                    tooltip: 'Apri le impostazioni dell\'App',
+                                    iconSize: 14,
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ImpostazioniView(response, profileUrl, (url){
+                                          profileUrl = url;
+                                          print("Nuova url: $url");
+                                        })),
+                                      );
+                                    },
+                                  ),
 
-                          ],
-                        ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      height: 4,
+                      color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
+                    )
+                  ],
                 ),
-                Container(
-                  height: 4,
-                  color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
-                )
-              ],
-            ),
           ),
         ),
         body: /*PageView(

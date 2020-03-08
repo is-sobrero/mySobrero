@@ -156,8 +156,11 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
     }
     final classeUtente = response.user.classe.toString() + " " + response.user.sezione.trim();
     final indirizzoUtente = response.user.corso;
-    final ultimaComunicazione = response.comunicazioni[0].contenuto.substring(0, 100) + "...";
+    var ultimaComunicazione = response.comunicazioni[0].contenuto;
+    if (ultimaComunicazione.length > 100) ultimaComunicazione = ultimaComunicazione.substring(0, 100) + "...";
     final ultimaComMittente = response.comunicazioni[0].mittente;
+    String realDestinatario = "Dirigente";
+    if (ultimaComMittente.toUpperCase() != "DIRIGENTE") realDestinatario = "Gianni Rossi";
     final accountStudente = response.user.livello == "4";
     bool isWide = MediaQuery.of(context).size.width > 550;
 
@@ -517,6 +520,40 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 8.0),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(100.0),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors.black.withAlpha(50),
+                                                              blurRadius: 10,
+                                                              spreadRadius: 4,
+                                                              offset: Offset(0, 2)
+                                                          )
+                                                        ]
+                                                    ),
+                                                    child: ultimaComMittente.toUpperCase() == "DIRIGENTE" ?
+                                                    CircleAvatar(
+                                                      backgroundImage: AssetImage("assets/images/rota.png"),
+                                                      radius: 15,
+                                                    ) :
+                                                    CircleAvatar(
+                                                      child: Text("GR", style: TextStyle(color: Colors.black)),
+                                                      backgroundColor: Colors.white,
+                                                      radius: 15,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left: 8.0),
+                                                    child: Text(toBeginningOfSentenceCase(realDestinatario), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                             AutoSizeText(
                                               ultimaComunicazione,
                                               minFontSize: 12,
@@ -531,7 +568,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                               padding: const EdgeInsets.only(
                                                   top: 12.0),
                                               child: AutoSizeText(
-                                                "Ultima comunicazione da $ultimaComMittente",
+                                                "Ultima comunicazione ricevuta",
                                                 style: new TextStyle(
                                                     color: Color(0xFFFFFFFF)),
                                               ),
@@ -684,7 +721,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                     padding: const EdgeInsets.fromLTRB(15,30,15,25),
                                     child: Text(
                                       item.title,
-                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24),
+                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: Colors.white),
                                     ),
                                   ),
                                 ),
