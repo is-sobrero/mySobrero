@@ -49,6 +49,62 @@ class Mainview extends StatefulWidget {
 
 final stateMain = new GlobalKey<_Mainview>();
 
+class RemoteNotice {
+  bool enabled;
+  String description;
+  bool bottomNoticeEnabled;
+  String bottomNoticeTitle;
+  String bottomNotice;
+  String bottomNoticeHeadingURL;
+  String bottomNoticeLinkTitle;
+  String bottomNoticeLink;
+
+  RemoteNotice(
+      {this.enabled,
+        this.description,
+        this.bottomNoticeEnabled,
+        this.bottomNoticeTitle,
+        this.bottomNotice,
+        this.bottomNoticeHeadingURL,
+        this.bottomNoticeLinkTitle,
+        this.bottomNoticeLink});
+
+  RemoteNotice.fromJson(Map<String, dynamic> json) {
+    enabled = json['enabled'];
+    description = json['description'];
+    bottomNoticeEnabled = json['bottomNoticeEnabled'];
+    bottomNoticeTitle = json['bottomNoticeTitle'];
+    bottomNotice = json['bottomNotice'];
+    bottomNoticeHeadingURL = json['bottomNoticeHeadingURL'];
+    bottomNoticeLinkTitle = json['bottomNoticeLinkTitle'];
+    bottomNoticeLink = json['bottomNoticeLink'];
+  }
+
+  RemoteNotice.preFetch(){
+    enabled = false;
+    description = "";
+    bottomNoticeEnabled = false;
+    bottomNoticeTitle = "";
+    bottomNotice = "";
+    bottomNoticeHeadingURL = "";
+    bottomNoticeLinkTitle = "";
+    bottomNoticeLink = "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['enabled'] = this.enabled;
+    data['description'] = this.description;
+    data['bottomNoticeEnabled'] = this.bottomNoticeEnabled;
+    data['bottomNoticeTitle'] = this.bottomNoticeTitle;
+    data['bottomNotice'] = this.bottomNotice;
+    data['bottomNoticeHeadingURL'] = this.bottomNoticeHeadingURL;
+    data['bottomNoticeLinkTitle'] = this.bottomNoticeLinkTitle;
+    data['bottomNoticeLink'] = this.bottomNoticeLink;
+    return data;
+  }
+}
+
 class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainview>{
   @override
   bool get wantKeepAlive => true;
@@ -73,14 +129,12 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
   String infoAggiuntiveTXT = "";
   bool disponibiliInfo = false;
 
-  Future<String> ottieniInformazioniAggiuntive() async{
+  Future<RemoteNotice> ottieniInformazioniAggiuntive() async{
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     await remoteConfig.fetch(expiration: const Duration(seconds: 0));
     await remoteConfig.activateFetched();
     final notice = jsonDecode(remoteConfig.getString('notice_setting'));
-    if (notice["enabled"] == true){
-      return notice["description"];
-    } else return null;
+    return RemoteNotice.fromJson(notice);
   }
 
   @override
@@ -110,11 +164,12 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
 
     ottieniInformazioniAggiuntive().then((notice){
       setState((){
-        infoAggiuntiveTXT = notice.toString();
-        disponibiliInfo = true;
+        remoteNotice = notice;
       });
     });
   }
+
+  RemoteNotice remoteNotice = RemoteNotice.preFetch();
 
   @override
   Widget build(BuildContext context) {
@@ -175,8 +230,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                !accountStudente
-                    ? Row(
+                !accountStudente ? Row(
                         children: <Widget>[
                           Expanded(
                             child: Padding(
@@ -237,9 +291,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                             flex: 1,
                           ),
                         ],
-                      )
-                    : Container(),
-
+                      ) : Container(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
@@ -266,7 +318,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: disponibiliInfo ? 10 : 0),
+                  padding: EdgeInsets.only(bottom: remoteNotice.enabled ? 10 : 0),
                   child: Container(
                     decoration: new BoxDecoration(
                         boxShadow: <BoxShadow>[
@@ -277,7 +329,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                         ],
                         ),
                     child: ExpandedSection(
-                      expand: disponibiliInfo,
+                      expand: remoteNotice.enabled,
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -312,7 +364,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: "  " + infoAggiuntiveTXT,
+                                                text: "  " + remoteNotice.description,
                                               ),
                                             ],
                                           ),
@@ -585,7 +637,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -687,7 +739,161 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
               )
             ],
           ),
-        )
+        ),
+        SafeArea(
+          top: false,
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
+            child: Container(
+              //height: isWide ? 200 : null,
+              decoration: new BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Color(0xFF6a11cb).withOpacity(0.4),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 10.0),
+                  ],
+                  borderRadius: BorderRadius.all(Radius.circular(11)),
+                  gradient: LinearGradient(
+                    begin: FractionalOffset.topRight,
+                    end: FractionalOffset.bottomRight,
+                    colors: <Color>[
+                      Color(0xFFfa71cd),
+                      Color(0xFF6a11cb)
+                    ],
+                  )),
+              child: isWide ? IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(11)),
+                      child: Container(
+                        width: 300,
+                        color: Colors.red,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Expanded(
+                              child: CachedNetworkImage(
+                                imageUrl: remoteNotice.bottomNoticeHeadingURL,
+                                placeholder: (context, url) => Skeleton(),
+                                errorWidget: (context, url, error) => Container(
+                                        color: Theme.of(context).textTheme.body1.color.withAlpha(40),
+                                        height: 200,
+                                        child: Center(child: Icon(Icons.broken_image, size: 70, color: Colors.white,))
+                                    ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                              child: Text(
+                                remoteNotice.bottomNoticeTitle,
+                                style: new TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFFFFFFF)),
+                              ),
+                            ),
+                            Text(
+                              remoteNotice.bottomNotice,
+                              style: new TextStyle(color: Color(0xFFFFFFFF)),
+                            ),
+                            FlatButton(
+                              child: Row(
+                                children: <Widget>[
+                                  Text(remoteNotice.bottomNoticeLinkTitle, style: TextStyle(color: Colors.white),),
+                                  Icon(Icons.arrow_forward_ios, color: Colors.white,)
+                                ],
+                              ),
+                              onPressed: () => openURL(context, remoteNotice.bottomNoticeLink),
+                              padding: EdgeInsets.zero,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ) : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(11)),
+                    child: Container(
+                      width: isWide ? 300 : null,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          CachedNetworkImage(
+                            imageUrl: remoteNotice.bottomNoticeHeadingURL,
+                            height: 200,
+                            placeholder: (context, url) => Skeleton(),
+                            errorWidget: (context, url, error) =>
+                                Container(
+                                    color: Theme.of(context).textTheme.body1.color.withAlpha(40),
+                                    height: 200,
+                                    child: Center(child: Icon(Icons.broken_image, size: 70, color: Colors.white,))
+                                ),
+                            fit: BoxFit.cover,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                          child: Text(
+                            remoteNotice.bottomNoticeTitle,
+                            style: new TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFFFFFFF)),
+                          ),
+                        ),
+                        Text(
+                          remoteNotice.bottomNotice,
+                          style: new TextStyle(color: Color(0xFFFFFFFF)),
+                        ),
+                        FlatButton(
+                          child: Row(
+                            children: <Widget>[
+                              Text(remoteNotice.bottomNoticeLinkTitle, style: TextStyle(color: Colors.white),),
+                              Icon(Icons.arrow_forward_ios, color: Colors.white,)
+                            ],
+                          ),
+                          onPressed: () => openURL(context, remoteNotice.bottomNoticeLink),
+                          padding: EdgeInsets.zero,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     ));
   }
