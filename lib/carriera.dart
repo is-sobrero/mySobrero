@@ -71,18 +71,25 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
   }
 
   Widget _generaAnno(Curriculum anno){
-    final Color scaffoldColor = anno.esito == "AMMESSO ALLA CLASSE SUCCESSIVA" ? Color(0xff45BF6D) : Colors.red;
+    Color scaffoldColor;
+    int shadowDepth = 20;
+    if (anno.esito.contains("AMMESS")) scaffoldColor = Color(0xff45BF6D);
+    else if (anno.credito.length == 0) {
+      scaffoldColor  = Color(0xff0652DD);
+      shadowDepth = 40;
+    } else if (anno.esito.length == 0) scaffoldColor = Color(0xff45BF6D);
+    else scaffoldColor  = Colors.red;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
           decoration: new BoxDecoration(
             //color: Theme.of(context).textTheme.body1.color.withAlpha(20),
-              color: Color(0xff45BF6D),
+              color: scaffoldColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
               //border: Border.all(width: 0.0, color: Color(0xFFCCCCCC)),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black12.withAlpha(20),
+                    color: Colors.black.withAlpha(shadowDepth),
                     blurRadius: 10,
                     spreadRadius: 10
                 )
@@ -95,9 +102,30 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text("Classe ${anno.classe} ${anno.sezione.trim()}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      Text("Classe ${anno.classe} ${anno.sezione.trim()}",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white.withAlpha(50),
+                              blurRadius: 10,
+                              spreadRadius: 5
+                            )
+                          ]
+                        ),
+                        child: Chip(
+                          label: Text(anno.credito.length == 0 ? "Anno in corso" : "${anno.credito} crediti", style: TextStyle(color: Colors.black),),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          backgroundColor: Colors.white,
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Text(anno.corso,
@@ -240,12 +268,15 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
                                         ),
                                       ],
                                     ),
-                                    ListView.builder(
-                                      addAutomaticKeepAlives: true,
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      itemCount: widget.curriculum.length,
-                                      itemBuilder: (context, index) => _generaAnno(widget.curriculum[index]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: ListView.builder(
+                                        addAutomaticKeepAlives: true,
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        itemCount: widget.curriculum.length,
+                                        itemBuilder: (context, index) => _generaAnno(widget.curriculum[index]),
+                                      ),
                                     )
                                   ],
                                 )))

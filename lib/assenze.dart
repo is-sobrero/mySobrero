@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:intl/number_symbols_data.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
 import 'reapi2.dart';
 
@@ -32,6 +33,8 @@ class _AssenzeState extends State<AssenzeView>
   @override
   void initState() {
     super.initState();
+    reAPI3 reapi = new reAPI3();
+    reapi.retrieveStartupData("3845", "campionato1A");
     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
