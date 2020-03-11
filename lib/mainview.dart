@@ -5,7 +5,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/compiti.dart';
 import 'package:mySobrero/expandedsection.dart';
-import 'reapi2.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'SobreroFeed.dart';
@@ -17,34 +17,31 @@ import 'globals.dart' as globals;
 typedef SwitchPageCallback = void Function(int page);
 
 class Mainview extends StatefulWidget {
-  reAPI2 response;
+  //reAPI2 response;
+  UnifiedLoginStructure unifiedLoginStructure;
+  reAPI3 apiInstance;
   SobreroFeed feed;
   SwitchPageCallback callback;
-  List<Compiti> compitiSettimana;
+  List<CompitoStructure> compitiSettimana;
   String profileUrl;
 
-  Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback, String profileUrl) {
-    this.response = response;
-    this.feed = feed;
-    this.callback = callback;
-    this.profileUrl = profileUrl;
-    this.compitiSettimana = List<Compiti>();
+  Mainview({Key key, @required this.unifiedLoginStructure, @required this.apiInstance, @required this.feed, @required this.callback, @required this.profileUrl}) {
     DateTime today = DateTime.now();
     bool okLista = false;
     var inizioSettimana = today.subtract(new Duration(days: today.weekday - 1));
     var formatter = new DateFormat('DD/MM/yyyy');
-    for (int i = 0; i < response.compiti.length; i++) {
-      DateTime dataCompito = formatter.parse(response.compiti[i].data);
+    compitiSettimana = List<CompitoStructure>();
+    for (int i = 0; i < unifiedLoginStructure.compiti.length; i++) {
+      DateTime dataCompito = formatter.parse(unifiedLoginStructure.compiti[i].data);
       if (dataCompito.compareTo(inizioSettimana) >= 0) okLista = true;
-      if (okLista) this.compitiSettimana.add(response.compiti[i]);
+      if (okLista) this.compitiSettimana.add(unifiedLoginStructure.compiti[i]);
     }
   }
+
   static _Mainview of(BuildContext context) => context.findAncestorStateOfType<_Mainview>();
 
-
   @override
-  _Mainview createState() =>
-      _Mainview(response, feed, callback, compitiSettimana, profileUrl);
+  _Mainview createState() => _Mainview();
 }
 
 final stateMain = new GlobalKey<_Mainview>();
@@ -109,20 +106,12 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
   @override
   bool get wantKeepAlive => true;
 
-  reAPI2 response;
+  /*reAPI2 response;
   SobreroFeed feed;
-  SwitchPageCallback callback;
-  List<Compiti> compitiSettimana;
-  String _profileURL;
+  SwitchPageCallback callback;*/
+  //String _profileURL;
 
-  _Mainview(reAPI2 response, SobreroFeed feed, SwitchPageCallback callback,
-      List<Compiti> compitiSettimana, String profileUrl) {
-    this.response = response;
-    this.feed = feed;
-    this.callback = callback;
-    this.compitiSettimana = compitiSettimana;
-    this._profileURL = profileUrl;
-  }
+  _Mainview() {}
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -198,25 +187,25 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
         ),
       ),
     );
-    final nomeUtente = response.user.nome;
+    final nomeUtente = widget.unifiedLoginStructure.user.nome;
     var ultimoVoto = "null";
     var ultimaMateria = "null";
-    if (response.voti1q.length > 0){
-      ultimoVoto = response.voti1q[0].voto;
-      ultimaMateria = response.voti1q[0].materia;
+    if (widget.unifiedLoginStructure.voti1Q.length > 0){
+      ultimoVoto = widget.unifiedLoginStructure.voti1Q[0].voto;
+      ultimaMateria = widget.unifiedLoginStructure.voti1Q[0].materia;
     }
-    if (response.voti2q.length > 0){
-      ultimoVoto = response.voti2q[0].voto;
-      ultimaMateria = response.voti2q[0].materia;
+    if (widget.unifiedLoginStructure.voti2Q.length > 0){
+      ultimoVoto = widget.unifiedLoginStructure.voti2Q[0].voto;
+      ultimaMateria = widget.unifiedLoginStructure.voti2Q[0].materia;
     }
-    final classeUtente = response.user.classe.toString() + " " + response.user.sezione.trim();
-    final indirizzoUtente = response.user.corso;
-    var ultimaComunicazione = response.comunicazioni[0].contenuto;
+    final classeUtente = widget.unifiedLoginStructure.user.classe.toString() + " " + widget.unifiedLoginStructure.user.sezione.trim();
+    final indirizzoUtente = widget.unifiedLoginStructure.user.corso;
+    var ultimaComunicazione = widget.unifiedLoginStructure.comunicazioni[0].contenuto;
     if (ultimaComunicazione.length > 100) ultimaComunicazione = ultimaComunicazione.substring(0, 100) + "...";
-    final ultimaComMittente = response.comunicazioni[0].mittente;
+    final ultimaComMittente = widget.unifiedLoginStructure.comunicazioni[0].mittente;
     String realDestinatario = "Dirigente";
     if (ultimaComMittente.toUpperCase() != "DIRIGENTE") realDestinatario = "Gianni Rossi";
-    final accountStudente = response.user.livello == "4";
+    final accountStudente = widget.unifiedLoginStructure.user.livello == "4";
     bool isWide = MediaQuery.of(context).size.width > 550;
 
     return SingleChildScrollView(
@@ -389,7 +378,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  callback(1);
+                                  widget.callback(1);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 5),
@@ -449,7 +438,10 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => CompitiView(response.compiti, compitiSettimana),
+                                      builder: (_) => CompitiView(
+                                        compiti: widget.unifiedLoginStructure.compiti,
+                                        settimana: widget.compitiSettimana,
+                                      ),
                                       fullscreenDialog: true,
                                     )
                                   );
@@ -466,10 +458,8 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                             decoration: new BoxDecoration(
                                                 boxShadow: <BoxShadow>[
                                                   BoxShadow(
-                                                      color: Color(0xFF43e97b)
-                                                          .withOpacity(0.4),
-                                                      offset:
-                                                          const Offset(1.1, 1.1),
+                                                      color: Color(0xFF43e97b).withOpacity(0.4),
+                                                      offset: const Offset(1.1, 1.1),
                                                       blurRadius: 10.0),
                                                 ],
                                                 borderRadius: BorderRadius.all(
@@ -477,8 +467,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                                 gradient: LinearGradient(
                                                   begin:
                                                       FractionalOffset.topRight,
-                                                  end: FractionalOffset
-                                                      .bottomRight,
+                                                  end: FractionalOffset.bottomRight,
                                                   colors: <Color>[
                                                     Color(0xFF38f9d7),
                                                     Color(0xFF43e97b)
@@ -501,16 +490,14 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
-                                                compitiSettimana.length
-                                                    .toString(),
+                                                widget.compitiSettimana.length.toString(),
                                                 style: new TextStyle(
                                                     fontSize: 70,
                                                     color: Color(0xFF000000)),
                                               ),
                                               Text(
                                                 "Compiti per i prossimi giorni",
-                                                style: new TextStyle(
-                                                    color: Color(0xFF000000)),
+                                                style: new TextStyle(color: Color(0xFF000000)),
                                               )
                                             ],
                                           ),
@@ -533,7 +520,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                callback(2);
+                                widget.callback(2);
                               },
                               child: Padding(
                                 padding:
@@ -659,14 +646,14 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                 height: 450,
                 child: ListView.builder(
                     padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 16),
-                    itemCount: feed.items.length,
+                    itemCount: widget.feed.items.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctxt, int index) {
-                      final item = feed.items[index];
+                      final item = widget.feed.items[index];
                       return SafeArea(
                         bottom: false,
                         left: index == 0,
-                        right: index == feed.items.length -1,
+                        right: index == widget.feed.items.length -1,
                         top: false,
                         child: Padding(
                           padding: const EdgeInsets.only(right: 15),

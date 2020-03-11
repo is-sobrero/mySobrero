@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mySobrero/impostazioni.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'reapi2.dart';
 import 'dart:ui';
 import 'SobreroFeed.dart';
@@ -15,12 +16,14 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 class HomeScreen extends StatefulWidget {
-  reAPI2 response;
+  //reAPI2 response;
+  UnifiedLoginStructure unifiedLoginStructure;
+  reAPI3 apiInstance;
   SobreroFeed feed;
   String profileUrl;
   bool isBeta = false;
 
-  HomeScreen({Key key, @required this.response, @required this.feed, @required this.profileUrl, @required this.isBeta}) : super(key: key);
+  HomeScreen({Key key, @required this.unifiedLoginStructure, @required this.feed, @required this.profileUrl, @required this.isBeta, @required this.apiInstance}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _HomeState();
@@ -95,23 +98,25 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
   void initState(){
     super.initState();
-    response = widget.response;
+    //response = widget.response;
     feed = widget.feed;
     profileUrl = widget.profileUrl;
-    _mainViewInstance = Mainview(response, feed, (int page) {
-        onTabTapped(page);
-      }, profileUrl);
-    _votiViewInstance = VotiView(response.voti1q, response.voti2q);
-    _comunicazioniViewInstance = ComunicazioniView(response.comunicazioni);
-    _altroViewInstance = AltroView(response);
+    _mainViewInstance = Mainview(
+        unifiedLoginStructure: widget.unifiedLoginStructure,
+        apiInstance: widget.apiInstance,
+        feed: widget.feed,
+        callback: (page) => onTabTapped(page),
+        profileUrl: widget.profileUrl);
+    //_votiViewInstance = VotiView(response.voti1q, response.voti2q);
+    //_comunicazioniViewInstance = ComunicazioniView(response.comunicazioni);
+    //_altroViewInstance = AltroView(response);
   }
 
   void dispose() {
     super.dispose();
   }
 
-  double map(double x, double in_min, double in_max, double out_min, double out_max)
-  {
+  double map(double x, double in_min, double in_max, double out_min, double out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 
@@ -205,37 +210,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                 ),
           ),
         ),
-        body: /*PageView(
-
-              controller: pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  scroll = 0;
-                  _currentIndex = index;
-                });
-              },
-              children: <Widget>[
-                NotificationListener<ScrollNotification>(
-                  onNotification: elaboraScroll,
-                  child: Mainview(response, feed, (int page) {
-                    onTabTapped(page);
-                  }, profileUrl),
-                ),
-                NotificationListener<ScrollNotification>(
-                  onNotification: elaboraScroll,
-                  child: VotiView(response.voti1q, response.voti2q),
-                ),
-                NotificationListener<ScrollNotification>(
-                  onNotification: elaboraScroll,
-                  child: ComunicazioniView(response.comunicazioni),
-                ),
-                NotificationListener<ScrollNotification>(
-                  onNotification: elaboraScroll,
-                  child: AltroView(response),
-                ),
-              ],
-          ),*/
-        PageView.builder(
+        body: PageView.builder(
           controller: pageController,
           onPageChanged: (index) {
             setState(() {
@@ -244,12 +219,12 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             });
           },
             itemCount: 4,
-          itemBuilder: (context, i){
+            itemBuilder: (context, i){
             var schermata;
             if (i == 0) schermata =  _mainViewInstance;
-            if (i == 1) schermata = _votiViewInstance;
-            if (i == 2) schermata = _comunicazioniViewInstance;
-            if (i == 3) schermata = _altroViewInstance;
+            //if (i == 1) schermata = _votiViewInstance;
+            //if (i == 2) schermata = _comunicazioniViewInstance;
+            //if (i == 3) schermata = _altroViewInstance;
             return NotificationListener<ScrollNotification>(
               onNotification: elaboraScroll,
               child: schermata,

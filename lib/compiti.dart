@@ -1,25 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'reapi2.dart';
 
 class CompitiView extends StatefulWidget {
-  List<Compiti> compiti;
-  List<Compiti> settimana;
-  CompitiView(List<Compiti> compiti, List<Compiti> settimana) {
-    this.compiti = compiti;
-    this.settimana = settimana;
-  }
+  List<CompitoStructure> compiti;
+  List<CompitoStructure> settimana;
+
+  CompitiView({Key key, @required this.compiti, @required this.settimana}) {}
 
   @override
-  _CompitiState createState() => _CompitiState(this.compiti, this.settimana);
+  _CompitiState createState() => _CompitiState();
 }
 
-class _CompitiState extends State<CompitiView>
-    with SingleTickerProviderStateMixin {
-  List<Compiti> compiti;
-  List<Compiti> settimana;
+class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMixin {
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
 
@@ -29,10 +24,7 @@ class _CompitiState extends State<CompitiView>
   double _appBarTitleOpacity = 0.0;
 
   Brightness currentBrightness;
-  _CompitiState(List<Compiti> compiti, List<Compiti> settimana) {
-    this.compiti = compiti;
-    this.settimana = settimana;
-  }
+  _CompitiState() {}
 
   Map<int, Widget> _children = const <int, Widget> {
     0: Text('Settimana', style: TextStyle(color: Colors.black)),
@@ -158,12 +150,12 @@ class _CompitiState extends State<CompitiView>
                                           groupValue: selezioneCompiti,
                                         ),
                                       ),
-                                      (selezioneCompiti == 0 ? settimana.length : compiti.length) > 0 ? ListView.builder(
+                                      (selezioneCompiti == 0 ? widget.settimana.length : widget.compiti.length) > 0 ? ListView.builder(
                                         primary: false,
                                         shrinkWrap: true,
-                                        itemCount: selezioneCompiti == 0 ? settimana.length : compiti.length,
+                                        itemCount: selezioneCompiti == 0 ? widget.settimana.length : widget.compiti.length,
                                         itemBuilder: (context2, index2) {
-                                          List<Compiti> current = selezioneCompiti == 0 ? settimana : compiti;
+                                          List<CompitoStructure> current = selezioneCompiti == 0 ? widget.settimana : widget.compiti;
                                           int i = selezioneCompiti == 0 ? index2 : current.length - index2 - 1;
                                           return Padding(
                                             padding: const EdgeInsets.only(bottom: 15),

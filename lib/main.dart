@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/reapi2.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'home.dart';
 import 'dart:convert';
 import 'SobreroFeed.dart';
@@ -258,14 +259,152 @@ class _AppLoginState extends State<AppLogin> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final username = await prefs.getString('username') ?? "NO";
     final password = await prefs.getString('password') ?? "NO";
-    requestMethod(username, password);
+    reapi3Login(username, password);
   }
 
+  Future<void> reapi3Login(String username, String password) async {
+    reAPI3 apiInstance = new reAPI3();
+    UnifiedLoginStructure loginStructure = await apiInstance.retrieveStartupData(username, password);
+    if (loginStructure.statusHeader.code != 0){
+      setState(() {isLoginVisible = true;});
+      showDialog(
+          context: context,
+          builder: (context) => Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                        borderRadius: new BorderRadius.circular(8.0),
+                        child: Image.asset('assets/images/errore.png')),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  "Errore durante il Login",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.only(top: 16, bottom: 16),
+                                  child: Text(
+                                    loginStructure.statusHeader.description,
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Text(
+                                  "Per fortuna abbiamo messo il pulsante riprova",
+                                  style: TextStyle(fontSize: 13),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                          OutlineButton(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                            onPressed: () => Navigator.of(context).pop(),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(7.0))),
+                            color: Theme.of(context).primaryColor,
+                            child: const Text('RIPROVA'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+            ),
+          )
+      );
+      return;
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('savedCredentials', true);
+    prefs.setString('username', username);
+    prefs.setString('password', password);
+    prefs.setString('user', loginStructure.user.nomeCompleto);
+    String systemPlatform = (Platform.isWindows ? "win32" : "") +
+        (Platform.isAndroid ? "android" : "") +
+        (Platform.isFuchsia ? "fuchsia" : "") +
+        (Platform.isIOS ? "iOS" : "") +
+        (Platform.isLinux ? "linux" : "") +
+        (Platform.isMacOS ? "macos" : "");
+    final cognome = loginStructure.user.cognome;
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+    analytics.setUserId("UID$username$cognome");
+    analytics.setUserProperty(name: "anno", value: loginStructure.user.classe.toString());
+    analytics.setUserProperty(name: "classe", value: "${loginStructure.user.classe} ${loginStructure.user.sezione.trim()}");
+    analytics.setUserProperty(name: "corso", value: loginStructure.user.corso);
+    analytics.setUserProperty(name: "indirizzo", value: loginStructure.user.corso.contains("Liceo") ? "liceo" : "itis");
+    analytics.setUserProperty(name: "platform", value: systemPlatform);
+
+    final PackageInfo info = await PackageInfo.fromPlatform();
+
+    Firestore.instance.collection('utenti').document(username).setData({
+      'classe': "${loginStructure.user.classe} ${loginStructure.user.sezione.trim()}",
+      'cognome': loginStructure.user.cognome,
+      'nome': loginStructure.user.nome,
+      'ultimo accesso': DateTime.now().toIso8601String(),
+      'platform': systemPlatform,
+      'build flavour': isInDebugMode ? 'internal' : 'production',
+      'version' : info.buildNumber
+    }, merge: true);
+
+    final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(username).get();
+    final profileImageUrl = dataRetrieve.data["profileImage"];
+    print("profilo: $profileImageUrl");
+    globals.profileURL = profileImageUrl;
+
+    final feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
+    final feedHTTP = await http.get(feedUrl);
+    Map feedMap = jsonDecode(feedHTTP.body);
+    var feed = SobreroFeed.fromJson(feedMap);
+
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___)  =>
+              HomeScreen(
+                unifiedLoginStructure: loginStructure,
+                apiInstance: apiInstance,
+                profileUrl: profileImageUrl,
+                feed: feed,
+                isBeta: isBeta,
+              ),
+          transitionDuration: Duration(milliseconds: 700),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(0.0, 1.0);
+            var end = Offset.zero;
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+
+        )
+    );
+    _controlloSB = false;
+  }
+/*
   Future<http.Response> requestMethod(String username, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = "https://reapistaging.altervista.org/reapi2.php";
-    var feedUrl =
-        "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
+    var feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
     Map<String, String> headers = {
       'Accept': 'application/json',
     };
@@ -426,7 +565,7 @@ class _AppLoginState extends State<AppLogin> {
     }
     return responseHTTP;
   }
-
+*/
   void buttonLogin() {
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
@@ -437,7 +576,7 @@ class _AppLoginState extends State<AppLogin> {
       loginCalled = true;
     });
 
-    requestMethod(userController.text, pwrdController.text);
+    reapi3Login(userController.text, pwrdController.text);
   }
 
   @override
