@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'reapi2.dart';
 import 'dart:ui';
 import 'SobreroFeed.dart';
 import 'mainview.dart';
@@ -34,7 +33,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   int _currentIndex = 0;
   PageController pageController = PageController();
-  reAPI2 response;
   SobreroFeed feed;
   String profileUrl;
 
@@ -106,9 +104,16 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
         apiInstance: widget.apiInstance,
         feed: widget.feed,
         callback: (page) => onTabTapped(page),
-        profileUrl: widget.profileUrl);
-    //_votiViewInstance = VotiView(response.voti1q, response.voti2q);
-    //_comunicazioniViewInstance = ComunicazioniView(response.comunicazioni);
+        profileUrl: widget.profileUrl
+    );
+    _votiViewInstance = VotiView(
+      unifiedLoginStructure: widget.unifiedLoginStructure,
+      apiInstance: widget.apiInstance,
+    );
+    _comunicazioniViewInstance = ComunicazioniView(
+      unifiedLoginStructure: widget.unifiedLoginStructure,
+      apiInstance: widget.apiInstance,
+    );
     //_altroViewInstance = AltroView(response);
   }
 
@@ -188,10 +193,14 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => ImpostazioniView(response, profileUrl, (url){
-                                          profileUrl = url;
-                                          print("Nuova url: $url");
-                                        })),
+                                        MaterialPageRoute(builder: (context) =>
+                                          ImpostazioniView(
+                                              unifiedLoginStructure: widget.unifiedLoginStructure,
+                                              profileURL: profileUrl,
+                                              profileCallback: (url) =>
+                                              profileUrl = url
+                                          )
+                                        ),
                                       );
                                     },
                                   ),
@@ -222,8 +231,8 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             itemBuilder: (context, i){
             var schermata;
             if (i == 0) schermata =  _mainViewInstance;
-            //if (i == 1) schermata = _votiViewInstance;
-            //if (i == 2) schermata = _comunicazioniViewInstance;
+            if (i == 1) schermata = _votiViewInstance;
+            if (i == 2) schermata = _comunicazioniViewInstance;
             //if (i == 3) schermata = _altroViewInstance;
             return NotificationListener<ScrollNotification>(
               onNotification: elaboraScroll,

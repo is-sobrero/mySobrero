@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/situazione.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'reapi2.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,22 +14,22 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 
 
 class VotiView extends StatefulWidget {
-  List<Voti> voti1q, voti2q;
-
-  VotiView(List<Voti> voti1q, List<Voti> voti2q) {
-    this.voti1q = voti1q;
-    this.voti2q = voti2q;
+  List<VotoStructure> voti1q, voti2q;
+  UnifiedLoginStructure unifiedLoginStructure;
+  reAPI3 apiInstance;
+  VotiView({Key key, @required this.unifiedLoginStructure, @required this.apiInstance}) {
+    this.voti1q = unifiedLoginStructure.voti1Q;
+    this.voti2q = unifiedLoginStructure.voti2Q;
   }
 
   @override
-  _VotiView createState() => _VotiView(voti1q, voti2q);
+  _VotiView createState() => _VotiView();
 }
 
 class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiView>{
   @override
   bool get wantKeepAlive => true;
 
-  List<Voti> voti, voti1q, voti2q;
   List<double> votiTotali;
   List<String> materie;
 
@@ -39,18 +39,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   };
   int selezionePeriodo = 0;
 
-  _VotiView(List<Voti> voti1q, List<Voti> voti2q) {
-    this.voti1q = voti1q;
-    this.voti2q = voti2q;
-    this.voti = voti1q;
-
-    materie = new List();
-    materie.add("Tutte le materie");
-    for (int i = 0; i < voti1q.length; i++) {
-      String m = voti1q[i].materia;
-      if (!materie.contains(m)) materie.add(m);
-    }
-  }
+  _VotiView() {}
   
   Map<String, double> sommaVoti1Q = new Map<String, double>();
   Map<String, double> sommaVoti2Q = new Map<String, double>();
@@ -76,7 +65,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     }
   }
 
-  Widget _generaTileVoto(Voti voto){
+  Widget _generaTileVoto(VotoStructure voto){
     LinearGradient sfondoVoto = LinearGradient(
       begin: FractionalOffset.topRight,
       end: FractionalOffset.bottomRight,
@@ -186,26 +175,32 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
 
   void initState(){
     super.initState();
-    for (int i = 0; i < voti1q.length; i++) {
-      double votoParsed = double.parse(voti1q[i].voto.replaceAll(",", "."));
-      if (!sommaVoti1Q.containsKey(voti1q[i].materia)) {
-        sommaVoti1Q[voti1q[i].materia] = 0;
-        countVoti1Q[voti1q[i].materia] = 0;
+    materie = new List();
+    materie.add("Tutte le materie");
+    for (int i = 0; i < widget.voti1q.length; i++) {
+      String m = widget.voti1q[i].materia;
+      if (!materie.contains(m)) materie.add(m);
+    }
+    for (int i = 0; i < widget.voti1q.length; i++) {
+      double votoParsed = double.parse(widget.voti1q[i].voto.replaceAll(",", "."));
+      if (!sommaVoti1Q.containsKey(widget.voti1q[i].materia)) {
+        sommaVoti1Q[widget.voti1q[i].materia] = 0;
+        countVoti1Q[widget.voti1q[i].materia] = 0;
       }
-      sommaVoti1Q[voti1q[i].materia] += votoParsed * int.parse(voti1q[i].peso);
-      countVoti1Q[voti1q[i].materia] += int.parse(voti1q[i].peso);
+      sommaVoti1Q[widget.voti1q[i].materia] += votoParsed * int.parse(widget.voti1q[i].peso);
+      countVoti1Q[widget.voti1q[i].materia] += int.parse(widget.voti1q[i].peso);
     }
     sommaVoti1Q.forEach((key, value){
       situazione1Q[key] =  SituazioneElement(countVoti1Q[key].toInt() ~/ 100, sommaVoti1Q[key] / countVoti1Q[key]);
     });
-    for (int i = 0; i < voti2q.length; i++) {
-      double votoParsed = double.parse(voti2q[i].voto.replaceAll(",", "."));
-      if (!sommaVoti2Q.containsKey(voti2q[i].materia)) {
-        sommaVoti2Q[voti2q[i].materia] = 0;
-        countVoti2Q[voti2q[i].materia] = 0;
+    for (int i = 0; i < widget.voti2q.length; i++) {
+      double votoParsed = double.parse(widget.voti2q[i].voto.replaceAll(",", "."));
+      if (!sommaVoti2Q.containsKey(widget.voti2q[i].materia)) {
+        sommaVoti2Q[widget.voti2q[i].materia] = 0;
+        countVoti2Q[widget.voti2q[i].materia] = 0;
       }
-      sommaVoti2Q[voti2q[i].materia] += votoParsed * int.parse(voti2q[i].peso);
-      countVoti2Q[voti2q[i].materia] += int.parse(voti2q[i].peso);
+      sommaVoti2Q[widget.voti2q[i].materia] += votoParsed * int.parse(widget.voti2q[i].peso);
+      countVoti2Q[widget.voti2q[i].materia] += int.parse(widget.voti2q[i].peso);
     }
     sommaVoti2Q.forEach((key, value){
       situazione2Q[key] = SituazioneElement(countVoti2Q[key].toInt() ~/ 100, sommaVoti2Q[key] / countVoti2Q[key]);
@@ -215,135 +210,6 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
         ottenutoObbiettivi = true;
       });
     });
-  }
-
-  List<Widget> generaVoti(List<Voti> valutazioni) {
-    double media = 0;
-    double sommaPesi = 0;
-    List<Widget> list = new List<Widget>();
-    for (var i = 0; i < valutazioni.length; i++) {
-      LinearGradient sfondoVoto = LinearGradient(
-        begin: FractionalOffset.topRight,
-        end: FractionalOffset.bottomRight,
-        colors: <Color>[Color(0xFF38f9d7), Color(0xFF43e97b)],
-      );
-      double votoParsed = double.parse(valutazioni[i].voto.replaceAll(",", "."));
-      Color coloreTesto = Colors.black;
-      if (votoParsed >= 6 && votoParsed < 7) {
-        sfondoVoto = LinearGradient(
-          begin: FractionalOffset.topRight,
-          end: FractionalOffset.bottomRight,
-          colors: <Color>[Color(0xffFFD200), Color(0xffF7971E)],
-        );
-      }
-      if (votoParsed < 6) {
-        sfondoVoto = LinearGradient(
-          begin: FractionalOffset.topRight,
-          end: FractionalOffset.bottomRight,
-          colors: <Color>[Color(0xffFF416C), Color(0xffFF4B2B)],
-        );
-        coloreTesto = Colors.white;
-      }
-
-      final tipologia = valutazioni[i].tipologia;
-      final peso = valutazioni[i].peso;
-      sommaPesi += int.parse(peso);
-      media += votoParsed * int.parse(peso);
-      final docente = valutazioni[i].docente;
-      final data = valutazioni[i].data;
-      var commento = valutazioni[i].commento;
-      if (commento.length == 0) commento = "Nessun commento al voto";
-
-      if (peso == "0") {
-        sfondoVoto = LinearGradient(
-          begin: FractionalOffset.topRight,
-          end: FractionalOffset.bottomRight,
-          colors: <Color>[Color(0xff005C97), Color(0xff363795)],
-        );
-        coloreTesto = Colors.white;
-      }
-
-      list.add(ExpandableNotifier(
-        child: Column(
-          children: [
-            Expandable(
-              collapsed: ExpandableButton(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(11)),
-                      gradient: sfondoVoto,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Text(valutazioni[i].voto, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
-                          ),
-                          Expanded(child: Text(valutazioni[i].materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              expanded: Column(children: [
-                ExpandableButton(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Container(
-                      decoration: new BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(11)),
-                        gradient: sfondoVoto,
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
-                        ],
-                      ),
-                      child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 15),
-                                    child: Text(valutazioni[i].voto, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
-                                  ),
-                                  Expanded(child: Text(valutazioni[i].materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
-                                ],
-                              ),
-                              Text("Data voto: $data", style: TextStyle(color: coloreTesto)),
-                              Text("Tipologia: $tipologia", style: TextStyle(color: coloreTesto)),
-                              Text("Docente: $docente", style: TextStyle(color: coloreTesto)),
-                              Text("Peso: $peso", style: TextStyle(color: coloreTesto)),
-                              Text("Commento al voto: $commento", style: TextStyle(color: coloreTesto)),
-                            ],
-                          )),
-                    ),
-                  ),
-                ),
-              ]),
-            ),
-          ],
-        ),
-      ));
-    }
-    media /= sommaPesi;
-    final finalMedia = media.toStringAsFixed(2);
-    list.insert(
-        0,
-        Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: Text(filterIndex > 0 ? "Media ponderata della materia: $finalMedia" : "Media ponderata attuale: $finalMedia"),
-        ));
-    return list;
   }
 
   int filterIndex = 0;
@@ -358,8 +224,8 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     bool isWide = MediaQuery.of(context).size.width > 500;
     int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
     columnCount = MediaQuery.of(context).size.width > 900 ? 3 : columnCount;
-    List<Voti> currentVoti;
-    List<Voti> periodoSelezionato = selezionePeriodo == 0 ? voti1q : voti2q;
+    List<VotoStructure> currentVoti;
+    List<VotoStructure> periodoSelezionato = selezionePeriodo == 0 ? widget.voti1q : widget.voti2q;
     if (filterIndex == 0) currentVoti = periodoSelezionato;
     else {
       String materia = materie[filterIndex];
@@ -439,7 +305,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                             child: CupertinoSlidingSegmentedControl(
                               children: _children,
                               onValueChanged: (val) {
-                                List<Voti> periodoSelezionato = val == 0 ? voti1q : voti2q;
+                                List<VotoStructure> periodoSelezionato = val == 0 ? widget.voti1q : widget.voti2q;
                                 materie = new List();
                                 materie.add("Tutte le materie");
                                 for (int i = 0; i < periodoSelezionato.length; i++) {

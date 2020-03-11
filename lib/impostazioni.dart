@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mySobrero/reapi2.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'fade_slide_transition.dart';
@@ -15,17 +15,14 @@ import 'package:mySobrero/hud.dart';
 
 
 class ImpostazioniView extends StatefulWidget {
-  reAPI2 response;
   String profileURL;
   Function(String url) profileCallback;
-  @override
-  _ImpostazioniState createState() => _ImpostazioniState(response, profileURL, profileCallback);
+  UnifiedLoginStructure unifiedLoginStructure;
 
-  ImpostazioniView (reAPI2 response, String profileURL, Function(String url) profileCallback){
-    this.response = response;
-    this.profileURL = profileURL;
-    this.profileCallback = profileCallback;
-  }
+  ImpostazioniView ({Key key, @required this.unifiedLoginStructure, @required this.profileURL, @required this.profileCallback}) : super(key: key);
+
+  @override
+  _ImpostazioniState createState() => _ImpostazioniState();
 }
 
 class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProviderStateMixin {
@@ -38,11 +35,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  _ImpostazioniState (reAPI2 response, String profileURL, Function(String url) profileCallback){
-    this.response = response;
-    _profileURL = profileURL;
-    this.profileCallback = profileCallback;
-  }
+  _ImpostazioniState (){}
 
   @override
   void initState() {
@@ -85,10 +78,9 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   }
 
   final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
-  reAPI2 response;
 
   Future<bool> cambiaProfilo(image) async {
-    final userName = response.user.matricola;
+    final userName = widget.unifiedLoginStructure.user.matricola;
     final StorageUploadTask uploadTask = _firebaseStorage.child("profile_$userName.jpg").putFile(
       image,
       StorageMetadata(
@@ -104,7 +96,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
       profileCallback(_profileURL);
     });
 
-    Firestore.instance.collection('utenti').document(response.user.matricola).setData({
+    Firestore.instance.collection('utenti').document(widget.unifiedLoginStructure.user.matricola).setData({
       'profileImage': url,
     }, merge: true);
 
@@ -243,7 +235,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10),
-                                      child: Text(response.user.nome + " " + response.user.cognome, style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+                                      child: Text(widget.unifiedLoginStructure.user.nomeCompleto, style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
                                     ),
                                     SettingsButton(Icons.exit_to_app, "Logout", "Cancella l'account memorizzato dall'app", () {
                                       _impostaBool("savedCredentials", false);

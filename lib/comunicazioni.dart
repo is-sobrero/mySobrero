@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
-import 'reapi2.dart';
+//import 'reapi2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
 class ComunicazioniView extends StatefulWidget {
-  List<Comunicazioni> comunicazioni;
+  List<ComunicazioneStructure> comunicazioni;
+  UnifiedLoginStructure unifiedLoginStructure;
+  reAPI3 apiInstance;
 
-  ComunicazioniView(List<Comunicazioni> comunicazioni) {
-    this.comunicazioni = comunicazioni;
+  ComunicazioniView({Key key, @required this.unifiedLoginStructure, @required this.apiInstance}) {
+    this.comunicazioni = unifiedLoginStructure.comunicazioni;
   }
+
   @override
-  _ComunicazioniView createState() => _ComunicazioniView(comunicazioni);
+  _ComunicazioniView createState() => _ComunicazioniView();
 }
 
 class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliveClientMixin<ComunicazioniView>{
   @override
   bool get wantKeepAlive => true;
 
-  List<Comunicazioni> comunicazioni;
-  _ComunicazioniView(List<Comunicazioni> comunicazioni) {
-    this.comunicazioni = comunicazioni;
-  }
+  _ComunicazioniView(){}
 
   _launchURL(String uri) async {
     if (await canLaunch(uri)) {
@@ -33,7 +34,7 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
   }
 
 
-  List<Widget> generaAllegati(List<Allegato> allegati){
+  List<Widget> generaAllegati(List<AllegatoStructure> allegati){
     List<Widget> list = new List<Widget>();
     for (int i = 0; i<allegati.length; i++){
       list.add(Container(
@@ -64,7 +65,7 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
     return list;
   }
 
-  Widget _generaComunicazione(Comunicazioni comunicazione){
+  Widget _generaComunicazione(ComunicazioneStructure comunicazione){
     String realDestinatario = "Dirigente";
     if (comunicazione.mittente.toUpperCase() != "DIRIGENTE") realDestinatario = "Gianni Rossi";
     return Container(
@@ -176,15 +177,15 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
                 WaterfallFlow.builder(
                   primary: false,
                   shrinkWrap: true,
-                  itemCount: comunicazioni.length,
+                  itemCount: widget.comunicazioni.length,
                   itemBuilder: (context, i){
-                    return _generaComunicazione(comunicazioni[i]);
+                    return _generaComunicazione(widget.comunicazioni[i]);
                   },
                   gridDelegate: SliverWaterfallFlowDelegate(
                     crossAxisCount: columnCount,
                     mainAxisSpacing: 10.0,
                     crossAxisSpacing: 10.0,
-                    lastChildLayoutTypeBuilder: (index) => index == comunicazioni.length
+                    lastChildLayoutTypeBuilder: (index) => index == widget.comunicazioni.length
                         ? LastChildLayoutType.foot
                         : LastChildLayoutType.none,
                   ),
