@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//import 'package:mySobrero/generated_plugin_registrant.dart';
+import 'package:mySobrero/reapi3.dart';
 
 import 'reapi2.dart';
 import 'fade_slide_transition.dart';
@@ -12,9 +15,10 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 class ArgomentiView extends StatefulWidget {
   List<Argomenti> regclasse;
   List<Argomenti> argSettimana;
-
+/*
   ArgomentiView(List<Argomenti> regclasse) {
     this.regclasse = regclasse;
+
     this.argSettimana = List<Argomenti>();
     DateTime today = DateTime.now();
     var x = today.subtract(new Duration(days: today.weekday - 1));
@@ -25,25 +29,21 @@ class ArgomentiView extends StatefulWidget {
       if (currentGiorno.compareTo(x) >= 0){
         this.argSettimana.add(regclasse[i]);
         print("curr: ${formatter.format(currentGiorno)}");
-
       }
     }
-  }
+
+  }*/
+  reAPI3 apiInstance;
+
+  ArgomentiView({Key key, @required this.apiInstance}) : super(key: key);
 
   @override
-  _ArgomentiState createState() => _ArgomentiState(regclasse, argSettimana);
+  _ArgomentiState createState() => _ArgomentiState();
 }
 
-class _ArgomentiState extends State<ArgomentiView>
-    with SingleTickerProviderStateMixin {
-  List<Argomenti> regclasse;
-  List<Argomenti> argSettimana;
+class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStateMixin {
+  List<ArgomentoStructure> regclasse;
   Brightness currentBrightness;
-
-  _ArgomentiState(List<Argomenti> regclasse, List<Argomenti> argSettimana) {
-    this.regclasse = regclasse;
-    this.argSettimana = argSettimana;
-  }
 
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
@@ -54,6 +54,8 @@ class _ArgomentiState extends State<ArgomentiView>
   double _appBarTitleOpacity = 0.0;
 
   List<String> materie;
+  List<ArgomentoStructure> argSettimana;
+  Future<List<ArgomentoStructure>> _argomenti;
 
   @override
   void initState() {
@@ -71,13 +73,34 @@ class _ArgomentiState extends State<ArgomentiView>
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
     });
 
-    materie = new List();
+    _argomenti = widget.apiInstance.retrieveArgomenti().then((argomenti){
+      this.argSettimana = List<ArgomentoStructure>();
+      for (int i = 0; i < argomenti.length; i++) {
+        var currentGiorno = formatter.parse(argomenti[i].data.split(" ")[0]);
+        if (currentGiorno.compareTo(inizioSettimana) >= 0){
+          this.argSettimana.add(argomenti[i]);
+          print("Futuri argomenti: ${formatter.format(currentGiorno)}");
+        }
+        materie = new List();
+        materie.add("Tutte le materie");
+        for (int i = 0; i < argomenti.length; i++) {
+          String m = argomenti[i].materia;
+          if (!materie.contains(m)) materie.add(m);
+        }
+      }
+      return argomenti;
+    });
+
+    inizioSettimana = today.subtract(new Duration(days: today.weekday - 1));
+    formatter = new DateFormat('dd/MM/yyyy');
+
+    /*materie = new List();
     materie.add("Tutte le materie");
     for (int i = 0; i < regclasse.length; i++) {
       String m = regclasse[i].materia;
       if (!materie.contains(m)) materie.add(m);
     }
-    regclasse = regclasse.reversed.toList();
+    regclasse = regclasse.reversed.toList();*/
   }
 
   @override
@@ -88,6 +111,10 @@ class _ArgomentiState extends State<ArgomentiView>
     super.dispose();
   }
 
+  DateTime today = DateTime.now();
+  var inizioSettimana, formatter;
+
+
   Map<int, Widget> _children = const <int, Widget>{
     0: Text('Settimana', style: TextStyle(color: Colors.white)),
     1: Text('Tutti gli argomenti', style: TextStyle(color: Colors.white)),
@@ -95,7 +122,7 @@ class _ArgomentiState extends State<ArgomentiView>
 
   int selezioneArgomenti = 0;
 
-  Widget _generaTileArgomento(Argomenti argomento){
+  Widget _generaTileArgomento(ArgomentoStructure argomento){
     return Padding(
       padding:
       const EdgeInsets.only(bottom: 15),
@@ -136,10 +163,7 @@ class _ArgomentiState extends State<ArgomentiView>
   @override
   Widget build(BuildContext context) {
     String dataTemporanea = "";
-    currentBrightness = Theme
-        .of(context)
-        .brightness;
-    List<Argomenti> currentSet = selezioneArgomenti == 0 ? argSettimana : regclasse;
+    currentBrightness = Theme.of(context).brightness;
     AppBar titolo = AppBar(
       title: AnimatedOpacity(
         opacity: _appBarTitleOpacity,
@@ -153,7 +177,6 @@ class _ArgomentiState extends State<ArgomentiView>
         color: Colors.white,
       ),
     );
-
     return Hero(
         tag: "argomenti_background",
         child: Scaffold(
@@ -180,12 +203,7 @@ class _ArgomentiState extends State<ArgomentiView>
                   behavior: ScrollBehavior(),
                   child: SingleChildScrollView(
                     controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      10,
-                      20,
-                      20,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                     child: Column(
                       children: <Widget>[
                         FadeSlideTransition(
@@ -200,11 +218,7 @@ class _ArgomentiState extends State<ArgomentiView>
                             children: <Widget>[
                               Text(
                                 "Argomenti",
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .title
-                                    .copyWith(
+                                style: Theme.of(context).textTheme.title.copyWith(
                                     fontSize: 32.0,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -221,147 +235,173 @@ class _ArgomentiState extends State<ArgomentiView>
                           begin: _listAnimationIntervalStart - 0.15,
                           child: Padding(
                               padding: EdgeInsets.only(top: 10),
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(bottom: 15),
-                                    child: CupertinoSlidingSegmentedControl(
-                                      backgroundColor: Colors.black.withAlpha(50),
-                                      thumbColor: Colors.black54,
-                                      children: _children,
-                                      onValueChanged: (val) {
-                                        setState(() {
-                                          selezioneArgomenti = val;
-                                        });
-                                      },
-                                      groupValue: selezioneArgomenti,
-                                    ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(bottom: 15),
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              boxShadow: <BoxShadow>[
-                                                new BoxShadow(
-                                                  color: Colors.black.withOpacity(0.06),
-                                                  spreadRadius: 4,
-                                                  offset: new Offset(0.0, 0.0),
-                                                  blurRadius: 15.0,
-                                                ),
-                                              ],
-                                            ),
-                                            child: Card(
-                                              color: Colors.black54,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-                                                      child: Theme(
-                                                        data: Theme.of(context).copyWith(
-                                                            brightness: Brightness.dark,
-                                                            canvasColor: Color(0xFF212121)
-                                                        ),
-                                                        child: DropdownButtonHideUnderline(
-                                                          child: DropdownButton<String>(
-                                                            isExpanded: true,
-                                                            hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis),
-                                                            value: materie[filterIndex],
-                                                            onChanged: (String Value) {
-                                                              setState(() {
-                                                                filterIndex = materie.indexOf(Value);
-                                                              });
-                                                            },
-                                                            items: materie.map((String user) {
-                                                              return DropdownMenuItem<String>(
-                                                                value: user,
-                                                                child:
-                                                                Text(
-                                                                    user,
-                                                                    overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)
-                                                                ),
-                                                              );
-                                                            }).toList(),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),)
-
-                                                ],
+                              child: FutureBuilder<List<ArgomentoStructure>>(
+                                future: _argomenti,
+                                builder: (context, snapshot){
+                                  switch (snapshot.connectionState){
+                                    case ConnectionState.none:
+                                    case ConnectionState.active:
+                                    case ConnectionState.waiting:
+                                      return Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: Center(
+                                          child: Column(
+                                            children: <Widget>[
+                                              SpinKitDualRing(
+                                                color: Colors.white,
+                                                size: 40,
+                                                lineWidth: 5,
                                               ),
-                                              margin: EdgeInsets.zero,
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                                  ListView.builder(
-                                    addAutomaticKeepAlives: true,
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    itemCount: currentSet.length,
-                                    itemBuilder: (context, index) {
-                                      var mesi = [
-                                        "Gennaio",
-                                        "Febbraio",
-                                        "Marzo",
-                                        "Aprile",
-                                        "Maggio",
-                                        "Giugno",
-                                        "Luglio",
-                                        "Agosto",
-                                        "Settembre",
-                                        "Ottobre",
-                                        "Novembre",
-                                        "Dicembre"
-                                      ];
-                                      var tempString = currentSet[index]
-                                          .data
-                                          .split(" ")[0]
-                                          .split("/");
-                                      String formattedDate = tempString[0] +
-                                          " " +
-                                          mesi[int.parse(tempString[1]) - 1];
-                                      bool mostraGiornata = true;
-
-                                      final bool mostra = filterIndex == 0 ? true : currentSet[index].materia == materie[filterIndex];
-                                      if (dataTemporanea != currentSet[index].data) {
-                                        dataTemporanea = currentSet[index].data;
-                                        if (filterIndex != 0) {
-                                          mostraGiornata = false;
-                                          print("filtro giornate");
-                                          for (int i = 0; i < currentSet.length; i++) {
-                                            if (currentSet[i].materia == materie[filterIndex] && currentSet[i].data == dataTemporanea) {
-                                              mostraGiornata = true;
-                                              break;
-                                            }
-                                          }
-                                        }
-                                        return Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            mostraGiornata ? Padding(
-                                              padding: const EdgeInsets.only(bottom: 15),
-                                              child: Text(
-                                                formattedDate,
-                                                style: TextStyle(
-                                                    fontSize: 24,
-                                                    color: Colors.white),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 8.0),
+                                                child: Text("Sto caricando gli argomenti", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
                                               ),
-                                            ) : Container(),
-                                            mostra ? _generaTileArgomento(currentSet[index]) : Container()
-                                          ],
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    case ConnectionState.done:
+                                      if (snapshot.hasError) {
+                                        return Padding(
+                                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(Icons.warning, size: 40, color: Colors.white,),
+                                              Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                            ],
+                                          ),
                                         );
                                       }
-                                      dataTemporanea = currentSet[index].data;
-                                      return mostra ? _generaTileArgomento(currentSet[index]) : Container();
-                                    },
-                                  ),
-                                ],
-                              )),
+                                      List<ArgomentoStructure> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
+                                      return Column(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 15),
+                                            child: CupertinoSlidingSegmentedControl(
+                                              backgroundColor: Colors.black.withAlpha(50),
+                                              thumbColor: Colors.black54,
+                                              children: _children,
+                                              onValueChanged: (val) {
+                                                setState(() {
+                                                  selezioneArgomenti = val;
+                                                });
+                                              },
+                                              groupValue: selezioneArgomenti,
+                                            ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(bottom: 15),
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: <BoxShadow>[
+                                                        new BoxShadow(
+                                                          color: Colors.black.withOpacity(0.06),
+                                                          spreadRadius: 4,
+                                                          offset: new Offset(0.0, 0.0),
+                                                          blurRadius: 15.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Card(
+                                                      color: Colors.black54,
+                                                      child: Row(
+                                                        mainAxisSize: MainAxisSize.max,
+                                                        children: <Widget>[
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+                                                              child: Theme(
+                                                                data: Theme.of(context).copyWith(
+                                                                    brightness: Brightness.dark,
+                                                                    canvasColor: Color(0xFF212121)
+                                                                ),
+                                                                child: DropdownButtonHideUnderline(
+                                                                  child: DropdownButton<String>(
+                                                                    isExpanded: true,
+                                                                    hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis),
+                                                                    value: materie[filterIndex],
+                                                                    onChanged: (String Value) {
+                                                                      setState(() {
+                                                                        filterIndex = materie.indexOf(Value);
+                                                                      });
+                                                                    },
+                                                                    items: materie.map((String user) {
+                                                                      return DropdownMenuItem<String>(
+                                                                        value: user,
+                                                                        child:
+                                                                        Text(
+                                                                            user,
+                                                                            overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)
+                                                                        ),
+                                                                      );
+                                                                    }).toList(),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),)
+
+                                                        ],
+                                                      ),
+                                                      margin: EdgeInsets.zero,
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                          ListView.builder(
+                                            addAutomaticKeepAlives: true,
+                                            primary: false,
+                                            shrinkWrap: true,
+                                            itemCount: currentSet.length,
+                                            itemBuilder: (context, index){
+                                              var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile",
+                                                "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
+                                                "Ottobre", "Novembre", "Dicembre"];
+                                              var tempString = currentSet[index].data.split(" ")[0].split("/");
+                                              String formattedDate = "${tempString[0]} ${mesi[int.parse(tempString[1]) - 1]}";
+                                              bool mostraGiornata = true;
+                                              final bool mostra = filterIndex == 0 ? true : currentSet[index].materia == materie[filterIndex];
+                                              if (dataTemporanea != currentSet[index].data){
+                                                dataTemporanea = currentSet[index].data;
+                                                if (filterIndex != 0){
+                                                  mostraGiornata = false;
+                                                  print("filtro giornate attivo");
+                                                  for (int i = 0; i < currentSet.length; i++) {
+                                                    if (currentSet[i].materia == materie[filterIndex] && currentSet[i].data == dataTemporanea) {
+                                                      mostraGiornata = true;
+                                                      break;
+                                                    }
+                                                  }
+                                                }
+                                                return Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    mostraGiornata ? Padding(
+                                                      padding: const EdgeInsets.only(bottom: 15),
+                                                      child: Text(
+                                                        formattedDate,
+                                                        style: TextStyle(
+                                                            fontSize: 24,
+                                                            color: Colors.white),
+                                                      ),
+                                                    ) : Container(),
+                                                    mostra ? _generaTileArgomento(currentSet[index]) : Container()
+                                                  ],
+                                                );
+                                              }
+                                              dataTemporanea = currentSet[index].data;
+                                              return mostra ? _generaTileArgomento(currentSet[index]) : Container();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                  }
+                                  return null;
+                                },
+                              )
+                          ),
+
                         )
                       ],
                     ),

@@ -1,30 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:mySobrero/carriera.dart';
 import 'package:mySobrero/pagelle.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ricercaaule.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
-import 'reapi2.dart';
+//import 'reapi2.dart';
 import 'assenze.dart';
 import 'argomenti.dart';
 import 'materiale.dart';
 
 class AltroView extends StatefulWidget {
-  reAPI2 response;
+  UnifiedLoginStructure unifiedLoginStructure;
+  reAPI3 apiInstance;
 
-  AltroView(reAPI2 response) {
-    this.response = response;
-  }
+  AltroView({Key key, @required this.unifiedLoginStructure, @required this.apiInstance}) : super(key: key);
+
   @override
-  _AltroView createState() => _AltroView(response);
+  _AltroView createState() => _AltroView();
 }
 
 class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<AltroView>{
   @override
   bool get wantKeepAlive => true;
 
-  reAPI2 response;
-  _AltroView(reAPI2 response) {
-    this.response = response;
+  Widget _generaTile({@required Function(BuildContext) builder, @required String heroTag, @required String titolo, @required String immagine, @required Color sfondo, @required Color dettagli}){
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: builder,
+                fullscreenDialog: true
+            )
+        );
+      },
+      child: Hero(
+        tag: heroTag,
+        child: Container(
+          decoration: new BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: sfondo.withOpacity(0.4),
+                  offset: const Offset(1.1, 1.1),
+                  blurRadius: 10.0),
+            ],
+          ),
+          child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 0,
+              margin: EdgeInsets.only(bottom: 10),
+              clipBehavior: Clip.antiAlias,
+              color: sfondo,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Text(titolo,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: dettagli)),
+                  ),
+                  Spacer(),
+                  Image.asset(
+                    immagine,
+                    height: 150,
+                  )
+                ],
+              )),
+        ),
+      ),
+    );
   }
 
   @override
@@ -56,107 +105,7 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                   shrinkWrap: true,
                   crossAxisCount: columnCount,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => AssenzeView(response.assenze),
-                                fullscreenDialog: true
-                            )
-                        );
-                      },
-                      child: Hero(
-                        tag: "assenze_background",
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color(0xffff9692).withOpacity(0.4),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAlias,
-                              color: Color(0xffff9692),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Text("Assenze",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black)),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    "assets/images/assenze.png",
-                                    height: 150,
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ArgomentiView(response.argomenti),
-                              fullscreenDialog: true
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: "argomenti_background",
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color(0xFF5352ed).withOpacity(0.4),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAlias,
-                              color: Color(0xFF5352ed),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Text("Argomenti",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    "assets/images/argomenti.png",
-                                    height: 150,
-                                    width: 200,
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
+                    /*
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -259,58 +208,7 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CarrieraView(curriculum: response.user.curriculum,),
-                              fullscreenDialog: true
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: "carriera_background",
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color(0xff45BF6D).withOpacity(0.4),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAlias,
-                              color: Color(0xff45BF6D),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Text("Carriera scolastica",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    "assets/images/carriera.png",
-                                    height: 150,
-                                    fit: BoxFit.fitWidth,
-                                    width: 150,
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
+
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -362,6 +260,38 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                               )),
                         ),
                       ),
+                    )*/
+                    _generaTile(
+                        builder: (_) => AssenzeView(apiInstance: widget.apiInstance),
+                        heroTag: "assenze_background",
+                        titolo: "Assenze",
+                        immagine: "assets/images/assenze.png",
+                        sfondo: Color(0xffff9692),
+                        dettagli: Colors.black
+                    ),
+                    _generaTile(
+                        builder: (_) => ArgomentiView(apiInstance: widget.apiInstance),
+                        heroTag: "argomenti_background",
+                        titolo: "Argomenti",
+                        immagine: "assets/images/argomenti.png",
+                        sfondo: Color(0xFF5352ed),
+                        dettagli: Colors.white
+                    ),
+                    _generaTile(
+                        builder: (_) => RicercaAuleView(),
+                        heroTag: "ricercaaule_background",
+                        titolo: "Ricerca aule",
+                        immagine: "assets/images/ricercaaule.png",
+                        sfondo: Color(0xffF86925),
+                        dettagli: Colors.white
+                    ),
+                    _generaTile(
+                        builder: (_) => CarrieraView(unifiedLoginStructure: widget.unifiedLoginStructure),
+                        heroTag: "carriera_background",
+                        titolo: "Carriera scolastica",
+                        immagine: "assets/images/carriera.png",
+                        sfondo: Color(0xff45BF6D),
+                        dettagli: Colors.white
                     )
                   ],
                   crossAxisSpacing: 10,

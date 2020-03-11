@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'package:intl/number_symbols_data.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
 import 'reapi2.dart';
 
 class AssenzeView extends StatefulWidget {
-  Assenze assenze;
+  reAPI3 apiInstance;
 
-  AssenzeView(Assenze assenze) {
-    this.assenze = assenze;
-  }
+  AssenzeView({Key key, @required this.apiInstance}) : super(key: key);
   @override
-  _AssenzeState createState() => _AssenzeState(assenze);
+  _AssenzeState createState() => _AssenzeState();
 }
 
-class _AssenzeState extends State<AssenzeView>
-    with SingleTickerProviderStateMixin {
-  Assenze assenze;
+class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMixin {
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
 
@@ -26,15 +22,9 @@ class _AssenzeState extends State<AssenzeView>
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  _AssenzeState(Assenze assenze) {
-    this.assenze = assenze;
-  }
-
   @override
   void initState() {
     super.initState();
-    reAPI3 reapi = new reAPI3();
-    reapi.retrieveStartupData("3845", "campionato1A");
     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
@@ -48,6 +38,7 @@ class _AssenzeState extends State<AssenzeView>
       _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
     });
+    _assenze = widget.apiInstance.retrieveAssenze();
   }
 
   Brightness currentBrightness;
@@ -60,6 +51,8 @@ class _AssenzeState extends State<AssenzeView>
     super.dispose();
   }
 
+  Future<AssenzeStructure> _assenze;
+
   @override
   Widget build(BuildContext context) {
     currentBrightness = Theme.of(context).brightness;
@@ -67,8 +60,7 @@ class _AssenzeState extends State<AssenzeView>
       title: AnimatedOpacity(
         opacity: _appBarTitleOpacity,
         duration: const Duration(milliseconds: 250),
-        child: Text("Assenze",
-            style: TextStyle(color: Colors.black)),
+        child: Text("Assenze", style: TextStyle(color: Colors.black)),
       ),
       backgroundColor: Color(0xffff9692),
       elevation: _appBarElevation,
@@ -153,50 +145,83 @@ class _AssenzeState extends State<AssenzeView>
                             end: Offset(0.0, 0.0),
                           ),
                           begin: _listAnimationIntervalStart - 0.15,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 15.0, top: 20),
-                                child: Text(
-                                  "Non giustificate",
-                                  style: TextStyle(
-                                      fontSize: 24, color: Colors.black),
-                                ),
-                              ),
-                              Column(
-                                children: assenze.nongiustificate.length > 0
-                                    ? generaAssenze(assenze.nongiustificate,
-                                    Colors.red, context)
-                                    : <Widget>[
-                                  Text(
-                                    "Nessuna assenza da giustificare, ottimo!",
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15.0),
-                                child: Text(
-                                  assenze.giustificate.length > 25
-                                      ? "Ultime 25 giustificate"
-                                      : "Giustificate",
-                                  style: TextStyle(
-                                      fontSize: 24, color: Colors.black),
-                                ),
-                              ),
-                              Column(
-                                children: generaAssenze(
-                                    assenze.giustificate.length > 25
-                                        ? assenze.giustificate.sublist(0, 24)
-                                        : assenze.giustificate,
-                                    Colors.black.withAlpha(100),
-                                    context),
-                              ),
-                            ],
+                          child: FutureBuilder<AssenzeStructure>(
+                            future: _assenze,
+                            builder: (context, snapshot){
+                              switch (snapshot.connectionState){
+                                case ConnectionState.none:
+                                case ConnectionState.active:
+                                case ConnectionState.waiting:
+                                  return Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Center(
+                                    child: Column(
+                                      children: <Widget>[
+                                        SpinKitDualRing(
+                                          color: Colors.black,
+                                          size: 40,
+                                          lineWidth: 5,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 8.0),
+                                          child: Text("Sto caricando le assenze...", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                                case ConnectionState.done:
+                                  if (snapshot.hasError) {
+                                    return Padding(
+                                      padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Icon(Icons.warning, size: 40, color: Colors.black,),
+                                          Text("${snapshot.error}", style: TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.center,),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                  return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 15.0, top: 20),
+                                          child: Text(
+                                    "Non giustificate",
+                                    style: TextStyle(
+                                        fontSize: 24, color: Colors.black),
+                                  ),
+                                        ),
+                                        Column(
+                                          children: snapshot.data.nongiustificate.length > 0 ? generaAssenze(
+                                              snapshot.data.nongiustificate,
+                                              Colors.red, context) : <Widget>[Text("Nessuna assenza da giustificare, ottimo!", textAlign: TextAlign.center,)
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 15.0),
+                                          child: Text(
+                                            snapshot.data.giustificate.length > 25
+                                                ? "Ultime 25 giustificate"
+                                                : "Giustificate",
+                                            style: TextStyle(
+                                                fontSize: 24, color: Colors.black),
+                                          ),
+                                        ),
+                                        Column(
+                                          children: generaAssenze(
+                                              snapshot.data.giustificate.length > 25 ? snapshot.data.giustificate.sublist(0, 24) : snapshot.data.giustificate,
+                                              Colors.black.withAlpha(100),
+                                              context),
+                                        ),
+                                      ]
+                                  );
+                              }
+                              return null;
+                            }
+                            ),
                           ),
-                        )
                       ],
                     ),
                   ),
@@ -208,8 +233,7 @@ class _AssenzeState extends State<AssenzeView>
     );
   }
 
-  List<Widget> generaAssenze(
-      List<Assenza> assenze, Color borderColor, BuildContext context) {
+  List<Widget> generaAssenze(List<AssenzaStructure> assenze, Color borderColor, BuildContext context) {
     List<Widget> list = new List<Widget>();
     for (int i = 0; i < assenze.length; i++) {
       final String tipologia = assenze[i].tipologia;

@@ -114,7 +114,10 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
-    //_altroViewInstance = AltroView(response);
+    _altroViewInstance = AltroView(
+      unifiedLoginStructure: widget.unifiedLoginStructure,
+      apiInstance: widget.apiInstance,
+    );
   }
 
   void dispose() {
@@ -170,40 +173,45 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                                         "mySobrero",
                                         style: TextStyle(
                                             fontSize:  17,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xFF0360e7)),
+                                            fontWeight: FontWeight.w800,
+                                            color: Theme.of(context).primaryColor),
                                       ),
                                       widget.isBeta ? Text(
                                         " beta",
                                         style: TextStyle(
                                             fontSize:  17,
-                                            fontWeight: FontWeight.w300,
-                                            color: Color(0xFF0360e7)),
+                                            fontWeight: FontWeight.w400,
+                                            color: Theme.of(context).primaryColor),
                                       ) : Container(),
                                     ],
                                   ),
                                 ),
                                 Spacer(), // use Spacer
-                                IconButton(
-                                    icon: new Image.asset(
-                                      'assets/images/ic_settings_grad.png',
-                                    ),
-                                    tooltip: 'Apri le impostazioni dell\'App',
-                                    iconSize: 14,
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) =>
-                                          ImpostazioniView(
-                                              unifiedLoginStructure: widget.unifiedLoginStructure,
-                                              profileURL: profileUrl,
-                                              profileCallback: (url) =>
-                                              profileUrl = url
-                                          )
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Material(
+                                    color: Theme.of(context).scaffoldBackgroundColor,
+                                    child: IconButton(
+                                        icon: new Image.asset(
+                                          'assets/images/ic_settings_grad.png',
                                         ),
-                                      );
-                                    },
+                                        tooltip: 'Apri le impostazioni dell\'App',
+                                        iconSize: 14,
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) =>
+                                              ImpostazioniView(
+                                                  unifiedLoginStructure: widget.unifiedLoginStructure,
+                                                  profileURL: profileUrl,
+                                                  profileCallback: (url) => profileUrl = url
+                                              )
+                                            ),
+                                          );
+                                        },
+                                      ),
                                   ),
+                                ),
 
                               ],
                             ),
@@ -233,7 +241,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
             if (i == 0) schermata =  _mainViewInstance;
             if (i == 1) schermata = _votiViewInstance;
             if (i == 2) schermata = _comunicazioniViewInstance;
-            //if (i == 3) schermata = _altroViewInstance;
+            if (i == 3) schermata = _altroViewInstance;
             return NotificationListener<ScrollNotification>(
               onNotification: elaboraScroll,
               child: schermata,

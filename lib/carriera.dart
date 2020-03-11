@@ -1,20 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'reapi2.dart';
 
 class CarrieraView extends StatefulWidget {
-  List<Curriculum> curriculum;
-  CarrieraView({Key key, @required this.curriculum}) : super(key: key);
-
+  UnifiedLoginStructure unifiedLoginStructure;
+  CarrieraView({Key key, @required this.unifiedLoginStructure}) : super(key: key);
   @override
   _CarrieraState createState() => _CarrieraState();
 }
-
 
 class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateMixin {
 
@@ -46,9 +43,9 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
     });
 
-    for (int i = 0; i < widget.curriculum.length; i++){
-      final Curriculum item = widget.curriculum[i];
-      final int anno = item.classe;
+    for (int i = 0; i < widget.unifiedLoginStructure.user.curriculum.length; i++){
+      final CurriculumStructure item = widget.unifiedLoginStructure.user.curriculum[i];
+      final int anno = int.parse(item.classe);
       int credito = -1;
       if (item.credito.length > 0) credito = int.parse(item.credito.trim());
       int maxCredito = 12;
@@ -70,7 +67,7 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  Widget _generaAnno(Curriculum anno){
+  Widget _generaAnno(CurriculumStructure anno){
     Color scaffoldColor;
     int shadowDepth = 20;
     if (anno.esito.contains("AMMESS")) scaffoldColor = Color(0xff45BF6D);
@@ -274,8 +271,8 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
                                         addAutomaticKeepAlives: true,
                                         primary: false,
                                         shrinkWrap: true,
-                                        itemCount: widget.curriculum.length,
-                                        itemBuilder: (context, index) => _generaAnno(widget.curriculum[index]),
+                                        itemCount: widget.unifiedLoginStructure.user.curriculum.length,
+                                        itemBuilder: (context, index) => _generaAnno(widget.unifiedLoginStructure.user.curriculum[index]),
                                       ),
                                     )
                                   ],
