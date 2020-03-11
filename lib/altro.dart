@@ -4,7 +4,6 @@ import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ricercaaule.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
-//import 'reapi2.dart';
 import 'assenze.dart';
 import 'argomenti.dart';
 import 'materiale.dart';
@@ -105,162 +104,6 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                   shrinkWrap: true,
                   crossAxisCount: columnCount,
                   children: <Widget>[
-                    /*
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MaterialeView(reMateriale: response.materiale, userID: response.session,),
-                              fullscreenDialog: true
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: "materiale_background",
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color(0xffe55039).withOpacity(0.4),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAlias,
-                              color: Color(0xffe55039),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Text("Materiale didattico",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    "assets/images/material.png",
-                                    height: 150,
-                                    width: 150,
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RicercaAuleView(),
-                            fullscreenDialog: true
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: "ricercaaule_background",
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color(0xffF86925).withOpacity(0.2),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAlias,
-                              color: Color(0xffF86925),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Text("Ricerca aule",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    "assets/images/ricercaaule.png",
-                                    height: 150,
-                                    width: 170,
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
-
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PagelleView(response.pagelle),
-                              fullscreenDialog: true
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: "pagelle_background",
-                        child: Container(
-                          decoration: new BoxDecoration(
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color(0xff38ada9).withOpacity(0.4),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.only(bottom: 10),
-                              clipBehavior: Clip.antiAlias,
-                              color: Color(0xff38ada9),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Text("Pagelle",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                  ),
-                                  Spacer(),
-                                  Image.asset(
-                                    "assets/images/pagelle.png",
-                                    height: 150,
-                                    fit: BoxFit.fitWidth,
-                                    width: 200,
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    )*/
                     _generaTile(
                         builder: (_) => AssenzeView(apiInstance: widget.apiInstance),
                         heroTag: "assenze_background",
@@ -278,11 +121,27 @@ class _AltroView extends State<AltroView> with AutomaticKeepAliveClientMixin<Alt
                         dettagli: Colors.white
                     ),
                     _generaTile(
+                        builder: (_) => MaterialeView(apiInstance: widget.apiInstance),
+                        heroTag: "materiale_background",
+                        titolo: "Materiale didattico",
+                        immagine: "assets/images/material.png",
+                        sfondo: Color(0xffe55039),
+                        dettagli: Colors.white
+                    ),
+                    _generaTile(
                         builder: (_) => RicercaAuleView(),
                         heroTag: "ricercaaule_background",
                         titolo: "Ricerca aule",
                         immagine: "assets/images/ricercaaule.png",
                         sfondo: Color(0xffF86925),
+                        dettagli: Colors.white
+                    ),
+                    _generaTile(
+                        builder: (_) => PagelleView(apiInstance: widget.apiInstance),
+                        heroTag: "pagelle_background",
+                        titolo: "Pagelle",
+                        immagine: "assets/images/pagelle.png",
+                        sfondo: Color(0xff38ada9),
                         dettagli: Colors.white
                     ),
                     _generaTile(

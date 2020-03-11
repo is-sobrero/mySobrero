@@ -338,26 +338,40 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        RichText(
-                                          textAlign: TextAlign.left,
-                                          text: TextSpan(
-                                            style: new TextStyle(
-                                              color: Colors.white,
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(color: Colors.white, width: 3.0,)
+                                              )
                                             ),
-                                            children: [
-                                              WidgetSpan(
-                                                child: Icon(
-                                                  Icons.info_outline,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(bottom: 3.0),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Icon(
+                                                    Icons.info_outline,
+                                                    size: 25,
+                                                    color: Colors.white,
+                                                  ),
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 8.0),
+                                                      child: Text("Informazioni per gli studenti", style: new TextStyle(
+                                                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
+                                                      ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              TextSpan(
-                                                text: "  " + remoteNotice.description,
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ),
+                                        Text(remoteNotice.description, style: TextStyle(
+                                          color: Colors.white
+                                        )),
                                       ],
                                     ))),
                             flex: 1,

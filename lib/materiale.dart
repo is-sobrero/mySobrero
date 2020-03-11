@@ -4,24 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'reapi2.dart';
+import 'reapi3.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 class MaterialeView extends StatefulWidget {
-
-  final List<MaterialeDocente> reMateriale;
-  final String userID;
-
-  MaterialeView({Key key, @required this.reMateriale, @required this.userID}) : super(key: key);
+  reAPI3 apiInstance;
+  MaterialeView({Key key, @required this.apiInstance}) : super(key: key);
 
   @override
   _MaterialeState createState() => _MaterialeState();
 }
 
 class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStateMixin {
-  List<MaterialeDocente> reMateriale;
+  //List<MaterialeDocente> reMateriale;
+
+  Future<List<DocenteStructure>> _materiale;
 
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
@@ -48,7 +47,8 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
       _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
     });
-    reMateriale = widget.reMateriale;
+    //reMateriale = widget.reMateriale;
+    _materiale = widget.apiInstance.retrieveMateriale();
   }
 
   @override
@@ -57,24 +57,6 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
     _scrollController.dispose();
     FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
-  }
-
-  Future<List<File>> _ottieniFile(String session, String idDocente, String idCartella) async {
-    final endpointCartella = 'https://reapistaging.altervista.org/api/v3/getContenutiCartella/';
-    Map<String, String> headers = {
-      'Accept': 'application/json',
-    };
-    final response = await http.post(
-        endpointCartella,
-        headers: headers,
-        body: {'session': session, 'idDocente':idDocente, 'idCartella': idCartella});
-    print({'session': session, 'idDocente':idDocente, 'idCartella': idCartella}.toString());
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body)["files"];
-      return jsonResponse.map((file) => new File.fromJson(file)).toList();
-    } else {
-      throw Exception('Impossibile caricare il contenuto della cartella (${json.decode(response.body)["status"]["description"]})');
-    }
   }
 
   _launchURL(String uri) async {
@@ -160,7 +142,236 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                 padding: EdgeInsets.only(top: 10),
                                 child: Column(
                                   children: <Widget>[
-                                    ListView.builder(
+                                    FutureBuilder<List<DocenteStructure>>(
+                                      future: _materiale,
+                                      builder: (context, snapshot){
+                                        switch (snapshot.connectionState){
+                                          case ConnectionState.none:
+                                          case ConnectionState.active:
+                                          case ConnectionState.waiting:
+                                            return Padding(
+                                              padding: const EdgeInsets.all(15.0),
+                                              child: Center(
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    SpinKitDualRing(
+                                                      color: Colors.white,
+                                                      size: 40,
+                                                      lineWidth: 5,
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(top: 8.0),
+                                                      child: Text("Sto caricando il materiale...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          case ConnectionState.done:
+                                            if (snapshot.hasError) {
+                                              return Padding(
+                                                padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Icon(Icons.warning, size: 40, color: Colors.white,),
+                                                    Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                  ],
+                                                ),
+                                              );
+                                            }
+                                            return ListView.builder(
+                                                primary: false,
+                                                shrinkWrap: true,
+                                                itemCount: snapshot.data.length,
+                                                itemBuilder: (context, index){
+                                                  return Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(bottom: 10, top: 5),
+                                                        child: Text(
+                                                            snapshot.data[index].docente,
+                                                            style: TextStyle(
+                                                                fontSize: 24,
+                                                                color: Colors.white)
+                                                        ),
+                                                      ),
+                                                      ListView.builder(
+                                                        primary: false,
+                                                        shrinkWrap: true,
+                                                        itemCount: snapshot.data[index].cartelle.length,
+                                                        itemBuilder: (ctx, i){
+                                                          return Padding(
+                                                              padding: const EdgeInsets.only(bottom: 15),
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Colors.black.withAlpha(20),
+                                                                        blurRadius: 10,
+                                                                        spreadRadius: 10
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                child: ExpandableNotifier(
+                                                                    child: Expandable(
+                                                                      collapsed: ExpandableButton(
+                                                                          child: Container(
+                                                                            decoration: new BoxDecoration(
+                                                                              //color: Colors.white.withAlpha(20),
+                                                                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                                color: Color(0xffe55039)
+                                                                              //border: Border.all(width: 1.0, color: Colors.white)
+                                                                            ),
+                                                                            child: Padding(
+                                                                              padding: const EdgeInsets.all(15),
+                                                                              child: Row(
+                                                                                children: <Widget>[
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.only(right: 5),
+                                                                                    child: Icon(Icons.folder_open, color: Colors.white),
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: Text(
+                                                                                        snapshot.data[index].cartelle[i].descrizione,
+                                                                                        style: TextStyle(
+                                                                                            fontSize: 18,
+                                                                                            fontWeight:
+                                                                                            FontWeight.bold,
+                                                                                            color: Colors.white
+                                                                                        )
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                      ),
+                                                                      expanded: Container(
+                                                                        decoration: new BoxDecoration(
+                                                                          color: Color(0xffe55039),
+                                                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                          //border: Border.all(width: 1.0, color: Colors.white)
+                                                                        ),
+                                                                        child: Column(
+                                                                          children: <Widget>[
+                                                                            ExpandableButton(
+                                                                                child: Container(
+                                                                                  decoration: new BoxDecoration(
+                                                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.all(15),
+                                                                                    child: Row(
+                                                                                      children: <Widget>[
+                                                                                        Padding(
+                                                                                          padding: const EdgeInsets.only(right: 5),
+                                                                                          child: Icon(Icons.folder_open, color: Colors.black),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Text(
+                                                                                              snapshot.data[index].cartelle[i].descrizione,
+                                                                                              style: TextStyle(
+                                                                                                  fontSize: 18,
+                                                                                                  fontWeight:
+                                                                                                  FontWeight.bold,
+                                                                                                  color: Colors.black
+                                                                                              )
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                            ),
+                                                                            FutureBuilder<List<FileStructure>>(
+                                                                                future: widget.apiInstance.retrieveContenutiCartella(snapshot.data[index].id, snapshot.data[index].cartelle[i].idCartella),
+                                                                                builder: (context, snapshot){
+                                                                                  if (snapshot.hasData){
+                                                                                    return snapshot.data.length > 0 ?ListView.builder(
+                                                                                      primary: false,
+                                                                                      shrinkWrap: true,
+                                                                                      itemCount: snapshot.data.length,
+                                                                                      itemBuilder: (c, i2){
+                                                                                        //return Text(snapshot.data[i2].nome);
+                                                                                        return FlatButton(
+                                                                                            padding: EdgeInsets.zero,
+                                                                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(15.0),
+                                                                                              child: Row(
+                                                                                                children: <Widget>[
+                                                                                                  Padding(
+                                                                                                    padding: const EdgeInsets.only(right: 8.0),
+                                                                                                    child: Icon(Icons.insert_drive_file, color: Colors.white),
+                                                                                                  ),
+                                                                                                  Expanded(child: Text(snapshot.data[i2].nome, style: TextStyle(color: Colors.white),)),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                            onPressed: (){
+                                                                                              _launchURL(snapshot.data[i2].url);
+                                                                                            }
+                                                                                        );
+                                                                                      },
+                                                                                    ) : Padding(
+                                                                                      padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                                                      child: Column(
+                                                                                        children: <Widget>[
+                                                                                          Icon(Icons.cloud_queue, size: 40, color: Colors.white,),
+                                                                                          Text("La cartella è vuota", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                                        ],
+                                                                                      ),
+                                                                                    );
+                                                                                  } else if (snapshot.hasError) {
+                                                                                    return Padding(
+                                                                                      padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                                                                      child: Column(
+                                                                                        children: <Widget>[
+                                                                                          Icon(Icons.error_outline, size: 40, color: Colors.white,),
+                                                                                          Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                                        ],
+                                                                                      ),
+                                                                                    );
+                                                                                  }
+                                                                                  return Padding(
+                                                                                    padding: const EdgeInsets.all(15.0),
+                                                                                    child: Column(
+                                                                                      children: <Widget>[
+                                                                                        SpinKitDualRing(
+                                                                                          color: Colors.white,
+                                                                                          size: 40,
+                                                                                          lineWidth: 5,
+                                                                                        ),
+                                                                                        Padding(
+                                                                                          padding: const EdgeInsets.only(top: 15.0),
+                                                                                          child: Text("Sto caricando i contenuti...", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  );
+                                                                                }
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                      ),
+
+                                                                    )
+                                                                ),
+                                                              )
+                                                          );
+                                                        },
+                                                      )
+                                                    ],
+                                                  );
+                                                },
+                                            );
+                                        }
+                                        return null;
+
+                                        /*
+                                        ListView.builder(
                                       primary: false,
                                       shrinkWrap: true,
                                       itemCount: reMateriale.length,
@@ -345,18 +556,11 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                 );
                                               },
                                             )
-                                            /*ExpandableNotifier(
-                                              child: Expandable(
-                                                collapsed: ExpandableButton(
-                                                  child: Text("ESPANDAMI")
-                                                ),
-                                                expanded: ExpandableButton(
-                                                  child: Text("COMPRIMIMI"),
-                                                ),
-                                              )
-                                            )*/
                                           ],
                                         );
+                                      },
+                                    )
+                                         */
                                       },
                                     )
                                   ],

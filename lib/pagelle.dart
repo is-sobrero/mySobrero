@@ -1,31 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'reapi2.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class PagelleView extends StatefulWidget {
-  List<Pagella> pagelle;
+  reAPI3 apiInstance;
 
-  PagelleView(List<Pagella> pagelle) {
-    this.pagelle = pagelle;
-  }
+  PagelleView({Key key, @required this.apiInstance}) : super(key: key);
 
   @override
-  _PagelleState createState() => _PagelleState(pagelle);
+  _PagelleState createState() => _PagelleState();
 }
 
 class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMixin {
-  List<Pagella> pagelle;
+  //List<PagellaStructure> pagelle;
   Brightness currentBrightness;
-
-  _PagelleState(List<Pagella> pagelle) {
-    this.pagelle = pagelle;
-  }
 
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
@@ -52,6 +45,7 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
       _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
     });
+    _pagelle = widget.apiInstance.retrievePagelle();
   }
 
   @override
@@ -69,12 +63,12 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
 
   int selezionaPagella = 0;
 
-  Pagella selectedPagella;
+  Future<List<PagellaStructure>> _pagelle;
+
+  PagellaStructure selectedPagella;
 
   @override
   Widget build(BuildContext context) {
-    if (selezionaPagella == pagelle.length) selectedPagella = null;
-    else selectedPagella = pagelle[selezionaPagella];
     currentBrightness = Theme.of(context).brightness;
     AppBar titolo = AppBar(
       title: AnimatedOpacity(
@@ -130,10 +124,7 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                             children: <Widget>[
                               Text(
                                 "Pagelle",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .title
-                                    .copyWith(
+                                style: Theme.of(context).textTheme.title.copyWith(
                                     fontSize: 32.0,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -167,65 +158,108 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                                       groupValue: selezionaPagella,
                                     ),
                                   ),
-                                  selectedPagella != null ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // TODO inserire pagelle
-                                      Text("Media totale: ${selectedPagella.media}", style: TextStyle(
-                                          fontSize: 20, color: Colors.white),),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 10),
-                                        child: Text("Esito: ${selectedPagella.esito != "" ?  selectedPagella.esito  : "Non specificato"}", style: TextStyle(
-                                            fontSize: 20, color: Colors.white),),
-                                      ),
-                                      ListView.builder(
-                                        primary: false,
-                                        shrinkWrap: true,
-                                        itemCount: selectedPagella.materie.length,
-                                        itemBuilder: (context, index) {
-                                          VotoPagella mat = selectedPagella.materie[index];
+                                  FutureBuilder<List<PagellaStructure>>(
+                                    future: _pagelle,
+                                    builder: (context, snapshot){
+                                      switch (snapshot.connectionState){
+                                        case ConnectionState.none:
+                                        case ConnectionState.active:
+                                        case ConnectionState.waiting:
                                           return Padding(
-                                            padding: const EdgeInsets.only(bottom: 15),
-                                            child: Container(
-                                                decoration: new BoxDecoration(
-                                                    color: Colors.white.withAlpha(20),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: Color(0xff38ada9),
-                                                          blurRadius: 10,
-                                                          spreadRadius: 10
-                                                      )
-                                                    ],
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(15.0),
-                                                  child:
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(right: 15),
-                                                        child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.white)),
-                                                      ),
-                                                      Expanded(child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Text(mat.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                                                          Text("Ore di assenza: ${mat.assenze}",
-                                                              style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors.white)),
-                                                        ],
-                                                      ))
-                                                    ],
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: Center(
+                                              child: Column(
+                                                children: <Widget>[
+                                                  SpinKitDualRing(
+                                                    color: Colors.white,
+                                                    size: 40,
+                                                    lineWidth: 5,
                                                   ),
-                                                )),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: 8.0),
+                                                    child: Text("Sto caricando le pagelle", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           );
-                                        },
-                                      )
-                                    ],
-                                  ) : new Text("Pagella non disponibile per il periodo selezionato", style: TextStyle(
-                                      fontSize: 20, color: Colors.black),),
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Padding(
+                                              padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Icon(Icons.warning, size: 40, color: Colors.white,),
+                                                  Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                          if (selezionaPagella == snapshot.data.length) selectedPagella = null;
+                                          else selectedPagella = snapshot.data[selezionaPagella];
+
+                                          return selectedPagella != null ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Media totale: ${selectedPagella.media.toStringAsFixed(2)}", style: TextStyle(
+                                                  fontSize: 20, color: Colors.white),),
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 10),
+                                                child: Text("Esito: ${selectedPagella.esito != "" ?  selectedPagella.esito  : "Non specificato"}", style: TextStyle(
+                                                    fontSize: 20, color: Colors.white),),
+                                              ),
+                                              ListView.builder(
+                                                primary: false,
+                                                shrinkWrap: true,
+                                                itemCount: selectedPagella.materie.length,
+                                                itemBuilder: (context, index) {
+                                                  VotoFinaleStructure mat = selectedPagella.materie[index];
+                                                  return Padding(
+                                                    padding: const EdgeInsets.only(bottom: 15),
+                                                    child: Container(
+                                                        decoration: new BoxDecoration(
+                                                          color: Color(0xff38ada9),
+                                                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: Colors.black.withAlpha(20),
+                                                                blurRadius: 10,
+                                                                spreadRadius: 10
+                                                            )
+                                                          ],
+                                                        ),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(15.0),
+                                                          child:
+                                                          Row(
+                                                            children: <Widget>[
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(right: 15),
+                                                                child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.white)),
+                                                              ),
+                                                              Expanded(child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: <Widget>[
+                                                                  Text(mat.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                                                                  Text("Ore di assenza: ${mat.assenze}",
+                                                                      style: TextStyle(
+                                                                          fontSize: 16,
+                                                                          color: Colors.white)),
+                                                                ],
+                                                              ))
+                                                            ],
+                                                          ),
+                                                        )),
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ) : new Text("Pagella non disponibile per il periodo selezionato", style: TextStyle(
+                                              fontSize: 20, color: Colors.white),);
+                                      }
+                                      return null;
+                                    },
+                                  )
                                 ],
                               )),
                         )

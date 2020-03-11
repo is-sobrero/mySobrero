@@ -5,34 +5,12 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:mySobrero/generated_plugin_registrant.dart';
 import 'package:mySobrero/reapi3.dart';
 
-import 'reapi2.dart';
 import 'fade_slide_transition.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class ArgomentiView extends StatefulWidget {
-  List<Argomenti> regclasse;
-  List<Argomenti> argSettimana;
-/*
-  ArgomentiView(List<Argomenti> regclasse) {
-    this.regclasse = regclasse;
-
-    this.argSettimana = List<Argomenti>();
-    DateTime today = DateTime.now();
-    var x = today.subtract(new Duration(days: today.weekday - 1));
-    var formatter = new DateFormat('dd/MM/yyyy');
-    print("Inizio settimana: ${formatter.format(x)}");
-    for (int i = 0; i < regclasse.length; i++) {
-      var currentGiorno = formatter.parse(regclasse[i].data.split(" ")[0]);
-      if (currentGiorno.compareTo(x) >= 0){
-        this.argSettimana.add(regclasse[i]);
-        print("curr: ${formatter.format(currentGiorno)}");
-      }
-    }
-
-  }*/
   reAPI3 apiInstance;
 
   ArgomentiView({Key key, @required this.apiInstance}) : super(key: key);
