@@ -91,8 +91,7 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
                     title: AnimatedOpacity(
                       opacity: _appBarTitleOpacity,
                       duration: const Duration(milliseconds: 250),
-                      child: Text("Assenze",
-                          style: TextStyle(color: Colors.black)),
+                      child: Text("Assenze", style: TextStyle(color: Colors.black)),
                     ),
                     backgroundColor: Color(0xffff9692),
                     elevation: 0,
@@ -107,12 +106,7 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
                   behavior: ScrollBehavior(),
                   child: SingleChildScrollView(
                     controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      10,
-                      20,
-                      20,
-                    ),
+                    padding: const EdgeInsets.fromLTRB( 20, 10, 20, 20,),
                     child: Column(
                       children: <Widget>[
                         FadeSlideTransition(
@@ -127,10 +121,7 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
                             children: <Widget>[
                               Text(
                                 "Assenze",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .title
-                                    .copyWith(
+                                style: Theme.of(context).textTheme.title.copyWith(
                                     fontSize: 32.0,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -202,11 +193,8 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 15.0),
                                           child: Text(
-                                            snapshot.data.giustificate.length > 25
-                                                ? "Ultime 25 giustificate"
-                                                : "Giustificate",
-                                            style: TextStyle(
-                                                fontSize: 24, color: Colors.black),
+                                            snapshot.data.giustificate.length > 25 ? "Ultime 25 giustificate" : "Giustificate",
+                                            style: TextStyle(fontSize: 24, color: Colors.black),
                                           ),
                                         ),
                                         Column(

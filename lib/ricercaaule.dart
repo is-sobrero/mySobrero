@@ -210,47 +210,30 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Theme(
-                                            data: ThemeData(
-                                              hintColor: Colors.white,
-                                              primaryColor: Colors.white,
-                                            ),
-                                            child: TextField(
-                                              cursorColor: Colors.white,
-                                              style: new TextStyle(color: Colors.white),
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-                                                labelText: 'Aula da cercare',
-                                                enabledBorder: const OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.white, width: 2),
-                                                ),
-                                              ),
-                                              controller: _searchController,
-                                              //controller: pwrdController,
-                                            ),
-                                          ),
+                                    Theme(
+                                      data: ThemeData(
+                                        hintColor: Colors.white,
+                                        primaryColor: Colors.white,
+                                      ),
+                                      child: TextField(
+                                        cursorColor: Colors.white,
+                                        style: new TextStyle(color: Colors.white),
+                                        decoration: InputDecoration(
+                                          //border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                                            filled: true,
+                                            labelText: 'Aula da cercare',
+                                            suffixIcon: IconButton(
+                                                icon: Icon(Icons.search),
+                                                color: Colors.white,
+                                                onPressed: (){
+                                                  setState(() {
+                                                    _risultatoAule = _ottieniAule(_searchController.text, filterIndex);
+                                                  });
+                                                }
+                                            )
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 10),
-                                          child: Container(
-                                            height:  57,
-                                            width: 57,
-                                            child: OutlineButton(
-                                              borderSide: BorderSide(color: Colors.white, width: 2),
-                                              child: Icon(Icons.search, color:  Colors.white,),
-                                              highlightedBorderColor: Colors.white,
-                                              onPressed: (){
-                                                setState(() {
-                                                  _risultatoAule = _ottieniAule(_searchController.text, filterIndex);
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                        controller: _searchController,
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10),

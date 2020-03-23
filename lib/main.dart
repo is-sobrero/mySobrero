@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -9,6 +10,7 @@ import 'package:local_auth/auth_strings.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/reapi2.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/skeleton.dart';
 import 'home.dart';
 import 'dart:convert';
 import 'SobreroFeed.dart';
@@ -40,17 +42,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xFF0360e7),
         accentColor: Color(0xFF0360e7),
-        scaffoldBackgroundColor: Colors.white
+        scaffoldBackgroundColor: Colors.white,
+        //fontFamily: "ARSMaquettePro"
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Color(0xFF0360e7),
+        //fontFamily: "ARSMaquettePro",
         accentColor: Color(0xFF0360e7),
         scaffoldBackgroundColor: Color(0xff121212),
         backgroundColor: Colors.blue,
         cardColor: Color(0xff212121),
         bottomAppBarColor: Color(0xff242424),
-        canvasColor: Color(0xff242424)
+        canvasColor: Color(0xff242424),
       ),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -72,7 +76,7 @@ class AppLogin extends StatefulWidget {
   _AppLoginState createState() => _AppLoginState();
 }
 
-class _AppLoginState extends State<AppLogin> {
+class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin {
   bool loginCalled = false;
   bool initialCall = true;
   final userController = TextEditingController();
@@ -84,6 +88,9 @@ class _AppLoginState extends State<AppLogin> {
     return inDebugMode;
   }
 
+  bool savedNotAuth = false;
+  String profileUrl;
+  String uname, realName;
   Future<bool> credSalvate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var localAuth = LocalAuthentication();
@@ -109,6 +116,12 @@ class _AppLoginState extends State<AppLogin> {
       if (didAuthenticate) {
         return true;
       } else {
+        uname = prefs.getString('username') ?? "";
+        final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(uname).get();
+        profileUrl = dataRetrieve.data["profileImage"];
+        print("Profilo: $profileUrl");
+        savedNotAuth = true;
+        realName = nomecognome;
         return false;
       }
     }
@@ -187,14 +200,9 @@ class _AppLoginState extends State<AppLogin> {
                                     onPressed: () {
                                       SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                                     },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(7.0))),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(7.0))),
                                     color: Theme.of(context).primaryColor,
-                                    child: const AutoSizeText(
-                                      'CHIUDI APP',
-                                      maxLines: 1,
-                                    ),
+                                    child: const AutoSizeText('CHIUDI APP', maxLines: 1,),
                                   ),
                                 ) : new Container(),
                                 Container(width: Theme.of(context).platform != TargetPlatform.iOS ? 10 : 0,),
@@ -205,13 +213,9 @@ class _AppLoginState extends State<AppLogin> {
                                     onPressed: () {
                                       LaunchReview.launch();
                                     },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(7.0))),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(7.0))),
                                     color: Theme.of(context).primaryColor,
-                                    child: const Text(
-                                      'AGGIORNA',
-                                    ),
+                                    child: const Text('AGGIORNA',),
                                   ),
                                 ),
                               ],
@@ -400,183 +404,19 @@ class _AppLoginState extends State<AppLogin> {
     );
     _controlloSB = false;
   }
-/*
-  Future<http.Response> requestMethod(String username, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = "https://reapistaging.altervista.org/reapi2.php";
-    var feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
-    Map<String, String> headers = {
-      'Accept': 'application/json',
-    };
-    final responseHTTP = await http.post(
-        url,
-        headers: headers,
-        body: {'stud_id': username, 'password': password});
-    Map responseMap = jsonDecode(responseHTTP.body);
-    var response = reAPI2.fromJson(responseMap);
-    if (response.status.code == 0) {
-      print(response.user.nome);
-      final feedHTTP = await http.get(feedUrl, headers: headers);
-      Map feedMap = jsonDecode(feedHTTP.body);
-      var feed = SobreroFeed.fromJson(feedMap);
-      prefs.setBool('savedCredentials', true);
-      prefs.setString('username', username);
-      prefs.setString('password', password);
-      prefs.setString('user', response.user.nome + " " + response.user.cognome);
-      String systemPlatform = (Platform.isWindows ? "win32" : "") +
-          (Platform.isAndroid ? "android" : "") +
-          (Platform.isFuchsia ? "fuchsia" : "") +
-          (Platform.isIOS ? "iOS" : "") +
-          (Platform.isLinux ? "linux" : "") +
-          (Platform.isMacOS ? "macos" : "");
-      final cognome = response.user.cognome;
-      FirebaseAnalytics analytics = FirebaseAnalytics();
-      analytics.setUserId("UID$username$cognome");
-      analytics.setUserProperty(
-          name: "anno", value: response.user.classe.toString());
-      analytics.setUserProperty(
-          name: "classe",
-          value: response.user.classe.toString() +
-              " " +
-              response.user.sezione.trim());
-      analytics.setUserProperty(name: "corso", value: response.user.corso);
-      analytics.setUserProperty(
-          name: "indirizzo",
-          value: response.user.corso.contains("Liceo") ? "liceo" : "itis");
-      analytics.setUserProperty(name: "platform", value: systemPlatform);
-      final PackageInfo info = await PackageInfo.fromPlatform();
-      Firestore.instance.collection('utenti').document(username).setData({
-        'classe': response.user.classe.toString() +
-            " " +
-            response.user.sezione.trim(),
-        'cognome': response.user.cognome,
-        'nome': response.user.nome,
-        'ultimo accesso': DateTime.now().toIso8601String(),
-        'platform': systemPlatform,
-        'build flavour': isInDebugMode ? 'internal' : 'production',
-        'version' : info.buildNumber
-      }, merge: true);
-      final DocumentSnapshot dataRetrieve = await Firestore.instance
-          .collection('utenti')
-          .document(username)
-          .get();
-      final profileImageUrl = dataRetrieve.data["profileImage"];
-      print("profilo: $profileImageUrl");
-      globals.profileURL = profileImageUrl;
-      _controlloSB = false;
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (_, __, ___)  =>
-                HomeScreen(
-                  response: response,
-                  profileUrl: profileImageUrl,
-                  feed: feed,
-                  isBeta: isBeta,
-                ),
-            transitionDuration: Duration(milliseconds: 700),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              var begin = Offset(0.0, 1.0);
-              var end = Offset.zero;
-              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
-              var offsetAnimation = animation.drive(tween);
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
 
-        )
-      );
-    } else {
-      setState(() {
-        isLoginVisible = true;
-      });
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)), //this right here
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 200),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                        borderRadius: new BorderRadius.circular(8.0),
-                        child: Image.asset('assets/images/errore.png')),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  "Errore durante il Login",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 16, bottom: 16),
-                                  child: Text(
-                                    response.status.description,
-                                    style: TextStyle(fontSize: 16),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Text(
-                                  "Per fortuna abbiamo messo il pulsante riprova",
-                                  style: TextStyle(fontSize: 13),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                          OutlineButton(
-                            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(7.0))),
-                            color: Theme.of(context).primaryColor,
-                            child: const Text(
-                              'RIPROVA',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    }
-    return responseHTTP;
-  }
-*/
   void buttonLogin() {
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+    final String finalUser = savedNotAuth ? uname : userController.text;
     setState(() {
       isLoginVisible = false;
       loginCalled = true;
+      savedNotAuth = false;
     });
-
-    reapi3Login(userController.text, pwrdController.text);
+    reapi3Login(finalUser, pwrdController.text);
   }
 
   @override
@@ -598,9 +438,9 @@ class _AppLoginState extends State<AppLogin> {
             children: <Widget>[
               Hero(
                 tag: "main_logosobre",
-                child: SizedBox(
-                  width: 70,
-                  height: 70,
+                child: Container(
+                  width: savedNotAuth ? 40 : 70,
+                  height: savedNotAuth ? 40 : 70,
                   child: Image.asset('assets/images/logo_sobrero_grad.png'),
                 ),
               ),
@@ -610,37 +450,89 @@ class _AppLoginState extends State<AppLogin> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          'Accedi a mySobrero',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            foreground: Paint()..shader = sobreroGradient,
-                          ),
-                        ),
+                      ExpandedSection(
+                        expand: savedNotAuth,
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: Container(
+                                decoration: new BoxDecoration(
+                                  boxShadow: [BoxShadow(
+                                      color: Colors.black.withAlpha(50),
+                                      offset: Offset(0, 5),
+                                      blurRadius: 10
+                                  )],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: ClipOval(
+                                  child: new Container(
+                                      width: 80,
+                                      height: 80,
+                                      color: Theme.of(context).scaffoldBackgroundColor,
+                                      child: profileUrl != null ? CachedNetworkImage(
+                                        imageUrl: profileUrl,
+                                        placeholder: (context, url) =>
+                                            Skeleton(),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                        fit: BoxFit.cover,
+                                      ) : Image.asset("assets/images/profile.jpg")
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0, bottom: 15.0),
+                              child: Text("Accedi a mySobrero come $realName",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 19,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          ],
+                        )
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'ID Studente'),
-                          controller: userController,
+                      ExpandedSection(
+                        expand: !savedNotAuth,
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                'Accedi a mySobrero',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    labelText: 'ID Studente'),
+                                controller: userController,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       TextField(
                         obscureText: true,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          filled: true,
                           labelText: 'Password',
                         ),
                         controller: pwrdController,
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(top: 10),
                         child: Center(
                           child: RaisedButton(
                             padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
@@ -651,12 +543,24 @@ class _AppLoginState extends State<AppLogin> {
                                 BorderRadius.all(Radius.circular(7.0))),
                             color: Theme.of(context).primaryColor,
                             textColor: Colors.white,
-                            child: const Text(
-                              'ACCEDI',
-                            ),
+                            child: const Text('ACCEDI'),
                           ),
                         ),
                       ),
+                      ExpandedSection(
+                        expand: savedNotAuth,
+                        child: Center(
+                          child: InkWell(
+                            onTap: () => setState((){
+                              savedNotAuth = false;
+                            }),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Accedi con un altro account", style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).primaryColor), ),
+                            ),
+                          ),
+                        )
+                      )
                     ],
                   )
               ),

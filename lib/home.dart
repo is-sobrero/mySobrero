@@ -22,15 +22,20 @@ class HomeScreen extends StatefulWidget {
   String profileUrl;
   bool isBeta = false;
 
-  HomeScreen({Key key, @required this.unifiedLoginStructure, @required this.feed, @required this.profileUrl, @required this.isBeta, @required this.apiInstance}) : super(key: key);
+  HomeScreen(
+      {Key key,
+      @required this.unifiedLoginStructure,
+      @required this.feed,
+      @required this.profileUrl,
+      @required this.isBeta,
+      @required this.apiInstance})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _HomeState();
-
 }
 
-
-class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
+class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   PageController pageController = PageController();
   SobreroFeed feed;
@@ -63,7 +68,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   }
 
   Future<bool> _onWillPop() async {
-    if (_currentIndex != 0){
+    if (_currentIndex != 0) {
       onTabTapped(0);
       return false;
     }
@@ -94,7 +99,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   ComunicazioniView _comunicazioniViewInstance;
   AltroView _altroViewInstance;
 
-  void initState(){
+  void initState() {
     super.initState();
     //response = widget.response;
     feed = widget.feed;
@@ -104,8 +109,7 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
         apiInstance: widget.apiInstance,
         feed: widget.feed,
         callback: (page) => onTabTapped(page),
-        profileUrl: widget.profileUrl
-    );
+        profileUrl: widget.profileUrl);
     _votiViewInstance = VotiView(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
@@ -124,8 +128,15 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
     super.dispose();
   }
 
-  double map(double x, double in_min, double in_max, double out_min, double out_max) {
+  double map(
+      double x, double in_min, double in_max, double out_min, double out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+
+  bool get isInDebugMode {
+    bool inDebugMode = false;
+    assert(inDebugMode = true);
+    return inDebugMode;
   }
 
   @override
@@ -137,132 +148,128 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
         appBar: PreferredSize(
           preferredSize: Size(double.infinity, 57),
           child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    color: Theme.of(context).primaryColor.withAlpha((100 * scroll).toInt()),
-                    spreadRadius: 7,
-                    blurRadius: 12
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                  color: Theme.of(context)
+                      .primaryColor
+                      .withAlpha((100 * scroll).toInt()),
+                  spreadRadius: 7,
+                  blurRadius: 12)
+            ], color: Theme.of(context).scaffoldBackgroundColor),
+            child: Stack(
+              children: <Widget>[
+                SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Row(
+                          children: <Widget>[
+                            Hero(
+                              tag: "main_logosobre",
+                              child: SizedBox(
+                                width: 35,
+                                height: 35,
+                                child: Image.asset('assets/images/logo_sobrero_grad.png', scale: 1.1),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "mySobrero",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w800,
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  widget.isBeta || isInDebugMode ? Text(
+                                    isInDebugMode ? " internal" : " beta",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w400,
+                                        color: Theme.of(context).primaryColor),
+                                  ) : Container(),
+                                ],
+                              ),
+                            ),
+                            Spacer(), // use Spacer
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Material(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                child: IconButton(
+                                  icon: new Image.asset(
+                                    'assets/images/ic_settings_grad.png',
+                                  ),
+                                  tooltip: 'Apri le impostazioni dell\'App',
+                                  iconSize: 14,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ImpostazioniView(
+                                              unifiedLoginStructure: widget.unifiedLoginStructure,
+                                              profileURL: profileUrl,
+                                              profileCallback: (url) => profileUrl = url)),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 4,
+                  color: Theme.of(context)
+                      .primaryColor
+                      .withAlpha((255 * scroll).toInt()),
                 )
               ],
-              color: Theme.of(context).scaffoldBackgroundColor
+              alignment: Alignment.bottomCenter,
             ),
-            child: Column(
-                  children: <Widget>[
-                    SafeArea(
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Hero(
-                                  tag: "main_logosobre",
-                                  child: SizedBox(
-                                    width:  35,
-                                    height:  35,
-                                    child: Image.asset('assets/images/logo_sobrero_grad.png',
-                                        scale: 1.1),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        "mySobrero",
-                                        style: TextStyle(
-                                            fontSize:  17,
-                                            fontWeight: FontWeight.w800,
-                                            color: Theme.of(context).primaryColor),
-                                      ),
-                                      widget.isBeta ? Text(
-                                        " beta",
-                                        style: TextStyle(
-                                            fontSize:  17,
-                                            fontWeight: FontWeight.w400,
-                                            color: Theme.of(context).primaryColor),
-                                      ) : Container(),
-                                    ],
-                                  ),
-                                ),
-                                Spacer(), // use Spacer
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Material(
-                                    color: Theme.of(context).scaffoldBackgroundColor,
-                                    child: IconButton(
-                                        icon: new Image.asset(
-                                          'assets/images/ic_settings_grad.png',
-                                        ),
-                                        tooltip: 'Apri le impostazioni dell\'App',
-                                        iconSize: 14,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) =>
-                                              ImpostazioniView(
-                                                  unifiedLoginStructure: widget.unifiedLoginStructure,
-                                                  profileURL: profileUrl,
-                                                  profileCallback: (url) => profileUrl = url
-                                              )
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                  ),
-                                ),
-
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 4,
-                      color: Theme.of(context).primaryColor.withAlpha((255 * scroll).toInt()),
-                    )
-                  ],
-                ),
           ),
         ),
         body: PageView.builder(
-          controller: pageController,
-          onPageChanged: (index) {
-            setState(() {
-              scroll = 0;
-              _currentIndex = index;
-            });
-          },
+            controller: pageController,
+            onPageChanged: (index) {
+              setState(() {
+                scroll = 0;
+                _currentIndex = index;
+              });
+            },
             itemCount: 4,
-            itemBuilder: (context, i){
-            var schermata;
-            if (i == 0) schermata =  _mainViewInstance;
-            if (i == 1) schermata = _votiViewInstance;
-            if (i == 2) schermata = _comunicazioniViewInstance;
-            if (i == 3) schermata = _altroViewInstance;
-            return NotificationListener<ScrollNotification>(
-              onNotification: elaboraScroll,
-              child: schermata,
-            );
-          }
-        ),
+            itemBuilder: (context, i) {
+              var schermata;
+              if (i == 0) schermata = _mainViewInstance;
+              if (i == 1) schermata = _votiViewInstance;
+              if (i == 2) schermata = _comunicazioniViewInstance;
+              if (i == 3) schermata = _altroViewInstance;
+              return NotificationListener<ScrollNotification>(
+                onNotification: elaboraScroll,
+                child: schermata,
+              );
+            }),
         bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(50),
-                  blurRadius: 10,
-                  spreadRadius: 10,
-                )
-              ]
-          ),
+          decoration:
+              BoxDecoration(color: Theme.of(context).cardColor, boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(50),
+              blurRadius: 10,
+              spreadRadius: 10,
+            )
+          ]),
           child: SafeArea(
             bottom: true,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20,5,20,5),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               child: GNav(
                   gap: 8,
                   color: Theme.of(context).disabledColor,
@@ -294,7 +301,9 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin{
                     print(index);
                     setState(() {
                       _currentIndex = index;
-                      pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
+                      pageController.animateToPage(index,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.ease);
                     });
                   }),
             ),

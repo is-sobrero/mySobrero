@@ -11,7 +11,7 @@ description: La nuova app ufficiale del Sobrero per gli Studenti
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.2+20
+version: 2.0.2+21
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -89,34 +89,31 @@ flutter:
       fonts:
         - asset: assets/fonts/CustomIcons.ttf
 
-#    - family:  SFPro
-#      fonts:
-#        - asset: assets/fonts/SF-Pro-Display-Black.otf
-#          weight: 900
-#        - asset: assets/fonts/SF-Pro-Display-BlackItalic.otf
-#          weight: 900
-#          style: italic
-#
-#        - asset: assets/fonts/SF-Pro-Display-Bold.otf
-#          weight: 700
-#
-#        - asset: assets/fonts/SF-Pro-Display-BoldItalic.otf
-#          weight: 700
-#          style: italic
-#
-#        - asset: assets/fonts/SF-Pro-Display-Heavy.otf
-#          weight: 600
-#
-#        - asset: assets/fonts/SF-Pro-Display-HeavyItalic.otf
-#          weight: 600
-#          style: italic
+    - family:  ARSMaquettePro
+      fonts:
+        - asset: assets/fonts/ARSMaquettePro-Black.ttf
+          weight: 900
+        - asset: assets/fonts/ARSMaquettePro-BlackItalic.ttf
+          weight: 900
+          style: italic
 
- #       - asset: assets/fonts/SF-Pro-Display-Light.otf
- #         weight: 300
+        - asset: assets/fonts/ARSMaquettePro-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/ARSMaquettePro-BoldItalic.ttf
+          weight: 700
+          style: italic
 
-#        - asset: assets/fonts/SF-Pro-Display-LightItalic.otf
-#          weight: 300
-#          style: italic
+        - asset: assets/fonts/ARSMaquettePro-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ARSMaquettePro-MediumItalic.ttf
+          weight: 500
+          style: italic
+
+        - asset: assets/fonts/ARSMaquettePro-Light.ttf
+          weight: 300
+        - asset: assets/fonts/ARSMaquettePro-LightItalic.ttf
+          weight: 300
+          style: italic
 
 #        - asset: assets/fonts/SF-Pro-Display-Medium.otf
 #          weight: 500
@@ -125,10 +122,8 @@ flutter:
 #          weight: 500
 #          style: italic
 
-#        - asset: assets/fonts/SF-Pro-Display-Regular.otf
+        - asset: assets/fonts/ARSMaquettePro-Regular.ttf
 
-#        - asset: assets/fonts/SF-Pro-Display-RegularItalic.otf
-#          style: italic
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
