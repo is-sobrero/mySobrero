@@ -4,7 +4,8 @@ class ExpandedSection extends StatefulWidget {
 
   final Widget child;
   final bool expand;
-  ExpandedSection({this.expand = false, this.child});
+  final bool debug;
+  ExpandedSection({this.expand = false, this.child, this.debug = false});
 
   @override
   _ExpandedSectionState createState() => _ExpandedSectionState();
@@ -18,10 +19,10 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
   void initState() {
     super.initState();
     prepareAnimations();
-    _runExpandCheck();
+    if(widget.expand) expandController.forward();
+    else expandController.reverse();
   }
 
-  ///Setting up the animation
   void prepareAnimations() {
     expandController = AnimationController(
         vsync: this,
@@ -33,13 +34,12 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
     );
   }
 
+  int stateCounter = 0;
+
   void _runExpandCheck() {
-    if(widget.expand) {
-      expandController.forward();
-    }
-    else {
-      expandController.reverse();
-    }
+    //expandController.duration = Duration(milliseconds: 500);
+    if(widget.expand) expandController.forward();
+    else expandController.reverse();
   }
 
   @override
@@ -56,6 +56,7 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    if (widget.debug)print("Count rebuild: ${++stateCounter}");
     return SizeTransition(
         axisAlignment: 1.0,
         sizeFactor: animation,

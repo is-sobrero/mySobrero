@@ -51,6 +51,7 @@ dependencies:
   google_nav_bar: ^2.0.1
   connectivity_widget: ^0.1.5
   utf: ^0.9.0+5
+  animations: ^1.0.0+5
 
   flutter:
     sdk: flutter
@@ -85,6 +86,17 @@ flutter:
     - assets/images/
 
   fonts:
+    - family: Open Sans
+      fonts:
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/OpenSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/OpenSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/OpenSans-Regular.ttf
+          weight: 400
+
     - family:  CustomIcons
       fonts:
         - asset: assets/fonts/CustomIcons.ttf

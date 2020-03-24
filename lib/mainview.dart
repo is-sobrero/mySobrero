@@ -310,15 +310,16 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                   padding: EdgeInsets.only(bottom: remoteNotice.enabled ? 10 : 0),
                   child: Container(
                     decoration: new BoxDecoration(
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Color(0xFFff5858).withOpacity(0.4),
-                              offset: const Offset(1.1, 1.1),
-                              blurRadius: 10.0),
-                        ],
-                        ),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Color(0xFFff5858).withOpacity(0.4),
+                            offset: const Offset(1.1, 1.1),
+                            blurRadius: 10.0),
+                      ],
+                    ),
                     child: ExpandedSection(
                       expand: remoteNotice.enabled,
+                      debug: true,
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -342,12 +343,12 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                           padding: const EdgeInsets.only(bottom: 8.0),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              border: Border(
-                                                bottom: BorderSide(color: Colors.white, width: 3.0,)
-                                              )
+                                                border: Border(
+                                                    bottom: BorderSide(color: Colors.white, width: 1.0,)
+                                                )
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.only(bottom: 3.0),
+                                              padding: const EdgeInsets.only(bottom: 5.0),
                                               child: Row(
                                                 children: <Widget>[
                                                   Icon(
@@ -357,9 +358,9 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                                   ),
                                                   Expanded(
                                                     child: Padding(
-                                                      padding: const EdgeInsets.only(left: 8.0),
+                                                      padding: const EdgeInsets.only(left: 8.0,),
                                                       child: Text("Informazioni per gli studenti", style: new TextStyle(
-                                                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
+                                                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
                                                       ),
                                                       ),
                                                     ),
@@ -369,9 +370,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                             ),
                                           ),
                                         ),
-                                        Text(remoteNotice.description, style: TextStyle(
-                                          color: Colors.white
-                                        )),
+                                        Text(remoteNotice.description, style: TextStyle(color: Colors.white)),
                                       ],
                                     ))),
                             flex: 1,
@@ -751,7 +750,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
               decoration: new BoxDecoration(
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                        color: Color(0xFF6a11cb).withOpacity(0.4),
+                        color: Color(0xFF6a11cb).withOpacity(Theme.of(context).brightness == Brightness.light ? 0.4 : 0),
                         offset: const Offset(1.1, 1.1),
                         blurRadius: 10.0),
                   ],

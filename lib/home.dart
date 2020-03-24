@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mySobrero/impostazioni.dart';
@@ -141,21 +142,22 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size(double.infinity, 57),
           child: Container(
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: Theme.of(context)
-                      .primaryColor
-                      .withAlpha((100 * scroll).toInt()),
-                  spreadRadius: 7,
-                  blurRadius: 12)
-            ], color: Theme.of(context).scaffoldBackgroundColor),
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                      color: Theme.of(context).primaryColor.withAlpha((100 * scroll).toInt()),
+                      spreadRadius: 7,
+                      blurRadius: 12)
+                ],
+                color: Theme.of(context).scaffoldBackgroundColor
+            ),
             child: Stack(
               children: <Widget>[
                 SafeArea(
@@ -209,13 +211,29 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
                                   iconSize: 14,
                                   onPressed: () {
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ImpostazioniView(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (_, __, ___)  => ImpostazioniView(
                                               unifiedLoginStructure: widget.unifiedLoginStructure,
                                               profileURL: profileUrl,
-                                              profileCallback: (url) => profileUrl = url)),
+                                              profileCallback: (url) => profileUrl = url),
+                                          transitionDuration: Duration(milliseconds: 1000),
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            var begin = Offset(0.0, 1.0);
+                                            var end = Offset.zero;
+                                            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
+                                            var offsetAnimation = animation.drive(tween);
+                                            return SharedAxisTransition(
+                                              child: child,
+                                              animation: animation,
+                                              secondaryAnimation: secondaryAnimation,
+                                              transitionType: SharedAxisTransitionType.vertical,
+                                            );
+                                          },
+
+                                        )
                                     );
+
                                   },
                                 ),
                               ),

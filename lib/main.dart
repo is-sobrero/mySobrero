@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/reapi2.dart';
+import 'package:animations/animations.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/skeleton.dart';
 import 'home.dart';
@@ -28,7 +29,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 void main() {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  //timeDilation = 3.0;
+  timeDilation = 3.0;
   runApp( MyApp(),
   );
 }
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Color(0xFF0360e7),
-        //fontFamily: "ARSMaquettePro",
+        //fontFamily: "Open Sans",
         accentColor: Color(0xFF0360e7),
         scaffoldBackgroundColor: Color(0xff121212),
         backgroundColor: Colors.blue,
@@ -388,15 +389,21 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                 feed: feed,
                 isBeta: isBeta,
               ),
-          transitionDuration: Duration(milliseconds: 700),
+          transitionDuration: Duration(milliseconds: 1000),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var begin = Offset(0.0, 1.0);
             var end = Offset.zero;
             var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
             var offsetAnimation = animation.drive(tween);
-            return SlideTransition(
+            /*return SlideTransition(
               position: offsetAnimation,
               child: child,
+            );*/
+            return SharedAxisTransition(
+              child: child,
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
             );
           },
 

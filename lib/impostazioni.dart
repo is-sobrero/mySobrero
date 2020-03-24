@@ -126,6 +126,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                 child: PreferredSize(
                   preferredSize: Size.fromHeight(_preferredAppBarHeight),
                   child: AppBar(
+                    brightness: Theme.of(context).brightness,
                     title: AnimatedOpacity(
                       opacity: _appBarTitleOpacity,
                       duration: const Duration(milliseconds: 250),
