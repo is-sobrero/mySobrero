@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parallax/flutter_parallax.dart';
+import 'package:mySobrero/FeedDetail.dart';
 import 'package:mySobrero/compiti.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -736,6 +737,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext ctxt, int index) {
                       final item = widget.feed.items[index];
+
                       return SafeArea(
                         bottom: false,
                         left: index == 0,
@@ -755,58 +757,51 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                 )
                               ]
                             ),
+
                             width: 300,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Stack(
-                                //crossAxisAlignment: CrossAxisAlignment.start,
-                                alignment: Alignment.bottomLeft,
-                                children: <Widget>[
-                                  Positioned.fill(
-                                    child: Parallax.inside(
-                                      mainAxisExtent: 200.0,
-                                      child: CachedNetworkImage(
-                                        imageUrl: item.thumbnail,
-                                        placeholder: (context, url) => Skeleton(),
-                                        errorWidget: (context, url, error) =>
-                                            Container(
-                                                color: Theme.of(context).textTheme.body1.color.withAlpha(40),
-                                                width: 300,
-                                                child: Center(child: Icon(Icons.broken_image, size: 70))
-                                            ),
-                                        fit: BoxFit.cover,
+                              child: OpenContainer(
+                                  closedColor: Theme.of(context).scaffoldBackgroundColor,
+                                  openColor: Theme.of(context).scaffoldBackgroundColor,
+                                  closedBuilder: (c, action) => Stack(
+                                    alignment: Alignment.bottomLeft,
+                                    children: <Widget>[
+                                      Positioned.fill(
+                                        child: CachedNetworkImage(
+                                          imageUrl: item.thumbnail,
+                                          placeholder: (context, url) => Skeleton(),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                                  color: Theme.of(context).textTheme.body1.color.withAlpha(40),
+                                                  width: 300,
+                                                  child: Center(child: Icon(Icons.broken_image, size: 70))
+                                              ),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
+                                      Container(
+                                        width: 300,
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                colors: [Colors.black87, Colors.transparent],
+                                                begin: Alignment.bottomCenter,
+                                                end: Alignment.topCenter
+                                            )
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(15,30,15,25),
+                                          child: Text(
+                                            item.title,
+                                            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    width: 300,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [Colors.black87, Colors.transparent],
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter
-                                      )
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(15,30,15,25),
-                                      child: Text(
-                                        item.title,
-                                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned.fill(
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: (){
-                                          openURL(context, item.link);
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                                  openBuilder: (c, action) => FeedDetailView(articolo: widget.feed.items[index]),
+                                  tappable: true
+                              )
                             ),
                           ),
                         ),

@@ -88,6 +88,9 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     return inDebugMode;
   }
 
+
+
+
   bool savedNotAuth = false;
   String profileUrl;
   String uname, realName;
@@ -443,7 +446,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    //if (_controlloSB) FlutterStatusbarcolor.setStatusBarWhiteForeground(Theme.of(context).brightness == Brightness.dark);
     return Scaffold(
       body: Center(
         child: SizedBox(
