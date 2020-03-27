@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class CarrieraView extends StatefulWidget {
@@ -23,14 +22,12 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  Brightness currentBrightness;
   int creditiPresiTotali = 0;
   int creditiNonPresiTotali = 0;
 
   @override
   void initState() {
     super.initState();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -63,7 +60,6 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 
@@ -142,38 +138,24 @@ class _CarrieraState extends State<CarrieraView> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    currentBrightness = Theme.of(context).brightness;
-    AppBar titolo = AppBar(
-      title: AnimatedOpacity(
-        opacity: _appBarTitleOpacity,
-        duration: const Duration(milliseconds: 250),
-        child: Text("Carriera scolastica", style: TextStyle(color: Colors.white)),
-      ),
-      backgroundColor: Color(0xff45BF6D),
-      elevation: _appBarElevation,
-      leading: BackButton(color: Colors.white,),
-    );
     return Hero(
         tag: "carriera_background",
         child: Scaffold(
-          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          appBar: AppBar(
+            centerTitle: false,
+            title: AnimatedOpacity(
+              opacity: _appBarTitleOpacity,
+              duration: const Duration(milliseconds: 250),
+              child: Text("Carriera scolastica", style: TextStyle(color: Colors.white)),
+            ),
+            backgroundColor: Color(0xff45BF6D),
+            elevation: _appBarElevation,
+            leading: BackButton(color: Colors.white,),
+          ),
           backgroundColor: Color(0xff45BF6D),
           body: SafeArea(
-            bottom: !_fadeSlideAnimationController.isCompleted,
+            bottom: false,
             child: Column(children: <Widget>[
-              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
-                controller: _fadeSlideAnimationController,
-                slideAnimationTween: Tween<Offset>(
-                  begin: Offset(0.0, 0.5),
-                  end: Offset(0.0, 0.0),
-                ),
-                begin: 0.0,
-                end: _listAnimationIntervalStart,
-                child: PreferredSize(
-                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: titolo,
-                ),
-              ) : Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:mySobrero/compiti.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -191,11 +193,11 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
     var ultimoVoto = "null";
     var ultimaMateria = "null";
     if (widget.unifiedLoginStructure.voti1Q.length > 0){
-      ultimoVoto = widget.unifiedLoginStructure.voti1Q[0].voto;
+      ultimoVoto = widget.unifiedLoginStructure.voti1Q[0].votoTXT;
       ultimaMateria = widget.unifiedLoginStructure.voti1Q[0].materia;
     }
     if (widget.unifiedLoginStructure.voti2Q.length > 0){
-      ultimoVoto = widget.unifiedLoginStructure.voti2Q[0].voto;
+      ultimoVoto = widget.unifiedLoginStructure.voti2Q[0].votoTXT;
       ultimaMateria = widget.unifiedLoginStructure.voti2Q[0].materia;
     }
     final classeUtente = widget.unifiedLoginStructure.user.classe.toString() + " " + widget.unifiedLoginStructure.user.sezione.trim();
@@ -446,6 +448,76 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                               flex: 1,
                             ),
                             Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.all(Radius.circular(11)),
+                                  child: OpenContainer(
+                                    tappable: true,
+                                    closedColor: Color(0xFF43e97b),
+                                    openColor: Color(0xFF43e97b),
+                                    transitionDuration: Duration(milliseconds: 300),
+                                    openBuilder: (ctx, action) => CompitiView(
+                                      compiti: widget.unifiedLoginStructure.compiti,
+                                      settimana: widget.compitiSettimana,
+                                    ),
+                                    closedBuilder: (ctx, action) => Stack(
+                                      children: <Widget>[
+                                        AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            decoration: new BoxDecoration(
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Color(0xFF43e97b).withOpacity(0.4),
+                                                      offset: const Offset(1.1, 1.1),
+                                                      blurRadius: 10.0),
+                                                ],
+                                                gradient: LinearGradient(
+                                                  begin:
+                                                  FractionalOffset.topRight,
+                                                  end: FractionalOffset.bottomRight,
+                                                  colors: <Color>[
+                                                    Color(0xFF38f9d7),
+                                                    Color(0xFF43e97b)
+                                                  ],
+                                                )
+                                            ),
+
+                                          ),
+                                        ),
+                                        AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  widget.compitiSettimana.length.toString(),
+                                                  style: new TextStyle(
+                                                      fontSize: 70,
+                                                      color: Color(0xFF000000)),
+                                                ),
+                                                Text(
+                                                  "Compiti per i prossimi giorni",
+                                                  style: new TextStyle(color: Color(0xFF000000)),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            /*Expanded(
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -475,8 +547,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                                       offset: const Offset(1.1, 1.1),
                                                       blurRadius: 10.0),
                                                 ],
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(11)),
+                                                borderRadius: BorderRadius.all(Radius.circular(11)),
                                                 gradient: LinearGradient(
                                                   begin:
                                                       FractionalOffset.topRight,
@@ -485,7 +556,9 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                                     Color(0xFF38f9d7),
                                                     Color(0xFF43e97b)
                                                   ],
-                                                )),
+                                                )
+                                                ),
+
                                           ),
                                         ),
                                       ),
@@ -521,7 +594,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                 ),
                               ),
                               flex: 1,
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -690,16 +763,19 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                 alignment: Alignment.bottomLeft,
                                 children: <Widget>[
                                   Positioned.fill(
-                                    child: CachedNetworkImage(
-                                      imageUrl: item.thumbnail,
-                                      placeholder: (context, url) => Skeleton(),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                              color: Theme.of(context).textTheme.body1.color.withAlpha(40),
-                                              width: 300,
-                                              child: Center(child: Icon(Icons.broken_image, size: 70))
-                                          ),
-                                      fit: BoxFit.cover,
+                                    child: Parallax.inside(
+                                      mainAxisExtent: 200.0,
+                                      child: CachedNetworkImage(
+                                        imageUrl: item.thumbnail,
+                                        placeholder: (context, url) => Skeleton(),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                                color: Theme.of(context).textTheme.body1.color.withAlpha(40),
+                                                width: 300,
+                                                child: Center(child: Icon(Icons.broken_image, size: 70))
+                                            ),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                   Container(

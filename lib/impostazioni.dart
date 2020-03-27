@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'fade_slide_transition.dart';
@@ -54,7 +55,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
     });
   }
 
-  int lenBio;
+  int lenBio = 0;
 
   @override
   void dispose() {
@@ -78,6 +79,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   }
 
   final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<bool> cambiaProfilo(image) async {
     final userName = widget.unifiedLoginStructure.user.matricola;
@@ -111,37 +113,28 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        centerTitle: false,
+        brightness: Theme.of(context).brightness,
+        title: AnimatedOpacity(
+          opacity: _appBarTitleOpacity,
+          duration: const Duration(milliseconds: 250),
+          child: Text(
+            "Impostazioni",
+            style: TextStyle(color: Theme.of(context).textTheme.body1.color),
+          ),
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: _appBarElevation,
+        leading: BackButton(
+          color: Theme.of(context).textTheme.body1.color,
+        ),
+      ),
       body: Stack(
         children: <Widget>[
           SafeArea(
             child: Column(children: <Widget>[
-              FadeSlideTransition(
-                controller: _fadeSlideAnimationController,
-                slideAnimationTween: Tween<Offset>(
-                  begin: Offset(0.0, 0.5),
-                  end: Offset(0.0, 0.0),
-                ),
-                begin: 0.0,
-                end: _listAnimationIntervalStart,
-                child: PreferredSize(
-                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: AppBar(
-                    brightness: Theme.of(context).brightness,
-                    title: AnimatedOpacity(
-                      opacity: _appBarTitleOpacity,
-                      duration: const Duration(milliseconds: 250),
-                      child: Text(
-                        "Impostazioni",
-                      ),
-                    ),
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    elevation: _appBarElevation,
-                    leading: BackButton(
-                      color: Theme.of(context).textTheme.body1.color,
-                    ),
-                  ),
-                ),
-              ),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),
@@ -239,8 +232,63 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                       child: Text(widget.unifiedLoginStructure.user.nomeCompleto, style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
                                     ),
                                     SettingsButton(Icons.exit_to_app, "Logout", "Cancella l'account memorizzato dall'app", () {
-                                      _impostaBool("savedCredentials", false);
-
+                                      showModalBottomSheet(isDismissible: false, context: context, builder: (context)
+                                      {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.all(30),
+                                              child: Image.asset("assets/images/logout.png", width: 275,),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+                                              child: Text("Proseguo con la disconnessione da mySobrero?", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.red.withAlpha(70),
+                                                        blurRadius: 10,
+                                                        spreadRadius: 1,
+                                                        offset: Offset(0, 3)
+                                                    )
+                                                  ]
+                                              ),
+                                              child: FlatButton(
+                                                child: Text(
+                                                  "Continua con il logout",
+                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                                                color: Colors.red,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(7)
+                                                ),
+                                                textColor: Colors.white,
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  final snackBar = SnackBar(
+                                                    content: Text("Verrai disconnesso da mySobrero alla chiusura completa dell'applicazione", textAlign: TextAlign.center,),
+                                                    duration: Duration(seconds: 3),
+                                                  );
+                                                  scaffoldKey.currentState.showSnackBar(snackBar);
+                                                  final QuickActions quickActions = QuickActions();
+                                                  quickActions.setShortcutItems(<ShortcutItem>[]);
+                                                  _impostaBool("savedCredentials", false);
+                                                },
+                                              ),
+                                            ),
+                                            SafeArea(
+                                              top: false,
+                                              child: Padding(
+                                                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                                                child: Text("Per annullare il logout, scorri in basso la finestra di dialogo", textAlign: TextAlign.center,),
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      });
                                     }),
                                     ToggleButton(Icons.fingerprint, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
                                       setState(() {

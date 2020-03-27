@@ -29,7 +29,6 @@ dependencies:
   firebase_crashlytics: ^0.1.2+4
   firebase_storage: ^3.1.1
   local_auth: ^0.6.1
-  flutter_statusbarcolor: ^0.2.3
   device_preview: ^0.2.6
   auto_size_text: ^2.1.0
   cached_network_image: ^2.0.0
@@ -52,6 +51,8 @@ dependencies:
   connectivity_widget: ^0.1.5
   utf: ^0.9.0+5
   animations: ^1.0.0+5
+  quick_actions: ^0.4.0+2
+  flutter_parallax: ^0.1.2
 
   flutter:
     sdk: flutter
@@ -86,46 +87,11 @@ flutter:
     - assets/images/
 
   fonts:
-    - family: Open Sans
-      fonts:
-        - asset: assets/fonts/OpenSans-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/OpenSans-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/OpenSans-Light.ttf
-          weight: 300
-        - asset: assets/fonts/OpenSans-Regular.ttf
-          weight: 400
 
     - family:  CustomIcons
       fonts:
         - asset: assets/fonts/CustomIcons.ttf
 
-    - family:  ARSMaquettePro
-      fonts:
-        - asset: assets/fonts/ARSMaquettePro-Black.ttf
-          weight: 900
-        - asset: assets/fonts/ARSMaquettePro-BlackItalic.ttf
-          weight: 900
-          style: italic
-
-        - asset: assets/fonts/ARSMaquettePro-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/ARSMaquettePro-BoldItalic.ttf
-          weight: 700
-          style: italic
-
-        - asset: assets/fonts/ARSMaquettePro-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/ARSMaquettePro-MediumItalic.ttf
-          weight: 500
-          style: italic
-
-        - asset: assets/fonts/ARSMaquettePro-Light.ttf
-          weight: 300
-        - asset: assets/fonts/ARSMaquettePro-LightItalic.ttf
-          weight: 300
-          style: italic
 
 #        - asset: assets/fonts/SF-Pro-Display-Medium.otf
 #          weight: 500
@@ -134,7 +100,6 @@ flutter:
 #          weight: 500
 #          style: italic
 
-        - asset: assets/fonts/ARSMaquettePro-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

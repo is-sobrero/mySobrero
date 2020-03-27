@@ -3,15 +3,14 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:mySobrero/expandedsection.dart';
-import 'package:mySobrero/reapi2.dart';
 import 'package:animations/animations.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/skeleton.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'home.dart';
 import 'dart:convert';
 import 'SobreroFeed.dart';
@@ -29,9 +28,8 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 void main() {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  timeDilation = 3.0;
-  runApp( MyApp(),
-  );
+  //timeDilation = 3.0;
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -60,7 +58,8 @@ class MyApp extends StatelessWidget {
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark),
+            statusBarBrightness: Theme.of(context).brightness
+        ),
         child: Scaffold(
             body: AppLogin(title: 'mySobrero'),
         ),
@@ -336,6 +335,11 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       );
       return;
     }
+    final QuickActions quickActions = QuickActions();
+    quickActions.setShortcutItems(<ShortcutItem>[
+      const ShortcutItem(type: 'action_voti', localizedTitle: 'Valutazioni'),
+      const ShortcutItem(type: 'action_comm', localizedTitle: 'Comunicazioni')
+    ]);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('savedCredentials', true);
     prefs.setString('username', username);
@@ -381,8 +385,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___)  =>
-              HomeScreen(
+          pageBuilder: (_, __, ___)  => HomeScreen(
                 unifiedLoginStructure: loginStructure,
                 apiInstance: apiInstance,
                 profileUrl: profileImageUrl,
@@ -430,11 +433,17 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     versionCheck(context);
+    final QuickActions quickActions = QuickActions();
+    quickActions.initialize((shortcutType) {
+      if (shortcutType == 'action_voti') {
+        print('Preload su voti');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_controlloSB) FlutterStatusbarcolor.setStatusBarWhiteForeground(Theme.of(context).brightness == Brightness.dark);
+    //if (_controlloSB) FlutterStatusbarcolor.setStatusBarWhiteForeground(Theme.of(context).brightness == Brightness.dark);
     return Scaffold(
       body: Center(
         child: SizedBox(

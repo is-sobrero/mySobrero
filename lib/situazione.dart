@@ -360,6 +360,8 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     final Map<String, SituazioneElement> currentPeriodo = selezionePeriodo == 0 ? widget.situazione1Q : widget.situazione2Q;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
+        brightness: Theme.of(context).brightness,
         title: AnimatedOpacity(
           opacity: _appBarTitleOpacity,
           duration: const Duration(milliseconds: 250),

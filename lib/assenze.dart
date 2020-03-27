@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
-import 'reapi2.dart';
 
 class AssenzeView extends StatefulWidget {
   reAPI3 apiInstance;
@@ -25,7 +23,6 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -41,13 +38,10 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
     _assenze = widget.apiInstance.retrieveAssenze();
   }
 
-  Brightness currentBrightness;
-
   @override
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 
@@ -55,52 +49,27 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    currentBrightness = Theme.of(context).brightness;
-    AppBar titolo = AppBar(
-      title: AnimatedOpacity(
-        opacity: _appBarTitleOpacity,
-        duration: const Duration(milliseconds: 250),
-        child: Text("Assenze", style: TextStyle(color: Colors.black)),
-      ),
-      backgroundColor: Color(0xffff9692),
-      elevation: _appBarElevation,
-      leading: BackButton(
-        color: Colors.black,
-      ),
-    );
-
     return Hero(
         tag: "assenze_background",
         child: Scaffold(
-          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          appBar: AppBar(
+            centerTitle: false,
+            brightness: Brightness.light,
+            title: AnimatedOpacity(
+              opacity: _appBarTitleOpacity,
+              duration: const Duration(milliseconds: 250),
+              child: Text("Assenze", style: TextStyle(color: Colors.black)),
+            ),
+            backgroundColor: Color(0xffff9692),
+            elevation: _appBarElevation,
+            leading: BackButton(
+              color: Colors.black,
+            ),
+          ),
           backgroundColor: Color(0xffff9692),
           body: SafeArea(
-            bottom: !_fadeSlideAnimationController.isCompleted,
+            bottom: false,//!_fadeSlideAnimationController.isCompleted,
             child: Column(children: <Widget>[
-              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
-                controller: _fadeSlideAnimationController,
-                slideAnimationTween: Tween<Offset>(
-                  begin: Offset(0.0, 0.5),
-                  end: Offset(0.0, 0.0),
-                ),
-                begin: 0.0,
-                end: _listAnimationIntervalStart,
-                child: PreferredSize(
-                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: AppBar(
-                    title: AnimatedOpacity(
-                      opacity: _appBarTitleOpacity,
-                      duration: const Duration(milliseconds: 250),
-                      child: Text("Assenze", style: TextStyle(color: Colors.black)),
-                    ),
-                    backgroundColor: Color(0xffff9692),
-                    elevation: 0,
-                    leading: BackButton(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ) : new Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

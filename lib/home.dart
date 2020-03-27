@@ -145,185 +145,194 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
     //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(double.infinity, 57),
-          child: Container(
-            decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                      color: Theme.of(context).primaryColor.withAlpha((100 * scroll).toInt()),
-                      spreadRadius: 7,
-                      blurRadius: 12)
-                ],
-                color: Theme.of(context).scaffoldBackgroundColor
-            ),
-            child: Stack(
-              children: <Widget>[
-                SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15, right: 15),
-                        child: Row(
-                          children: <Widget>[
-                            Hero(
-                              tag: "main_logosobre",
-                              child: SizedBox(
-                                width: 35,
-                                height: 35,
-                                child: Image.asset('assets/images/logo_sobrero_grad.png', scale: 1.1),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    "mySobrero",
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w800,
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                  widget.isBeta || isInDebugMode ? Text(
-                                    isInDebugMode ? " internal" : " beta",
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w400,
-                                        color: Theme.of(context).primaryColor),
-                                  ) : Container(),
-                                ],
-                              ),
-                            ),
-                            Spacer(), // use Spacer
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Material(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                child: IconButton(
-                                  icon: new Image.asset(
-                                    'assets/images/ic_settings_grad.png',
-                                  ),
-                                  tooltip: 'Apri le impostazioni dell\'App',
-                                  iconSize: 14,
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          pageBuilder: (_, __, ___)  => ImpostazioniView(
-                                              unifiedLoginStructure: widget.unifiedLoginStructure,
-                                              profileURL: profileUrl,
-                                              profileCallback: (url) => profileUrl = url),
-                                          transitionDuration: Duration(milliseconds: 1000),
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                            var begin = Offset(0.0, 1.0);
-                                            var end = Offset.zero;
-                                            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
-                                            var offsetAnimation = animation.drive(tween);
-                                            return SharedAxisTransition(
-                                              child: child,
-                                              animation: animation,
-                                              secondaryAnimation: secondaryAnimation,
-                                              transitionType: SharedAxisTransitionType.vertical,
-                                            );
-                                          },
-
-                                        )
-                                    );
-
-                                  },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarBrightness: Theme.of(context).brightness
+        ),
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size(double.infinity, 57),
+            child: Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Theme.of(context).primaryColor.withAlpha((100 * scroll).toInt()),
+                        spreadRadius: 7,
+                        blurRadius: 12)
+                  ],
+                  color: Theme.of(context).scaffoldBackgroundColor
+              ),
+              child: Stack(
+                children: <Widget>[
+                  SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            children: <Widget>[
+                              Hero(
+                                tag: "main_logosobre",
+                                child: SizedBox(
+                                  width: 35,
+                                  height: 35,
+                                  child: Image.asset('assets/images/logo_sobrero_grad.png', scale: 1.1),
                                 ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "mySobrero",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w800,
+                                          color: Theme.of(context).primaryColor),
+                                    ),
+                                    widget.isBeta || isInDebugMode ? Text(
+                                      isInDebugMode ? " internal" : " beta",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w400,
+                                          color: Theme.of(context).primaryColor),
+                                    ) : Container(),
+                                  ],
+                                ),
+                              ),
+                              Spacer(), // use Spacer
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Material(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  child: IconButton(
+                                    icon: new Image.asset(
+                                      'assets/images/ic_settings_grad.png',
+                                    ),
+                                    tooltip: 'Apri le impostazioni dell\'App',
+                                    iconSize: 14,
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (_, __, ___)  => ImpostazioniView(
+                                                unifiedLoginStructure: widget.unifiedLoginStructure,
+                                                profileURL: profileUrl,
+                                                profileCallback: (url) => profileUrl = url),
+                                            transitionDuration: Duration(milliseconds: 700),
+                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                              var begin = Offset(0.0, 1.0);
+                                              var end = Offset.zero;
+                                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
+                                              var offsetAnimation = animation.drive(tween);
+                                              return SharedAxisTransition(
+                                                child: child,
+                                                animation: animation,
+                                                secondaryAnimation: secondaryAnimation,
+                                                transitionType: SharedAxisTransitionType.vertical,
+                                              );
+                                            },
+
+                                          )
+                                      );
+
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  height: 4,
-                  color: Theme.of(context)
-                      .primaryColor
-                      .withAlpha((255 * scroll).toInt()),
-                )
-              ],
-              alignment: Alignment.bottomCenter,
+                  Container(
+                    height: 4,
+                    color: Theme.of(context)
+                        .primaryColor
+                        .withAlpha((255 * scroll).toInt()),
+                  )
+                ],
+                alignment: Alignment.bottomCenter,
+              ),
             ),
           ),
-        ),
-        body: PageView.builder(
-            controller: pageController,
-            onPageChanged: (index) {
-              setState(() {
-                scroll = 0;
-                _currentIndex = index;
-              });
-            },
-            itemCount: 4,
-            itemBuilder: (context, i) {
-              var schermata;
-              if (i == 0) schermata = _mainViewInstance;
-              if (i == 1) schermata = _votiViewInstance;
-              if (i == 2) schermata = _comunicazioniViewInstance;
-              if (i == 3) schermata = _altroViewInstance;
-              return NotificationListener<ScrollNotification>(
-                onNotification: elaboraScroll,
-                child: schermata,
-              );
-            }),
-        bottomNavigationBar: Container(
-          decoration:
-              BoxDecoration(color: Theme.of(context).cardColor, boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(50),
-              blurRadius: 10,
-              spreadRadius: 10,
-            )
-          ]),
-          child: SafeArea(
-            bottom: true,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              child: GNav(
-                  gap: 8,
-                  color: Theme.of(context).disabledColor,
-                  activeColor: Theme.of(context).primaryColor,
-                  iconSize: 24,
-                  tabBackgroundColor: Colors.transparent,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  duration: Duration(milliseconds: 300),
-                  tabs: [
-                    GButton(
-                      icon: Icons.home,
-                      text: 'Home',
-                    ),
-                    GButton(
-                      icon: CustomIcons.chart,
-                      text: 'Voti',
-                    ),
-                    GButton(
-                      icon: Icons.list,
-                      text: 'Comunicazioni',
-                    ),
-                    GButton(
-                      icon: CustomIcons.dot,
-                      text: 'Altro',
-                    )
-                  ],
-                  selectedIndex: _currentIndex,
-                  onTabChange: (index) {
-                    print(index);
-                    setState(() {
-                      _currentIndex = index;
-                      pageController.animateToPage(index,
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    });
-                  }),
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(statusBarColor: Colors.red),
+            child: PageView.builder(
+                controller: pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    scroll = 0;
+                    _currentIndex = index;
+                  });
+                },
+                itemCount: 4,
+                itemBuilder: (context, i) {
+                  var schermata;
+                  if (i == 0) schermata = _mainViewInstance;
+                  if (i == 1) schermata = _votiViewInstance;
+                  if (i == 2) schermata = _comunicazioniViewInstance;
+                  if (i == 3) schermata = _altroViewInstance;
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: elaboraScroll,
+                    child: schermata,
+                  );
+                }),
+          ),
+          bottomNavigationBar: Container(
+            decoration:
+                BoxDecoration(color: Theme.of(context).cardColor, boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(50),
+                blurRadius: 10,
+                spreadRadius: 10,
+              )
+            ]),
+            child: SafeArea(
+              bottom: true,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: GNav(
+                    gap: 8,
+                    color: Theme.of(context).disabledColor,
+                    activeColor: Theme.of(context).primaryColor,
+                    iconSize: 24,
+                    tabBackgroundColor: Colors.transparent,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    duration: Duration(milliseconds: 300),
+                    tabs: [
+                      GButton(
+                        icon: Icons.home,
+                        text: 'Home',
+                      ),
+                      GButton(
+                        icon: CustomIcons.chart,
+                        text: 'Voti',
+                      ),
+                      GButton(
+                        icon: Icons.list,
+                        text: 'Comunicazioni',
+                      ),
+                      GButton(
+                        icon: CustomIcons.dot,
+                        text: 'Altro',
+                      )
+                    ],
+                    selectedIndex: _currentIndex,
+                    onTabChange: (index) {
+                      print(index);
+                      setState(() {
+                        _currentIndex = index;
+                        pageController.animateToPage(index,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      });
+                    }),
+              ),
             ),
           ),
         ),

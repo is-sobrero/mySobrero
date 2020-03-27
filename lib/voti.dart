@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -71,16 +69,15 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       end: FractionalOffset.bottomRight,
       colors: <Color>[Color(0xFF38f9d7), Color(0xFF43e97b)],
     );
-    double votoParsed = double.parse(voto.voto.replaceAll(",", "."));
     Color coloreTesto = Colors.black;
-    if (votoParsed >= 6 && votoParsed < 7) {
+    if (voto.votoValore >= 6 && voto.votoValore < 7) {
       sfondoVoto = LinearGradient(
         begin: FractionalOffset.topRight,
         end: FractionalOffset.bottomRight,
         colors: <Color>[Color(0xffFFD200), Color(0xffF7971E)],
       );
     }
-    if (votoParsed < 6) {
+    if (voto.votoValore < 6) {
       sfondoVoto = LinearGradient(
         begin: FractionalOffset.topRight,
         end: FractionalOffset.bottomRight,
@@ -92,7 +89,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     var commento = voto.commento;
     if (commento.length == 0) commento = "Nessun commento al voto";
 
-    if (voto.peso == "0") {
+    if (voto.pesoValore == 0) {
       sfondoVoto = LinearGradient(
         begin: FractionalOffset.topRight,
         end: FractionalOffset.bottomRight,
@@ -119,7 +116,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 15),
-                          child: Text(voto.voto, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
+                          child: Text(voto.votoTXT, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
                         ),
                         Expanded(child: Text(voto.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
                       ],
@@ -147,7 +144,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.only(right: 15),
-                                  child: Text(voto.voto, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
+                                  child: Text(voto.votoTXT, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
                                 ),
                                 Expanded(child: Text(voto.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
                               ],
@@ -182,28 +179,34 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       if (!materie.contains(m)) materie.add(m);
     }
     for (int i = 0; i < widget.voti1q.length; i++) {
-      double votoParsed = double.parse(widget.voti1q[i].voto.replaceAll(",", "."));
       if (!sommaVoti1Q.containsKey(widget.voti1q[i].materia)) {
         sommaVoti1Q[widget.voti1q[i].materia] = 0;
         countVoti1Q[widget.voti1q[i].materia] = 0;
       }
-      sommaVoti1Q[widget.voti1q[i].materia] += votoParsed * int.parse(widget.voti1q[i].peso);
-      countVoti1Q[widget.voti1q[i].materia] += int.parse(widget.voti1q[i].peso);
+      if (widget.voti1q[i].votoValore > 0){
+        sommaVoti1Q[widget.voti1q[i].materia] += widget.voti1q[i].votoValore * widget.voti1q[i].pesoValore;
+        countVoti1Q[widget.voti1q[i].materia] += int.parse(widget.voti1q[i].peso);
+      }
     }
     sommaVoti1Q.forEach((key, value){
-      situazione1Q[key] =  SituazioneElement(countVoti1Q[key].toInt() ~/ 100, sommaVoti1Q[key] / countVoti1Q[key]);
+      if (countVoti1Q[key] > 0){
+        situazione1Q[key] =  SituazioneElement(countVoti1Q[key].toInt() ~/ 100, sommaVoti1Q[key] / countVoti1Q[key]);
+      }
     });
     for (int i = 0; i < widget.voti2q.length; i++) {
-      double votoParsed = double.parse(widget.voti2q[i].voto.replaceAll(",", "."));
       if (!sommaVoti2Q.containsKey(widget.voti2q[i].materia)) {
         sommaVoti2Q[widget.voti2q[i].materia] = 0;
         countVoti2Q[widget.voti2q[i].materia] = 0;
       }
-      sommaVoti2Q[widget.voti2q[i].materia] += votoParsed * int.parse(widget.voti2q[i].peso);
-      countVoti2Q[widget.voti2q[i].materia] += int.parse(widget.voti2q[i].peso);
+      if (widget.voti2q[i].votoValore > 0){
+        sommaVoti2Q[widget.voti2q[i].materia] += widget.voti1q[i].votoValore * widget.voti2q[i].pesoValore;
+        countVoti2Q[widget.voti2q[i].materia] += int.parse(widget.voti2q[i].peso);
+      }
     }
     sommaVoti2Q.forEach((key, value){
-      situazione2Q[key] = SituazioneElement(countVoti2Q[key].toInt() ~/ 100, sommaVoti2Q[key] / countVoti2Q[key]);
+      if (countVoti2Q[key] > 0) {
+        situazione2Q[key] = SituazioneElement(countVoti2Q[key].toInt() ~/ 100, sommaVoti2Q[key] / countVoti2Q[key]);
+      }
     });
     ottieniObbiettivi().then((res){
       setState(() {
@@ -235,8 +238,8 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     List<FlSpot> votiT = new List();
     int j = 0;
     for (int i = 0; i < currentVoti.length; i++) {
-      double votoParsed = double.parse(currentVoti[i].voto.replaceAll(",", "."));
-      votiT.add(FlSpot(200-(j++).toDouble(), votoParsed));
+      if (currentVoti[i].pesoValore > 0)
+        votiT.add(FlSpot(200-(j++).toDouble(), currentVoti[i].votoValore));
     }
     Color linkDis = ottenutoObbiettivi ? Theme.of(context).primaryColor : Theme.of(context).disabledColor;
 

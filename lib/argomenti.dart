@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:mySobrero/reapi3.dart';
 
 import 'fade_slide_transition.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class ArgomentiView extends StatefulWidget {
   reAPI3 apiInstance;
@@ -21,7 +20,6 @@ class ArgomentiView extends StatefulWidget {
 
 class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStateMixin {
   List<ArgomentoStructure> regclasse;
-  Brightness currentBrightness;
 
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
@@ -38,7 +36,6 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -85,7 +82,6 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 
@@ -141,41 +137,27 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     String dataTemporanea = "";
-    currentBrightness = Theme.of(context).brightness;
-    AppBar titolo = AppBar(
-      title: AnimatedOpacity(
-        opacity: _appBarTitleOpacity,
-        duration: const Duration(milliseconds: 250),
-        child: Text("Argomenti", style: TextStyle(color: Colors.white)),
-      ),
-      backgroundColor: Color(0xFF5352ed),
-      elevation: _appBarElevation,
-      brightness: Brightness.dark,
-      leading: BackButton(
-        color: Colors.white,
-      ),
-    );
     return Hero(
         tag: "argomenti_background",
         child: Scaffold(
-          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          appBar: AppBar(
+            centerTitle: false,
+            title: AnimatedOpacity(
+              opacity: _appBarTitleOpacity,
+              duration: const Duration(milliseconds: 250),
+              child: Text("Argomenti", style: TextStyle(color: Colors.white)),
+            ),
+            backgroundColor: Color(0xFF5352ed),
+            elevation: _appBarElevation,
+            brightness: Brightness.dark,
+            leading: BackButton(
+              color: Colors.white,
+            ),
+          ),
           backgroundColor: Color(0xFF5352ed),
           body: SafeArea(
-            bottom: !_fadeSlideAnimationController.isCompleted,
+            bottom: false,
             child: Column(children: <Widget>[
-              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
-                controller: _fadeSlideAnimationController,
-                slideAnimationTween: Tween<Offset>(
-                  begin: Offset(0.0, 0.5),
-                  end: Offset(0.0, 0.0),
-                ),
-                begin: 0.0,
-                end: _listAnimationIntervalStart,
-                child: PreferredSize(
-                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: titolo,
-                ),
-              ) : Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

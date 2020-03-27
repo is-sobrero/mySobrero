@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'fade_slide_transition.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,12 +53,10 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  Brightness currentBrightness;
 
   @override
   void initState() {
     super.initState();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -77,7 +74,6 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 
@@ -137,38 +133,24 @@ class _RicercaAuleState extends State<RicercaAuleView> with SingleTickerProvider
   final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    currentBrightness = Theme.of(context).brightness;
-    AppBar titolo = AppBar(
-      title: AnimatedOpacity(
-        opacity: _appBarTitleOpacity,
-        duration: const Duration(milliseconds: 250),
-        child: Text("Ricerca aule", style: TextStyle(color: Colors.white)),
-      ),
-      backgroundColor: Color(0xffF86925),
-      elevation: _appBarElevation,
-      leading: BackButton(color: Colors.white,),
-    );
     return Hero(
         tag: "ricercaaule_background",
         child: Scaffold(
-          appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+          appBar: AppBar(
+            centerTitle: false,
+            title: AnimatedOpacity(
+              opacity: _appBarTitleOpacity,
+              duration: const Duration(milliseconds: 250),
+              child: Text("Ricerca aule", style: TextStyle(color: Colors.white)),
+            ),
+            backgroundColor: Color(0xffF86925),
+            elevation: _appBarElevation,
+            leading: BackButton(color: Colors.white,),
+          ),
           backgroundColor: Color(0xffF86925),
           body: SafeArea(
-            bottom: !_fadeSlideAnimationController.isCompleted,
+            bottom: false,
             child: Column(children: <Widget>[
-              !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
-                controller: _fadeSlideAnimationController,
-                slideAnimationTween: Tween<Offset>(
-                  begin: Offset(0.0, 0.5),
-                  end: Offset(0.0, 0.0),
-                ),
-                begin: 0.0,
-                end: _listAnimationIntervalStart,
-                child: PreferredSize(
-                  preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                  child: titolo,
-                ),
-              ) : Container(),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: ScrollBehavior(),

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'fade_slide_transition.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class CompitiView extends StatefulWidget {
   List<CompitoStructure> compiti;
@@ -23,7 +22,6 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  Brightness currentBrightness;
   _CompitiState() {}
 
   Map<int, Widget> _children = const <int, Widget> {
@@ -34,7 +32,6 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     _fadeSlideAnimationController = AnimationController(
       duration: Duration(milliseconds: 1500),
       vsync: this,
@@ -52,7 +49,6 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
   void dispose() {
     _fadeSlideAnimationController.dispose();
     _scrollController.dispose();
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(currentBrightness == Brightness.dark);
     super.dispose();
   }
 
@@ -60,42 +56,29 @@ class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    AppBar titolo = AppBar(
-      title: AnimatedOpacity(
-        opacity: _appBarTitleOpacity,
-        duration: const Duration(milliseconds: 250),
-        child: Text("Compiti", style: TextStyle(color: Colors.black)),
-      ),
-      backgroundColor: Color(0xFF43e97b),
-      elevation: _appBarElevation,
-      leading: BackButton(
-        color: Colors.black,
-      ),
-    );
-    currentBrightness = Theme.of(context).brightness;
     return Hero(
     tag: "compiti_background",
       child: Scaffold(
-        appBar: _fadeSlideAnimationController.isCompleted ? titolo : null,
+        appBar: AppBar(
+          centerTitle: false,
+          brightness: Brightness.light,
+          title: AnimatedOpacity(
+            opacity: _appBarTitleOpacity,
+            duration: const Duration(milliseconds: 250),
+            child: Text("Compiti", style: TextStyle(color: Colors.black)),
+          ),
+          backgroundColor: Color(0xFF43e97b),
+          elevation: _appBarElevation,
+          leading: BackButton(
+            color: Colors.black,
+          ),
+        ),
         backgroundColor: Color(0xFF43e97b),
         body: Stack(
           children: <Widget>[
             SafeArea(
-              bottom: !_fadeSlideAnimationController.isCompleted,
+              bottom: false,
               child: Column(children: <Widget>[
-                !_fadeSlideAnimationController.isCompleted ? FadeSlideTransition(
-                  controller: _fadeSlideAnimationController,
-                  slideAnimationTween: Tween<Offset>(
-                    begin: Offset(0.0, 0.5),
-                    end: Offset(0.0, 0.0),
-                  ),
-                  begin: 0.0,
-                  end: _listAnimationIntervalStart,
-                  child: PreferredSize(
-                    preferredSize: Size.fromHeight(_preferredAppBarHeight),
-                    child: titolo,
-                  ),
-                ) : new Container(),
                 Expanded(
                   child: ScrollConfiguration(
                     behavior: ScrollBehavior(),
