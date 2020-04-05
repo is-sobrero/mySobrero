@@ -151,8 +151,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
           barrierDismissible: false,
           builder: (BuildContext context) {
             return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)), //this right here
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), //this right here
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 200),
                 child: Column(
@@ -356,12 +355,14 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         (Platform.isMacOS ? "macos" : "");
     final cognome = loginStructure.user.cognome;
     FirebaseAnalytics analytics = FirebaseAnalytics();
+    final tipoAccount = loginStructure.user.livello == "4" ? "studente" : "genitore";
     analytics.setUserId("UID$username$cognome");
     analytics.setUserProperty(name: "anno", value: loginStructure.user.classe.toString());
     analytics.setUserProperty(name: "classe", value: "${loginStructure.user.classe} ${loginStructure.user.sezione.trim()}");
     analytics.setUserProperty(name: "corso", value: loginStructure.user.corso);
     analytics.setUserProperty(name: "indirizzo", value: loginStructure.user.corso.contains("Liceo") ? "liceo" : "itis");
     analytics.setUserProperty(name: "platform", value: systemPlatform);
+    analytics.setUserProperty(name: "livelloAccount", value: tipoAccount);
 
     final PackageInfo info = await PackageInfo.fromPlatform();
 
@@ -372,7 +373,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       'ultimo accesso': DateTime.now().toIso8601String(),
       'platform': systemPlatform,
       'build flavour': isInDebugMode ? 'internal' : 'production',
-      'version' : info.buildNumber
+      'version' : info.buildNumber,
+      'livelloAccount' : tipoAccount
     }, merge: true);
 
     final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(username).get();

@@ -68,7 +68,7 @@ class _AssenzeState extends State<AssenzeView> with SingleTickerProviderStateMix
           ),
           backgroundColor: Color(0xffff9692),
           body: SafeArea(
-            bottom: false,//!_fadeSlideAnimationController.isCompleted,
+            bottom: false,
             child: Column(children: <Widget>[
               Expanded(
                 child: ScrollConfiguration(

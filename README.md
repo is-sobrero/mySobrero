@@ -6,11 +6,7 @@ Repo principale del mySobrero 2.0
 Il nuovo mySobrero, per rendere lo sviluppo più semplice e veloce, è
 basato sul framework open source [Flutter](https://flutter.dev) di
 Google, che permette di scrivere app per Android, iOS, Web e Computer da
-una unica base di codice. mySobrero si basa su
-[reAPI](https://github.com/federunco/reAPI), un wrapper per Axios,
-attualmente in sviluppo. L'endpoint dell'API è temporaneo e non
-ottimizzato per un altro carico di richieste.
-
+una unica base di codice.
 
 ## Per gli studenti del Sobrero
 Rendere mySobrero adatto ai 1300 studenti del Sobrero non è una impresa facile, anche il minimo contributo è fondamentale. Sarebbe utile andare a compilare questo modulo per supportare lo sviluppo: https://forms.gle/tDt4RZD1XWK5kkH39 (solo con account @sobrero)
@@ -22,6 +18,7 @@ Rendere mySobrero adatto ai 1300 studenti del Sobrero non è una impresa facile,
 ### Prerequisiti
 - SDK Flutter
 - SDK per la piattaforma di destinazione
+- File reAPI3.dart (non open-source)
 
 TODO finire "come compilare"
 

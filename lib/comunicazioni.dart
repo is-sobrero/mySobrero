@@ -117,7 +117,9 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(toBeginningOfSentenceCase(realDestinatario), style: TextStyle(fontWeight: FontWeight.bold),),
-                    )
+                    ),
+                    Spacer(),
+                    Text(comunicazione.data)
                   ],
                 ),
               ),
