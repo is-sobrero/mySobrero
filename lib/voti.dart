@@ -29,7 +29,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   bool get wantKeepAlive => true;
 
   List<double> votiTotali;
-  List<String> materie;
+  List<String> materie, materie2q;
 
   Map<int, Widget> _children = const <int, Widget> {
     0: Text('1^ Quad.',),
@@ -173,10 +173,17 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   void initState(){
     super.initState();
     materie = new List();
+    materie2q = new List();
     materie.add("Tutte le materie");
+    materie2q.add("Tutte le materie");
+    if (widget.voti2q.length > 0) selezionePeriodo = 1;
     for (int i = 0; i < widget.voti1q.length; i++) {
       String m = widget.voti1q[i].materia;
       if (!materie.contains(m)) materie.add(m);
+    }
+    for (int i = 0; i < widget.voti2q.length; i++) {
+      String m = widget.voti2q[i].materia;
+      if (!materie2q.contains(m)) materie2q.add(m);
     }
     for (int i = 0; i < widget.voti1q.length; i++) {
       if (!sommaVoti1Q.containsKey(widget.voti1q[i].materia)) {
@@ -220,6 +227,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
 
   @override
   Widget build(BuildContext context) {
+    print("Count voti2q: ${widget.voti2q.length}");
     List<Color> gradientColors = [
       const Color(0xff23b6e6),
       const Color(0xff02d39a),
@@ -242,7 +250,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
         votiT.add(FlSpot(200-(j++).toDouble(), currentVoti[i].votoValore));
     }
     Color linkDis = ottenutoObbiettivi ? Theme.of(context).primaryColor : Theme.of(context).disabledColor;
-
+    List<String> selectedFMaterie = selezionePeriodo == 0 ? materie : materie2q;
     return SingleChildScrollView(
           child: SafeArea(
             top: false,
@@ -309,12 +317,12 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                               children: _children,
                               onValueChanged: (val) {
                                 List<VotoStructure> periodoSelezionato = val == 0 ? widget.voti1q : widget.voti2q;
-                                materie = new List();
+                                /*materie = new List();
                                 materie.add("Tutte le materie");
                                 for (int i = 0; i < periodoSelezionato.length; i++) {
                                   String m = periodoSelezionato[i].materia;
                                   if (!materie.contains(m)) materie.add(m);
-                                }
+                                }*/
                                 setState(() {
                                   filterIndex = 0;
                                   selezionePeriodo = val;
@@ -356,21 +364,16 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                                               icon: Icon(Icons.unfold_more, color: Theme.of(context).primaryColor),
                                               isExpanded: false,
                                               hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
-                                              value: materie[filterIndex],
+                                              value: selectedFMaterie[filterIndex],
                                               onChanged: (String Value) {
-                                                setState(() {
-                                                  filterIndex = materie.indexOf(Value);
-                                                });
+                                                filterIndex = materie.indexOf(Value);
+                                                setState(() {});
                                               },
-                                              items: materie.map((String user) {
+                                              items: selectedFMaterie.map((String user) {
                                                 return DropdownMenuItem<String>(
                                                   value: user,
-                                                  child:
-                                                  Container(
-                                                    child: Text(
-                                                      user,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
+                                                  child: Container(
+                                                    child: Text(user, overflow: TextOverflow.ellipsis,),
                                                   ),
                                                 );
                                               }).toList(),

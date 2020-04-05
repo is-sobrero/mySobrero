@@ -4,7 +4,6 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:mySobrero/FeedDetail.dart';
 import 'package:mySobrero/compiti.dart';
 import 'package:mySobrero/expandedsection.dart';

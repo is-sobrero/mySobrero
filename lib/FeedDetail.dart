@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:mySobrero/SobreroFeed.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:html/dom.dart' as dom;
 
 
 class FeedDetailView extends StatefulWidget {
@@ -55,8 +54,16 @@ class _FeedState extends State<FeedDetailView> with SingleTickerProviderStateMix
   }
 
 
+
+  @override
+  void initState(){
+    super.initState();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.articolo.pubDate);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
