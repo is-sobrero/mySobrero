@@ -18,8 +18,9 @@ class SituazioneElement{
 class DialogoObbiettivo extends StatefulWidget {
   String materia;
   Function(int) nuovoObbiettivoCallback;
+  int initialVoto = 6;
 
-  DialogoObbiettivo({Key key, @required this.materia, @required this.nuovoObbiettivoCallback}) : super(key: key);
+  DialogoObbiettivo({Key key, @required this.materia, @required this.nuovoObbiettivoCallback, @required this.initialVoto}) : super(key: key);
 
   @override
   _dObbiettivoState createState() => _dObbiettivoState();
@@ -30,7 +31,13 @@ class _dObbiettivoState extends State<DialogoObbiettivo> {
   final List<Color> limite = <Color>[Color(0xffFFD200), Color(0xffF7971E)];
   final List<Color> insufficienza = <Color>[Color(0xffFF416C), Color(0xffFF4B2B)];
 
-  int voto = 6;
+  int voto = 0;
+
+  @override
+  void initState(){
+    super.initState();
+    voto = widget.initialVoto;
+  }
 
   @override
   Widget build(BuildContext context){
@@ -296,13 +303,14 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     );
   }
 
-  Dialog cambiaObbiettivo(String materia){
+  Dialog cambiaObbiettivo(String materia, int setpointObbiettivo){
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), //this right here
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 200),
         child: DialogoObbiettivo(
           materia: materia,
+          initialVoto: setpointObbiettivo,
           nuovoObbiettivoCallback: (obbiettivo){
             setState(() {
               obbiettivi[materia] = obbiettivo;
@@ -444,7 +452,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                                               showDialog(
                                                   context: context,
                                                   builder: (BuildContext context){
-                                                    return cambiaObbiettivo(materia);
+                                                    return cambiaObbiettivo(materia, obbiettivi.containsKey(materia) ? obbiettivi[materia] : 6);
                                                   }
                                               );
                                             }

@@ -192,7 +192,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
       }
       if (widget.voti1q[i].votoValore > 0){
         sommaVoti1Q[widget.voti1q[i].materia] += widget.voti1q[i].votoValore * widget.voti1q[i].pesoValore;
-        countVoti1Q[widget.voti1q[i].materia] += int.parse(widget.voti1q[i].peso);
+        countVoti1Q[widget.voti1q[i].materia] += widget.voti1q[i].pesoValore;
       }
     }
     sommaVoti1Q.forEach((key, value){
@@ -206,8 +206,8 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
         countVoti2Q[widget.voti2q[i].materia] = 0;
       }
       if (widget.voti2q[i].votoValore > 0){
-        sommaVoti2Q[widget.voti2q[i].materia] += widget.voti1q[i].votoValore * widget.voti2q[i].pesoValore;
-        countVoti2Q[widget.voti2q[i].materia] += int.parse(widget.voti2q[i].peso);
+        sommaVoti2Q[widget.voti2q[i].materia] += widget.voti2q[i].votoValore * widget.voti2q[i].pesoValore;
+        countVoti2Q[widget.voti2q[i].materia] += widget.voti2q[i].pesoValore;
       }
     }
     sommaVoti2Q.forEach((key, value){
@@ -227,7 +227,6 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
 
   @override
   Widget build(BuildContext context) {
-    print("Count voti2q: ${widget.voti2q.length}");
     List<Color> gradientColors = [
       const Color(0xff23b6e6),
       const Color(0xff02d39a),

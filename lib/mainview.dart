@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/FeedDetail.dart';
 import 'package:mySobrero/compiti.dart';
@@ -129,6 +130,12 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
   }
 
   @override
+  void dispose(){
+    _parentNoticeRecognizer.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _firebaseMessaging.configure(
@@ -142,6 +149,11 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
         print("onResume: $message");
       },
     );
+    _parentNoticeRecognizer = TapGestureRecognizer()..onTap = (){
+      setState((){
+        expandedParentNotice = !expandedParentNotice;
+      });
+    };
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
     _firebaseMessaging.onIosSettingsRegistered
@@ -161,7 +173,8 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
   }
 
   RemoteNotice remoteNotice = RemoteNotice.preFetch();
-
+  bool expandedParentNotice = false;
+  TapGestureRecognizer _parentNoticeRecognizer;
   @override
   Widget build(BuildContext context) {
     Widget immagineProfilo = Container(
@@ -221,68 +234,97 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                !accountStudente ? Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Container(
-                                  decoration: new BoxDecoration(
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                            color: Color(0xFFFF416C).withOpacity(0.4),
-                                            offset: const Offset(1.1, 1.1),
-                                            blurRadius: 10.0),
-                                      ],
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(11)),
-                                      gradient: LinearGradient(
-                                        begin: FractionalOffset.topRight,
-                                        end: FractionalOffset.bottomRight,
-                                        colors: <Color>[
-                                          Color(0xFFFF416C),
-                                          Color(0xFFFF4B2B),
-                                        ],
-                                      )),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          RichText(
-                                            text: TextSpan(
-                                              style: new TextStyle(
-                                                  color: Colors.white),
-                                              children: [
-                                                WidgetSpan(
-                                                  child: Icon(
-                                                    Icons.warning,
-                                                    size: 20,
-                                                    color: Colors.white,
+                !accountStudente ? Padding(
+                  padding: EdgeInsets.only(bottom: remoteNotice.enabled ? 10 : 0),
+                  child: Container(
+                    decoration: new BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Color(0xFFFF416C).withOpacity(0.4),
+                            offset: const Offset(1.1, 1.1),
+                            blurRadius: 10.0),
+                      ],
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                              decoration: new BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(11)),
+                                  gradient: LinearGradient(
+                                    begin: FractionalOffset.topRight,
+                                    end: FractionalOffset.bottomRight,
+                                    colors: <Color>[
+                                      Color(0xFFFF416C),
+                                      Color(0xFFFF4B2B),
+                                    ],
+                                  )),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 8.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(color: Colors.white, width: 1.0,)
+                                              )
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(bottom: 5.0),
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.error,
+                                                  size: 25,
+                                                  color: Colors.white,
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 8.0,),
+                                                    child: Text("Attenzione", style: new TextStyle(
+                                                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
+                                                    ),
+                                                    ),
                                                   ),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      "  Hai eseguito l'accesso al mySobrero con le credenziali per genitori, questo può provocare errori inaspettati. Effettua il logout e riaccedi con le credenziali da studente.",
-                                                ),
+                                                )
                                               ],
                                             ),
                                           ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 6),
-                                            child: Text(
-                                              "Se non hai a disposizione le credenziali a te riservate puoi andare a richiederle in Segreteria Amministrativa.",
-                                              style: new TextStyle(
-                                                  color: Color(0xFFFFFFFF)),
+                                        ),
+                                      ),
+                                      RichText(
+                                        text: new TextSpan(
+                                          children: [
+                                            new TextSpan(
+                                              text: "Hai eseguito l'accesso a mySobrero con le credenziali da genitore, ",
+                                              style: new TextStyle(color: Colors.white),
                                             ),
-                                          )
-                                        ],
-                                      ))),
-                            ),
-                            flex: 1,
-                          ),
-                        ],
-                      ) : Container(),
+                                            TextSpan(
+                                              text: expandedParentNotice ? "Per saperne di meno" : "Per saperne di più...",
+                                              style: new TextStyle(fontWeight: FontWeight.bold, color: Colors.white, decoration: TextDecoration.underline),
+                                              recognizer: _parentNoticeRecognizer
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ExpandedSection(
+                                        expand: expandedParentNotice,
+                                        child:  Padding(
+                                          padding: const EdgeInsets.only(top: 8.0),
+                                          child: Text("Utilizzando le credenziali da genitore mySobrero continua a funzionare, ma alcune funzionalità potrebbero non essere disponibili, come la selezione dello studente, i sondaggi interni, l'accesso alla Knowledge Platform o a Resell@Sobrero.\nSe sei uno studente e stai usando le credenziali dei tuoi genitori, richiedi le credenziali a te riservare in Segreteria Amministrativa per sfruttare al massimo mySobrero.", style: TextStyle(color: Colors.white)),
+                                        ),
+                                      )
+                                    ],
+                                  ))),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                ) : Container(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
