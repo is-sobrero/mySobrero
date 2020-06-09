@@ -194,7 +194,8 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                                                 shrinkWrap: true,
                                                 itemCount: selectedPagella.materie.length,
                                                 itemBuilder: (context, index) {
-                                                  VotoFinaleStructure mat = selectedPagella.materie[index];
+                                                  VotoFinaleStructure mat = selectedPagella.materie.values.elementAt(index);
+                                                  String materia = selectedPagella.materie.keys.elementAt(index);
                                                   return Padding(
                                                     padding: const EdgeInsets.only(bottom: 15),
                                                     child: Container(
@@ -221,7 +222,7 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                                                               Expanded(child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: <Widget>[
-                                                                  Text(mat.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                                                                  Text(materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                                                                   Text("Ore di assenza: ${mat.assenze}",
                                                                       style: TextStyle(
                                                                           fontSize: 16,
