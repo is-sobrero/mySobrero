@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -228,8 +229,12 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
   @override
   Widget build(BuildContext context) {
     List<Color> gradientColors = [
-      const Color(0xff23b6e6),
-      const Color(0xff02d39a),
+      const Color(0xFF0287d1),
+      const Color(0xFF0335ff),
+    ];
+    List<Color> gradientColors2 = [
+      const Color(0xFF0287d1),
+      const Color(0xFF0287d1),
     ];
     bool isWide = MediaQuery.of(context).size.width > 500;
     int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
@@ -238,7 +243,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     List<VotoStructure> periodoSelezionato = selezionePeriodo == 0 ? widget.voti1q : widget.voti2q;
     if (filterIndex == 0) currentVoti = periodoSelezionato;
     else {
-      String materia = materie[filterIndex];
+      String materia = selezionePeriodo == 0 ? materie[filterIndex] : materie2q[filterIndex];
       currentVoti = List();
       for (int i = 0; i < periodoSelezionato.length; i++) if (periodoSelezionato[i].materia == materia) currentVoti.add(periodoSelezionato[i]);
     }
@@ -276,8 +281,11 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                           FlatButton(
                             child: Row(
                               children: <Widget>[
-                                Text(ottenutoObbiettivi ? "Vai alla situazione" : "Caricando gli obbiettivi", style: TextStyle(color: linkDis),),
-                                ottenutoObbiettivi ? Icon(Icons.arrow_forward_ios, color: linkDis,) : Padding(
+                                Text(ottenutoObbiettivi ? "Situazione" : "Caricando gli obbiettivi", style: TextStyle(color: linkDis),),
+                                ottenutoObbiettivi ? Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Icon(Icons.flag, color: linkDis,),
+                                ) : Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: SpinKitDualRing(
                                     color: Theme.of(context).disabledColor,
@@ -289,17 +297,35 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                             ),
                             onPressed: ottenutoObbiettivi ? (){
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => SituazioneView(
-                                  situazione1Q: situazione1Q, situazione2Q: situazione2Q,
-                                  obbiettivi: obbiettivi, onObbiettiviChange: (_nob){
-                                    print("changeObbiettivi");
-                                    setState(() {
-                                      obbiettivi = _nob;
-                                    });
-                                  },
-                                )),
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___)  => SituazioneView(
+                                      situazione1Q: situazione1Q, situazione2Q: situazione2Q,
+                                      apiInstance: widget.apiInstance,
+                                      obbiettivi: obbiettivi, onObbiettiviChange: (_nob){
+                                      print("changeObbiettivi");
+                                      setState(() {
+                                        obbiettivi = _nob;
+                                      });
+                                    },
+                                    ),
+                                    transitionDuration: Duration(milliseconds: 700),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
+                                      var offsetAnimation = animation.drive(tween);
+                                      return SharedAxisTransition(
+                                        child: child,
+                                        animation: animation,
+                                        secondaryAnimation: secondaryAnimation,
+                                        transitionType: SharedAxisTransitionType.vertical,
+                                      );
+                                    },
+
+                                  )
                               );
+
                             } : null,
                             padding: EdgeInsets.zero,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -365,7 +391,7 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                                               hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
                                               value: selectedFMaterie[filterIndex],
                                               onChanged: (String Value) {
-                                                filterIndex = materie.indexOf(Value);
+                                                filterIndex = selectedFMaterie.indexOf(Value);
                                                 setState(() {});
                                               },
                                               items: selectedFMaterie.map((String user) {
@@ -422,10 +448,12 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
                                       spots: votiT,
                                       curveSmoothness: 0.5,
                                       isCurved: false,
-                                      colors: gradientColors,
+                                      colors: gradientColors2,
                                       belowBarData: BarAreaData(
                                         show: true,
                                         colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+                                        gradientFrom: Offset(0, 0),
+                                        gradientTo: Offset(0, 1),
                                       ),
                                     )
                                   ]),

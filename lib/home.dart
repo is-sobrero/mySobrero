@@ -176,9 +176,9 @@ class _HomeState extends State<HomeScreen> with SingleTickerProviderStateMixin {
                               Hero(
                                 tag: "main_logosobre",
                                 child: SizedBox(
-                                  width: 35,
-                                  height: 35,
-                                  child: Image.asset('assets/images/logo_sobrero_grad.png', scale: 1.1),
+                                  width: 33,
+                                  height: 33,
+                                  child: Image.asset('assets/images/logo_sobrero_grad.png'),
                                 ),
                               ),
                               Padding(

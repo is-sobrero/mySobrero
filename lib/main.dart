@@ -459,8 +459,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
               Hero(
                 tag: "main_logosobre",
                 child: Container(
-                  width: savedNotAuth ? 40 : 70,
-                  height: savedNotAuth ? 40 : 70,
+                  width: savedNotAuth ? 37 : 65,
+                  height: savedNotAuth ? 37 : 65,
                   child: Image.asset('assets/images/logo_sobrero_grad.png'),
                 ),
               ),

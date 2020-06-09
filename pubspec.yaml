@@ -23,7 +23,7 @@ dependencies:
   intl: ^0.16.1
   shared_preferences: ^0.5.6
   firebase_core: ^0.4.0+9
-  cloud_firestore: ^0.13.0+1
+  cloud_firestore: ^0.13.6
   firebase_analytics: ^5.0.9
   firebase_messaging: ^6.0.9
   firebase_crashlytics: ^0.1.2+4
@@ -73,15 +73,8 @@ flutter_icons:
   adaptive_icon_background: assets/icon/ic_background.png
   adaptive_icon_foreground: assets/icon/ic_foreground.png
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
   assets:

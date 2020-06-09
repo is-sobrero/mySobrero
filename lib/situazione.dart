@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -146,8 +147,9 @@ class SituazioneView extends StatefulWidget {
   Map<String, SituazioneElement> situazione1Q, situazione2Q;
   Map<String, int> obbiettivi;
   Function(Map<String, int>) onObbiettiviChange;
+  reAPI3 apiInstance;
 
-  SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q, @required this.obbiettivi, @required this.onObbiettiviChange}) : super(key: key);
+  SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q, @required this.obbiettivi, @required this.onObbiettiviChange, @required this.apiInstance}) : super(key: key);
 
   @override
   _SituazioneView createState() => _SituazioneView();
@@ -164,7 +166,7 @@ class SituaMateria{
 
 class _SituazioneView extends State<SituazioneView> with SingleTickerProviderStateMixin {
   final double _preferredAppBarHeight = 56.0;
-
+  Future<List<PagellaStructure>> _pagelle;
   AnimationController _fadeSlideAnimationController;
   ScrollController _scrollController;
   double _appBarElevation = 0.0;
@@ -178,6 +180,9 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     ),
     1: Text(
       '2^ Quad.',
+    ),
+    3: Text(
+      'Previsioni',
     ),
   };
 
@@ -199,6 +204,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
         if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
       });
     obbiettivi = widget.obbiettivi;
+    _pagelle = widget.apiInstance.retrievePagelle();
   }
 
   @override
@@ -250,41 +256,6 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
               colors: selezionato
             ),
           ),
-            /*Container(
-              width: 75,
-              height: 75,
-              child: SleekCircularSlider(
-                appearance: CircularSliderAppearance(
-                  startAngle: 270,
-                  angleRange: 360,
-                  customWidths: CustomSliderWidths(
-                      trackWidth: 3,
-                      progressBarWidth: 8,
-                      shadowWidth: 15
-                  ),
-                  customColors: CustomSliderColors(
-                      progressBarColors: selezionato,
-                      shadowColor: selezionato[0],
-                      shadowMaxOpacity: 0.2,
-                      trackColor: Theme.of(context).textTheme.body1.color.withAlpha(100)
-                  )
-                ),
-                innerWidget: (value) => Center(
-                  child: Container(
-                      width: 50,
-                      child: AutoSizeText(
-                        value.toStringAsFixed(1),
-                        minFontSize: 8,
-                        maxLines: 1,
-                        style: TextStyle(fontSize: 25, ),
-                        textAlign: TextAlign.center,
-                      )
-                  ),
-                ),
-                min: 0,
-                max: 10,
-                initialValue: voto,
-              ),*/
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 10),
@@ -346,7 +317,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     double finalVoto = -1;
     do {
       volte++;
-      double sogliaMinima = obbiettivo - (1-paramSoglia);
+      double sogliaMinima = obbiettivo - (1 - paramSoglia);
       finalVoto = sogliaMinima * (countVoti + volte) - mediaAttuale * countVoti;
       finalVoto /= volte.toDouble();
     } while ((finalVoto < 1 || finalVoto > 10) && volte < 10);
@@ -396,12 +367,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                   behavior: ScrollBehavior(),
                   child: SingleChildScrollView(
                     controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      10,
-                      20,
-                      20,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[

@@ -16,7 +16,6 @@ class PagelleView extends StatefulWidget {
 }
 
 class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMixin {
-  //List<PagellaStructure> pagelle;
 
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;

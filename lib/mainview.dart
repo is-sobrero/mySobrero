@@ -112,7 +112,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
   /*reAPI2 response;
   SobreroFeed feed;
   SwitchPageCallback callback;*/
-  //String _profileURL;
+  //String _profileURL; g
 
   _Mainview() {}
 
@@ -299,7 +299,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                         text: new TextSpan(
                                           children: [
                                             new TextSpan(
-                                              text: "Hai eseguito l'accesso a mySobrero con le credenziali da genitore, ",
+                                              text: "Hai eseguito l'accesso a mySobrero con le credenziali da genitore. ",
                                               style: new TextStyle(color: Colors.white),
                                             ),
                                             TextSpan(
@@ -314,7 +314,7 @@ class _Mainview extends State<Mainview> with AutomaticKeepAliveClientMixin<Mainv
                                         expand: expandedParentNotice,
                                         child:  Padding(
                                           padding: const EdgeInsets.only(top: 8.0),
-                                          child: Text("Utilizzando le credenziali da genitore mySobrero continua a funzionare, ma alcune funzionalità potrebbero non essere disponibili, come la selezione dello studente, i sondaggi interni, l'accesso alla Knowledge Platform o a Resell@Sobrero.\nSe sei uno studente e stai usando le credenziali dei tuoi genitori, richiedi le credenziali a te riservare in Segreteria Amministrativa per sfruttare al massimo mySobrero.", style: TextStyle(color: Colors.white)),
+                                          child: Text("Utilizzando le credenziali da genitore mySobrero continua a funzionare, ma alcune funzionalità potrebbero non essere disponibili, come la selezione dello studente, i sondaggi interni o l'accesso a Resell@Sobrero.\nSe sei uno studente e stai usando le credenziali dei tuoi genitori, richiedi le credenziali a te riservate in Segreteria Amministrativa per sfruttare al massimo mySobrero.", style: TextStyle(color: Colors.white)),
                                         ),
                                       )
                                     ],
