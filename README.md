@@ -1,7 +1,7 @@
 <h1 align="center">mySobrero 2.0</h1>
 
 <div align="center">
-<img widht="256" height="256" src="assets/ic_launcher_ios.png">
+<img widht="256" height="256" src="assets/icon/ic_launcher_ios.png">
 </div>
 
 <br />
