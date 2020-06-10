@@ -315,11 +315,10 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
 
   String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){
     int volte = 0;
-    double paramSoglia = 0.7;
     double finalVoto = -1;
     do {
       volte++;
-      double sogliaMinima = obbiettivo - (1 - paramSoglia);
+      double sogliaMinima = obbiettivo - (1 - sogliaArrotondamento);
       finalVoto = sogliaMinima * (countVoti + volte) - mediaAttuale * countVoti;
       finalVoto /= volte.toDouble();
     } while ((finalVoto < 1 || finalVoto > 10) && volte < 10);
@@ -338,6 +337,11 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
 
   Widget _generaPrevisione(double mediaAttuale, int mediaPrevista, double media1Q, double scarto, String materia){
     String realDestinatario = "Dirigente";
+    Color scartoColor = Theme.of(context).accentColor;
+    Color mediaColor = Colors.green;
+    if (scarto > 0) scartoColor = Colors.green;
+    if (scarto < 0) scartoColor = Colors.red;
+    if (media1Q < 6) mediaColor = Colors.red;
     return Container(
         decoration: new BoxDecoration(
           //color: Theme.of(context).textTheme.body1.color.withAlpha(20),
@@ -378,17 +382,67 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Row(
                   children: [
-                    Column(
-                      children: [
-                        Text("Voto in pagella 1Q"),
-                        Text(media1Q.toStringAsFixed(0))
-                      ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text("Voto in pagella 1Q", textAlign: TextAlign.center),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withAlpha(30),
+                                          blurRadius: 10,
+                                          spreadRadius: 4,
+                                          offset: Offset(0, 2)
+                                      )
+                                    ]
+                                ),
+                                child: CircleAvatar(
+                                  child: Text(media1Q.toStringAsFixed(0), style: TextStyle(color: Colors.white, fontSize: 25)),
+                                  backgroundColor: mediaColor,
+                                  radius: 30,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Text("Scarto rispetto alla media"),
-                        Text(scarto.toStringAsFixed(1)),
-                      ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text("Scarto rispetto alla media", textAlign: TextAlign.center),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withAlpha(30),
+                                          blurRadius: 10,
+                                          spreadRadius: 4,
+                                          offset: Offset(0, 2)
+                                      )
+                                    ]
+                                ),
+                                child: CircleAvatar(
+                                  child: Text(scarto.toStringAsFixed(1), style: TextStyle(color: Colors.white, fontSize: 20)),
+                                  backgroundColor: scartoColor,
+                                  radius: 30,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     )
                   ],
                 )
@@ -446,7 +500,7 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            "Arrotondamento impostato a 0.7",
+                            "Arrotondamento impostato a ${sogliaArrotondamento.toStringAsFixed(1)}",
                             style: Theme.of(context).textTheme.subtitle.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -488,74 +542,88 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                                             }
                                       );
                                     }
-                                ) : new Container(
-                                  child: FutureBuilder<List<PagellaStructure>>(
-                                    future: _pagelle,
-                                    builder: (context, snapshot){
-                                      switch (snapshot.connectionState){
-                                        case ConnectionState.none:
-                                        case ConnectionState.active:
-                                        case ConnectionState.waiting:
+                                ) : FutureBuilder<List<PagellaStructure>>(
+                                  future: _pagelle,
+                                  builder: (context, snapshot){
+                                    switch (snapshot.connectionState){
+                                      case ConnectionState.none:
+                                      case ConnectionState.active:
+                                      case ConnectionState.waiting:
+                                        return Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Center(
+                                            child: Column(
+                                              children: <Widget>[
+                                                SpinKitDualRing(
+                                                  color: Theme.of(context).textTheme.bodyText1.color,
+                                                  size: 40,
+                                                  lineWidth: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 8.0),
+                                                  child: Text("Calcolando le previsioni...", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      case ConnectionState.done:
+                                        if (snapshot.hasError) {
                                           return Padding(
-                                            padding: const EdgeInsets.all(15.0),
-                                            child: Center(
-                                              child: Column(
-                                                children: <Widget>[
-                                                  SpinKitDualRing(
-                                                    color: Theme.of(context).textTheme.bodyText1.color,
-                                                    size: 40,
-                                                    lineWidth: 5,
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top: 8.0),
-                                                    child: Text("Calcolando le previsioni...", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-                                                  ),
-                                                ],
-                                              ),
+                                            padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Icon(Icons.warning, size: 40, color: Theme.of(context).textTheme.bodyText1.color,),
+                                                Text("${snapshot.error}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
+                                              ],
                                             ),
                                           );
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            return Padding(
-                                              padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Icon(Icons.warning, size: 40, color: Theme.of(context).textTheme.bodyText1.color,),
-                                                  Text("${snapshot.error}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-                                                ],
-                                              ),
-                                            );
-                                          }
-                                          if (snapshot.data.length == 0)
-                                            return Text("Previsioni non è disponibile fino a quando non è uscita la pagella del primo quadrimestre", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,);
+                                        }
+                                        if (snapshot.data.length == 0)
+                                          return Text("Previsioni non è disponibile fino a quando non è uscita la pagella del primo quadrimestre", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,);
 
-                                          PagellaStructure pag1q = snapshot.data[0];
-                                          double mediaPrevista = 0;
-                                          List<Widget> previsioni = new List<Widget>();
-                                          widget.situazione2Q.forEach((key, value) {
-                                            double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
-                                            double media1q = widget.situazione1Q[key].media;
-                                            double media2q = value.media;
-                                            double differenza = media1q - voto1q;
-                                            double mediaProbabile = media2q + differenza;
-                                            double parteDecMP = mediaProbabile % 1;
-                                            int pagellaProbabile = -1;
-                                            if (parteDecMP >= sogliaArrotondamento) pagellaProbabile = mediaProbabile.ceil();
-                                            else pagellaProbabile = mediaProbabile.floor();
-                                            if (pagellaProbabile > 10) pagellaProbabile = 10;
-                                            mediaPrevista += pagellaProbabile;
-                                            previsioni.add(_generaPrevisione(media2q, pagellaProbabile, voto1q, differenza, key));
-                                            print("${key}: diff ${differenza} - media2q  ${media2q} - mediaProb ${mediaProbabile} - pag ${pagellaProbabile}");
-                                          });
-
-                                          mediaPrevista /= widget.situazione2Q.length.toDouble();
-                                          return Column(
+                                        PagellaStructure pag1q = snapshot.data[0];
+                                        double mediaPrevista = 0;
+                                        List<Widget> previsioni = new List<Widget>();
+                                        widget.situazione2Q.forEach((key, value) {
+                                          double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
+                                          double media1q = widget.situazione1Q[key].media;
+                                          double media2q = value.media;
+                                          double differenza = media1q - voto1q;
+                                          double mediaProbabile = media2q + differenza;
+                                          double parteDecMP = mediaProbabile % 1;
+                                          int pagellaProbabile = -1;
+                                          if (parteDecMP >= sogliaArrotondamento) pagellaProbabile = mediaProbabile.ceil();
+                                          else pagellaProbabile = mediaProbabile.floor();
+                                          if (pagellaProbabile > 10) pagellaProbabile = 10;
+                                          mediaPrevista += pagellaProbabile;
+                                          previsioni.add(_generaPrevisione(media2q, pagellaProbabile, voto1q, differenza, key));
+                                          //print("${key}: diff ${differenza} - media2q  ${media2q} - mediaProb ${mediaProbabile} - pag ${pagellaProbabile}");
+                                        });
+                                        mediaPrevista /= widget.situazione2Q.length.toDouble();
+                                        previsioni.insert(0,
+                                            Text("Media totale prevista: ${mediaPrevista.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)
+                                        );
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 8.0),
+                                          child: ListView.builder(
+                                              primary: false,
+                                              shrinkWrap: true,
+                                              itemCount: previsioni.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(bottom: 10),
+                                                  child: previsioni[index],
+                                                );
+                                              }
+                                          ),
+                                        );
+                                        return ListView(
                                             children: previsioni
-                                          );
-                                      }
-                                      return null;
-                                    },
-                                  ),
+                                        );
+                                    }
+                                    return null;
+                                  },
                                 )
                               ],
                             ))
