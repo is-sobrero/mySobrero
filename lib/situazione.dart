@@ -586,18 +586,24 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                                         double mediaPrevista = 0;
                                         List<Widget> previsioni = new List<Widget>();
                                         widget.situazione2Q.forEach((key, value) {
-                                          double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
-                                          double media1q = widget.situazione1Q[key].media;
-                                          double media2q = value.media;
-                                          double differenza = media1q - voto1q;
-                                          double mediaProbabile = media2q + differenza;
-                                          double parteDecMP = mediaProbabile % 1;
-                                          int pagellaProbabile = -1;
-                                          if (parteDecMP >= sogliaArrotondamento) pagellaProbabile = mediaProbabile.ceil();
-                                          else pagellaProbabile = mediaProbabile.floor();
-                                          if (pagellaProbabile > 10) pagellaProbabile = 10;
-                                          mediaPrevista += pagellaProbabile;
-                                          previsioni.add(_generaPrevisione(media2q, pagellaProbabile, voto1q, differenza, key));
+                                          try {
+                                            double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
+                                            double media1q = widget.situazione1Q[key].media;
+                                            double media2q = value.media;
+                                            double differenza = media1q - voto1q;
+                                            double mediaProbabile = media2q + differenza;
+                                            double parteDecMP = mediaProbabile % 1;
+                                            int pagellaProbabile = -1;
+                                            if (parteDecMP >= sogliaArrotondamento) pagellaProbabile = mediaProbabile.ceil();
+                                            else pagellaProbabile = mediaProbabile.floor();
+                                            if (pagellaProbabile > 10) pagellaProbabile = 10;
+                                            mediaPrevista += pagellaProbabile;
+                                            previsioni.add(_generaPrevisione(media2q, pagellaProbabile, voto1q, differenza, key));
+                                          } catch (e){
+                                            print("Errore in previsione!");
+                                            print(e.toString());
+                                          }
+
                                           //print("${key}: diff ${differenza} - media2q  ${media2q} - mediaProb ${mediaProbabile} - pag ${pagellaProbabile}");
                                         });
                                         mediaPrevista /= widget.situazione2Q.length.toDouble();

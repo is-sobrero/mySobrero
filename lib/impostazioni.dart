@@ -283,7 +283,10 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                               top: false,
                                               child: Padding(
                                                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                                                child: Text("Per annullare il logout, scorri in basso la finestra di dialogo", textAlign: TextAlign.center,),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Per annullare il logout, scorri in basso la finestra di dialogo", textAlign: TextAlign.center,),
+                                                ),
                                               ),
                                             )
                                           ],
