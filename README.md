@@ -27,9 +27,9 @@
   - [Clonazione del repository](#clonazione-del-repository)
   - [Compilazione app](#compilazione-app)
   - [Servizi cloud](#servizi-cloud)
-- [Statistiche in-app](#statistiche)
-- [Licenza](##licenza)
-  - [Autori / Copyright](#autori-copyright)
+- [Statistiche in-app](#statisiche-in-app)
+- [Licenza](#licenza)
+  - [Autori / Copyright](#autori--copyright)
   - [Licenze componenti di terze parti](##componenti-terze-parti)
   - [Dettagli licenza](#dettagli-licenza)
 
@@ -72,19 +72,53 @@ Assicurarsi che git sia installato sul computer.
 
 Avviare una finestra di terminale (o CMD se su Windows), collocarsi nella cartella dove si vuole che venga clonato il repository e lanciare il seguente comando:
 
-    git clone https://github.com/federunco/mySobrero.git mysobrero-master
+    git clone https://github.com/federunco/mySobrero.git mysobrero-repo
 
 Dopo che il comando ha clonato tutto il repository, esso sarà disponibile nella directory "mysobrero-repo".
 
 ## Compilazione app
 Indipendentemente dal sistema operativo di destinazione, è consigliabile utilizzare Android Studio come ambiente di sviluppo, essendo attualmente l'IDE supportato maggiormente per lo sviluppo Flutter.
+Bisognerà inoltre installare il plugin Flutter e Dart per Android Studio.
 
 In base al sistema operativo di destinazione, bisognerà installare diversi strumenti:
 
 - Android
   - Android SDK (incluso in Android Studio)
+  - Dispositivo Android con le impostazioni da sviluppatore abilitate
   - Java JDK
 - iOS
   - Xcode 11 (da App Store, disponibile solo su macOS)
   - CocoaPods
 
+
+Se si sta compilando mySobrero su macOS, dopo aver installato Xcode 11 eseguire i seguenti comandi da terminale:
+
+    sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+    sudo xcodebuild -runFirstLaunch
+    sudo xcodebuild -license
+
+Testare la configurazione di macOS lanciando il seguente comando (avvio del simulatore)
+
+    open -a Simulator
+
+Una volta configurato l'ambiente di sviluppo, aprire il progetto con Android Studio, aprire il file pubspeck.yaml e cliccare "Packages get", qui Android Studio sincronizzerà il progetto con le dipendenze richieste.
+Se si ha a disposizione il file reapi3.dart (non ancora open-source), spostarlo nella cartella lib.
+
+Ora è possibile compilare l'applicazione: selezionare nel menù in alto a destra il dispositivo di destinazione, dopo averlo collegato al computer, e cliccare dal menù "Run" l'opzione "Flutter run main.dart in Release mode".
+Il processo di compilazione è lungo, soprattutto la prima volta, attendere col dispositivo di destinazione collegato al computer per tutta la durata dell'operazione.
+
+## Servizi cloud
+mySobrero è strettamente dipendente da Firebase, anche se è in sviluppo un server backend privato, attualmente è la scelta migliore per gestire il cloud dell'applicazione.
+Essendo una scelta temporanea Firebase (temporaneità dettata anche dalla incompatibilità con i dispositivi Huawei di nuova generazione) non è stato creato nessun file di configurazione per l'accesso a Firebase, rendendo difficoltosa la modifica del pool di applicazione predefinito.  
+E' consigliabile non modificare il pool di applicazioni, essendo configurato per la raccolta dei dati sul pool principale, garantendo statistiche ottimali.
+
+# Statisiche in-app
+mySobrero raccoglie statistiche anonime riguardo l'utilizzo dell'app, la frequenza di apertura, gli orari e le schermate aperte. Inoltre viene registrata la classe di appartenenza per effetturare statistiche a livello di istituto riguardo l'utilizzo dell'applicazione.
+I dati raccolti sono compatibili con il regolamento GDPR dell'istituto, installando l'applicazione si accetta il trattamento dei dati.
+
+# Licenza
+## Autori / Copyright
+Copyright 2020 (c) I.S. "A. Sobrero" / Federico Runco
+## Dettagli licenza
+Il codice sorgente è rilasciato in licenza secondo GNU General Public License v3.0, che garantisce le quattro regole fondamentali del software libero anche sui fork dell'applicazione.
+Per maggiori dettagli riguardo la licenza, consultare il file [LICENSE](LICENSE).
