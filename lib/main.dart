@@ -24,6 +24,7 @@ import 'package:package_info/package_info.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'globals.dart' as globals;
 import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() {
   Crashlytics.instance.enableInDevMode = true;
@@ -95,12 +96,16 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   String profileUrl;
   String uname, realName;
   Future<bool> credSalvate() async {
+    print("cred");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var localAuth = LocalAuthentication();
     bool useBiometrics = prefs.getBool('biometric_auth') ?? false;
-    bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+    bool canCheckBiometrics = false;
+    if (!kIsWeb) canCheckBiometrics = await localAuth.canCheckBiometrics;
+    List<BiometricType> availableBiometrics = List<BiometricType>();
     bool salvate = prefs.getBool('savedCredentials') ?? false;
-    List<BiometricType> availableBiometrics = await localAuth.getAvailableBiometrics();
+    if (!kIsWeb) availableBiometrics = await localAuth.getAvailableBiometrics();
+    print("ce");
     String nomecognome = prefs.getString('user') ?? "[pref key non salvata]";
     if (canCheckBiometrics && salvate && useBiometrics && availableBiometrics.length > 0) {
       bool didAuthenticate = await localAuth.authenticateWithBiometrics(
@@ -134,7 +139,10 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   bool isBeta = false;
 
   versionCheck(context) async {
-
+    if (kIsWeb){
+      ragionaLogin();
+      return;
+    }
     final PackageInfo info = await PackageInfo.fromPlatform();
     double currentVersion = double.parse(info.buildNumber);
     print("Versione app corrente: $currentVersion");
@@ -245,6 +253,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   var isLoginVisible = false;
 
   ragionaLogin() async {
+    print("ragionalogin");
     bool cred = await credSalvate();
     if (cred) {
       setState(() {
@@ -337,34 +346,44 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       );
       return;
     }
-    final QuickActions quickActions = QuickActions();
-    quickActions.setShortcutItems(<ShortcutItem>[
-      const ShortcutItem(type: 'action_voti', localizedTitle: 'Valutazioni'),
-      const ShortcutItem(type: 'action_comm', localizedTitle: 'Comunicazioni')
-    ]);
+    if (!kIsWeb){
+      final QuickActions quickActions = QuickActions();
+      quickActions.setShortcutItems(<ShortcutItem>[
+        const ShortcutItem(type: 'action_voti', localizedTitle: 'Valutazioni'),
+        const ShortcutItem(type: 'action_comm', localizedTitle: 'Comunicazioni')
+      ]);
+    }
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('savedCredentials', true);
     prefs.setString('username', username);
     prefs.setString('password', password);
     prefs.setString('user', loginStructure.user.nomeCompleto);
-    String systemPlatform = (Platform.isWindows ? "win32" : "") +
-        (Platform.isAndroid ? "android" : "") +
-        (Platform.isFuchsia ? "fuchsia" : "") +
-        (Platform.isIOS ? "iOS" : "") +
-        (Platform.isLinux ? "linux" : "") +
-        (Platform.isMacOS ? "macos" : "");
+    String systemPlatform = "Web client";
+    if (!kIsWeb){
+      systemPlatform = (Platform.isWindows ? "win32" : "") +
+          (Platform.isAndroid ? "android" : "") +
+          (Platform.isFuchsia ? "fuchsia" : "") +
+          (Platform.isIOS ? "iOS" : "") +
+          (Platform.isLinux ? "linux" : "") +
+          (Platform.isMacOS ? "macos" : "");
+    }
+
     final cognome = loginStructure.user.cognome;
     FirebaseAnalytics analytics = FirebaseAnalytics();
     final tipoAccount = loginStructure.user.livello == "4" ? "studente" : "genitore";
-    analytics.setUserId("UID$username$cognome");
-    analytics.setUserProperty(name: "anno", value: loginStructure.user.classe.toString());
-    analytics.setUserProperty(name: "classe", value: "${loginStructure.user.classe} ${loginStructure.user.sezione.trim()}");
-    analytics.setUserProperty(name: "corso", value: loginStructure.user.corso);
-    analytics.setUserProperty(name: "indirizzo", value: loginStructure.user.corso.contains("Liceo") ? "liceo" : "itis");
-    analytics.setUserProperty(name: "platform", value: systemPlatform);
-    analytics.setUserProperty(name: "livelloAccount", value: tipoAccount);
+    if (!kIsWeb) {
+      analytics.setUserId("UID$username$cognome");
+      analytics.setUserProperty(name: "anno", value: loginStructure.user.classe.toString());
+      analytics.setUserProperty(name: "classe", value: "${loginStructure.user.classe} ${loginStructure.user.sezione.trim()}");
+      analytics.setUserProperty(name: "corso", value: loginStructure.user.corso);
+      analytics.setUserProperty(name: "indirizzo", value: loginStructure.user.corso.contains("Liceo") ? "liceo" : "itis");
+      analytics.setUserProperty(name: "platform", value: systemPlatform);
+      analytics.setUserProperty(name: "livelloAccount", value: tipoAccount);
+    }
 
-    final PackageInfo info = await PackageInfo.fromPlatform();
+    PackageInfo info;
+    if (!kIsWeb) info = await PackageInfo.fromPlatform();
 
     Firestore.instance.collection('utenti').document(username).setData({
       'classe': "${loginStructure.user.classe} ${loginStructure.user.sezione.trim()}",
@@ -373,7 +392,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       'ultimo accesso': DateTime.now().toIso8601String(),
       'platform': systemPlatform,
       'build flavour': isInDebugMode ? 'internal' : 'production',
-      'version' : info.buildNumber,
+      'version' : kIsWeb ? "webclient" : info.buildNumber,
       'livelloAccount' : tipoAccount
     }, merge: true);
 
