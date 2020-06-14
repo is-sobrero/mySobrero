@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
-import 'package:mySobrero/SobreroFeed.dart';
+import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 

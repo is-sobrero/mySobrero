@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -58,4 +60,12 @@ void setAnalyticsData({@required String userID, String classe, String sezione, S
     analytics.setUserProperty(name: "platform", value: getSystemPlatform);
     analytics.setUserProperty(name: "livelloAccount", value: accountLevel);
   }
+}
+
+Future<RemoteNews> getRemoteHeadingNews() async {
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+  await remoteConfig.activateFetched();
+  final notice = jsonDecode(remoteConfig.getString('notice_setting'));
+  return RemoteNews.fromJson(notice);
 }

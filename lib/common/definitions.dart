@@ -1,16 +1,16 @@
-class RemoteNotice {
-  bool enabled;
-  String description;
-  bool bottomNoticeEnabled;
+class RemoteNews {
+  bool headingNewsEnabled = false;
+  String headingNewsBody;
+  bool bottomNoticeEnabled = false;
   String bottomNoticeTitle;
   String bottomNotice;
   String bottomNoticeHeadingURL;
   String bottomNoticeLinkTitle;
   String bottomNoticeLink;
 
-  RemoteNotice(
-      {this.enabled,
-        this.description,
+  RemoteNews(
+      {this.headingNewsEnabled = false,
+        this.headingNewsBody,
         this.bottomNoticeEnabled,
         this.bottomNoticeTitle,
         this.bottomNotice,
@@ -18,9 +18,9 @@ class RemoteNotice {
         this.bottomNoticeLinkTitle,
         this.bottomNoticeLink});
 
-  RemoteNotice.fromJson(Map<String, dynamic> json) {
-    enabled = json['enabled'];
-    description = json['description'];
+  RemoteNews.fromJson(Map<String, dynamic> json) {
+    headingNewsEnabled = json['enabled'];
+    headingNewsBody = json['description'];
     bottomNoticeEnabled = json['bottomNoticeEnabled'];
     bottomNoticeTitle = json['bottomNoticeTitle'];
     bottomNotice = json['bottomNotice'];
@@ -29,9 +29,9 @@ class RemoteNotice {
     bottomNoticeLink = json['bottomNoticeLink'];
   }
 
-  RemoteNotice.preFetch(){
-    enabled = false;
-    description = "";
+  RemoteNews.preFetch(){
+    headingNewsEnabled = false;
+    headingNewsBody = "";
     bottomNoticeEnabled = false;
     bottomNoticeTitle = "";
     bottomNotice = "";
@@ -42,8 +42,8 @@ class RemoteNotice {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['enabled'] = this.enabled;
-    data['description'] = this.description;
+    data['enabled'] = this.headingNewsEnabled;
+    data['description'] = this.headingNewsBody;
     data['bottomNoticeEnabled'] = this.bottomNoticeEnabled;
     data['bottomNoticeTitle'] = this.bottomNoticeTitle;
     data['bottomNotice'] = this.bottomNotice;

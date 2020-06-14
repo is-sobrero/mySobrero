@@ -14,7 +14,7 @@ import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
 import 'package:mySobrero/app_main/main.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'package:mySobrero/SobreroFeed.dart';
+import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

@@ -1,15 +1,18 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mySobrero/FeedDetail.dart';
 
+import 'package:mySobrero/feed/feed_detail.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/common/definitions.dart';
+import 'package:mySobrero/common/expandedsection.dart';
 import 'package:mySobrero/common/profiles.dart';
 import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/SobreroFeed.dart';
+import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/globals.dart' as globals;
@@ -20,9 +23,8 @@ class HomePage extends StatefulWidget {
   SobreroFeed feed;
   SwitchPageCallback callback;
   List<CompitoStructure> weekAssignments;
-  String profileUrl;
 
-  HomePage({Key key, @required this.unifiedLoginStructure, @required this.apiInstance, @required this.feed, @required this.callback, @required this.profileUrl}) {
+  HomePage({Key key, @required this.unifiedLoginStructure, @required this.apiInstance, @required this.feed, @required this.callback,}) {
     DateTime today = DateTime.now();
     bool isCurrentWeek = false;
     var weekStart = today.subtract(new Duration(days: today.weekday - 1));
@@ -45,6 +47,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
 
   String lastMark = "", lastSubject;
   String lastCircular = "", lastCircularSender;
+  
+  RemoteNews _remoteNotice = RemoteNews.preFetch();
+
+  bool expandedParentNotice = false;
+  TapGestureRecognizer _parentNoticeRecognizer;
+
+  bool accountStudente;
 
   @override
   void initState(){
@@ -65,6 +74,24 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
       if (tempSender.toUpperCase() == "DIRIGENTE") lastCircularSender = "Dirigente";
       else lastCircularSender = "Gianni Rossi";
     }
+    getRemoteHeadingNews().then(
+            (value) => setState((){
+              _remoteNotice = value;
+            })
+    );
+
+    _parentNoticeRecognizer = TapGestureRecognizer()..onTap = (){
+      setState((){
+        expandedParentNotice = !expandedParentNotice;
+      });
+    };
+    accountStudente = widget.unifiedLoginStructure.user.livello == "4";
+  }
+
+  @override
+  void dispose(){
+    _parentNoticeRecognizer.dispose();
+    super.dispose();
   }
 
   @override
@@ -80,6 +107,97 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
               child: Column(
                 children: [
+                  !accountStudente ? Padding(
+                    padding: EdgeInsets.only(bottom: _remoteNotice.headingNewsEnabled ? 10 : 0),
+                    child: Container(
+                      decoration: new BoxDecoration(
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Color(0xFFFF416C).withOpacity(0.4),
+                              offset: const Offset(1.1, 1.1),
+                              blurRadius: 10.0),
+                        ],
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                                decoration: new BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(11)),
+                                    gradient: LinearGradient(
+                                      begin: FractionalOffset.topRight,
+                                      end: FractionalOffset.bottomRight,
+                                      colors: <Color>[
+                                        Color(0xFFFF416C),
+                                        Color(0xFFFF4B2B),
+                                      ],
+                                    )),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(color: Colors.white, width: 1.0,)
+                                                )
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(bottom: 5.0),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Icon(
+                                                    Icons.error,
+                                                    size: 25,
+                                                    color: Colors.white,
+                                                  ),
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 8.0,),
+                                                      child: Text("Attenzione", style: new TextStyle(
+                                                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
+                                                      ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: new TextSpan(
+                                            children: [
+                                              new TextSpan(
+                                                text: "Hai eseguito l'accesso a mySobrero con le credenziali da genitore. ",
+                                                style: new TextStyle(color: Colors.white),
+                                              ),
+                                              TextSpan(
+                                                  text: expandedParentNotice ? "Per saperne di meno" : "Per saperne di più...",
+                                                  style: new TextStyle(fontWeight: FontWeight.bold, color: Colors.white, decoration: TextDecoration.underline),
+                                                  recognizer: _parentNoticeRecognizer
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        ExpandedSection(
+                                          expand: expandedParentNotice,
+                                          child:  Padding(
+                                            padding: const EdgeInsets.only(top: 8.0),
+                                            child: Text("Utilizzando le credenziali da genitore mySobrero continua a funzionare, ma alcune funzionalità potrebbero non essere disponibili, come la selezione dello studente, i sondaggi interni o l'accesso a Resell@Sobrero.\nSe sei uno studente e stai usando le credenziali dei tuoi genitori, richiedi le credenziali a te riservate in Segreteria Amministrativa per sfruttare al massimo mySobrero.", style: TextStyle(color: Colors.white)),
+                                          ),
+                                        )
+                                      ],
+                                    ))),
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ) : Container(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: Row(
@@ -126,6 +244,49 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                         )
                       ],
                     ),
+                  ),
+                  UnconstrainedToggleTile(
+                    padding: EdgeInsets.only(bottom: _remoteNotice.headingNewsEnabled ? 10 : 0),
+                    highColor: Color(0xFFff5858),
+                    lowColor: Color(0xFFf09819),
+                    openTile: _remoteNotice.headingNewsEnabled,
+                    body: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(color: Colors.white, width: 1.0,)
+                                )
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.info_outline,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,),
+                                      child: Text("Informazioni per gli studenti", style: new TextStyle(
+                                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
+                                      ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(_remoteNotice.headingNewsBody, style: TextStyle(color: Colors.white)),
+                      ],
+                    )
                   ),
                   Flex(
                     direction: isWide ? Axis.horizontal : Axis.vertical,
@@ -223,8 +384,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
             ),
           ),
           Container(
-            color: Theme.of(context).brightness == Brightness.dark ?
-              AppColorScheme().darkSectionColor : AppColorScheme().sectionColor,
+            color: Theme.of(context).brightness == Brightness.dark ? AppColorScheme().darkSectionColor : AppColorScheme().sectionColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -255,6 +415,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                   ),
                 )
               ],
+            ),
+          ),
+          ExpandedSection(
+            expand: _remoteNotice.bottomNoticeEnabled,
+            child: ImageLinkTile(
+              context: context,
+              highColor: Color(0xFFfa71cd),
+              lowColor: Color(0xFF6a11cb),
+              isWide: isWide,
+              imageUrl: _remoteNotice.bottomNoticeHeadingURL,
+              title: _remoteNotice.bottomNoticeTitle,
+              body: _remoteNotice.bottomNotice,
+              detailsText: _remoteNotice.bottomNoticeLinkTitle,
+              detailsUrl: _remoteNotice.bottomNoticeLink
             ),
           )
         ],

@@ -5,9 +5,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:mySobrero/altro.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
 import 'package:mySobrero/comunicazioni.dart';
-import 'package:mySobrero/SobreroFeed.dart';
+import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/custom_icons_icons.dart';
-import 'package:mySobrero/mainview.dart';
 import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
@@ -39,7 +38,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
 
   int _scrollThreshold = 100;
 
-  Mainview _mainViewInstance;
   HomePage _homePageInstance;
   VotiView _votiViewInstance;
   ComunicazioniView _comunicazioniViewInstance;
@@ -85,14 +83,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
         apiInstance: widget.apiInstance,
         feed: widget.feed,
         callback: (page) => switchPage(true, page),
-        profileUrl: widget.profileUrl
     );
-    _mainViewInstance = Mainview(
-        unifiedLoginStructure: widget.unifiedLoginStructure,
-        apiInstance: widget.apiInstance,
-        feed: widget.feed,
-        callback: (page) => switchPage(true, page),
-        profileUrl: widget.profileUrl);
     _votiViewInstance = VotiView(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
