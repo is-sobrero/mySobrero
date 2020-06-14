@@ -12,7 +12,7 @@ import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
-import 'package:mySobrero/home.dart';
+import 'package:mySobrero/app_main/main.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/SobreroFeed.dart';
 import 'package:package_info/package_info.dart';
@@ -31,8 +31,8 @@ class AppLogin extends StatefulWidget {
 
 class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin {
   final userController = TextEditingController();
-  final pwrdController = TextEditingController();
-  final pwdController = TextEditingController();
+  final loginPwdController = TextEditingController();
+  final retypePwdController = TextEditingController();
 
   bool isLoginVisible = false;
   bool retypePassword = false;
@@ -114,6 +114,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     if (!areCredentialsSaved) return 1; // Le credenziali non sono salvate
     if (kIsWeb) return 0; // Se su web accedi con le cred salvate
     else {
+      profilePicUrl = await getProfilePicture(userID: userID);
+      globals.profileURL = profilePicUrl;
       var localAuth = LocalAuthentication();
       bool useBiometrics = prefs.getBool('biometric_auth') ?? false;
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
@@ -133,13 +135,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
             signInTitle: "Accedi a mySobrero",
           ),
         );
-        if (didAuthenticate){
-          return 0;
-        } else {
-          profilePicUrl = await getProfilePicture(userID: userID);
-          globals.profileURL = profilePicUrl;
-          return 2;
-        }
+        if (didAuthenticate) return 0;
+        else return 2;
       }
       else {
         return 0;
@@ -225,9 +222,9 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     );
   }
 
-  void buttonLoginOnClick() {
-    userID = userController.text;
-    userPassword = pwrdController.text;
+  void buttonLoginOnClick(String user, String password) {
+    userID = user;
+    userPassword = password;
     setState(() {
       isLoginVisible = false;
       isProgressVisible = true;
@@ -301,13 +298,13 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                         filled: true,
                         labelText: 'Password',
                       ),
-                      controller: pwdController,
+                      controller: retypePwdController,
                     ),
                     Container(
                       padding: EdgeInsets.only(top: 10),
                       child: RaisedButton(
                         padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                        onPressed: buttonLoginOnClick,
+                        onPressed: () => buttonLoginOnClick(userID, retypePwdController.text),
                         elevation: 2,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(7.0))),
                         color: Theme.of(context).primaryColor,
@@ -365,14 +362,14 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                         filled: true,
                         labelText: 'Password',
                       ),
-                      controller: pwrdController,
+                      controller: loginPwdController,
                     ),
                     Container(
                       padding: EdgeInsets.only(top: 10),
                       child: Center(
                         child: RaisedButton(
                           padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                          onPressed: buttonLoginOnClick,
+                          onPressed: () => buttonLoginOnClick(userController.text, loginPwdController.text),
                           elevation: 2,
                           shape: RoundedRectangleBorder(
                               borderRadius:

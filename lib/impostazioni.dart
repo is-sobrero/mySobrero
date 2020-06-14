@@ -36,8 +36,6 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  _ImpostazioniState (){}
-
   @override
   void initState() {
     super.initState();
