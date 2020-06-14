@@ -10,4 +10,6 @@ class AppColorScheme {
   final Color darkCardColor = Color(0xff212121);
   final Color darkBottomNavColor = Color(0xff242424);
   final Color darkCanvasColor = Color(0xff242424);
+  final Color sectionColor = Color(0xFFfafafa);
+  final Color darkSectionColor = Color(0xFF212121);
 }

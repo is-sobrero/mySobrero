@@ -8,18 +8,19 @@ import 'package:mySobrero/comunicazioni.dart';
 import 'package:mySobrero/SobreroFeed.dart';
 import 'package:mySobrero/custom_icons_icons.dart';
 import 'package:mySobrero/mainview.dart';
+import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
 import 'package:mySobrero/voti.dart';
 
-class HomeScreen extends StatefulWidget {
+class AppMain extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;
   reAPI3 apiInstance;
   SobreroFeed feed;
   String profileUrl;
   bool isBeta = false;
 
-  HomeScreen({
+  AppMain({
     Key key,
     @required this.unifiedLoginStructure,
     @required this.feed,
@@ -28,10 +29,10 @@ class HomeScreen extends StatefulWidget {
     @required this.apiInstance}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _HomeScreenState();
+  State<StatefulWidget> createState() => _AppMainState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;
   String _profileUrl;
   double _globalScroll = 0;
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   int _scrollThreshold = 100;
 
   Mainview _mainViewInstance;
+  HomePage _homePageInstance;
   VotiView _votiViewInstance;
   ComunicazioniView _comunicazioniViewInstance;
   AltroView _altroViewInstance;
@@ -78,6 +80,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.initState();
     _profileUrl = widget.profileUrl;
     print(_profileUrl);
+    _homePageInstance = HomePage(
+        unifiedLoginStructure: widget.unifiedLoginStructure,
+        apiInstance: widget.apiInstance,
+        feed: widget.feed,
+        callback: (page) => switchPage(true, page),
+        profileUrl: widget.profileUrl
+    );
     _mainViewInstance = Mainview(
         unifiedLoginStructure: widget.unifiedLoginStructure,
         apiInstance: widget.apiInstance,
@@ -137,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             itemCount: 4,
             itemBuilder: (context, i) {
               var schermata;
-              if (i == 0) schermata = _mainViewInstance;
+              if (i == 0) schermata = _homePageInstance;
               if (i == 1) schermata = _votiViewInstance;
               if (i == 2) schermata = _comunicazioniViewInstance;
               if (i == 3) schermata = _altroViewInstance;

@@ -201,7 +201,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___)  => HomeScreen(
+          pageBuilder: (_, __, ___)  => AppMain(
             unifiedLoginStructure: loginStructure,
             apiInstance: apiInstance,
             profileUrl: profilePicUrl,
