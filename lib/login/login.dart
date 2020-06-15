@@ -12,7 +12,7 @@ import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
-import 'package:mySobrero/app_main/main.dart';
+import 'package:mySobrero/app_main/app_main.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:package_info/package_info.dart';

@@ -132,28 +132,18 @@ class _VotesPageState extends State<VotesPage> with AutomaticKeepAliveClientMixi
       child: Container (
         child: Expandable(
           collapsed: ExpandableButton(
-            child: Container(
-              decoration: new BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(11)),
-                gradient: sfondoVoto,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Text(voto.votoTXT, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
+                  ),
+                  Expanded(child: Text(voto.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
                 ],
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15),
-                      child: Text(voto.votoTXT, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: coloreTesto)),
-                    ),
-                    Expanded(child: Text(voto.materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: coloreTesto)))
-                  ],
-                ),
-              ),
             ),
-
           ),
           expanded: Column(children: [
             ExpandableButton(
@@ -192,6 +182,8 @@ class _VotesPageState extends State<VotesPage> with AutomaticKeepAliveClientMixi
           ]),
         ),
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(11)),
+          gradient: sfondoVoto,
           boxShadow: <BoxShadow>[
             BoxShadow(color: sfondoVoto.colors[1].withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
           ],
@@ -391,6 +383,7 @@ class _VotesPageState extends State<VotesPage> with AutomaticKeepAliveClientMixi
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 5, top: 3),
+                        // TODO: cambiare CupertinoSlidingSegmentedControl con un qualcosa di più decente
                         child: CupertinoSlidingSegmentedControl(
                           children: _filters,
                           onValueChanged: (val) {
@@ -454,6 +447,7 @@ class _VotesPageState extends State<VotesPage> with AutomaticKeepAliveClientMixi
               PageTransitionSwitcher2(
                 reverse: periodFilter == 0,
                 alignment: Alignment.topLeft,
+                duration: Duration(milliseconds: 700),
                 transitionBuilder: (child, primary, secondary){
                   return SharedAxisTransition(
                     animation: primary,

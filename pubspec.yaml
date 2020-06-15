@@ -79,12 +79,21 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/fonts/
 
   fonts:
 
-    - family:  CustomIcons
+    - family: CustomIcons
       fonts:
         - asset: assets/fonts/CustomIcons.ttf
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope-Medium.ttf
+          weight: 400
+        - asset: assets/fonts/Manrope-ExtraBold.ttf
+          weight: 800
 
 
 #        - asset: assets/fonts/SF-Pro-Display-Medium.otf

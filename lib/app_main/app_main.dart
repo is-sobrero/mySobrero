@@ -11,7 +11,6 @@ import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/app_main/votes.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
-import 'package:mySobrero/voti.dart';
 
 class AppMain extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;
@@ -40,7 +39,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
   int _scrollThreshold = 100;
 
   HomePage _homePageInstance;
-  VotiView _votiViewInstance;
   VotesPage _votesPageInstance;
   ComunicazioniView _comunicazioniViewInstance;
   AltroView _altroViewInstance;
@@ -174,18 +172,34 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                       GButton(
                         icon: Icons.home,
                         text: 'Home',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       GButton(
                         icon: CustomIcons.chart,
                         text: 'Voti',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       GButton(
                         icon: Icons.list,
-                        text: 'Comunicazioni',
+                        text: 'Circolari',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       GButton(
                         icon: CustomIcons.dot,
                         text: 'Altro',
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       )
                     ],
                     selectedIndex: _currentPageIndex,

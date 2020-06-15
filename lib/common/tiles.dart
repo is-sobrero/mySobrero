@@ -11,51 +11,54 @@ Widget CounterTile ({@required double aspectRatio, EdgeInsets padding, int flex,
     flex: flex,
     child: GestureDetector(
       onTap: onTap,
-      child: Padding(
-        padding: padding,
-        child: AspectRatio(
-          aspectRatio: aspectRatio,
-          child: Container(
-            decoration: new BoxDecoration(
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: lowColor.withOpacity(0.4),
-                      offset: const Offset(1.1, 1.1),
-                      blurRadius: 10.0
-                  ),
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(11)),
-                gradient: LinearGradient(
-                  begin: FractionalOffset.topRight,
-                  end: FractionalOffset.bottomRight,
-                  colors: <Color>[
-                    highColor, lowColor
+      child: Transform.scale(
+        scale: 1,
+        child: Padding(
+          padding: padding,
+          child: AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Container(
+              decoration: new BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: lowColor.withOpacity(0.4),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 10.0
+                    ),
                   ],
-                )
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  showImage ? Image.asset(imagePath) : Text(
-                    primaryText,
-                    style: new TextStyle(
-                        fontSize: 65,
-                        color: textColor
-                    ),
-                  ),
-                  AutoSizeText(
-                    secondaryText,
-                    style: new TextStyle(
-                        color: textColor,
-                        fontSize: 14
-                    ),
-                    maxLines: 2,
-                    minFontSize: 7,
+                  borderRadius: BorderRadius.all(Radius.circular(11)),
+                  gradient: LinearGradient(
+                    begin: FractionalOffset.topRight,
+                    end: FractionalOffset.bottomRight,
+                    colors: <Color>[
+                      highColor, lowColor
+                    ],
                   )
-                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    showImage ? Image.asset(imagePath) : Text(
+                      primaryText,
+                      style: new TextStyle(
+                          fontSize: 65,
+                          color: textColor
+                      ),
+                    ),
+                    AutoSizeText(
+                      secondaryText,
+                      style: new TextStyle(
+                          color: textColor,
+                          fontSize: 14
+                      ),
+                      maxLines: 2,
+                      minFontSize: 7,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
