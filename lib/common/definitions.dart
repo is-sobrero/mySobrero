@@ -55,3 +55,9 @@ class RemoteNews {
 }
 
 typedef SwitchPageCallback = void Function(int page);
+
+class SituazioneElement{
+  int numeroVoti;
+  double media;
+  SituazioneElement(this.numeroVoti, this.media);
+}

@@ -9,6 +9,7 @@ import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/custom_icons_icons.dart';
 import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/app_main/votes.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
 import 'package:mySobrero/voti.dart';
 
@@ -40,6 +41,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
 
   HomePage _homePageInstance;
   VotiView _votiViewInstance;
+  VotesPage _votesPageInstance;
   ComunicazioniView _comunicazioniViewInstance;
   AltroView _altroViewInstance;
 
@@ -84,7 +86,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
         feed: widget.feed,
         callback: (page) => switchPage(true, page),
     );
-    _votiViewInstance = VotiView(
+    _votesPageInstance = VotesPage(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
@@ -138,7 +140,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
             itemBuilder: (context, i) {
               var schermata;
               if (i == 0) schermata = _homePageInstance;
-              if (i == 1) schermata = _votiViewInstance;
+              if (i == 1) schermata = _votesPageInstance;
               if (i == 2) schermata = _comunicazioniViewInstance;
               if (i == 3) schermata = _altroViewInstance;
               return NotificationListener<ScrollNotification>(

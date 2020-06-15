@@ -69,3 +69,15 @@ Future<RemoteNews> getRemoteHeadingNews() async {
   final notice = jsonDecode(remoteConfig.getString('notice_setting'));
   return RemoteNews.fromJson(notice);
 }
+
+Future<Map<String, int>> getRemoteGoals({@required userID}) async {
+  Map<String, int> tempReturn = new Map<String, int> ();
+  final DocumentSnapshot dataRetrieve = await Firestore.instance.collection('utenti').document(userID).get();
+  if (dataRetrieve.data["obbiettivi"].toString() != "null") {
+    Map<String, dynamic> _tempObbiettivi = jsonDecode(dataRetrieve.data["obbiettivi"].toString());
+    _tempObbiettivi.forEach((key, value){
+      tempReturn[key] = int.parse(value.toString());
+    });
+  }
+  return tempReturn;
+}

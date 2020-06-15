@@ -171,6 +171,50 @@ class _VotiView extends State<VotiView> with AutomaticKeepAliveClientMixin<VotiV
     );
   }
 
+  Widget _generate1QView(int columns){
+    return Container(
+      key: ValueKey<int>(771),
+      child: WaterfallFlow.builder(
+        primary: false,
+        shrinkWrap: true,
+        itemCount: widget.voti1q.length,
+        itemBuilder: (context, i){
+          return _generaTileVoto(widget.voti1q[i]);
+        },
+        gridDelegate: SliverWaterfallFlowDelegate(
+          crossAxisCount: columns,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          lastChildLayoutTypeBuilder: (index) => index == widget.voti1q.length
+              ? LastChildLayoutType.foot
+              : LastChildLayoutType.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _generate2QView(int columns){
+    return Container(
+      key: ValueKey<int>(772),
+      child: WaterfallFlow.builder(
+        primary: false,
+        shrinkWrap: true,
+        itemCount: widget.voti2q.length,
+        itemBuilder: (context, i){
+          return _generaTileVoto(widget.voti2q[i]);
+        },
+        gridDelegate: SliverWaterfallFlowDelegate(
+          crossAxisCount: columns,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          lastChildLayoutTypeBuilder: (index) => index == widget.voti2q.length
+              ? LastChildLayoutType.foot
+              : LastChildLayoutType.none,
+        ),
+      ),
+    );
+  }
+
   void initState(){
     super.initState();
     materie = new List();
