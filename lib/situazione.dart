@@ -9,13 +9,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mySobrero/hud.dart';
-
-
-class SituazioneElement{
-  int numeroVoti;
-  double media;
-  SituazioneElement(this.numeroVoti, this.media);
-}
+import 'package:mySobrero/common/definitions.dart';
 
 class DialogoObbiettivo extends StatefulWidget {
   String materia;

@@ -10,6 +10,7 @@ import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
+import 'package:mySobrero/common/definitions.dart';
 
 
 class VotiView extends StatefulWidget {

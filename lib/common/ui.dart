@@ -12,4 +12,10 @@ class AppColorScheme {
   final Color darkCanvasColor = Color(0xff242424);
   final Color sectionColor = Color(0xFFfafafa);
   final Color darkSectionColor = Color(0xFF212121);
+
+  List<Color> appGradient = [
+    const Color(0xFF0287d1),
+    const Color(0xFF0335ff),
+  ];
 }
+

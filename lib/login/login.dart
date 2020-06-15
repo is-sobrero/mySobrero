@@ -107,7 +107,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool areCredentialsSaved = prefs.getBool('savedCredentials') ?? false;
-    print(areCredentialsSaved);
     userFullName = prefs.getString('user') ?? "";
     userID = prefs.getString('username') ?? "";
     userPassword = prefs.getString('password') ?? "";
@@ -145,7 +144,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   Future<void> doLogin() async {
-    print("$userID $userPassword");
     reAPI3 apiInstance = new reAPI3();
     UnifiedLoginStructure loginStructure = await apiInstance.retrieveStartupData(userID, userPassword);
     if (loginStructure.statusHeader.code != 0){
