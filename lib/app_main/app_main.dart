@@ -9,11 +9,12 @@ import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/app_main/more.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
-import 'package:mySobrero/comunicazioni.dart';
-import 'package:mySobrero/feed/sobrero_feed.dart';
-import 'package:mySobrero/app_main/home.dart';
-import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/app_main/votes.dart';
+import 'package:mySobrero/app_main/communications.dart';
+import 'package:mySobrero/app_main/home.dart';
+import 'package:mySobrero/feed/sobrero_feed.dart';
+import 'package:mySobrero/reapi3.dart';
+
 
 class AppMain extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;
@@ -43,7 +44,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
 
   HomePage _homePageInstance;
   VotesPage _votesPageInstance;
-  ComunicazioniView _comunicazioniViewInstance;
+  CommunicationsPageView _communicationsPageView;
   MorePageView _morePageInstance;
 
   PageController pageController = PageController();
@@ -91,7 +92,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
-    _comunicazioniViewInstance = ComunicazioniView(
+    _communicationsPageView = CommunicationsPageView(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
@@ -142,7 +143,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               var schermata;
               if (i == 0) schermata = _homePageInstance;
               if (i == 1) schermata = _votesPageInstance;
-              if (i == 2) schermata = _comunicazioniViewInstance;
+              if (i == 2) schermata = _communicationsPageView;
               if (i == 3) schermata = _morePageInstance;
               return NotificationListener<ScrollNotification>(
                 onNotification: elaboraScroll,

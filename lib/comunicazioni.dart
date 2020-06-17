@@ -42,12 +42,12 @@ class _ComunicazioniView extends State<ComunicazioniView> with AutomaticKeepAliv
           borderRadius: BorderRadius.circular(500),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).primaryColor.withAlpha(50),
-              blurRadius: 10,
-              spreadRadius: 1,
-              offset: Offset(0,3)
+                color: Theme.of(context).primaryColor.withAlpha(50),
+                blurRadius: 10,
+                spreadRadius: 1,
+                offset: Offset(0,3)
             )
-          ]
+          ],
         ),
         child: ActionChip(
           backgroundColor: Theme.of(context).primaryColor,

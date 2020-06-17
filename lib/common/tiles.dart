@@ -1,3 +1,7 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPL 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -451,6 +455,45 @@ class IllustrationTile extends StatelessWidget{
             ),
           )
         )
+      ),
+    );
+  }
+}
+
+class GenericTile extends StatelessWidget{
+  GenericTile({
+    Key key,
+    @required this.children,
+    this.crossAxisAlignment = CrossAxisAlignment.stretch
+  }) :  assert(crossAxisAlignment != null),
+        assert(children != null),
+        super(key: key);
+
+  CrossAxisAlignment crossAxisAlignment;
+  List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: new BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(12),
+            blurRadius: 10,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: crossAxisAlignment,
+          children: [
+            ...children,
+          ],
+        ),
       ),
     );
   }
