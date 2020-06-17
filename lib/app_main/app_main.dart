@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
-import 'package:mySobrero/app_main/other.dart';
+import 'package:mySobrero/app_main/more.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
 import 'package:mySobrero/comunicazioni.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
