@@ -1,5 +1,10 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPG 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -69,11 +74,12 @@ PreferredSize SobreroAppBar({
                           color:
                           Theme.of(context).scaffoldBackgroundColor,
                           child: IconButton(
-                            icon: new Image.asset(
-                              'assets/images/ic_settings_grad.png',
+                            icon: Icon(
+                              LineIcons.cog,
+                              color: Theme.of(context).primaryColor,
                             ),
                             tooltip: 'Apri le impostazioni dell\'App',
-                            iconSize: 14,
+                            iconSize: 25,
                             onPressed: () {
                               Navigator.push(
                                   context,

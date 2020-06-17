@@ -14,7 +14,7 @@ description: La nuova app ufficiale del Sobrero per gli Studenti
 version: 2.0.2+27
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   http: ^0.12.0+2
@@ -54,6 +54,7 @@ dependencies:
   quick_actions: ^0.4.0+2
   flutter_parallax: ^0.1.2
   flutter_html: ^0.11.1
+  line_icons: ^0.2.0
 
   flutter:
     sdk: flutter
@@ -86,6 +87,9 @@ flutter:
     - family: CustomIcons
       fonts:
         - asset: assets/fonts/CustomIcons.ttf
+    - family: SobreroIcons
+      fonts:
+        - asset: assets/fonts/SobreroIcons.ttf
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope-Bold.ttf

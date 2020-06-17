@@ -1,16 +1,19 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPG 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_icons/line_icons.dart';
 
-import 'package:mySobrero/altro.dart';
+import 'package:mySobrero/app_main/other.dart';
 import 'package:mySobrero/app_main/sobrero_appbar.dart';
 import 'package:mySobrero/comunicazioni.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
-import 'package:mySobrero/custom_icons_icons.dart';
 import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/app_main/votes.dart';
-import 'package:mySobrero/app_main/sobrero_appbar.dart';
 
 class AppMain extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;
@@ -41,7 +44,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
   HomePage _homePageInstance;
   VotesPage _votesPageInstance;
   ComunicazioniView _comunicazioniViewInstance;
-  AltroView _altroViewInstance;
+  MorePageView _morePageInstance;
 
   PageController pageController = PageController();
 
@@ -92,7 +95,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
-    _altroViewInstance = AltroView(
+    _morePageInstance = MorePageView(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
@@ -140,7 +143,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               if (i == 0) schermata = _homePageInstance;
               if (i == 1) schermata = _votesPageInstance;
               if (i == 2) schermata = _comunicazioniViewInstance;
-              if (i == 3) schermata = _altroViewInstance;
+              if (i == 3) schermata = _morePageInstance;
               return NotificationListener<ScrollNotification>(
                 onNotification: elaboraScroll,
                 child: schermata,
@@ -170,15 +173,17 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                     duration: Duration(milliseconds: 300),
                     tabs: [
                       GButton(
-                        icon: Icons.home,
+                        icon: LineIcons.home,
                         text: 'Home',
+                        iconSize: 20,
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
                       GButton(
-                        icon: CustomIcons.chart,
+                        icon: LineIcons.bar_chart,
+                        iconSize: 20,
                         text: 'Voti',
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -186,7 +191,8 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       GButton(
-                        icon: Icons.list,
+                        icon: LineIcons.envelope_o,
+                        iconSize: 20,
                         text: 'Circolari',
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -194,7 +200,8 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       GButton(
-                        icon: CustomIcons.dot,
+                        icon: LineIcons.ellipsis_h,
+                        iconSize: 20,
                         text: 'Altro',
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,

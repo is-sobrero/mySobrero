@@ -1,3 +1,7 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPG 3.0 license that can be
+// found in the LICENSE file.
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -19,3 +23,53 @@ class AppColorScheme {
   ];
 }
 
+class MainViewSimpleContainer extends StatelessWidget {
+  MainViewSimpleContainer({
+    Key key,
+    @required this.title,
+    @required this.children,
+  }) :  assert(title != null),
+        assert(children != null),
+        super(key: key);
+
+  String title;
+  List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+              ...children,
+            ],
+          ),
+        )
+      ),
+    );
+  }
+}
+
+class UIHelper {
+  BuildContext context;
+
+  UIHelper({
+    this.context,
+  }) : assert(context != null);
+
+  int get columnCount => MediaQuery.of(context).size.width > 550 ? 2 : 1;
+}

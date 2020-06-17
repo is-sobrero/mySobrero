@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -42,6 +43,20 @@ class _ChildEntry {
   }
 }
 
+/// Signature for builders used to generate custom layouts for
+/// [PageTransitionSwitcher2].
+///
+/// The builder should return a widget which contains the given children, laid
+/// out as desired. It must not return null. The builder should be able to
+/// handle an empty list of `previousChildren`, or a null `currentChild`.
+///
+/// The `previousChildren` list is an unmodifiable list, sorted with the oldest
+/// at the beginning and the newest at the end. It does not include the
+/// `currentChild`.
+typedef PageTransitionSwitcherLayoutBuilder = Widget Function(
+  List<_ChildEntry> _activeEntries,
+);
+
 /// Signature for builders used to generate custom transitions for
 /// [PageTransitionSwitcher2].
 ///
@@ -57,10 +72,10 @@ class _ChildEntry {
 /// its child appears, and the secondary animation to define how its child
 /// disappears.
 typedef PageTransitionSwitcherTransitionBuilder = Widget Function(
-    Widget child,
-    Animation<double> primaryAnimation,
-    Animation<double> secondaryAnimation,
-    );
+  Widget child,
+  Animation<double> primaryAnimation,
+  Animation<double> secondaryAnimation,
+);
 
 /// A widget that transitions from an old child to a new child whenever [child]
 /// changes using an animation specified by [transitionBuilder].
@@ -141,18 +156,19 @@ typedef PageTransitionSwitcherTransitionBuilder = Widget Function(
 class PageTransitionSwitcher2 extends StatefulWidget {
   /// Creates a [PageTransitionSwitcher2].
   ///
-  /// The [duration], [reverse], and [transitionBuilder] parameters
+  /// The [duration], [reverse], [transitionBuilder] and [alignment] parameters
   /// must not be null.
   const PageTransitionSwitcher2({
     Key key,
     this.duration = const Duration(milliseconds: 300),
     this.reverse = false,
     @required this.transitionBuilder,
-    this.alignment = Alignment.center,
+    this.layoutBuilder = defaultLayoutBuilder,
     this.child,
   })  : assert(duration != null),
         assert(reverse != null),
         assert(transitionBuilder != null),
+        assert(layoutBuilder != null),
         super(key: key);
 
   /// The current child widget to display.
@@ -203,13 +219,34 @@ class PageTransitionSwitcher2 extends StatefulWidget {
   /// The child provided to the transitionBuilder may be null.
   final PageTransitionSwitcherTransitionBuilder transitionBuilder;
 
-  /// The alignment of [child] when its animated
+  /// A function that wraps all of the children that are transitioning out, and
+  /// the [child] that's transitioning in, with a widget that lays all of them
+  /// out. This is called every time this widget is built. The function must not
+  /// return null.
   ///
-  /// The given alignment is applied during the animation of the child, when
-  /// the animation is finished, the original alignment is applied to the child.
+  /// The default is [PageTransitionSwitcher2.defaultLayoutBuilder].
   ///
-  /// Defaults to Alignment.center
-  final AlignmentGeometry alignment;
+  /// See also:
+  ///
+  ///  * [PageTransitionSwitcherLayoutBuilder] for more information about
+  ///    how a layout builder should function.
+  final PageTransitionSwitcherLayoutBuilder layoutBuilder;
+
+  /// The layout builder used as the default value of [layoutBuilder].
+  ///
+  /// The new child is placed in a [Stack] that sizes itself to match the
+  /// largest of the child or a previous child. The children are centered on
+  /// each other.
+  ///
+  /// This is an [PageTransitionSwitcherTransitionBuilder] function.
+  static Widget defaultLayoutBuilder(List<_ChildEntry> activeEntries) {
+    return Stack(
+      children: activeEntries
+          .map<Widget>((_ChildEntry entry) => entry.transition)
+          .toList(),
+      alignment: Alignment.center,
+    );
+  }
 
   @override
   _PageTransitionSwitcher2State createState() => _PageTransitionSwitcher2State();
@@ -318,8 +355,8 @@ class _PageTransitionSwitcher2State extends State<PageTransitionSwitcher2>
       secondaryController,
     );
     assert(
-    transition != null,
-    'PageTransitionSwitcher.builder must not return null.',
+      transition != null,
+      'PageTransitionSwitcher.builder must not return null.',
     );
     final _ChildEntry entry = _ChildEntry(
       widgetChild: child,
@@ -360,8 +397,8 @@ class _PageTransitionSwitcher2State extends State<PageTransitionSwitcher2>
       entry.secondaryController,
     );
     assert(
-    transition != null,
-    'PageTransitionSwitcher.builder must not return null.',
+      transition != null,
+      'PageTransitionSwitcher.builder must not return null.',
     );
     entry.transition = KeyedSubtree(
       key: entry.transition.key,
@@ -379,11 +416,6 @@ class _PageTransitionSwitcher2State extends State<PageTransitionSwitcher2>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: _activeEntries
-          .map<Widget>((_ChildEntry entry) => entry.transition)
-          .toList(),
-      alignment: widget.alignment,
-    );
+    return widget.layoutBuilder(_activeEntries);
   }
 }

@@ -1,5 +1,11 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPG 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/common/sobrero_icons.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -199,7 +205,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                               elevation: 5.0,
                                               fillColor: Theme.of(context).primaryColor,
                                               child: Icon(
-                                                Icons.edit,
+                                                LineIcons.pencil,
                                                 color: Colors.white,
                                                 size: 20,
                                               ),
@@ -229,7 +235,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Text(widget.unifiedLoginStructure.user.nomeCompleto, style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
                                     ),
-                                    SettingsButton(Icons.exit_to_app, "Logout", "Cancella l'account memorizzato dall'app", () {
+                                    SettingsButton(SobreroIcons.logout2, "Logout", "Cancella l'account memorizzato dall'app", () {
                                       showModalBottomSheet(isDismissible: false, context: context, builder: (context)
                                       {
                                         return Column(
@@ -291,13 +297,13 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                         );
                                       });
                                     }),
-                                    ToggleButton(Icons.fingerprint, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
+                                    ToggleButton(SobreroIcons.fingerprint, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
                                       setState(() {
                                           bioAuth = !bioAuth;
                                         _impostaBool("biometric_auth", bioAuth);
                                       });
                                     }, bioAuth, lenBio > 0),
-                                    SettingsButton(Icons.info, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {
+                                    SettingsButton(SobreroIcons.info_circled_alt, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {
                                       showDialog(context: context, builder: (BuildContext builder) {
                                         final ThemeData themeData = Theme.of(context);
                                         final TextStyle linkStyle = themeData.textTheme.body1.copyWith(color: themeData.accentColor);
@@ -386,7 +392,7 @@ class SettingsButton extends StatelessWidget {
       onPressed: this.onPressed,
       child: Row(
         children: <Widget>[
-          Icon(this.icon),
+          Icon(this.icon, size: 20,),
           SizedBox(width: 20.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,7 +427,7 @@ class ToggleButton extends StatelessWidget {
       onPressed: enabled ? this.onPressed : null,
       child: Row(
         children: <Widget>[
-          Icon(this.icon),
+          Icon(this.icon, size: 20,),
           SizedBox(width: 20.0),
           Expanded(
             child: Column(

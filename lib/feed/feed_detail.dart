@@ -1,7 +1,12 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPG 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:flutter_html/flutter_html.dart';
 
@@ -202,7 +207,7 @@ class _FeedState extends State<FeedDetailView> with SingleTickerProviderStateMix
             openURL(context, widget.articolo.link);
           },
           label: Text('Apri nel browser'),
-          icon: Icon(Icons.open_in_browser),
+          icon: Icon(LineIcons.chrome),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       ),

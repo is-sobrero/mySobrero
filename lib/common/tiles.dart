@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import 'package:mySobrero/common/expandedsection.dart';
 import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/common/utilities.dart';
@@ -362,4 +363,95 @@ Widget ImageLinkTile({BuildContext context, Color highColor, Color lowColor, boo
       ),
     ),
   );
+}
+
+class IllustrationTile extends StatelessWidget{
+  IllustrationTile({
+    Key key,
+    @required this.builder,
+    @required this.tag,
+    @required this.title,
+    @required this.image,
+    this.color = const Color(0xFFFF0000)
+  }) :  assert(builder != null),
+        assert(color != null),
+        assert(title != null),
+        assert(image != null),
+        super(key: key);
+
+  /// Route builder passed to the Navigator when the [IllustrationTile] is
+  /// tapped
+  final Function(BuildContext) builder;
+
+  /// Background color of the tile
+  final Color color;
+
+  /// Hero tag for [IllustrationTile] to animate the tile body during
+  /// Navigator.push transition
+  final String tag;
+
+  /// The title for [IllustrationTile]
+  final String title;
+
+  /// Relative path to the leading image of the [IllustrationTile]
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: builder,
+          fullscreenDialog: true,
+        ),
+      ),
+      child: Hero(
+        tag: tag,
+        child: Container(
+          height: 150,
+          width: double.infinity,
+          //margin: EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: color,
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(.4),
+                offset: const Offset(1.1, 1.1),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            clipBehavior: Clip.antiAlias,
+            // TODO: rimuovere ingradimento immagine durante hero
+            // TODO: provare le nuove animazioni con tiles
+            // TODO: implementare colore automatico testo
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(image),
+                  alignment: Alignment.centerRight,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: color.computeLuminance() > 0.45 ? Colors.black : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          )
+        )
+      ),
+    );
+  }
 }

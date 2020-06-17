@@ -1,8 +1,14 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPG 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:mySobrero/common/sobrero_icons.dart';
 import 'package:mySobrero/situazione.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:animations/animations.dart';
@@ -314,10 +320,10 @@ class _VotesPageState extends State<VotesPage> with AutomaticKeepAliveClientMixi
                               return FlatButton(
                                 child: Row(
                                   children: <Widget>[
-                                    Text("Situazione", style: TextStyle(color: Theme.of(context).primaryColor),),
+                                    Text("Situazione", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 5.0),
-                                      child: Icon(Icons.flag, color: Theme.of(context).primaryColor,),
+                                      child: Icon(LineIcons.flag, size: 20, color: Theme.of(context).primaryColor,),
                                     ),
                                   ],
                                 ),
@@ -446,7 +452,12 @@ class _VotesPageState extends State<VotesPage> with AutomaticKeepAliveClientMixi
               ),
               PageTransitionSwitcher2(
                 reverse: periodFilter == 0,
-                alignment: Alignment.topLeft,
+                layoutBuilder: (_entries) => Stack(
+                  children: _entries
+                      .map<Widget>((entry) => entry.transition)
+                      .toList(),
+                  alignment: Alignment.topLeft,
+                ),
                 duration: Duration(milliseconds: 700),
                 transitionBuilder: (child, primary, secondary){
                   return SharedAxisTransition(
