@@ -68,8 +68,14 @@ class UIHelper {
   BuildContext context;
 
   UIHelper({
-    this.context,
+    @required this.context,
   }) : assert(context != null);
 
-  int get columnCount => MediaQuery.of(context).size.width > 550 ? 2 : 1;
+  bool get isWide => MediaQuery.of(context).size.width > 500;
+
+  int get columnCount {
+    int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
+    columnCount = MediaQuery.of(context).size.width > 900 ? 3 : columnCount;
+    return columnCount;
+  }
 }

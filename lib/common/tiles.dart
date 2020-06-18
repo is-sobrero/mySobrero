@@ -482,7 +482,7 @@ class IllustrationTile extends StatelessWidget {
                 padding: EdgeInsets.all(15),
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: color.computeLuminance() > 0.45 ?

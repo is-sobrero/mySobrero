@@ -254,6 +254,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                     highColor: Color(0xFFff5858),
                     lowColor: Color(0xFFf09819),
                     expand: _remoteNotice.headingNewsEnabled,
+                    onTap: null,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
