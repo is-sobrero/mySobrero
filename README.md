@@ -12,7 +12,7 @@
       <img alt="GitHub release (latest SemVer)"
       src="https://img.shields.io/github/v/release/federunco/mySobrero">
     </a>
-    <a href="https://travis-ci.org/is-sobrero/mySobrero">
+    <a href="https://travis-ci.com/is-sobrero/mySobrero">
       <img alt="Travis CI Status"
       src="https://travis-ci.com/is-sobrero/mySobrero.svg?branch=master">
     </a>
