@@ -1,33 +1,91 @@
-os: osx
-osx_image: xcode11.3
-language: generic
-before_script:
-- brew update
-- brew install --HEAD usbmuxd
-- brew unlink usbmuxd
-- brew link usbmuxd
-- brew install automake autoconf libtool wget libimobiledevice
-- brew install ideviceinstaller
-- brew install ios-deploy
-- git clone https://github.com/flutter/flutter.git -b beta --depth 1
-script:
-- flutter/bin/flutter build ios --release --no-codesign
-cache:
-  directories:
-  - "$HOME/.pub-cache"
-before_deploy:
-- pushd build/ios/iphoneos
-- mkdir Payload
-- cd Payload
-- ln -s ../Runner.app
-- cd ..
-- zip -r app.ipa Payload
-- popd
-deploy:
-  provider: releases
-  api_key:
-    secure: UinnYIcNj4TszjKvGnRY/sbAtclbLHbZdKyLLWxJ5aiXO9TEv1yON456azTPSHYei+EeuDOk2696WmIE7V+ELFIPn7DmlgSAcT+BKh7w1I2dO3rhclK5FGOUEXi1cRf67528xfsYXCDr+PMvtkAkVpYoxQIglQuqGq2DobMBkMfRXqi0L4ci2j/B1LLCyRn5mM7D64XoUR/6xQ9jfc3888nKH8A5lnQHAZrnrDPMsS/KXkjVIv7+CPgWrGtQdtHdoHK58Y98EnKkzFT20D4uBz+YRQFCQ4DhbbhKK1yDnnrGDfJN1PqZkqPxICYocFW+2RHwlaavGdPUu3KC6NOsSF3KWfN4AA7UkKD1X6CYlXK4Su4Jsfv/oiNda5meecAL+fZMgiFB7y6WRE0uhY7GOc5lIlpLc/4Y2AHTqyFlcH5+iESNgZJhIv+ESn3qpFK8H5TVjCDkNKPaE27dYkHVefefe9/NH4VkphY40IND+GYNgUI1Lm7h/QdyKVO8IMOXNl81puxQ11CqBusMlJnWVvey1nKHBYNP383XGhGT2TYoJu2rIggZkSAsTorByLMchpDGprVVaHNg2H+LWFfixx62PCEysFBw7dS8nL54KjCcKUpJBujP1CG3zbRzyMvwiWf4xzyMTjS+Rs7RttJpyp368xSX2BjfzAHPHIei8dY=
-  file: build/ios/iphoneos/app.ipa
-  skip_cleanup: true
-  on:
-    repo: federunco/mySobrero
+matrix:
+  fast_finish: true
+  allow_failures:
+  - env: JOB=APK
+  - env: JOB=IPA
+  include:
+  - env: JOB=APK
+    os: linux
+    language: android
+    licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
+    android:
+      components:
+      - tools
+      - platform-tools
+      - build-tools-25.0.3
+      - android-25
+      - sys-img-armeabi-v7a-google_apis-25
+      - extra-android-m2repository
+      - extra-google-m2repository
+      - extra-google-android-support
+    jdk: oraclejdk8
+    sudo: false
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - libstdc++6
+        - fonts-droid
+    before_script:
+    - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
+    - unzip -qq gradle-3.5-bin.zip
+    - export GRADLE_HOME=$PWD/gradle-3.5
+    - export PATH=$GRADLE_HOME/bin:$PATH
+    - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+    - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv
+      -in reapi3.dart.enc -out reapi3.dart -d
+    script:
+    - "./flutter/bin/flutter -v build apk"
+    cache:
+      directories:
+      - "$HOME/.pub-cache"
+    deploy:
+      provider: releases
+      api_key:
+        secure: cY1PQI7nRhMzesTduvLavTAzlEz4NAP5VcGN0WrmJg1RP2pOMm+a7P5fx6GNzAuNpSiyUpQBVAt4JKCo74C5IeNgPCRzeo4I6GgNvpUfjV8meNf4MIXOpJSSlv5HkPLAyyFwCYbBG2/ma63PVXO15O/3prShGgkRgSsqKyxORtddeFhVdq++h2wbOtCGhybk29JtnrWe+QN7bi7LwHWC6LSinAXF6QjUv8WlcQBNeh8BmRQSa+8zFXgmEFTJD2A1qxkkos9wpH9ABWd464AlfIytedYfk1wGkXhgDVYN2PARxjbmyqlDVmdWho1ZbFZxpnSaUGcJv1VoWiIdzFPziB1Q2y8QFVmOz9CfVbpDx8D2R6Xmre+zaR/1LVMgrSSSZ0QyFG+x/CnO2j8FvM2BO4VjL0vdeUwgDshHZnt9YFKAY3zBRvpbEISiNpibHgsVSuxofyxEXeOybwAW9hZ91eV8DlT4z2J9WVRi4wckV09MjCsaGneSUOE4Hxy6u5IP86gK9PmczkJw/fIS94t/6XsdJpd5w/QikU9wOyCnYHZ/dC5yjbj6C4+oihYXW/uCAJI3Ihaw86cIml67Wv/5QacJsyzz0W05nQVWJDFoJdLHVDKWYPDb4G4GDfARDaliUOuE9DdFZMYqN6W1BibXfm7eH6i3yPyRx+PH0+y86SY=
+      file: build/app/outputs/apk/release/app-release.apk
+      skip_cleanup: true
+      on:
+        tags: true
+        repo: is-sobrero/mySobrero
+  - env: JOB=IPA
+    os: osx
+    osx_image: xcode11.3
+    language: generic
+    before_script:
+    - brew update
+    - brew install --HEAD usbmuxd
+    - brew unlink usbmuxd
+    - brew link usbmuxd
+    - brew install automake autoconf libtool wget libimobiledevice
+    - brew install ideviceinstaller
+    - brew install ios-deploy
+    - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+    - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv
+      -in reapi3.dart.enc -out reapi3.dart -d
+    script:
+    - "./flutter/bin/flutter -v build ios --release --no-codesign"
+    cache:
+      directories:
+      - "$HOME/.pub-cache"
+    before_deploy:
+    - pushd build/ios/iphoneos
+    - mkdir Payload
+    - cd Payload
+    - ln -s ../Runner.app
+    - cd ..
+    - zip -r app.ipa Payload
+    - popd
+    deploy:
+      provider: releases
+      api_key:
+        secure: cY1PQI7nRhMzesTduvLavTAzlEz4NAP5VcGN0WrmJg1RP2pOMm+a7P5fx6GNzAuNpSiyUpQBVAt4JKCo74C5IeNgPCRzeo4I6GgNvpUfjV8meNf4MIXOpJSSlv5HkPLAyyFwCYbBG2/ma63PVXO15O/3prShGgkRgSsqKyxORtddeFhVdq++h2wbOtCGhybk29JtnrWe+QN7bi7LwHWC6LSinAXF6QjUv8WlcQBNeh8BmRQSa+8zFXgmEFTJD2A1qxkkos9wpH9ABWd464AlfIytedYfk1wGkXhgDVYN2PARxjbmyqlDVmdWho1ZbFZxpnSaUGcJv1VoWiIdzFPziB1Q2y8QFVmOz9CfVbpDx8D2R6Xmre+zaR/1LVMgrSSSZ0QyFG+x/CnO2j8FvM2BO4VjL0vdeUwgDshHZnt9YFKAY3zBRvpbEISiNpibHgsVSuxofyxEXeOybwAW9hZ91eV8DlT4z2J9WVRi4wckV09MjCsaGneSUOE4Hxy6u5IP86gK9PmczkJw/fIS94t/6XsdJpd5w/QikU9wOyCnYHZ/dC5yjbj6C4+oihYXW/uCAJI3Ihaw86cIml67Wv/5QacJsyzz0W05nQVWJDFoJdLHVDKWYPDb4G4GDfARDaliUOuE9DdFZMYqN6W1BibXfm7eH6i3yPyRx+PH0+y86SY=
+      file: build/ios/iphoneos/app.ipa
+      skip_cleanup: true
+      on:
+        tags: true
+        repo: is-sobrero/mySobrero
