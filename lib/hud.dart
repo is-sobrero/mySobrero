@@ -34,7 +34,7 @@ class dialogoHUD extends StatelessWidget{
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20.0),
                           child: SpinKitDualRing(
-                            color: Colors.white,
+                            color: Theme.of(context).textTheme.bodyText1.color,
                             size: 50.0,
                             lineWidth: 3,
                           ),

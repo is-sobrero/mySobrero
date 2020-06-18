@@ -35,7 +35,6 @@ class ImpostazioniView extends StatefulWidget {
 class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProviderStateMixin {
   final double _listAnimationIntervalStart = 0.65;
   final double _preferredAppBarHeight = 56.0;
-  Function(String url) profileCallback;
 
   AnimationController _fadeSlideAnimationController;
   ScrollController _scrollController;
@@ -95,24 +94,22 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
     );
 
     final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
-    final String url = (await downloadUrl.ref.getDownloadURL());
+    final String url = await downloadUrl.ref.getDownloadURL();
+
+    await Firestore.instance.collection('utenti').document(widget.unifiedLoginStructure.user.matricola).setData({
+      'profileImage': url,
+    }, merge: true);
 
     setState(() {
       globals.profileURL = url;
-      profileCallback(_profileURL);
+      widget.profileCallback(_profileURL);
     });
-
-    Firestore.instance.collection('utenti').document(widget.unifiedLoginStructure.user.matricola).setData({
-      'profileImage': url,
-    }, merge: true);
 
     return true;
   }
 
   bool bioAuth = false;
   String _profileURL;
-
-
 
   @override
   Widget build(BuildContext context) {
