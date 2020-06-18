@@ -8,6 +8,7 @@ import 'package:mySobrero/argomenti.dart';
 import 'package:mySobrero/assenze.dart';
 import 'package:mySobrero/carriera.dart';
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/listings/listings_main.dart';
 import 'package:mySobrero/materiale.dart';
 import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -68,6 +69,13 @@ class _MorePageState extends State<MorePageView>
               builder: (_) => ArgomentiView(apiInstance: widget.apiInstance),
               tag: "argomenti_background",
               title: "Argomenti",
+              image: "assets/images/argomenti.png",
+              color: Color(0xFF5352ed),
+            ),
+            IllustrationTile(
+              builder: (_) => ListingsHomePage(),
+              tag: "listings_home",
+              title: "Resell@Sobrero",
               image: "assets/images/argomenti.png",
               color: Color(0xFF5352ed),
             ),
