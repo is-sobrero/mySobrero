@@ -249,12 +249,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                       ],
                     ),
                   ),
-                  UnconstrainedToggleTile(
+                  GradientToggleTile(
                     padding: EdgeInsets.only(bottom: _remoteNotice.headingNewsEnabled ? 10 : 0),
                     highColor: Color(0xFFff5858),
                     lowColor: Color(0xFFf09819),
-                    openTile: _remoteNotice.headingNewsEnabled,
-                    body: Column(
+                    expand: _remoteNotice.headingNewsEnabled,
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
@@ -302,23 +302,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                             children: <Widget>[
                               CounterTile(
                                 onTap: () => widget.callback(1),
-                                aspectRatio: 1,
                                 padding: EdgeInsets.only(right: 5),
-                                flex: 1,
                                 highColor: Color(0xFFfee140),
                                 lowColor: Color(0xFFfa709a),
                                 textColor: Colors.white,
                                 primaryText: lastMark,
                                 secondaryText: lastMark.isEmpty ? "Nessun voto inserito" : "Voto preso di $lastSubject",
                                 showImage: lastMark.isEmpty,
-                                imagePath: "assets/icons/test",
+                                image: "assets/icons/test",
                               ),
                               // TODO: implementare apertura compiti con hero
                               CounterTile(
                                 onTap: () => widget.callback(1),
                                 padding: EdgeInsets.only(left: 5),
-                                flex: 1,
-                                aspectRatio: 1,
                                 highColor: Color(0xFF38f9d7),
                                 lowColor: Color(0xFF43e97b),
                                 textColor: Colors.black,
@@ -329,14 +325,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                           ),
                         ),
                       ),
-                      DetailTile(
+                      GradientTile(
                         aspectRatio: 2,
                         padding: EdgeInsets.fromLTRB(isWide ? 10 : 0, 10 , 0, 10),
                         flex: isWide ? 1 : 0,
                         onTap: () => widget.callback(2),
                         highColor: Color(0xFFfa71cd),
                         lowColor: Color(0xFFc471f5),
-                        body: Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

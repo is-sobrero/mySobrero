@@ -2,13 +2,14 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
+// TODO: pulizia codice voti
+
 import 'package:expandable/expandable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:mySobrero/common/sobrero_icons.dart';
 import 'package:mySobrero/situazione.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:animations/animations.dart';

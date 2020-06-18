@@ -2,6 +2,8 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/material.dart';
+
 class RemoteNews {
   bool headingNewsEnabled = false;
   String headingNewsBody;
@@ -59,6 +61,9 @@ class RemoteNews {
 }
 
 typedef SwitchPageCallback = void Function(int page);
+
+typedef GradientTileLayoutBuilder = Function(Widget child);
+typedef GradientTileRootBuilder = Function(double aspectRatio, Widget child);
 
 class SituazioneElement{
   int numeroVoti;

@@ -2,114 +2,17 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
+// TODO: pulizia codice tiles 570
+
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mySobrero/common/definitions.dart';
 
 import 'package:mySobrero/common/expandedsection.dart';
 import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/common/utilities.dart';
-
-Widget CounterTile ({@required double aspectRatio, EdgeInsets padding, int flex, @required Function onTap, Color highColor, Color lowColor, Color textColor, String primaryText, String secondaryText, bool showImage = false, String imagePath}) {
-  return Expanded(
-    flex: flex,
-    child: GestureDetector(
-      onTap: onTap,
-      child: Transform.scale(
-        scale: 1,
-        child: Padding(
-          padding: padding,
-          child: AspectRatio(
-            aspectRatio: aspectRatio,
-            child: Container(
-              decoration: new BoxDecoration(
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: lowColor.withOpacity(0.4),
-                        offset: const Offset(1.1, 1.1),
-                        blurRadius: 10.0
-                    ),
-                  ],
-                  borderRadius: BorderRadius.all(Radius.circular(11)),
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topRight,
-                    end: FractionalOffset.bottomRight,
-                    colors: <Color>[
-                      highColor, lowColor
-                    ],
-                  )
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    showImage ? Image.asset(imagePath) : Text(
-                      primaryText,
-                      style: new TextStyle(
-                          fontSize: 65,
-                          color: textColor
-                      ),
-                    ),
-                    AutoSizeText(
-                      secondaryText,
-                      style: new TextStyle(
-                          color: textColor,
-                          fontSize: 14
-                      ),
-                      maxLines: 2,
-                      minFontSize: 7,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget DetailTile ({@required double aspectRatio, EdgeInsets padding, int flex, @required Function onTap, Color highColor, Color lowColor, Widget body}) {
-  return Expanded(
-    flex: flex,
-    child: GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: padding,
-        child: AspectRatio(
-          aspectRatio: aspectRatio,
-          child: Container(
-            decoration: new BoxDecoration(
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: lowColor.withOpacity(0.4),
-                      offset: const Offset(1.1, 1.1),
-                      blurRadius: 10.0
-                  ),
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(11)),
-                gradient: LinearGradient(
-                  begin: FractionalOffset.topRight,
-                  end: FractionalOffset.bottomRight,
-                  colors: <Color>[
-                    highColor, lowColor
-                  ],
-                )
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: body,
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
 
 Widget NewsTile({BuildContext context, bool safeLeft = false, bool safeRight = false, String leadingImageUrl, String title, StatefulWidget detailView}) {
   return SafeArea(
@@ -174,38 +77,6 @@ Widget NewsTile({BuildContext context, bool safeLeft = false, bool safeRight = f
                 openBuilder: (c, action) => detailView,
                 tappable: true
             )
-        ),
-      ),
-    ),
-  );
-}
-
-Widget UnconstrainedToggleTile({BuildContext context, Color highColor, Color lowColor, Widget body, EdgeInsets padding, bool openTile}){
-  return Padding(
-    padding: padding,
-    child: Container(
-      decoration: new BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: lowColor.withOpacity(0.4),
-                offset: const Offset(1.1, 1.1),
-                blurRadius: 10.0
-            ),
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(11)),
-          gradient: LinearGradient(
-            begin: FractionalOffset.topRight,
-            end: FractionalOffset.bottomRight,
-            colors: <Color>[
-              highColor, lowColor
-            ],
-          )
-      ),
-      child: ExpandedSection(
-        expand: openTile,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: body,
         ),
       ),
     ),
@@ -369,7 +240,173 @@ Widget ImageLinkTile({BuildContext context, Color highColor, Color lowColor, boo
   );
 }
 
-class IllustrationTile extends StatelessWidget{
+class GradientTile extends StatelessWidget {
+  GradientTile ({
+    Key key,
+    this.aspectRatio = 1,
+    this.padding = EdgeInsets.zero,
+    this.flex,
+    @required this.onTap,
+    this.highColor = Colors.red,
+    this.lowColor = Colors.red,
+    this.layoutBuilder = defaultLayoutBuilder,
+    this.rootBuilder = defaultRootBuilder,
+    this.child,
+  }) :  assert(aspectRatio != null),
+        assert(padding != null),
+        assert(layoutBuilder != null),
+        assert(highColor != null),
+        assert(lowColor != null),
+        super(key: key);
+
+  final double aspectRatio;
+  final EdgeInsets padding;
+  final int flex;
+  final Function onTap;
+  final Color highColor;
+  final Color lowColor;
+  final Widget child;
+  final GradientTileLayoutBuilder layoutBuilder;
+  final GradientTileRootBuilder rootBuilder;
+
+  static Widget defaultRootBuilder (aspectRatio, child) => AspectRatio(
+    aspectRatio: aspectRatio,
+    child: child,
+  );
+
+  static Widget defaultLayoutBuilder (child) => Padding(
+    padding: const EdgeInsets.all(12),
+    child: child,
+  );
+
+  @override
+  Widget build (BuildContext context){
+    return Expanded(
+        flex: flex,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Padding(
+              padding: padding,
+              child: rootBuilder(
+                aspectRatio,
+                Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: lowColor.withOpacity(0.4),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 10,
+                      )
+                    ],
+                    borderRadius: BorderRadius.circular(11),
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.topRight,
+                      end: FractionalOffset.bottomRight,
+                      colors: [highColor, lowColor],
+                    ),
+                  ),
+                  child: layoutBuilder(child),
+                ),
+              )
+          ),
+        )
+    );
+  }
+}
+
+class GradientToggleTile extends GradientTile {
+  GradientToggleTile({
+    Key key,
+    double aspectRatio = 1,
+    EdgeInsets padding = EdgeInsets.zero,
+    @required Function onTap,
+    Color highColor = Colors.red,
+    Color lowColor = Colors.red,
+    Widget child,
+    @required this.expand,
+  }) :  assert(expand != null),
+        super(
+          key: key,
+          padding: padding,
+          aspectRatio: aspectRatio,
+          onTap: onTap,
+          highColor: highColor,
+          lowColor: lowColor,
+          child: child,
+        );
+
+  final bool expand;
+
+  @override
+  GradientTileRootBuilder get rootBuilder => (_, body) => body;
+
+  @override
+  GradientTileLayoutBuilder get layoutBuilder => (child) => ExpandedSection(
+    expand: expand,
+    child: GradientTile.defaultLayoutBuilder(child),
+  );
+}
+
+class CounterTile extends GradientTile {
+  CounterTile ({
+    Key key,
+    double aspectRatio = 1,
+    EdgeInsets padding = EdgeInsets.zero,
+    int flex = 1,
+    @required Function onTap,
+    Color highColor = Colors.red,
+    Color lowColor = Colors.red,
+    this.textColor = Colors.black,
+    this.primaryText = "",
+    this.secondaryText = "",
+    this.showImage = false,
+    this.image = "",
+  }): assert(primaryText != null),
+        assert(secondaryText != null),
+        assert(showImage != null),
+        assert(image != null),
+        super(
+        key: key,
+        padding: padding,
+        flex: flex,
+        aspectRatio: aspectRatio,
+        onTap: onTap,
+        highColor: highColor,
+        lowColor: lowColor,
+      );
+
+  final String primaryText;
+  final String secondaryText;
+  final bool showImage;
+  final String image;
+  final Color textColor;
+
+  @override
+  Widget get child => Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      showImage ? Image.asset(image) : Text(
+        primaryText,
+        style: new TextStyle(
+          fontSize: 65,
+          color: textColor,
+        ),
+      ),
+      AutoSizeText(
+        secondaryText,
+        style: new TextStyle(
+          color: textColor,
+          fontSize: 14,
+        ),
+        maxLines: 2,
+        minFontSize: 7,
+      ),
+    ],
+  );
+}
+
+class IllustrationTile extends StatelessWidget {
   IllustrationTile({
     Key key,
     @required this.builder,
@@ -448,7 +485,8 @@ class IllustrationTile extends StatelessWidget{
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: color.computeLuminance() > 0.45 ? Colors.black : Colors.white,
+                    color: color.computeLuminance() > 0.45 ?
+                      Colors.black : Colors.white,
                   ),
                 ),
               ),
@@ -460,7 +498,7 @@ class IllustrationTile extends StatelessWidget{
   }
 }
 
-class GenericTile extends StatelessWidget{
+class GenericTile extends StatelessWidget {
   GenericTile({
     Key key,
     @required this.children,
