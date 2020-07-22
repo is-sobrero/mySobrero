@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:animations/animations.dart';
 
@@ -63,9 +64,7 @@ class _VotesPageState extends State<VotesPage>
     situazione1Q = _generateSituazioneMap(widget.voti1q);
     situazione2Q = _generateSituazioneMap(widget.voti2q);
 
-    _goals = getRemoteGoals(
-        userID: widget.unifiedLoginStructure.user.matricola
-    );
+    _goals = CloudConnector.getGoals(token: widget.apiInstance.getSession());
 
     if (widget.voti2q.length > 0) periodFilter = 1;
 
@@ -111,16 +110,16 @@ class _VotesPageState extends State<VotesPage>
   }
 
   Widget _generateMarkTile(VotoStructure mark){
-    List<Color> _entryBackground = [Color(0xFF38f9d7), Color(0xFF43e97b)];
+    List<Color> _entryBackground = AppColorScheme.greenGradient;
     if (mark.votoValore >= 6 && mark.votoValore < 7)
-      _entryBackground = [Color(0xffFFD200), Color(0xffF7971E)];
+      _entryBackground = AppColorScheme.yellowGradient;
     if (mark.votoValore < 6)
-      _entryBackground = [Color(0xffFF416C), Color(0xffFF4B2B)];
+      _entryBackground = AppColorScheme.redGradient;
     if (mark.votoValore == 0)
-      _entryBackground = [Color(0xff005C97), Color(0xff363795)];
+      _entryBackground = AppColorScheme.blueGradient;
 
     double _overallLuminance = _entryBackground[1].computeLuminance();
-    Color _textColor =  _overallLuminance > 0.5 ? Colors.black : Colors.white;
+    Color _textColor =  _overallLuminance > 0.45 ? Colors.black : Colors.white;
     var _comment = mark.commento ?? "Nessun commento al voto";
 
     return ExpandableNotifier(
@@ -283,12 +282,12 @@ class _VotesPageState extends State<VotesPage>
                   curveSmoothness: 0.5,
                   isCurved: false,
                   colors: [
-                    AppColorScheme().primaryColor,
-                    AppColorScheme().primaryColor,
+                    AppColorScheme.primaryColor,
+                    AppColorScheme.primaryColor,
                   ],
                   belowBarData: BarAreaData(
                     show: true,
-                    colors: AppColorScheme().appGradient.map(
+                    colors: AppColorScheme.appGradient.map(
                             (color) => color.withOpacity(0.3)
                     ).toList(),
                     gradientFrom: Offset(0, 0),
@@ -322,188 +321,151 @@ class _VotesPageState extends State<VotesPage>
   @override
   Widget build(BuildContext context) {
     List<String> currentSubjects = periodFilter == 0 ? materie1q : materie2q;
-
-    return SingleChildScrollView(
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Tutti i voti',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 24,
-                        ),
-                      ),
-                      Spacer(),
-                      FutureBuilder<Map<String, int>>(
-                          future: _goals,
-                          builder: (context, snapshot){
-                            if (snapshot.hasData){
-                              return FlatButton(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text("Situazione", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5.0),
-                                      child: Icon(LineIcons.flag, size: 20, color: Theme.of(context).primaryColor,),
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () => Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (_, __, ___)  => SituazioneView(
-                                        situazione1Q: situazione1Q, situazione2Q: situazione2Q,
-                                        apiInstance: widget.apiInstance,
-                                        obbiettivi: snapshot.data, onObbiettiviChange: (_nob){
-                                          setState(() => _goals = getRemoteGoals(userID: widget.unifiedLoginStructure.user.matricola));
-                                        },
-                                      ),
-                                      transitionDuration: Duration(milliseconds: 700),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        var begin = Offset(0.0, 1.0);
-                                        var end = Offset.zero;
-                                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
-                                        var offsetAnimation = animation.drive(tween);
-                                        return SharedAxisTransition(
-                                          child: child,
-                                          animation: animation,
-                                          secondaryAnimation: secondaryAnimation,
-                                          transitionType: SharedAxisTransitionType.vertical,
-                                        );
-                                      },
-
-                                    )
-                                ),
-                                padding: EdgeInsets.zero,
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              );
-                            } else if (snapshot.hasError){
-                              return Row(
-                                children: <Widget>[
-                                  Text("Errore negli obbiettivi", style: TextStyle(color: Theme.of(context).errorColor),),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: Icon(Icons.error, color: Theme.of(context).errorColor,),
-                                  ),
-                                ],
-                              );
-                            }
-                            return Row(
-                              children: <Widget>[
-                                Text("Caricando gli obbiettivi", style: TextStyle(color: Theme.of(context).disabledColor),),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: SpinKitDualRing(
-                                    color: Theme.of(context).disabledColor,
-                                    size: 20,
-                                    lineWidth: 3,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                      )
-                    ],
+    return SobreroPage(
+      children: [
+        Stack(
+          children: [
+            Row(
+              children: [
+                Text(
+                  'Tutti i voti',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: _uiHelper.isWide ? 0 : 40.0),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 5, top: 3),
-                        // TODO: cambiare CupertinoSlidingSegmentedControl con un qualcosa di più decente
-                        child: CupertinoSlidingSegmentedControl(
-                          children: _filters,
-                          onValueChanged: (val) {
-                            filterIndex = 0;
-                            setState(() => periodFilter = val);
-                          },
-                          groupValue: periodFilter,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 8, bottom: 20),
-                child: Center(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      //color: Theme.of(context).textTheme.body1.color.withAlpha(20),
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        //border: Border.all(width: 0.0, color: Color(0xFFCCCCCC)),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12.withAlpha(12),
-                              blurRadius: 10,
-                              spreadRadius: 10
-                          )
-                        ]
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
-                      child: DropdownButtonHideUnderline(
-                        child: Container(
-                          child: ButtonTheme(
-                              alignedDropdown: true,
-                              child: DropdownButton<String>(
-                                icon: Icon(Icons.unfold_more, color: Theme.of(context).primaryColor),
-                                isExpanded: true,
-                                hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis,),
-                                value: currentSubjects[filterIndex],
-                                onChanged: (String value) {
-                                  filterIndex = currentSubjects.indexOf(value);
-                                  setState(() {});
-                                },
-                                items: materie1q.map((String user) {
-                                  return DropdownMenuItem<String>(
-                                    value: user,
-                                    child: Text(user, overflow: TextOverflow.ellipsis,)
+                ),
+                Spacer(),
+                FutureBuilder<Map<String, int>>(
+                    future: _goals,
+                    builder: (context, snapshot){
+                      if (snapshot.hasData){
+                        return FlatButton(
+                          child: Row(
+                            children: <Widget>[
+                              Text("Situazione", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Icon(LineIcons.flag, size: 20, color: Theme.of(context).primaryColor,),
+                              ),
+                            ],
+                          ),
+                          onPressed: () => Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___)  => SituazioneView(
+                                  situazione1Q: situazione1Q, situazione2Q: situazione2Q,
+                                  apiInstance: widget.apiInstance,
+                                  obbiettivi: snapshot.data, onObbiettiviChange: (_nob){
+                                    _goals = CloudConnector.getGoals(token: widget.apiInstance.getSession());
+                                    setState(() {});
+                                  },
+                                ),
+                                transitionDuration: Duration(milliseconds: 700),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  var begin = Offset(0.0, 1.0);
+                                  var end = Offset.zero;
+                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
+                                  var offsetAnimation = animation.drive(tween);
+                                  return SharedAxisTransition(
+                                    child: child,
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    transitionType: SharedAxisTransitionType.vertical,
                                   );
-                                }).toList(),
+                                },
+
                               )
                           ),
-                        ),
-                      ),
-                    ),
-                    margin: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        );
+                      } else if (snapshot.hasError){
+                        return Row(
+                          children: <Widget>[
+                            Text("Errore negli obbiettivi", style: TextStyle(color: Theme.of(context).errorColor),),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Icon(Icons.error, color: Theme.of(context).errorColor,),
+                            ),
+                          ],
+                        );
+                      }
+                      return Row(
+                        children: <Widget>[
+                          Text("Caricando gli obbiettivi", style: TextStyle(color: Theme.of(context).disabledColor),),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: SpinKitDualRing(
+                              color: Theme.of(context).disabledColor,
+                              size: 20,
+                              lineWidth: 3,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                )
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: _uiHelper.isWide ? 0 : 40.0),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 5, top: 3),
+                  // TODO: cambiare CupertinoSlidingSegmentedControl con un qualcosa di più decente
+                  child: CupertinoSlidingSegmentedControl(
+                    children: _filters,
+                    onValueChanged: (val) {
+                      filterIndex = 0;
+                      setState(() => periodFilter = val);
+                    },
+                    groupValue: periodFilter,
                   ),
                 ),
               ),
-              PageTransitionSwitcher2(
-                reverse: periodFilter == 0,
-                layoutBuilder: (_entries) => Stack(
-                  children: _entries
-                      .map<Widget>((entry) => entry.transition)
-                      .toList(),
-                  alignment: Alignment.topLeft,
-                ),
-                duration: Duration(milliseconds: 700),
-                transitionBuilder: (child, primary, secondary){
-                  return SharedAxisTransition(
-                    fillColor: Colors.transparent,
-                    animation: primary,
-                    secondaryAnimation: secondary,
-                    transitionType: SharedAxisTransitionType.horizontal,
-                    child: child,
-                  );
-                },
-                child: _generatePeriodView(periodFilter == 0 ? widget.voti1q : widget.voti2q, _uiHelper.columnCount, periodFilter)
-              )
-            ],
+            ),
+          ],
+        ),
+        SobreroDropdown(
+          margin: EdgeInsets.only(top: 8, bottom: 20),
+          value: currentSubjects[filterIndex],
+          onChanged: (String value) {
+            filterIndex = currentSubjects.indexOf(value);
+            setState(() {});
+          },
+          items: materie1q.map((String user) {
+            return DropdownMenuItem<String>(
+              value: user,
+              child: Text(
+                user,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          }).toList(),
+        ),
+        PageTransitionSwitcher2(
+          reverse: periodFilter == 0,
+          layoutBuilder: (_entries) => Stack(
+            children: _entries
+                .map<Widget>((entry) => entry.transition)
+                .toList(),
+            alignment: Alignment.topLeft,
           ),
-        )
-      )
+          duration: Duration(milliseconds: 700),
+          transitionBuilder: (c, p, s) => SharedAxisTransition(
+            fillColor: Colors.transparent,
+            animation: p,
+            secondaryAnimation: s,
+            transitionType: SharedAxisTransitionType.horizontal,
+            child: c,
+          ),
+          child: _generatePeriodView(
+            periodFilter == 0 ? widget.voti1q : widget.voti2q,
+            _uiHelper.columnCount,
+            periodFilter,
+          ),
+        ),
+      ],
     );
   }
 }

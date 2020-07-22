@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:mySobrero/common/ui.dart';
 
 class RemoteNews {
   bool headingNewsEnabled = false;
@@ -25,14 +26,14 @@ class RemoteNews {
         this.bottomNoticeLink});
 
   RemoteNews.fromJson(Map<String, dynamic> json) {
-    headingNewsEnabled = json['enabled'];
-    headingNewsBody = json['description'];
-    bottomNoticeEnabled = json['bottomNoticeEnabled'];
-    bottomNoticeTitle = json['bottomNoticeTitle'];
-    bottomNotice = json['bottomNotice'];
-    bottomNoticeHeadingURL = json['bottomNoticeHeadingURL'];
-    bottomNoticeLinkTitle = json['bottomNoticeLinkTitle'];
-    bottomNoticeLink = json['bottomNoticeLink'];
+    headingNewsEnabled = json['heading_notice_enabled'];
+    headingNewsBody = json['heading_notice_content'];
+    bottomNoticeEnabled = json['trailing_notice_enabled'];
+    bottomNoticeTitle = json['trailing_notice_title'];
+    bottomNotice = json['trailing_notice_content'];
+    bottomNoticeHeadingURL = json['trailing_notice_img'];
+    bottomNoticeLinkTitle = json['trailing_notice_action'];
+    bottomNoticeLink = json['trailing_notice_redirect'];
   }
 
   RemoteNews.preFetch(){
@@ -45,25 +46,13 @@ class RemoteNews {
     bottomNoticeLinkTitle = "";
     bottomNoticeLink = "";
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['enabled'] = this.headingNewsEnabled;
-    data['description'] = this.headingNewsBody;
-    data['bottomNoticeEnabled'] = this.bottomNoticeEnabled;
-    data['bottomNoticeTitle'] = this.bottomNoticeTitle;
-    data['bottomNotice'] = this.bottomNotice;
-    data['bottomNoticeHeadingURL'] = this.bottomNoticeHeadingURL;
-    data['bottomNoticeLinkTitle'] = this.bottomNoticeLinkTitle;
-    data['bottomNoticeLink'] = this.bottomNoticeLink;
-    return data;
-  }
 }
 
 typedef SwitchPageCallback = void Function(int page);
 
 typedef GradientTileLayoutBuilder = Function(Widget child);
 typedef GradientTileRootBuilder = Function(double aspectRatio, Widget child);
+typedef HorizontalSectionListItemBuilder = Function(bool safeLeft, bool safeRight, int index);
 
 class SituazioneElement{
   int numeroVoti;

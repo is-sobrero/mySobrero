@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mySobrero/cloud_connector/cloud2.dart';
 
 import 'package:mySobrero/feed/feed_detail.dart';
 import 'package:mySobrero/cloud_connector/cloud.dart';
@@ -54,6 +55,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
   
   RemoteNews _remoteNotice = RemoteNews.preFetch();
 
+
   bool expandedParentNotice = false;
   TapGestureRecognizer _parentNoticeRecognizer;
 
@@ -78,7 +80,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
       if (tempSender.toUpperCase() == "DIRIGENTE") lastCircularSender = "Dirigente";
       else lastCircularSender = "Gianni Rossi";
     }
-    getRemoteHeadingNews().then(
+    CloudConnector.getRemoteHeadingNews().then(
             (value) => setState((){
               _remoteNotice = value;
             })
@@ -385,7 +387,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
             ),
           ),
           Container(
-            color: Theme.of(context).brightness == Brightness.dark ? AppColorScheme().darkSectionColor : AppColorScheme().sectionColor,
+            color: Theme.of(context).brightness == Brightness.dark ? AppColorScheme.darkSectionColor : AppColorScheme.sectionColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -407,8 +409,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                     itemBuilder: (context, index) =>
                         NewsTile(
                           context: context,
-                          safeLeft: false,
-                          safeRight:  false,
+                          safeLeft: index == 0,
+                          safeRight: index == widget.feed.items.length -1,
                           leadingImageUrl: widget.feed.items[index].thumbnail,
                           title: widget.feed.items[index].title,
                           detailView: FeedDetailView(articolo: widget.feed.items[index]),

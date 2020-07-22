@@ -5,12 +5,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
+
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/common/utilities.dart';
-
 import 'package:mySobrero/reapi3.dart';
-import 'package:waterfall_flow/waterfall_flow.dart';
 
 class CommunicationsPageView extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;

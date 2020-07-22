@@ -79,6 +79,7 @@ class FadeSlideTransition extends StatelessWidget {
   );
 
   Animation<Offset> get _slideAnimation => slideAnimationTween.animate(
+
     CurvedAnimation(
       parent: controller,
       curve: Interval(
@@ -91,11 +92,14 @@ class FadeSlideTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double offsetRelative = .2 * screenHeight;
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: child,
+        child: SizedBox(child: child),
       ),
     );
   }

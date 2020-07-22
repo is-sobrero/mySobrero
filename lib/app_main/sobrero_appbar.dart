@@ -10,12 +10,13 @@ import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/reapi3.dart';
 
 PreferredSize SobreroAppBar({
-  BuildContext context,
-  bool isBeta,
-  String profilePicUrl,
-  double scroll,
-  UnifiedLoginStructure loginStructure,
-  Function(String url) setProfileCallback}){
+  @required BuildContext context,
+  @required bool isBeta,
+  @required String profilePicUrl,
+  @required double scroll,
+  @required UnifiedLoginStructure loginStructure,
+  @required String session,
+  @required Function(String url) setProfileCallback}){
   return PreferredSize(
     preferredSize: Size(double.infinity, 57),
     child: Container(
@@ -85,9 +86,11 @@ PreferredSize SobreroAppBar({
                                   context,
                                   PageRouteBuilder(
                                     pageBuilder: (_, __, ___)  => ImpostazioniView(
-                                        unifiedLoginStructure: loginStructure,
-                                        profileURL: profilePicUrl,
-                                        profileCallback: setProfileCallback),
+                                      unifiedLoginStructure: loginStructure,
+                                      profileURL: profilePicUrl,
+                                      profileCallback: setProfileCallback,
+                                      session: session,
+                                    ),
                                     transitionDuration: Duration(milliseconds: 700),
                                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                       return SharedAxisTransition(

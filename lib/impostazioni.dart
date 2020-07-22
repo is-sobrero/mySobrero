@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/sobrero_icons.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -14,7 +15,6 @@ import 'fade_slide_transition.dart';
 import 'skeleton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'globals.dart' as globals;
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,11 +22,12 @@ import 'package:mySobrero/hud.dart';
 
 
 class ImpostazioniView extends StatefulWidget {
+  String session;
   String profileURL;
   Function(String url) profileCallback;
   UnifiedLoginStructure unifiedLoginStructure;
 
-  ImpostazioniView ({Key key, @required this.unifiedLoginStructure, @required this.profileURL, @required this.profileCallback}) : super(key: key);
+  ImpostazioniView ({Key key, @required this.session, @required this.unifiedLoginStructure, @required this.profileURL, @required this.profileCallback}) : super(key: key);
 
   @override
   _ImpostazioniState createState() => _ImpostazioniState();
@@ -96,9 +97,10 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
     final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
     final String url = await downloadUrl.ref.getDownloadURL();
 
-    await Firestore.instance.collection('utenti').document(widget.unifiedLoginStructure.user.matricola).setData({
-      'profileImage': url,
-    }, merge: true);
+    await CloudConnector.setProfilePicture(
+      token: widget.session,
+      url: url,
+    );
 
     setState(() {
       globals.profileURL = url;

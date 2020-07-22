@@ -128,12 +128,13 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
         ),
         child: Scaffold(
           appBar: SobreroAppBar(
-              context: context,
-              isBeta: widget.isBeta,
-              profilePicUrl: _profileUrl,
-              scroll: _globalScroll,
-              loginStructure: widget.unifiedLoginStructure,
-              setProfileCallback: _updateProfilePicture
+            context: context,
+            isBeta: widget.isBeta,
+            profilePicUrl: _profileUrl,
+            scroll: _globalScroll,
+            loginStructure: widget.unifiedLoginStructure,
+            setProfileCallback: _updateProfilePicture,
+            session: widget.apiInstance.getSession(),
           ),
           body: PageView.builder(
             controller: pageController,

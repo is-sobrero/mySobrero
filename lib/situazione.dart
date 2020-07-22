@@ -4,9 +4,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mySobrero/hud.dart';
 import 'package:mySobrero/common/definitions.dart';
@@ -297,15 +297,10 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     );
   }
 
-  Future<bool> aggiornaObbiettivi (String json) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final username = await prefs.getString('username') ?? "NO";
-    Firestore.instance.collection('utenti').document(username).setData({
-      'obbiettivi' : json
-    }, merge: true);
-    //await Future.delayed(Duration(seconds: 2));
-    return true;
-  }
+  Future<bool> aggiornaObbiettivi (String j) async => CloudConnector.setGoals(
+    token: widget.apiInstance.getSession(),
+    goals: j,
+  );
 
   String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){
     int volte = 0;

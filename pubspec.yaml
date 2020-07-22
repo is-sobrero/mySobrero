@@ -23,7 +23,6 @@ dependencies:
   intl: ^0.16.1
   shared_preferences: ^0.5.6
   firebase_core: ^0.4.0+9
-  cloud_firestore: ^0.13.6
   firebase_analytics: ^5.0.9
   firebase_messaging: ^6.0.9
   firebase_crashlytics: ^0.1.2+4
@@ -36,7 +35,6 @@ dependencies:
   direct_select: ^1.0.0
   image_picker: ^0.6.3+1
   package_info: ^0.4.0+13
-  firebase_remote_config: ^0.3.0+1
   expandable: ^4.0.2
   launch_review: ^2.0.0
   async: ^2.4.0

@@ -8,8 +8,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/cloud_connector/ConfigData.dart';
+import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/skeleton.dart';
-import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
 import 'package:mySobrero/app_main/app_main.dart';
@@ -77,14 +78,12 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     });
   }
 
-
-
   Future<int> initialProcedure () async {
+    ConfigData _config = await CloudConnector.getServerConfig();
     if (!kIsWeb) {
       final PackageInfo info = await PackageInfo.fromPlatform();
       int currentVersion = int.parse(info.buildNumber);
-      final int onlineAppVer = await getOnlineAppVersion();
-      if (onlineAppVer > currentVersion){
+      if (_config.data.latestVersion > currentVersion){
         // Se la versione dell'app non è aggiornata, obbliga l'utente ad aggiornare
         showDialog(
             context: context,
@@ -100,7 +99,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         );
         return -1;
       }
-      if (onlineAppVer < currentVersion){
+      if (_config.data.latestVersion < currentVersion){
         // Versione beta
         isBeta = true;
       }
@@ -113,7 +112,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     if (!areCredentialsSaved) return 1; // Le credenziali non sono salvate
     if (kIsWeb) return 0; // Se su web accedi con le cred salvate
     else {
-      profilePicUrl = await getProfilePicture(userID: userID);
+      profilePicUrl = await CloudConnector.getProfilePicture(userID);
       globals.profileURL = profilePicUrl;
       var localAuth = LocalAuthentication();
       bool useBiometrics = prefs.getBool('biometric_auth') ?? false;
@@ -172,16 +171,19 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     prefs.setString('password', userPassword);
     prefs.setString('user', loginStructure.user.nomeCompleto);
 
-    final accountType = loginStructure.user.livello == "4" ? "studente" : "genitore";
+    final accountType = loginStructure.user.livello == "4" ? "student" : "parent";
     final userClasse = "${loginStructure.user.classe} ${loginStructure.user.sezione}";
 
-    await saveAccountData(
-      userID: userID,
+    await CloudConnector.registerSession(
+      uid: userID,
       name: loginStructure.user.nome,
       surname: loginStructure.user.cognome,
-      classe: userClasse,
-      accountLevel: accountType,
+      currentClass: userClasse,
+      level: accountType,
+      token: apiInstance.getSession(),
     );
+
+    /*
     setAnalyticsData(
       userID: userID,
       surname: loginStructure.user.cognome,
@@ -189,7 +191,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       sezione: loginStructure.user.sezione,
       accountLevel: accountType,
       corso: loginStructure.user.corso
-    );
+    );*/
 
     final feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
     final feedHTTP = await http.get(feedUrl);
