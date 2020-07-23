@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/toggle.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:animations/animations.dart';
 
@@ -317,7 +318,7 @@ class _VotesPageState extends State<VotesPage>
   }
 
   // TODO: pulizia codice voti
-
+int customFilter = 0;
   @override
   Widget build(BuildContext context) {
     List<String> currentSubjects = periodFilter == 0 ? materie1q : materie2q;
@@ -412,20 +413,18 @@ class _VotesPageState extends State<VotesPage>
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 5, top: 3),
-                  // TODO: cambiare CupertinoSlidingSegmentedControl con un qualcosa di più decente
-                  child: CupertinoSlidingSegmentedControl(
-                    children: _filters,
-                    onValueChanged: (val) {
-                      filterIndex = 0;
-                      setState(() => periodFilter = val);
-                    },
-                    groupValue: periodFilter,
+                  child: SobreroToggle(
+                    values: ["1° Periodo", "2° Periodo"],
+                    onToggleCallback: (val) => setState(() => periodFilter = val),
+                    selectedItem: periodFilter,
+                    width: 200,
                   ),
                 ),
               ),
             ),
           ],
         ),
+
         SobreroDropdown(
           margin: EdgeInsets.only(top: 8, bottom: 20),
           value: currentSubjects[filterIndex],

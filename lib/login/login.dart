@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/agreement/agreement_dialog.dart';
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/skeleton.dart';
@@ -166,6 +167,23 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getBool('agreementAccepted') != true) {
+      await Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___)  => AgreementScreen(),
+          transitionDuration: Duration(milliseconds: 1000),
+          transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
+            animation: prim,
+            secondaryAnimation: sec,
+            transitionType: SharedAxisTransitionType.scaled,
+            child: child,
+          ),
+        ),
+      );
+    }
+    prefs.setBool('agreementAccepted', true);
     prefs.setBool('savedCredentials', true);
     prefs.setString('username', userID);
     prefs.setString('password', userPassword);

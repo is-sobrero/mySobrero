@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
-import 'package:mySobrero/common/sobrero_icons.dart';
+import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -184,8 +184,8 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                       children: <Widget>[
                                         ClipOval(
                                           child: new Container(
-                                              width: 100,
-                                              height: 100,
+                                              width: 130,
+                                              height: 130,
                                               color: Theme.of(context).scaffoldBackgroundColor,
                                               child: globals.profileURL != null
                                                   ? CachedNetworkImage(
@@ -234,7 +234,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Text(widget.unifiedLoginStructure.user.nomeCompleto, style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
                                     ),
-                                    SettingsButton(SobreroIcons.logout2, "Logout", "Cancella l'account memorizzato dall'app", () {
+                                    SettingsButton(LineIcons.close, "Logout", "Cancella l'account memorizzato dall'app", () {
                                       showModalBottomSheet(isDismissible: false, context: context, builder: (context)
                                       {
                                         return Column(
@@ -296,13 +296,65 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                         );
                                       });
                                     }),
-                                    ToggleButton(SobreroIcons.fingerprint, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
+                                    ToggleButton(LineIcons.lock, "Usa autenticazione biometrica", lenBio > 0 ? "Accedi all'app tramite autenticazione biometrica" : "Nessun metodo di accesso configurato", () {
                                       setState(() {
                                           bioAuth = !bioAuth;
                                         _impostaBool("biometric_auth", bioAuth);
                                       });
                                     }, bioAuth, lenBio > 0),
-                                    SettingsButton(SobreroIcons.info_circled_alt, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {
+                                    SettingsButton(SobreroIcons2.handshake, "Termini di utilizzo", "Consulta i termini di utilizzo di mySobrero", () {
+                                      showDialog(context: context, builder: (BuildContext builder) {
+                                        final ThemeData themeData = Theme.of(context);
+                                        final TextStyle linkStyle = themeData.textTheme.body1.copyWith(color: themeData.accentColor);
+
+                                        return AlertDialog(
+                                            title: Text("Informazioni su mySobrero"),
+                                            actions: <Widget>[
+                                              // usually buttons at the bottom of the dialog
+                                              new FlatButton(
+                                                child: new Text("CHIUDI", style: TextStyle(color: Theme.of(context).primaryColor)),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                            content: Column (
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                        style: Theme.of(context).textTheme.body1,
+                                                        text: 'mySobrero 2.0 - L\'app pensata appositamente per gli studenti del Sobrero - sviluppata da Federico Runco (4 AE - ',
+                                                      ),
+                                                      _LinkTextSpan(
+                                                          style: linkStyle,
+                                                          url: 'mailto:s00802@sobrero.it',
+                                                          text: 's00802@sobrero.it'
+                                                      ),
+                                                      TextSpan(
+                                                        style: Theme.of(context).textTheme.body1,
+                                                        text: ').\n\nIl codice sorgente dell\'applicazione è disponibile su Github ',
+                                                      ),
+                                                      _LinkTextSpan(
+                                                          style: linkStyle,
+                                                          url: 'https://github.com/federunco/mySobrero',
+                                                          text: 'a questo indirizzo'
+                                                      ),
+                                                      TextSpan(
+                                                        style: Theme.of(context).textTheme.body1,
+                                                        text: '.',
+                                                      ),
+                                                    ],
+
+                                                  ),
+                                                ),
+                                              ],)
+                                        );
+                                      });
+                                    }),
+                                    SettingsButton(LineIcons.info, "Informazioni su mySobrero", "Ottieni informazioni sull'app", () {
                                       showDialog(context: context, builder: (BuildContext builder) {
                                         final ThemeData themeData = Theme.of(context);
                                         final TextStyle linkStyle = themeData.textTheme.body1.copyWith(color: themeData.accentColor);

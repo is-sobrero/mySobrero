@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColorScheme.primaryColor,
         accentColor: AppColorScheme.secondaryColor,
         scaffoldBackgroundColor: AppColorScheme.scaffoldColor,
-        fontFamily: "Manrope"
+        toggleableActiveColor: AppColorScheme.toggleColor,
+        canvasColor: AppColorScheme.canvasColor,
+        fontFamily: "Manrope",
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         cardColor: AppColorScheme.darkCardColor,
         bottomAppBarColor: AppColorScheme.darkBottomNavColor,
         canvasColor: AppColorScheme.darkCanvasColor,
+        toggleableActiveColor: AppColorScheme.darkToggleColor,
         fontFamily: "Manrope",
       ),
       home: AnnotatedRegion<SystemUiOverlayStyle>(

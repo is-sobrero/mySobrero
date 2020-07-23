@@ -8,10 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:line_icons/line_icons.dart';
 
+import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/feed/feed_detail.dart';
-import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/expandedsection.dart';
 import 'package:mySobrero/common/profiles.dart';
@@ -273,7 +273,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                               child: Row(
                                 children: <Widget>[
                                   Icon(
-                                    Icons.info_outline,
+                                    LineIcons.warning,
                                     size: 25,
                                     color: Colors.white,
                                   ),
@@ -387,17 +387,29 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
             ),
           ),
           Container(
-            color: Theme.of(context).brightness == Brightness.dark ? AppColorScheme.darkSectionColor : AppColorScheme.sectionColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SafeArea(
                   top: false,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 15, top: 20,),
-                    child: Text(
-                        "Ultime dal Sobrero",
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(LineIcons.newspaper_o, size: 30,color: Colors.red,),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                              "News dal Sobrero",
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Container(

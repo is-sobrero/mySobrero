@@ -13,12 +13,15 @@ class AppColorScheme {
   static Color primaryColor = Color(0xFF0360e7);
   static Color secondaryColor = Color(0xFF0360e7);
   static Color scaffoldColor = Colors.white;
+  static Color toggleColor = Colors.white;
   static Color darkScaffoldColor = Color(0xff121212);
   static Color darkCardColor = Color(0xff212121);
   static Color darkBottomNavColor = Color(0xff242424);
   static Color darkCanvasColor = Color(0xff242424);
   static Color sectionColor = Color(0xFFfafafa);
   static Color darkSectionColor = Color(0xFF212121);
+  static Color darkToggleColor = Color(0xFF515151);
+  static Color canvasColor = Color(0xFFEEEEEE);
 
   static List<Color> appGradient = [
     const Color(0xFF0287d1),
@@ -72,7 +75,6 @@ class DetailView extends StatefulWidget {
   Color backgroundColor;
   Widget child;
   bool animateOpening;
-  int animationDuration;
   bool overridePadding;
 
   DetailView({
@@ -82,12 +84,10 @@ class DetailView extends StatefulWidget {
     @required this.child,
     @required this.backgroundColor,
     this.overridePadding = false,
-    this.animationDuration = 1500,
   }) :  assert(title != null),
         assert(tag != null),
         assert(child != null),
         assert(backgroundColor != null),
-        assert(animationDuration != null),
         super(key: key);
 
   @override
@@ -113,7 +113,7 @@ class _DetailViewState extends State<DetailView>
     super.initState();
 
     _fadeSlideAnimationController = AnimationController(
-      duration: Duration(milliseconds: widget.animationDuration),
+      duration: Duration(milliseconds: 1500),
       vsync: this,
     )..forward();
 
@@ -526,3 +526,4 @@ class SobreroDropdown extends StatelessWidget {
     );
   }
 }
+
