@@ -17,7 +17,7 @@ import 'package:package_info/package_info.dart';
 // TODO: implementare SSL pinning in tutto il CloudConnector
 
 class CloudConnector {
-  static String cloudEndpoint = "http://localhost:8888/mysobrero-api/";
+  static String cloudEndpoint = "https://reapistaging.altervista.org/api/v3/";
 
   static Future<bool> registerSession({
     @required String uid,

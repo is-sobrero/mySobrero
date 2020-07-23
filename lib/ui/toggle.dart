@@ -52,19 +52,20 @@ class _SobreroToggleState extends State<SobreroToggle> {
               children: List.generate(
                 widget.values.length,
                     (index) => GestureDetector(
-                  onTap: () => widget.onToggleCallback(index),
-                  child: Container(
-                    width: singleItem,
-                    child: Text(
-                      widget.values[index],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF918f95)),
+                      onTap: () => widget.onToggleCallback(index),
+                      child: Container(
+                        width: singleItem,
+                        child: Text(
+                          widget.values[index],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF918f95),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
               ),
             ),
           ),
@@ -77,22 +78,24 @@ class _SobreroToggleState extends State<SobreroToggle> {
               width: singleItem,
               height: 30,
               decoration: ShapeDecoration(
-                  color: Theme.of(context).toggleableActiveColor,
-                  shadows: [
-                    BoxShadow(
-                      color: Colors.black12.withAlpha(12),
-                      blurRadius: 10,
-                      spreadRadius: 10,
-                    )
-                  ],
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15))),
+                color: Theme.of(context).toggleableActiveColor,
+                shadows: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(12),
+                    blurRadius: 10,
+                    spreadRadius: 10,
+                  ),
+                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
               child: Text(
                 widget.values[widget.selectedItem],
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
