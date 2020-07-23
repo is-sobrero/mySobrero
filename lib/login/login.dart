@@ -168,7 +168,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (prefs.getBool('agreementAccepted') != false) {
+    if (prefs.getBool('agreementAccepted') != true) {
       await Navigator.push(
         context,
         PageRouteBuilder(
