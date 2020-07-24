@@ -6,12 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mySobrero/agreement/agreement_dialog.dart';
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/skeleton.dart';
+import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
 import 'package:mySobrero/app_main/app_main.dart';
@@ -241,6 +243,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   void buttonLoginOnClick(String user, String password) {
+    FocusScope.of(context).unfocus();
     userID = user;
     userPassword = password;
     setState(() {
@@ -256,7 +259,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: 300,
+          width: 340,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -310,25 +313,21 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Password',
-                      ),
+                    SobreroTextField(
+                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      hintText: 'Password',
                       controller: retypePwdController,
+                      obscureText: true,
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 10),
-                      child: RaisedButton(
-                        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                        onPressed: () => buttonLoginOnClick(userID, retypePwdController.text),
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(7.0))),
-                        color: Theme.of(context).primaryColor,
-                        textColor: Colors.white,
-                        child: const Text('ACCEDI'),
-                      )
+                    SobreroButton(
+                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      text: "Accedi",
+                      suffixIcon: Icon(LineIcons.unlock),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () => buttonLoginOnClick(
+                        userID,
+                        retypePwdController.text,
+                      ),
                     ),
                     InkWell(
                       onTap: () => setState((){
@@ -364,38 +363,25 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'ID Studente'),
-                        controller: userController,
-                      ),
+                    SobreroTextField(
+                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                      hintText: 'ID Studente',
+                      controller: userController,
                     ),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Password',
-                      ),
+                    SobreroTextField(
+                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      hintText: 'Password',
                       controller: loginPwdController,
+                      obscureText: true,
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Center(
-                        child: RaisedButton(
-                          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                          onPressed: () => buttonLoginOnClick(userController.text, loginPwdController.text),
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(7.0))),
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          child: const Text('ACCEDI'),
-                        ),
+                    SobreroButton(
+                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      text: "Accedi",
+                      suffixIcon: Icon(LineIcons.unlock),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () => buttonLoginOnClick(
+                        userController.text,
+                        loginPwdController.text,
                       ),
                     ),
                   ],

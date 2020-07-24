@@ -1,13 +1,20 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPL 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mySobrero/common/tiles.dart';
+import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/ui/detail_view.dart';
+import 'package:mySobrero/ui/toggle.dart';
 
-import 'fade_slide_transition.dart';
+// TODO: pulizia codice argomenti
 
 class ArgomentiView extends StatefulWidget {
   reAPI3 apiInstance;
@@ -18,16 +25,8 @@ class ArgomentiView extends StatefulWidget {
   _ArgomentiState createState() => _ArgomentiState();
 }
 
-class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStateMixin {
+class _ArgomentiState extends State<ArgomentiView> {
   List<ArgomentoStructure> regclasse;
-
-  final double _listAnimationIntervalStart = 0.65;
-  final double _preferredAppBarHeight = 56.0;
-
-  AnimationController _fadeSlideAnimationController;
-  ScrollController _scrollController;
-  double _appBarElevation = 0.0;
-  double _appBarTitleOpacity = 0.0;
 
   List<String> materie;
   List<ArgomentoStructure> argSettimana;
@@ -36,18 +35,6 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _fadeSlideAnimationController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    )..forward();
-    _scrollController = ScrollController()..addListener(() {
-      double oldElevation = _appBarElevation;
-      double oldOpacity = _appBarTitleOpacity;
-      _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
-      _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
-      if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
-    });
-
     _argomenti = widget.apiInstance.retrieveArgomenti().then((argomenti){
       this.argSettimana = List<ArgomentoStructure>();
       for (int i = 0; i < argomenti.length; i++) {
@@ -68,309 +55,173 @@ class _ArgomentiState extends State<ArgomentiView> with SingleTickerProviderStat
 
     inizioSettimana = today.subtract(new Duration(days: today.weekday - 1));
     formatter = new DateFormat('dd/MM/yyyy');
-
-    /*materie = new List();
-    materie.add("Tutte le materie");
-    for (int i = 0; i < regclasse.length; i++) {
-      String m = regclasse[i].materia;
-      if (!materie.contains(m)) materie.add(m);
-    }
-    regclasse = regclasse.reversed.toList();*/
-  }
-
-  @override
-  void dispose() {
-    _fadeSlideAnimationController.dispose();
-    _scrollController.dispose();
-    super.dispose();
   }
 
   DateTime today = DateTime.now();
   var inizioSettimana, formatter;
 
 
-  Map<int, Widget> _children = const <int, Widget>{
-    0: Text('Settimana', style: TextStyle(color: Colors.white)),
-    1: Text('Tutti gli argomenti', style: TextStyle(color: Colors.white)),
-  };
-
   int selezioneArgomenti = 0;
-
-  Widget _generaTileArgomento(ArgomentoStructure argomento){
-    return Padding(
-      padding:
-      const EdgeInsets.only(bottom: 15),
-      child: Container(
-          decoration: new BoxDecoration(
-              color: Color(0xFF5352ed),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withAlpha(30),
-                    blurRadius: 10,
-                    spreadRadius: 10
-                )
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(argomento.materia,
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight:
-                        FontWeight.bold,
-                        color: Colors.white)),
-                Text(
-                    argomento.descrizione.trim(),
-                    style: TextStyle(fontSize: 16, color: Colors.white)
-                ),
-              ],
-            ),
-          )),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     String dataTemporanea = "";
-    return Hero(
-        tag: "argomenti_background",
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: false,
-            title: AnimatedOpacity(
-              opacity: _appBarTitleOpacity,
-              duration: const Duration(milliseconds: 250),
-              child: Text("Argomenti", style: TextStyle(color: Colors.white)),
-            ),
-            backgroundColor: Color(0xFF5352ed),
-            elevation: _appBarElevation,
-            brightness: Brightness.dark,
-            leading: BackButton(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Color(0xFF5352ed),
-          body: SafeArea(
-            bottom: false,
-            child: Column(children: <Widget>[
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: ScrollBehavior(),
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-                    child: Column(
-                      children: <Widget>[
-                        FadeSlideTransition(
-                          controller: _fadeSlideAnimationController,
-                          slideAnimationTween: Tween<Offset>(
-                            begin: Offset(0.0, 0.5),
-                            end: Offset(0.0, 0.0),
+    return SobreroDetailView(
+      title: "Argomenti",
+      child: Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: FutureBuilder<List<ArgomentoStructure>>(
+            future: _argomenti,
+            builder: (context, snapshot){
+              switch (snapshot.connectionState){
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          SpinKitDualRing(
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                            size: 40,
+                            lineWidth: 5,
                           ),
-                          begin: 0.0,
-                          end: _listAnimationIntervalStart,
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                "Argomenti",
-                                style: Theme.of(context).textTheme.title.copyWith(
-                                    fontSize: 32.0,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text("Sto caricando gli argomenti", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
                           ),
-                        ),
-                        FadeSlideTransition(
-                          controller: _fadeSlideAnimationController,
-                          slideAnimationTween: Tween<Offset>(
-                            begin: Offset(0.0, 0.005),
-                            end: Offset(0.0, 0.0),
-                          ),
-                          begin: _listAnimationIntervalStart - 0.15,
-                          child: Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: FutureBuilder<List<ArgomentoStructure>>(
-                                future: _argomenti,
-                                builder: (context, snapshot){
-                                  switch (snapshot.connectionState){
-                                    case ConnectionState.none:
-                                    case ConnectionState.active:
-                                    case ConnectionState.waiting:
-                                      return Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Center(
-                                          child: Column(
-                                            children: <Widget>[
-                                              SpinKitDualRing(
-                                                color: Colors.white,
-                                                size: 40,
-                                                lineWidth: 5,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 8.0),
-                                                child: Text("Sto caricando gli argomenti", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    case ConnectionState.done:
-                                      if (snapshot.hasError) {
-                                        return Padding(
-                                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Icon(Icons.warning, size: 40, color: Colors.white,),
-                                              Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                      List<ArgomentoStructure> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
-                                      return Column(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 15),
-                                            child: CupertinoSlidingSegmentedControl(
-                                              backgroundColor: Colors.black.withAlpha(50),
-                                              thumbColor: Colors.black54,
-                                              children: _children,
-                                              onValueChanged: (val) {
-                                                setState(() {
-                                                  selezioneArgomenti = val;
-                                                });
-                                              },
-                                              groupValue: selezioneArgomenti,
-                                            ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(bottom: 15),
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                      boxShadow: <BoxShadow>[
-                                                        new BoxShadow(
-                                                          color: Colors.black.withOpacity(0.06),
-                                                          spreadRadius: 4,
-                                                          offset: new Offset(0.0, 0.0),
-                                                          blurRadius: 15.0,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Card(
-                                                      color: Colors.black54,
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        children: <Widget>[
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-                                                              child: Theme(
-                                                                data: Theme.of(context).copyWith(
-                                                                    brightness: Brightness.dark,
-                                                                    canvasColor: Color(0xFF212121)
-                                                                ),
-                                                                child: DropdownButtonHideUnderline(
-                                                                  child: DropdownButton<String>(
-                                                                    isExpanded: true,
-                                                                    hint: Text("Seleziona elemento", overflow: TextOverflow.ellipsis),
-                                                                    value: materie[filterIndex],
-                                                                    onChanged: (String Value) {
-                                                                      setState(() {
-                                                                        filterIndex = materie.indexOf(Value);
-                                                                      });
-                                                                    },
-                                                                    items: materie.map((String user) {
-                                                                      return DropdownMenuItem<String>(
-                                                                        value: user,
-                                                                        child:
-                                                                        Text(
-                                                                            user,
-                                                                            overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)
-                                                                        ),
-                                                                      );
-                                                                    }).toList(),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),)
-
-                                                        ],
-                                                      ),
-                                                      margin: EdgeInsets.zero,
-                                                    )),
-                                              ),
-                                            ],
-                                          ),
-                                          ListView.builder(
-                                            addAutomaticKeepAlives: true,
-                                            primary: false,
-                                            shrinkWrap: true,
-                                            itemCount: currentSet.length,
-                                            itemBuilder: (context, index){
-                                              var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile",
-                                                "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
-                                                "Ottobre", "Novembre", "Dicembre"];
-                                              var tempString = currentSet[index].data.split(" ")[0].split("/");
-                                              String formattedDate = "${tempString[0]} ${mesi[int.parse(tempString[1]) - 1]}";
-                                              bool mostraGiornata = true;
-                                              final bool mostra = filterIndex == 0 ? true : currentSet[index].materia == materie[filterIndex];
-                                              if (dataTemporanea != currentSet[index].data){
-                                                dataTemporanea = currentSet[index].data;
-                                                if (filterIndex != 0){
-                                                  mostraGiornata = false;
-                                                  print("filtro giornate attivo");
-                                                  for (int i = 0; i < currentSet.length; i++) {
-                                                    if (currentSet[i].materia == materie[filterIndex] && currentSet[i].data == dataTemporanea) {
-                                                      mostraGiornata = true;
-                                                      break;
-                                                    }
-                                                  }
-                                                }
-                                                return Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    mostraGiornata ? Padding(
-                                                      padding: const EdgeInsets.only(bottom: 15),
-                                                      child: Text(
-                                                        formattedDate,
-                                                        style: TextStyle(
-                                                            fontSize: 24,
-                                                            color: Colors.white),
-                                                      ),
-                                                    ) : Container(),
-                                                    mostra ? _generaTileArgomento(currentSet[index]) : Container()
-                                                  ],
-                                                );
-                                              }
-                                              dataTemporanea = currentSet[index].data;
-                                              return mostra ? _generaTileArgomento(currentSet[index]) : Container();
-                                            },
-                                          )
-                                        ],
-                                      );
-                                  }
-                                  return null;
-                                },
-                              )
-                          ),
-
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ]),
-          ),
-        )
+                  );
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
+                      child: Column(
+                        children: <Widget>[
+                          Icon(Icons.warning, size: 40, color: Colors.white,),
+                          Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                        ],
+                      ),
+                    );
+                  }
+                  List<ArgomentoStructure> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
+                  return Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: SobreroToggle(
+                          values: ["Settimana", "Tutti"],
+                          onToggleCallback: (val) => setState(() => selezioneArgomenti = val),
+                          selectedItem: selezioneArgomenti,
+                          width: 200,
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          SobreroDropdown(
+                            margin: EdgeInsets.only(bottom: 20),
+                            value: materie[filterIndex],
+                            onChanged: (String value) {
+                              filterIndex = materie.indexOf(value);
+                              setState(() {});
+                            },
+                            items: materie.map((String user) {
+                              return DropdownMenuItem<String>(
+                                value: user,
+                                child: Text(
+                                  user,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                      ListView.builder(
+                        addAutomaticKeepAlives: true,
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: currentSet.length,
+                        itemBuilder: (context, index){
+                          var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile",
+                            "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
+                            "Ottobre", "Novembre", "Dicembre"];
+                          var tempString = currentSet[index].data.split(" ")[0].split("/");
+                          String formattedDate = "${tempString[0]} ${mesi[int.parse(tempString[1]) - 1]}";
+                          bool mostraGiornata = true;
+                          final bool mostra = filterIndex == 0 ? true : currentSet[index].materia == materie[filterIndex];
+                          if (dataTemporanea != currentSet[index].data){
+                            dataTemporanea = currentSet[index].data;
+                            if (filterIndex != 0){
+                              mostraGiornata = false;
+                              print("filtro giornate attivo");
+                              for (int i = 0; i < currentSet.length; i++) {
+                                if (currentSet[i].materia == materie[filterIndex] && currentSet[i].data == dataTemporanea) {
+                                  mostraGiornata = true;
+                                  break;
+                                }
+                              }
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                if (mostraGiornata) Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: Text(
+                                    formattedDate,
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                                if (mostra) GenericTile(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  children: [
+                                    Text(currentSet[index].materia,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight:
+                                            FontWeight.bold,
+                                            )
+                                    ),
+                                    Text(
+                                        currentSet[index].descrizione.trim(),
+                                        style: TextStyle(fontSize: 16)
+                                    ),
+                                  ]
+                                )
+                              ],
+                            );
+                          }
+                          dataTemporanea = currentSet[index].data;
+                          return mostra ? GenericTile(
+                            margin: EdgeInsets.only(bottom: 15),
+                              children: [
+                                Text(currentSet[index].materia,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight:
+                                      FontWeight.bold,
+                                    )
+                                ),
+                                Text(
+                                    currentSet[index].descrizione.trim(),
+                                    style: TextStyle(fontSize: 16)
+                                ),
+                              ]
+                          ) : Container();
+                        },
+                      )
+                    ],
+                  );
+              }
+              return null;
+            },
+          )
+      ),
     );
   }
 

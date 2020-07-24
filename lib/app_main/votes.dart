@@ -17,7 +17,6 @@ import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/situazione.dart';
 
 class VotesPage extends StatefulWidget {

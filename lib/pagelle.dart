@@ -1,11 +1,17 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPL 3.0 license that can be
+// found in the LICENSE file.
+
+// TODO: pulizia codice pagelle
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'fade_slide_transition.dart';
+import 'package:mySobrero/ui/detail_view.dart';
+import 'package:mySobrero/ui/toggle.dart';
 
 class PagelleView extends StatefulWidget {
   reAPI3 apiInstance;
@@ -16,46 +22,15 @@ class PagelleView extends StatefulWidget {
   _PagelleState createState() => _PagelleState();
 }
 
-class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMixin {
-
-  final double _listAnimationIntervalStart = 0.65;
-  final double _preferredAppBarHeight = 56.0;
-
-  AnimationController _fadeSlideAnimationController;
-  ScrollController _scrollController;
-  double _appBarElevation = 0.0;
-  double _appBarTitleOpacity = 0.0;
+class _PagelleState extends State<PagelleView> {
 
   List<String> materie;
 
   @override
   void initState() {
     super.initState();
-    _fadeSlideAnimationController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    )..forward();
-    _scrollController = ScrollController()..addListener(() {
-      double oldElevation = _appBarElevation;
-      double oldOpacity = _appBarTitleOpacity;
-      _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
-      _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
-      if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
-    });
     _pagelle = widget.apiInstance.retrievePagelle();
   }
-
-  @override
-  void dispose() {
-    _fadeSlideAnimationController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  Map<int, Widget> _children = const <int, Widget>{
-    0: Text('1^ Quad', style: TextStyle(color: Colors.white)),
-    1: Text('2^ Quad', style: TextStyle(color: Colors.white)),
-  };
 
   int selezionaPagella = 0;
 
@@ -65,31 +40,20 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
 
   int filterIndex = 0;
 
-
   @override
   Widget build(BuildContext context) {
-    return DetailView(
+    return SobreroDetailView(
       title: "Pagelle",
-      tag: "pagelle_background",
-      backgroundColor: Color(0xff38ada9),
       child: Padding(
           padding: EdgeInsets.only(top: 10),
           child: Column(
             children: <Widget>[
-              Padding(
-                padding:
-                const EdgeInsets.only(bottom: 15),
-                child: CupertinoSlidingSegmentedControl(
-                  backgroundColor: Colors.black.withAlpha(50),
-                  thumbColor: Colors.black54,
-                  children: _children,
-                  onValueChanged: (val) {
-                    setState(() {
-                      selezionaPagella = val;
-                    });
-                  },
-                  groupValue: selezionaPagella,
-                ),
+              SobreroToggle(
+                margin: EdgeInsets.only(bottom: 15),
+                values: ["1° Periodo", "2° Periodo"],
+                onToggleCallback: (val) => setState(() => selezionaPagella = val),
+                selectedItem: selezionaPagella,
+                width: 200,
               ),
               FutureBuilder<List<PagellaStructure>>(
                 future: _pagelle,
@@ -104,13 +68,13 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                           child: Column(
                             children: <Widget>[
                               SpinKitDualRing(
-                                color: Colors.white,
+                                color: Theme.of(context).textTheme.bodyText1.color,
                                 size: 40,
                                 lineWidth: 5,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: Text("Sto caricando le pagelle", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                                child: Text("Sto caricando le pagelle", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
                               ),
                             ],
                           ),
@@ -122,8 +86,8 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                           padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
                           child: Column(
                             children: <Widget>[
-                              Icon(Icons.warning, size: 40, color: Colors.white,),
-                              Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                              Icon(Icons.warning, size: 40,),
+                              Text("${snapshot.error}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
                             ],
                           ),
                         );
@@ -132,14 +96,24 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                       else selectedPagella = snapshot.data[selezionaPagella];
 
                       return selectedPagella != null ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("Media totale: ${selectedPagella.media.toStringAsFixed(2)}", style: TextStyle(
-                              fontSize: 20, color: Colors.white),),
+                          Text("Media pagella",),
+                          Text(
+                            selectedPagella.media.toStringAsFixed(2),
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: Text("Esito: ${selectedPagella.esito != "" ?  selectedPagella.esito  : "Non specificato"}", style: TextStyle(
-                                fontSize: 20, color: Colors.white),),
+                            child: Text(
+                              selectedPagella.esito != "" ?  selectedPagella.esito  : "Esito non specificato",
+                              style: TextStyle(fontSize: 20,),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                           ListView.builder(
                             primary: false,
@@ -148,48 +122,34 @@ class _PagelleState extends State<PagelleView> with SingleTickerProviderStateMix
                             itemBuilder: (context, index) {
                               VotoFinaleStructure mat = selectedPagella.materie.values.elementAt(index);
                               String materia = selectedPagella.materie.keys.elementAt(index);
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 15),
-                                child: Container(
-                                    decoration: new BoxDecoration(
-                                      color: Color(0xff38ada9),
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black.withAlpha(20),
-                                            blurRadius: 10,
-                                            spreadRadius: 10
-                                        )
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child:
-                                      Row(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 15),
-                                            child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.white)),
-                                          ),
-                                          Expanded(child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                                              Text("Ore di assenza: ${mat.assenze}",
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white)),
-                                            ],
-                                          ))
-                                        ],
+                              return GenericTile(
+                                margin: EdgeInsets.only(bottom: 15),
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 15),
+                                        child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,)),
                                       ),
-                                    )),
+                                      Expanded(child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,)),
+                                          Text("Ore di assenza: ${mat.assenze}",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  )),
+                                        ],
+                                      ))
+                                    ],
+                                  ),
+                                ],
                               );
                             },
                           )
                         ],
                       ) : new Text("Pagella non disponibile per il periodo selezionato", style: TextStyle(
-                          fontSize: 20, color: Colors.white),);
+                          fontSize: 20,),);
                   }
                   return null;
                 },

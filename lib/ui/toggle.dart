@@ -8,15 +8,18 @@ class SobreroToggle extends StatefulWidget {
   final List<String> values;
   final ValueChanged onToggleCallback;
   int selectedItem;
+  EdgeInsets margin;
   double width;
   SobreroToggle(
       {Key key,
         @required this.values,
         @required this.onToggleCallback,
         @required this.selectedItem,
+        this.margin = EdgeInsets.zero,
         @required this.width})
       : assert(values != null),
         assert(onToggleCallback != null),
+        assert(margin != null),
         assert(selectedItem != null),
         assert(width != null),
         super(key: key);
@@ -37,6 +40,7 @@ class _SobreroToggleState extends State<SobreroToggle> {
     double singleItem = widget.width / widget.values.length;
     return Container(
       width: widget.width,
+      margin: widget.margin,
       child: Stack(
         children: [
           Container(

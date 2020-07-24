@@ -3,17 +3,19 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/argomenti.dart';
 import 'package:mySobrero/assenze.dart';
 import 'package:mySobrero/carriera.dart';
+import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/listings/listings_main.dart';
 import 'package:mySobrero/materiale.dart';
 import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/ricercaaule.dart';
+import 'package:mySobrero/tiles/action_tile.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 class MorePageView extends StatefulWidget {
@@ -58,56 +60,63 @@ class _MorePageState extends State<MorePageView>
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           children: [
-            IllustrationTile(
-              builder: (_) => AssenzeView(apiInstance: widget.apiInstance),
-              tag: "assenze_background",
+            ActionTile(
+              builder: (_,__,___) => AssenzeView(apiInstance: widget.apiInstance),
               title: "Assenze",
-              image: "assets/images/assenze.png",
+              lightImage: "assets/images/assenze_light.png",
+              darkImage: "assets/images/assenze_dark.png",
               color: Color(0xffff9692),
+              icon: LineIcons.bed,
             ),
-            IllustrationTile(
-              builder: (_) => ArgomentiView(apiInstance: widget.apiInstance),
-              tag: "argomenti_background",
+            ActionTile(
+              builder: (_,__,___) => ArgomentiView(apiInstance: widget.apiInstance),
               title: "Argomenti",
-              image: "assets/images/argomenti.png",
+              lightImage: "assets/images/argomenti_light.png",
+              darkImage: "assets/images/argomenti_dark.png",
               color: Color(0xFF5352ed),
+              icon: SobreroIcons2.edit,
             ),
-            IllustrationTile(
-              builder: (_) => ListingsHomePage(),
-              tag: "listings_home",
+            /*ActionTile(
+              builder: (_,__,___) => ListingsHomePage(),
               title: "Resell@Sobrero",
-              image: "assets/images/argomenti.png",
+              lightImage: "assets/images/argomenti.png",
+              darkImage: "assets/images/argomenti.png",
               color: Color(0xFF5352ed),
-            ),
-            IllustrationTile(
-              builder: (_) => MaterialeView(apiInstance: widget.apiInstance),
-              tag: "materiale_background",
+              icon: Icons.cloud,
+            ),*/
+            ActionTile(
+              builder: (_,__,___) => MaterialeView(apiInstance: widget.apiInstance),
               title: "Materiale didattico",
-              image: "assets/images/material.png",
+              lightImage: "assets/images/materiale_light.png",
+              darkImage: "assets/images/materiale_dark.png",
               color: Color(0xffe55039),
+              icon: LineIcons.hdd_o,
             ),
-            IllustrationTile(
-              builder: (_) => RicercaAuleView(),
-              tag: "ricercaaule_background",
+            ActionTile(
+              builder: (_,__,___) => RicercaAuleView(),
               title: "Ricerca aule",
-              image: "assets/images/ricercaaule.png",
+              lightImage: "assets/images/aula_light.png",
+              darkImage: "assets/images/aula_dark.png",
               color: Color(0xffF86925),
+              icon: SobreroIcons2.map,
             ),
-            IllustrationTile(
-              builder: (_) => PagelleView(apiInstance: widget.apiInstance),
-              tag: "pagelle_background",
+            ActionTile(
+              builder: (_,__,___) => PagelleView(apiInstance: widget.apiInstance),
               title: "Pagelle",
-              image: "assets/images/pagelle.png",
+              lightImage: "assets/images/pagelle_light.png",
+              darkImage: "assets/images/pagelle_dark.png",
               color: Color(0xff38ada9),
+              icon: SobreroIcons2.alternate_list,
             ),
-            IllustrationTile(
-              builder: (_) => CarrieraView(
+            ActionTile(
+              builder: (_,__,___) => CarrieraView(
                   unifiedLoginStructure: widget.unifiedLoginStructure
               ),
-              tag: "carriera_background",
               title: "Carriera scolastica",
-              image: "assets/images/carriera.png",
+              lightImage: "assets/images/carriera_light.png",
+              darkImage: "assets/images/carriera_dark.png",
               color: Color(0xff45BF6D),
+              icon: LineIcons.history,
             ),
           ],
         ),

@@ -410,7 +410,6 @@ class IllustrationTile extends StatelessWidget {
   IllustrationTile({
     Key key,
     @required this.builder,
-    @required this.tag,
     @required this.title,
     @required this.image,
     this.color = const Color(0xFFFF0000)
@@ -422,14 +421,10 @@ class IllustrationTile extends StatelessWidget {
 
   /// Route builder passed to the Navigator when the [IllustrationTile] is
   /// tapped
-  final Function(BuildContext) builder;
+  final Function(BuildContext, Animation<double>, Animation<double>) builder;
 
   /// Background color of the tile
   final Color color;
-
-  /// Hero tag for [IllustrationTile] to animate the tile body during
-  /// Navigator.push transition
-  final String tag;
 
   /// The title for [IllustrationTile]
   final String title;
@@ -442,14 +437,18 @@ class IllustrationTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: builder,
-          fullscreenDialog: true,
+        PageRouteBuilder(
+          pageBuilder: builder,
+          transitionDuration: Duration(milliseconds: 600),
+          transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
+            animation: prim,
+            secondaryAnimation: sec,
+            transitionType: SharedAxisTransitionType.scaled,
+            child: child,
+          ),
         ),
       ),
-      child: Hero(
-        tag: tag,
-        child: Container(
+      child: Container(
           height: 150,
           width: double.infinity,
           //margin: EdgeInsets.only(bottom: 10),
@@ -467,9 +466,6 @@ class IllustrationTile extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             clipBehavior: Clip.antiAlias,
-            // TODO: rimuovere ingradimento immagine durante hero
-            // TODO: provare le nuove animazioni con tiles
-            // TODO: implementare colore automatico testo
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -486,13 +482,12 @@ class IllustrationTile extends StatelessWidget {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: color.computeLuminance() > 0.45 ?
-                      Colors.black : Colors.white,
+                    Colors.black : Colors.white,
                   ),
                 ),
               ),
             ),
           )
-        )
       ),
     );
   }
@@ -502,6 +497,10 @@ class GenericTile extends StatelessWidget {
   GenericTile({
     Key key,
     @required this.children,
+    this.color,
+    this.showShadow = true,
+    this.margin = EdgeInsets.zero,
+    this.overridePadding = false,
     this.crossAxisAlignment = CrossAxisAlignment.stretch
   }) :  assert(crossAxisAlignment != null),
         assert(children != null),
@@ -509,15 +508,19 @@ class GenericTile extends StatelessWidget {
 
   CrossAxisAlignment crossAxisAlignment;
   List<Widget> children;
+  EdgeInsets margin;
+  Color color;
+  bool showShadow, overridePadding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: margin,
       decoration: new BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: color ?? Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(
+          if (showShadow) BoxShadow(
             color: Colors.black.withAlpha(12),
             blurRadius: 10,
             spreadRadius: 10,
@@ -525,7 +528,7 @@ class GenericTile extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: EdgeInsets.all(overridePadding ? 0 : 15),
         child: Column(
           crossAxisAlignment: crossAxisAlignment,
           children: [
