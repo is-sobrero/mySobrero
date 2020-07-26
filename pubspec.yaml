@@ -26,7 +26,6 @@ dependencies:
   firebase_analytics: ^5.0.9
   firebase_messaging: ^6.0.9
   firebase_crashlytics: ^0.1.2+4
-  firebase_storage: ^3.1.1 #TODO: rimuovere Firestorage
   local_auth: ^0.6.1
   device_preview: ^0.2.6
   auto_size_text: ^2.1.0

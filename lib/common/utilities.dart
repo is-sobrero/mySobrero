@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
@@ -39,5 +41,13 @@ void openURL(BuildContext context, String url) async {
     );
   } catch (e) {
     debugPrint(e.toString());
+  }
+}
+
+class Utilities {
+  static String getRandString(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) =>  random.nextInt(255));
+    return base64UrlEncode(values);
   }
 }

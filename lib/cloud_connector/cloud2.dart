@@ -5,12 +5,14 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/StringData.dart';
 import 'package:mySobrero/common/definitions.dart';
+import 'package:mySobrero/common/utilities.dart';
 
 import 'package:package_info/package_info.dart';
 
@@ -88,21 +90,6 @@ class CloudConnector {
     return RemoteNews.fromJson(jsonDecode(res.body)['data']);
   }
 
-  static Future<bool> setProfilePicture({
-    @required String token,
-    @required String url
-  }) async {
-    var response = await http.post(
-      cloudEndpoint + "pushData.php",
-      body: {
-        'token': token,
-        'data': url,
-        'reference': "profile",
-      },
-    );
-    return response.statusCode == 200;
-  }
-
   static Future<bool> setGoals({
     @required String token,
     @required String goals
@@ -116,6 +103,30 @@ class CloudConnector {
       },
     );
     print("cloud goals ${response.statusCode}");
+
+    return response.statusCode == 200;
+  }
+
+  static Future<bool> setProfilePicture({
+    @required String token,
+    @required File image
+  }) async {
+    var stream = http.ByteStream(DelegatingStream.typed(image.openRead()));
+    var length = await image.length();
+
+    var uri = Uri.parse(cloudEndpoint + "pushData.php");
+    var request = new http.MultipartRequest("POST", uri);
+    request.fields['token'] = token;
+    request.fields['reference'] = 'profile';
+    var multipartFile = new http.MultipartFile('avatar', stream, length,
+        filename: Utilities.getRandString(20));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
 
     return response.statusCode == 200;
   }

@@ -1,0 +1,18 @@
+{
+  "appUpdateAvailable": "Aggiornamento dell'App disponibile",
+  "appUpdateDesc": "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.",
+  "appUpdateButton": "AGGIORNA",
+  "authenticateToLogin": "Autenticati per accedere a mySobrero come $USER",
+  "cancelButton": "ANNULLA",
+  "fingerprintNotRecognized": "Impronta non riconosciuta",
+  "fingerprintRequired" : "Impronta richiesta",
+  "fingerprintSuccess": "Autenticazione riuscita",
+  "loginToMySobrero" : "Accedi a mySobrero",
+  "loginError" : "Errore durante il login",
+  "retryButton" : "RIPROVA",
+  "loginAs": "Accedi a mySobrero come $USER",
+  "password": "Password",
+  "loginButton" : "Accedi",
+  "loginWithAnotherAccount" : "Accedi con un altro account",
+  "studentID":  "ID Studente",
+}

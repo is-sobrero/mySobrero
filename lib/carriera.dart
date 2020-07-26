@@ -111,8 +111,8 @@ class _CarrieraState extends State<CarrieraView> {
               Stack(
                 children: <Widget>[
                   CircularPercentIndicator(
-                    radius: 175,
-                    lineWidth: 10,
+                    radius: 190,
+                    lineWidth: 15,
                     percent: (creditiNonPresiTotali + creditiPresiTotali) / 40,
                     animation: true,
                     animationDuration: 300,
@@ -134,8 +134,8 @@ class _CarrieraState extends State<CarrieraView> {
                     ),
                   ),
                   CircularPercentIndicator(
-                    radius: 175,
-                    lineWidth: 10,
+                    radius: 190,
+                    lineWidth: 15,
                     percent: creditiPresiTotali / 40,
                     animation: true,
                     animationDuration: 300,
@@ -151,7 +151,7 @@ class _CarrieraState extends State<CarrieraView> {
                           textAlign: TextAlign.center,
                         )
                     ),
-                    backgroundColor: Colors.black26,
+                    backgroundColor: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.1),
                     linearGradient: LinearGradient(
                         colors: <Color>[Color(0xff2af598), Color(0xff009efd)]
                     ),

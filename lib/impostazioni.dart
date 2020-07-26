@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'fade_slide_transition.dart';
 import 'skeleton.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'globals.dart' as globals;
 import 'package:flutter/gestures.dart';
@@ -82,12 +81,17 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
 
   }
 
-  final StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<bool> cambiaProfilo(image) async {
-    final userName = widget.unifiedLoginStructure.user.matricola;
-    final StorageUploadTask uploadTask = _firebaseStorage.child("profile_$userName.jpg").putFile(
+    //final userName = widget.unifiedLoginStructure.user.matricola;
+
+    bool res = await CloudConnector.setProfilePicture(
+      token: widget.session,
+      image: image,
+    );
+
+    /*final StorageUploadTask uploadTask = _firebaseStorage.child("profile_$userName.jpg").putFile(
       image,
       StorageMetadata(
         contentType: "image/jpeg",
@@ -105,7 +109,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
     setState(() {
       globals.profileURL = url;
       widget.profileCallback(_profileURL);
-    });
+    });*/
 
     return true;
   }
