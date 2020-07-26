@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/login/login.dart';
 
 void main() {
@@ -22,6 +24,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('it', 'IT'),
+      ],
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       title: 'mySobrero',
       theme: ThemeData(
         primaryColor: AppColorScheme.primaryColor,

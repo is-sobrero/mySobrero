@@ -283,6 +283,7 @@ class _ImpostazioniState extends State<ImpostazioniView> with SingleTickerProvid
                                                   final QuickActions quickActions = QuickActions();
                                                   quickActions.setShortcutItems(<ShortcutItem>[]);
                                                   _impostaBool("savedCredentials", false);
+                                                  _impostaBool("savedCredentials", false);
                                                 },
                                               ),
                                             ),

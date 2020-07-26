@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 import 'package:mySobrero/common/tiles.dart';
@@ -154,7 +155,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
   @override
   Widget build(BuildContext context) {
     return MainViewSimpleContainer(
-      title: "Tutte le circolari",
+      title: AppLocalizations.of(context).translate('allNotices'),
       children: [
         WaterfallFlow.builder(
           primary: false,

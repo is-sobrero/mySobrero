@@ -14,9 +14,11 @@ import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
 import 'package:mySobrero/app_main/app_main.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:package_info/package_info.dart';
@@ -93,9 +95,9 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
             barrierDismissible: false,
             builder: (context) => singleButtonDialog(
                 headingImage: 'assets/images/update.png',
-                title: "Aggiornamento dell'app disponibile",
-                content: "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.",
-                buttonText: "AGGIORNA",
+                title: AppLocalizations.of(context).translate('appUpdateAvailable'),
+                content: AppLocalizations.of(context).translate('appUpdateDesc'),
+                buttonText: AppLocalizations.of(context).translate('appUpdateButton'),
                 buttonCallback: () => LaunchReview.launch(),
                 context: context
             )
@@ -125,15 +127,18 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         print("cancheck");
         bool didAuthenticate = await localAuth.authenticateWithBiometrics(
           localizedReason:
-          'Autenticati per accedere a mySobrero come $userFullName',
+              Utilities.formatLocalized(
+                AppLocalizations.of(context).translate('authenticateToLogin'),
+                userFullName
+              ),
           stickyAuth: false,
           androidAuthStrings: AndroidAuthMessages(
-            cancelButton: "Annulla",
+            cancelButton: AppLocalizations.of(context).translate('cancelButton'),
             fingerprintHint: "",
-            fingerprintNotRecognized: "Impronta non riconosciuta",
-            fingerprintRequiredTitle: "Impronta richeista",
-            fingerprintSuccess: "Autenticazione riuscita",
-            signInTitle: "Accedi a mySobrero",
+            fingerprintNotRecognized: AppLocalizations.of(context).translate('fingerprintNotRecognized'),
+            fingerprintRequiredTitle: AppLocalizations.of(context).translate('fingerprintRequired'),
+            fingerprintSuccess: AppLocalizations.of(context).translate('fingerprintSuccess'),
+            signInTitle: AppLocalizations.of(context).translate('loginToMySobrero'),
           ),
         );
         if (didAuthenticate) return 0;
@@ -158,9 +163,9 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         context: context,
         builder: (context) => singleButtonDialog(
           headingImage: 'assets/images/errore.png',
-          title: "Errore durante il login",
+          title: AppLocalizations.of(context).translate('loginError'),
           content: loginStructure.statusHeader.description,
-          buttonText: "RIPROVA",
+          buttonText: AppLocalizations.of(context).translate('retryButton'),
           buttonCallback: () => Navigator.of(context).pop(),
           context: context
         )
@@ -305,7 +310,11 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 15.0),
-                      child: Text("Accedi a mySobrero come $userFullName",
+                      child: Text(
+                        Utilities.formatLocalized(
+                          AppLocalizations.of(context).translate('loginAs'),
+                          userFullName ?? "",
+                        ),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 19,
@@ -315,13 +324,13 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                     ),
                     SobreroTextField(
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      hintText: 'Password',
+                      hintText: AppLocalizations.of(context).translate('password'),
                       controller: retypePwdController,
                       obscureText: true,
                     ),
                     SobreroButton(
                       margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      text: "Accedi",
+                      text: AppLocalizations.of(context).translate('loginButton'),
                       suffixIcon: Icon(LineIcons.unlock),
                       color: Theme.of(context).primaryColor,
                       onPressed: () => buttonLoginOnClick(
@@ -337,7 +346,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Accedi con un altro account",
+                          AppLocalizations.of(context).translate('loginWithAnotherAccount'),
                           style: TextStyle(
                               decoration: TextDecoration.underline,
                               color: Theme.of(context).primaryColor),
@@ -355,7 +364,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        'Accedi a mySobrero',
+                        AppLocalizations.of(context).translate('loginToMySobrero'),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
@@ -365,18 +374,18 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                     ),
                     SobreroTextField(
                       margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                      hintText: 'ID Studente',
+                      hintText: AppLocalizations.of(context).translate('studentID'),
                       controller: userController,
                     ),
                     SobreroTextField(
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      hintText: 'Password',
+                      hintText: AppLocalizations.of(context).translate('password'),
                       controller: loginPwdController,
                       obscureText: true,
                     ),
                     SobreroButton(
                       margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      text: "Accedi",
+                      text: AppLocalizations.of(context).translate('loginButton'),
                       suffixIcon: Icon(LineIcons.unlock),
                       color: Theme.of(context).primaryColor,
                       onPressed: () => buttonLoginOnClick(

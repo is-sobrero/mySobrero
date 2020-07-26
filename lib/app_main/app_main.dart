@@ -13,6 +13,7 @@ import 'package:mySobrero/app_main/votes.dart';
 import 'package:mySobrero/app_main/communications.dart';
 import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 
 
@@ -176,7 +177,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                     tabs: [
                       GButton(
                         icon: LineIcons.home,
-                        text: 'Home',
+                        text: AppLocalizations.of(context).translate('home'),
                         iconSize: 20,
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -186,7 +187,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                       GButton(
                         icon: LineIcons.bar_chart,
                         iconSize: 20,
-                        text: 'Voti',
+                        text: AppLocalizations.of(context).translate('marks'),
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,
@@ -195,7 +196,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                       GButton(
                         icon: LineIcons.envelope_o,
                         iconSize: 20,
-                        text: 'Circolari',
+                        text: AppLocalizations.of(context).translate('memos'),
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,
@@ -204,7 +205,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                       GButton(
                         icon: LineIcons.ellipsis_h,
                         iconSize: 20,
-                        text: 'Altro',
+                        text: AppLocalizations.of(context).translate('more'),
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,

@@ -119,7 +119,7 @@ class CloudConnector {
     request.fields['token'] = token;
     request.fields['reference'] = 'profile';
     var multipartFile = new http.MultipartFile('avatar', stream, length,
-        filename: Utilities.getRandString(20));
+        filename: token + Utilities.getRandString(20));
 
     request.files.add(multipartFile);
     var response = await request.send();

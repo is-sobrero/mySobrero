@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/feed/feed_detail.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/expandedsection.dart';
@@ -18,7 +19,7 @@ import 'package:mySobrero/common/profiles.dart';
 import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
-import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/globals.dart' as globals;
 
@@ -163,7 +164,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                                                   Expanded(
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(left: 8.0,),
-                                                      child: Text("Attenzione", style: new TextStyle(
+                                                      child: Text(AppLocalizations.of(context).translate('warning'), style: new TextStyle(
                                                           color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
                                                       ),
                                                       ),
@@ -178,11 +179,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                                           text: new TextSpan(
                                             children: [
                                               new TextSpan(
-                                                text: "Hai eseguito l'accesso a mySobrero con le credenziali da genitore. ",
+                                                text: AppLocalizations.of(context).translate('loggedAsParent'),
                                                 style: new TextStyle(color: Colors.white),
                                               ),
                                               TextSpan(
-                                                  text: expandedParentNotice ? "Per saperne di meno" : "Per saperne di più...",
+                                                  text: expandedParentNotice ? AppLocalizations.of(context).translate('showLess') : AppLocalizations.of(context).translate('toLearnMore'),
                                                   style: new TextStyle(fontWeight: FontWeight.bold, color: Colors.white, decoration: TextDecoration.underline),
                                                   recognizer: _parentNoticeRecognizer
                                               ),
@@ -193,7 +194,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                                           expand: expandedParentNotice,
                                           child:  Padding(
                                             padding: const EdgeInsets.only(top: 8.0),
-                                            child: Text("Utilizzando le credenziali da genitore mySobrero continua a funzionare, ma alcune funzionalità potrebbero non essere disponibili, come la selezione dello studente, i sondaggi interni o l'accesso a Resell@Sobrero.\nSe sei uno studente e stai usando le credenziali dei tuoi genitori, richiedi le credenziali a te riservate in Segreteria Amministrativa per sfruttare al massimo mySobrero.", style: TextStyle(color: Colors.white)),
+                                            child: Text(AppLocalizations.of(context).translate('parentNotice'), style: TextStyle(color: Colors.white)),
                                           ),
                                         )
                                       ],
@@ -215,13 +216,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Ciao ${widget.unifiedLoginStructure.user.nome}!',
+                                '${AppLocalizations.of(context).translate('hello')} ${widget.unifiedLoginStructure.user.nome}!',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 24,
                                 ),
                               ),
-                              Text('Classe ${widget.unifiedLoginStructure.user.classe} ${widget.unifiedLoginStructure.user.sezione} - ${widget.unifiedLoginStructure.user.corso}',),
+                              Text('${AppLocalizations.of(context).translate('class')} ${widget.unifiedLoginStructure.user.classe} ${widget.unifiedLoginStructure.user.sezione} - ${widget.unifiedLoginStructure.user.corso}',),
                             ],
                           ),
                         ),
@@ -280,7 +281,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                                   Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 8.0,),
-                                      child: Text("Informazioni per gli studenti", style: new TextStyle(
+                                      child: Text(AppLocalizations.of(context).translate('studInfoTitle'), style: new TextStyle(
                                           color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16
                                       ),
                                       ),
@@ -310,7 +311,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                                 lowColor: Color(0xFFfa709a),
                                 textColor: Colors.white,
                                 primaryText: lastMark,
-                                secondaryText: lastMark.isEmpty ? "Nessun voto inserito" : "Voto preso di $lastSubject",
+                                secondaryText: lastMark.isEmpty ? AppLocalizations.of(context).translate('noMarkFound') : Utilities.formatLocalized(AppLocalizations.of(context).translate('markTaken'), lastSubject),
                                 showImage: lastMark.isEmpty,
                                 image: "assets/icons/test",
                               ),
@@ -322,7 +323,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                                 lowColor: Color(0xFF43e97b),
                                 textColor: Colors.black,
                                 primaryText: widget.weekAssignments.length.toString(),
-                                secondaryText: "Compiti per la settimana",
+                                secondaryText: AppLocalizations.of(context).translate('weekAssignments'),
                               ),
                             ],
                           ),
@@ -373,7 +374,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                             Padding(
                               padding: const EdgeInsets.only(top: 12.0),
                               child: AutoSizeText(
-                                "Ultima comunicazione ricevuta",
+                                AppLocalizations.of(context).translate('lastNotice'),
                                 style: new TextStyle(color: Color(0xFFFFFFFF)),
                               ),
                             )
@@ -401,7 +402,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
-                              "News dal Sobrero",
+                              AppLocalizations.of(context).translate('newsFromSobrero'),
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,

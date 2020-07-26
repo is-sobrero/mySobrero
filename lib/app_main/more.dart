@@ -11,6 +11,7 @@ import 'package:mySobrero/carriera.dart';
 import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/listings/listings_main.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/materiale.dart';
 import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -51,7 +52,7 @@ class _MorePageState extends State<MorePageView>
   @override
   Widget build(BuildContext context){
     return MainViewSimpleContainer(
-      title: "Altro",
+      title: AppLocalizations.of(context).translate('more'),
       children: [
         WaterfallFlow.count(
           primary: false,
@@ -62,7 +63,7 @@ class _MorePageState extends State<MorePageView>
           children: [
             ActionTile(
               builder: (_,__,___) => AssenzeView(apiInstance: widget.apiInstance),
-              title: "Assenze",
+              title: AppLocalizations.of(context).translate('absences'),
               lightImage: "assets/images/assenze_light.png",
               darkImage: "assets/images/assenze_dark.png",
               color: Color(0xffff9692),
@@ -70,7 +71,7 @@ class _MorePageState extends State<MorePageView>
             ),
             ActionTile(
               builder: (_,__,___) => ArgomentiView(apiInstance: widget.apiInstance),
-              title: "Argomenti",
+              title: AppLocalizations.of(context).translate('lessonTopics'),
               lightImage: "assets/images/argomenti_light.png",
               darkImage: "assets/images/argomenti_dark.png",
               color: Color(0xFF5352ed),
@@ -86,7 +87,7 @@ class _MorePageState extends State<MorePageView>
             ),*/
             ActionTile(
               builder: (_,__,___) => MaterialeView(apiInstance: widget.apiInstance),
-              title: "Materiale didattico",
+              title: AppLocalizations.of(context).translate('handouts'),
               lightImage: "assets/images/materiale_light.png",
               darkImage: "assets/images/materiale_dark.png",
               color: Color(0xffe55039),
@@ -94,7 +95,7 @@ class _MorePageState extends State<MorePageView>
             ),
             ActionTile(
               builder: (_,__,___) => RicercaAuleView(),
-              title: "Ricerca aule",
+              title: AppLocalizations.of(context).translate('searchClass'),
               lightImage: "assets/images/aula_light.png",
               darkImage: "assets/images/aula_dark.png",
               color: Color(0xffF86925),
@@ -102,7 +103,7 @@ class _MorePageState extends State<MorePageView>
             ),
             ActionTile(
               builder: (_,__,___) => PagelleView(apiInstance: widget.apiInstance),
-              title: "Pagelle",
+              title: AppLocalizations.of(context).translate('reportCard'),
               lightImage: "assets/images/pagelle_light.png",
               darkImage: "assets/images/pagelle_dark.png",
               color: Color(0xff38ada9),
@@ -112,7 +113,7 @@ class _MorePageState extends State<MorePageView>
               builder: (_,__,___) => CarrieraView(
                   unifiedLoginStructure: widget.unifiedLoginStructure
               ),
-              title: "Carriera scolastica",
+              title: AppLocalizations.of(context).translate('schoolCareer'),
               lightImage: "assets/images/carriera_light.png",
               darkImage: "assets/images/carriera_dark.png",
               color: Color(0xff45BF6D),

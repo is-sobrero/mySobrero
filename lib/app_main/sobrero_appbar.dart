@@ -5,8 +5,10 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/impostazioni.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 
 PreferredSize SobreroAppBar({
@@ -79,7 +81,7 @@ PreferredSize SobreroAppBar({
                               LineIcons.cog,
                               color: Theme.of(context).primaryColor,
                             ),
-                            tooltip: 'Apri le impostazioni dell\'App',
+                            tooltip: AppLocalizations.of(context).translate('openSettings'),
                             iconSize: 25,
                             onPressed: () {
                               Navigator.push(

@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/ui/toggle.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:animations/animations.dart';
@@ -48,11 +49,6 @@ class _VotesPageState extends State<VotesPage>
   Future<Map<String, int>> _goals;
 
   int periodFilter = 0, filterIndex = 0;
-
-  Map<int, Widget> _filters = const <int, Widget> {
-    0: Text('1^ Quad.',),
-    1: Text('2^ Quad.',),
-  };
 
   UIHelper _uiHelper;
 
@@ -101,7 +97,9 @@ class _VotesPageState extends State<VotesPage>
 
   List<String> _generateSubjectsList (List<VotoStructure> marks) {
     List<String> tempReturn = new List<String>();
+    // TODO: fix context loc
     tempReturn.add("Tutte le materie");
+
     marks.forEach((mark) {
       String m = mark.materia;
       if (!tempReturn.contains(m)) tempReturn.add(m);
@@ -120,7 +118,7 @@ class _VotesPageState extends State<VotesPage>
 
     double _overallLuminance = _entryBackground[1].computeLuminance();
     Color _textColor =  _overallLuminance > 0.45 ? Colors.black : Colors.white;
-    var _comment = mark.commento ?? "Nessun commento al voto";
+    var _comment = mark.commento ?? AppLocalizations.of(context).translate('noComment');
 
     return ExpandableNotifier(
       child: Container (
@@ -202,23 +200,23 @@ class _VotesPageState extends State<VotesPage>
                     ],
                   ),
                   Text(
-                      "Data voto: ${mark.data}",
+                      "${AppLocalizations.of(context).translate('markDate')}: ${mark.data}",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
-                      "Tipologia: ${mark.tipologia}",
+                      "${AppLocalizations.of(context).translate('markType')}: ${mark.tipologia}",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
-                      "Docente: ${mark.docente}",
+                      "${AppLocalizations.of(context).translate('markProf')}: ${mark.docente}",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
-                      "Peso: ${mark.peso}",
+                      "${AppLocalizations.of(context).translate('markWeight')}: ${mark.peso}\n",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
-                      "Commento al voto: $_comment",
+                      _comment,
                       style: TextStyle(color: _textColor,),
                   ),
                 ],
@@ -233,6 +231,7 @@ class _VotesPageState extends State<VotesPage>
   Widget _generatePeriodView(List<VotoStructure> marks, int columns, int key){
     if (marks.isEmpty)
       return Text("No voti");
+    // TODO: empty state decente per il no voti
 
     List<FlSpot> _marksSpots = new List();
     int _x = 0;
@@ -328,7 +327,7 @@ int customFilter = 0;
             Row(
               children: [
                 Text(
-                  'Tutti i voti',
+                  AppLocalizations.of(context).translate('allMarks'),
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 24,
@@ -342,7 +341,7 @@ int customFilter = 0;
                         return FlatButton(
                           child: Row(
                             children: <Widget>[
-                              Text("Situazione", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
+                              Text(AppLocalizations.of(context).translate('goals'), style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
                               Padding(
                                 padding: const EdgeInsets.only(left: 5.0),
                                 child: Icon(LineIcons.flag, size: 20, color: Theme.of(context).primaryColor,),
@@ -382,7 +381,7 @@ int customFilter = 0;
                       } else if (snapshot.hasError){
                         return Row(
                           children: <Widget>[
-                            Text("Errore negli obbiettivi", style: TextStyle(color: Theme.of(context).errorColor),),
+                            Text(AppLocalizations.of(context).translate('goalsError'), style: TextStyle(color: Theme.of(context).errorColor),),
                             Padding(
                               padding: const EdgeInsets.only(left: 5.0),
                               child: Icon(Icons.error, color: Theme.of(context).errorColor,),
@@ -392,7 +391,7 @@ int customFilter = 0;
                       }
                       return Row(
                         children: <Widget>[
-                          Text("Caricando gli obbiettivi", style: TextStyle(color: Theme.of(context).disabledColor),),
+                          Text(AppLocalizations.of(context).translate('loadingGoals'), style: TextStyle(color: Theme.of(context).disabledColor),),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: SpinKitDualRing(
@@ -413,7 +412,10 @@ int customFilter = 0;
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 5, top: 3),
                   child: SobreroToggle(
-                    values: ["1° Periodo", "2° Periodo"],
+                    values: [
+                      AppLocalizations.of(context).translate('firstPeriod'),
+                      AppLocalizations.of(context).translate('secondPeriod'),
+                    ],
                     onToggleCallback: (val) => setState(() => periodFilter = val),
                     selectedItem: periodFilter,
                     width: 200,

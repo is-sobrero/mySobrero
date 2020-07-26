@@ -50,4 +50,8 @@ class Utilities {
     var values = List<int>.generate(len, (i) =>  random.nextInt(255));
     return base64UrlEncode(values);
   }
+
+  static String formatLocalized (String loc, String arg){
+    return loc.replaceAll("\$", arg);
+  }
 }
