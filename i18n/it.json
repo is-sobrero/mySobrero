@@ -51,5 +51,17 @@
   "searchClass" : "Ricerca aule",
   "reportCard": "Pagelle",
   "schoolCareer": "Carriera scolastica",
-  "openSettings": "Apri le impostazioni dell'App"
+  "openSettings": "Apri le impostazioni dell'app",
+  "loadingAbsences": "Sto caricando le assenze...",
+  "notJustified": "Non giustificate",
+  "noAbsencesWOJustification":  "Nessuna assenza da giustificare, ottimo!",
+  "absencesWithJustification": "Giustificate",
+  "yes": "Sì",
+  "no": "No",
+  "reasonString": "Motivazione: $",
+  "contributesTo": "Questa assenza concorre al calcolo delle ore totali",
+  "contributesNotTo": "Questa assenza non viene conteggiata",
+  "delay": "Ritardo",
+  "absence": "Assenza",
+  "earlyCK" : "Uscita anticipata"
 }

@@ -10,6 +10,9 @@ import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/common/ui.dart';
 
 class AgreementScreen extends StatefulWidget {
+  final bool isInformative;
+  AgreementScreen({this.isInformative = false});
+
   @override
   _AgreementState createState() => _AgreementState();
 }
@@ -49,6 +52,16 @@ class _AgreementState extends State<AgreementScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String buttonText = "Torna indietro";
+    IconData buttonIcon = LineIcons.arrow_left;
+    Color buttonColor = Theme.of(context).primaryColor;
+    if (!widget.isInformative){
+      buttonText = _end ? "Accetta i termini" : "Leggi i termini";
+      buttonIcon = _end ? LineIcons.check : LineIcons.ban;
+      if (!_end) buttonColor = Color(0xFF555555);
+    }
+
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -85,10 +98,11 @@ class _AgreementState extends State<AgreementScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0),
                   child: SobreroButton(
-                    text: _end ? "Accetta i termini" : "Leggi i termini",
-                    color: _end ? Theme.of(context).primaryColor : Color(0xFF555555),
-                    suffixIcon: _end ? Icon(LineIcons.check) : Icon(LineIcons.ban),
-                    onPressed: _end ? () => Navigator.pop(context) : null,
+                    text: buttonText,
+                    color: buttonColor,
+                    suffixIcon: Icon(buttonIcon),
+                    onPressed: () => _end | widget.isInformative ?
+                      Navigator.of(context).pop() : null,
                   ),
                 )
               ],
