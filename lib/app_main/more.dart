@@ -16,6 +16,7 @@ import 'package:mySobrero/materiale.dart';
 import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ricercaaule.dart';
+import 'package:mySobrero/sso/sso.dart';
 import 'package:mySobrero/tiles/action_tile.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
@@ -72,6 +73,14 @@ class _MorePageState extends State<MorePageView>
             ActionTile(
               builder: (_,__,___) => ArgomentiView(apiInstance: widget.apiInstance),
               title: AppLocalizations.of(context).translate('lessonTopics'),
+              lightImage: "assets/images/argomenti_light.png",
+              darkImage: "assets/images/argomenti_dark.png",
+              color: Color(0xFF5352ed),
+              icon: SobreroIcons2.edit,
+            ),
+            ActionTile(
+              builder: (_,__,___) => SSOProvider(),
+              title: "Autorizza app",
               lightImage: "assets/images/argomenti_light.png",
               darkImage: "assets/images/argomenti_dark.png",
               color: Color(0xFF5352ed),

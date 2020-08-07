@@ -85,6 +85,17 @@ class CloudConnector {
     return tempReturn;
   }
 
+  static Future<bool> authorizeApp({
+    @required guid,
+    @required token,
+  }) async {
+    var res = await http.get(
+        cloudEndpoint + "authorize.php?&guid=$guid&token=$token"
+    );
+    //String data = StringData.fromJson(jsonDecode(res.body)).data;
+    return true;
+  }
+
   static Future<RemoteNews> getRemoteHeadingNews() async {
     var res = await http.get(cloudEndpoint + "getData.php?reference=config");
     return RemoteNews.fromJson(jsonDecode(res.body)['data']);
