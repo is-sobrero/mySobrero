@@ -4,12 +4,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+
 import 'package:mySobrero/ui/button.dart';
 
 class SobreroDialogSingle extends Dialog {
   SobreroDialogSingle({
     Key key,
     this.headingImage,
+    this.headingWidget,
     @required this.title,
     @required this.buttonText,
     @required this.content,
@@ -18,6 +20,7 @@ class SobreroDialogSingle extends Dialog {
 
   final String headingImage;
   final String title;
+  final Widget headingWidget;
   final String buttonText;
   final Widget content;
   final Function buttonCallback;
@@ -27,7 +30,7 @@ class SobreroDialogSingle extends Dialog {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), //this right here
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 230),
+        constraints: BoxConstraints(maxWidth: 300),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,8 +40,16 @@ class SobreroDialogSingle extends Dialog {
               borderRadius: BorderRadius.circular(8.0),
               child: Image.asset(headingImage),
             ),
+            if (headingWidget != null) Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: headingWidget,
+            ),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(
+                  10,
+                  headingWidget == null ? 10 : 0,
+                  10,10
+              ),
               child: Column(
                 children: <Widget>[
                   Padding(

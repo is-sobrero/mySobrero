@@ -238,7 +238,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                 SobreroListToggle(
                   onChanged: (b) => setState(() {
                     bioAuth = b;
-                    //_impostaBool("biometric_auth", bioAuth);
+                    _impostaBool("biometric_auth", bioAuth);
                   }),
                   value: bioAuth,
                   title: "Usa autenticazione biometrica",

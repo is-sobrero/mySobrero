@@ -108,9 +108,13 @@ Ora è possibile compilare l'applicazione: selezionare nel menù in alto a destr
 Il processo di compilazione è lungo, soprattutto la prima volta, attendere col dispositivo di destinazione collegato al computer per tutta la durata dell'operazione.
 
 ## Servizi cloud
-mySobrero è strettamente dipendente da Firebase, anche se è in sviluppo un server backend privato, attualmente è la scelta migliore per gestire il cloud dell'applicazione.
-Essendo una scelta temporanea Firebase (temporaneità dettata anche dalla incompatibilità con i dispositivi Huawei di nuova generazione) non è stato creato nessun file di configurazione per l'accesso a Firebase, rendendo difficoltosa la modifica del pool di applicazione predefinito.  
-E' consigliabile non modificare il pool di applicazioni, essendo configurato per la raccolta dei dati sul pool principale, garantendo statistiche ottimali.
+mySobrero basa i suoi servizi cloud su un server sviluppato appositamente per l'uso esclusivo con l'app. Ogni utente viene autenticato ed allineato tramite il token di accesso a RE generato dall'app, senza trasmettere nessun
+ID Studente o Password, rendendo estremamente sicura la piattaforma.
+I dati degli utenti sono protetti con la crittografia SSL (in sviluppo la convalida dei certificati SSL in app), e il server è stato sviluppato secondo le migliori pratiche per evitare attacchi di tipologia SQL-Injection, PHP Injection ecc.
+Se l'utente accede su più dispositivi allo stesso momento, verrà disconnesso da tutti i dispositivi che non sono quello che ha generato il token di accesso per ultimo, evitando disservizi generati dal disallineamento dei dati.
+
+mySobrero implementa un sistema di SSO (Single Sign On) per accedere a servizi scolastici senza utilizzare password. Il protocollo di autenticazione è basato su SAML2 (possibilità di integrazione con WordPress, Active Directory ecc.) su un endpoint ancora da definire,
+e solo le app autorizzate a livello server possono usufruirne, proteggendo le informazioni sensibili degli studenti da applicazioni pericolose.
 
 # Statisiche in-app
 mySobrero raccoglie statistiche anonime riguardo l'utilizzo dell'app, la frequenza di apertura, gli orari e le schermate aperte. Inoltre viene registrata la classe di appartenenza per effetturare statistiche a livello di istituto riguardo l'utilizzo dell'applicazione.
@@ -121,4 +125,4 @@ I dati raccolti sono compatibili con il regolamento GDPR dell'istituto, installa
 Copyright 2020 (c) I.S. "A. Sobrero" / Federico Runco
 ## Dettagli licenza
 Il codice sorgente è rilasciato in licenza secondo GNU General Public License v3.0, che garantisce le quattro regole fondamentali del software libero anche sui fork dell'applicazione.
-Per maggiori dettagli riguardo la licenza, consultare il file [LICENSE](LICENSE).
+Per maggiori dettagli riguardo la licenza, consultare il file [LICENSE](LICENSE.md).

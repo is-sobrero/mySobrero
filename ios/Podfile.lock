@@ -127,6 +127,8 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.4)
+  - qrcode (0.0.1):
+    - Flutter
   - quick_actions (0.0.1):
     - Flutter
   - Reachability (3.2)
@@ -165,6 +167,7 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
+  - qrcode (from `.symlinks/plugins/qrcode/ios`)
   - quick_actions (from `.symlinks/plugins/quick_actions/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
@@ -229,6 +232,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_linux/ios"
   path_provider_macos:
     :path: ".symlinks/plugins/path_provider_macos/ios"
+  qrcode:
+    :path: ".symlinks/plugins/qrcode/ios"
   quick_actions:
     :path: ".symlinks/plugins/quick_actions/ios"
   shared_preferences:
@@ -283,6 +288,7 @@ SPEC CHECKSUMS:
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
+  qrcode: 703d52352679d9b4284555e9a09c2157062f1989
   quick_actions: 6cb2390c4dab0e737c94573c27e18d9666710720
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d

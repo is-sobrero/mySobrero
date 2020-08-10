@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>mySobrero utilizza la fotocamera per personalizzare il profilo</string>
+	<string>mySobrero utilizza la fotocamera per autorizzare le app esterne con il tuo account</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>mySobrero utilizza Face ID per autenticarti senza inserire la password</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -49,5 +49,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>
