@@ -14,10 +14,10 @@ class AppColorScheme {
   static Color secondaryColor = Color(0xFF0360e7);
   static Color scaffoldColor = Colors.white;
   static Color toggleColor = Colors.white;
-  static Color darkScaffoldColor = Color(0xff121212);
-  static Color darkCardColor = Color(0xff212121);
-  static Color darkBottomNavColor = Color(0xff242424);
-  static Color darkCanvasColor = Color(0xff242424);
+  static Color darkScaffoldColor = Color(0xff000000);//Color(0xff121212);
+  static Color darkCardColor = Color(0xff1c1c1c);//Color(0xff212121);
+  static Color darkBottomNavColor = Color(0xff1c1c1c);//Color(0xff242424);
+  static Color darkCanvasColor = Color(0xff1c1c1c); //Color(0xff242424);
   static Color sectionColor = Color(0xFFfafafa);
   static Color darkSectionColor = Color(0xFF212121);
   static Color darkToggleColor = Color(0xFF515151);

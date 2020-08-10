@@ -6,7 +6,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mySobrero/agreement/agreement_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'skeleton.dart';
@@ -25,6 +24,7 @@ import 'package:mySobrero/ui/button.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/dialogs.dart';
 import 'package:mySobrero/ui/list_button.dart';
+import 'package:mySobrero/agreement/agreement_dialog.dart';
 
 class ImpostazioniView extends StatefulWidget {
   String session;
@@ -32,7 +32,13 @@ class ImpostazioniView extends StatefulWidget {
   Function(String url) profileCallback;
   UnifiedLoginStructure unifiedLoginStructure;
 
-  ImpostazioniView ({Key key, @required this.session, @required this.unifiedLoginStructure, @required this.profileURL, @required this.profileCallback}) : super(key: key);
+  ImpostazioniView ({
+    Key key,
+    @required this.session,
+    @required this.unifiedLoginStructure,
+    @required this.profileURL,
+    @required this.profileCallback
+  }) : super(key: key);
 
   @override
   _ImpostazioniState createState() => _ImpostazioniState();
@@ -313,7 +319,12 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                     context: context,
                     builder: (context) => SobreroDialogSingle(
                       title: "Informazioni su mySobrero",
-                      headingImage: "assets/images/errore.png",
+                      headingWidget: Icon(
+                        LineIcons.info,
+                        size: 40,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      //headingImage: "assets/images/errore.png",
                       buttonCallback: () => Navigator.of(context).pop(),
                       buttonText: "Chiudi",
                       content: RichText(

@@ -127,20 +127,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.6"
-  direct_select:
-    dependency: "direct main"
-    description:
-      name: direct_select
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2+1"
-  direct_select_flutter:
-    dependency: "direct main"
-    description:
-      name: direct_select_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.6"
   expandable:
     dependency: "direct main"
     description:
@@ -270,13 +256,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_parallax:
-    dependency: "direct main"
-    description:
-      name: flutter_parallax
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -525,13 +504,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.4"
-  qrcode:
+  qr_code_scanner:
     dependency: "direct main"
     description:
-      name: qrcode
+      name: qr_code_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "0.0.13"
   quick_actions:
     dependency: "direct main"
     description:
@@ -546,13 +525,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  rect_getter:
-    dependency: transitive
-    description:
-      name: rect_getter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   route_transitions:
     dependency: "direct main"
     description:

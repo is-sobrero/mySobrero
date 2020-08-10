@@ -92,7 +92,7 @@ class CloudConnector {
     var res = await http.get(
         cloudEndpoint + "authorize.php?&guid=$guid&token=$token"
     );
-    //String data = StringData.fromJson(jsonDecode(res.body)).data;
+    print("bellazio" + res.body);
     return true;
   }
 

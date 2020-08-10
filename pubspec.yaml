@@ -30,8 +30,6 @@ dependencies:
   device_preview: ^0.2.6
   auto_size_text: ^2.1.0
   cached_network_image: ^2.0.0
-  direct_select_flutter: ^1.0.5
-  direct_select: ^1.0.0
   image_picker: ^0.6.3+1
   package_info: ^0.4.0+13
   expandable: ^4.0.2
@@ -49,11 +47,10 @@ dependencies:
   utf: ^0.9.0+5
   animations: ^1.1.1
   quick_actions: ^0.4.0+2
-  flutter_parallax: ^0.1.2
   flutter_html: ^0.11.1
   line_icons: ^0.2.0
   country_icons: ^1.1.1
-  qrcode: ^1.0.4
+  qr_code_scanner: ^0.0.13
 
   flutter:
     sdk: flutter

@@ -1,13 +1,20 @@
 import 'dart:convert';
 
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/common/pageswitcher.dart';
+import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/ui/data_ui.dart';
+import 'package:mySobrero/ui/detail_view.dart';
+import 'package:mySobrero/ui/switch.dart';
+import 'package:mySobrero/ui/toggle.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mySobrero/hud.dart';
 import 'package:mySobrero/common/definitions.dart';
 
@@ -159,70 +166,26 @@ class SituaMateria{
   }
 }
 
-class _SituazioneView extends State<SituazioneView> with SingleTickerProviderStateMixin {
-  final double _preferredAppBarHeight = 56.0;
+class _SituazioneView extends State<SituazioneView> {
   Future<List<PagellaStructure>> _pagelle;
-  AnimationController _fadeSlideAnimationController;
-  ScrollController _scrollController;
-  double _appBarElevation = 0.0;
-  double _appBarTitleOpacity = 0.0;
-
-  _SituazioneView() {}
-
-  Map<int, Widget> _children = const <int, Widget>{
-    0: Text(
-      '1^ Quad.',
-    ),
-    1: Text(
-      '2^ Quad.',
-    ),
-    2: Text(
-      'Previsioni',
-    ),
-  };
 
   int selezionePeriodo = 0;
 
   @override
   void initState() {
     super.initState();
-    _fadeSlideAnimationController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    )..forward();
-    _scrollController = ScrollController()
-      ..addListener(() {
-        double oldElevation = _appBarElevation;
-        double oldOpacity = _appBarTitleOpacity;
-        _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
-        _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
-        if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
-      });
     obbiettivi = widget.obbiettivi;
     _pagelle = widget.apiInstance.retrievePagelle();
   }
 
-  @override
-  void dispose() {
-    _fadeSlideAnimationController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  int selezioneCompiti = 0;
   final sogliaArrotondamento = 0.6;
-
-  final List<Color> sufficienza = <Color>[Color(0xff23b6e6), Color(0xff02d39a)];
-  final List<Color> limite = <Color>[Color(0xffFFD200), Color(0xffF7971E)];
-  final List<Color> insufficienza = <Color>[Color(0xffFF416C), Color(0xffFF4B2B)];
-
 
   Map <String, int> obbiettivi = Map<String, int>();
 
   Widget _templateVoto(String materia, double voto, int numVoti){
-    List<Color> selezionato = sufficienza;
-    if (voto < 7) selezionato = limite;
-    if (voto < 6) selezionato = insufficienza;
+    List<Color> selezionato = AppColorScheme.greenGradient;
+    if (voto < 7) selezionato = AppColorScheme.yellowGradient;
+    if (voto < 6) selezionato = AppColorScheme.redGradient;
 
     bool esisteObbiettivo = obbiettivi.containsKey(materia);
 
@@ -247,7 +210,8 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
                   textAlign: TextAlign.center,
                 )
             ),
-            backgroundColor: Colors.black26,
+            backgroundColor: Theme.of(context).textTheme.bodyText1
+                .color.withOpacity(0.1),
             linearGradient: LinearGradient(
               colors: selezionato
             ),
@@ -297,9 +261,9 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
     );
   }
 
-  Future<bool> aggiornaObbiettivi (String j) async => CloudConnector.setGoals(
+  Future<bool> aggiornaObbiettivi (g) async => CloudConnector.setGoals(
     token: widget.apiInstance.getSession(),
-    goals: j,
+    goals: g,
   );
 
   String ottieniVotiXMedia(double mediaAttuale, int countVoti, int obbiettivo){
@@ -325,7 +289,6 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
   }
 
   Widget _generaPrevisione(double mediaAttuale, int mediaPrevista, double media1Q, double scarto, String materia){
-    String realDestinatario = "Dirigente";
     Color scartoColor = Theme.of(context).accentColor;
     Color mediaColor = Colors.green;
     if (scarto > 0) scartoColor = Colors.green;
@@ -441,194 +404,156 @@ class _SituazioneView extends State<SituazioneView> with SingleTickerProviderSta
         ));
   }
 
+  bool _reverseAnim = false;
+
   @override
   Widget build(BuildContext context) {
     final Map<String, SituazioneElement> currentPeriodo = selezionePeriodo == 0 ? widget.situazione1Q : widget.situazione2Q;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        brightness: Theme.of(context).brightness,
-        title: AnimatedOpacity(
-          opacity: _appBarTitleOpacity,
-          duration: const Duration(milliseconds: 250),
-          child: Text(
-            "Situazione attuale",
-            style: TextStyle(
-                color: Theme.of(context).textTheme.body1.color),
-          ),
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: _appBarElevation,
-        leading: BackButton(
-          color: Theme.of(context).textTheme.body1.color,
-        ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(color: Theme.of(context).scaffoldBackgroundColor),
-          SafeArea(
-            bottom: false,
-            child: Column(children: <Widget>[
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: ScrollBehavior(),
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              "Situazione attuale",
-                              style: Theme.of(context).textTheme.title.copyWith(fontSize: 32.0, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            "Arrotondamento impostato a ${sogliaArrotondamento.toStringAsFixed(1)}",
-                            style: Theme.of(context).textTheme.subtitle.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Column(
-                              children: <Widget>[
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 5, top: 3),
-                                    child: CupertinoSlidingSegmentedControl(
-                                      children: _children,
-                                      onValueChanged: (val) {
-                                        setState(() {
-                                          selezionePeriodo = val;
-                                        });
-                                      },
-                                      groupValue: selezionePeriodo,
+    return SobreroDetailView(
+      title: "Situazione attuale",
+      child: Column(
+        children: [
+          Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Column(
+                children: <Widget>[
+                  SobreroToggle(
+                    values: [
+                      AppLocalizations.of(context).translate("firstPeriod"),
+                      AppLocalizations.of(context).translate("secondPeriod"),
+                      "Previsioni" //  AppLocalizations.of(context).translate("forecast"),
+                    ],
+                    onToggleCallback: (c) => setState(() {
+                      _reverseAnim = c < selezionePeriodo;
+                      selezionePeriodo = c;
+                    }),
+                    selectedItem: selezionePeriodo,
+                    width: 300,
+                    margin: EdgeInsets.only(bottom: 10),
+                  ),
+                  PageTransitionSwitcher2(
+                    reverse: _reverseAnim,
+                    layoutBuilder: (_entries) => Stack(
+                      children: _entries
+                          .map<Widget>((entry) => entry.transition)
+                          .toList(),
+                      alignment: Alignment.topLeft,
+                    ),
+                    duration: Duration(milliseconds: 700),
+                    transitionBuilder: (c, p, s) => SharedAxisTransition(
+                      fillColor: Colors.transparent,
+                      animation: p,
+                      secondaryAnimation: s,
+                      transitionType: SharedAxisTransitionType.horizontal,
+                      child: c,
+                    ),
+                    child: selezionePeriodo != 2 ? ListView.builder(
+                        key: ValueKey<int>(selezionePeriodo),
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: currentPeriodo.values.length,
+                        itemBuilder: (context, index){
+                          String materia = currentPeriodo.keys.elementAt(index);
+                          double voto = currentPeriodo.values.elementAt(index).media;
+                          int numVoti = currentPeriodo.values.elementAt(index).numeroVoti;
+                          return InkWell(
+                              child: _templateVoto(materia, voto, numVoti),
+                              onTap: (){
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context){
+                                      return cambiaObbiettivo(materia, obbiettivi.containsKey(materia) ? obbiettivi[materia] : 6);
+                                    }
+                                );
+                              }
+                          );
+                        }
+                    ) : FutureBuilder<List<PagellaStructure>>(
+                      key: ValueKey<int>(selezionePeriodo),
+                      future: _pagelle,
+                      builder: (context, snapshot){
+                        switch (snapshot.connectionState){
+                          case ConnectionState.none:
+                          case ConnectionState.active:
+                          case ConnectionState.waiting:
+                            return SobreroLoading(
+                              loadingStringKey: "loadingAbsences",
+                            );
+                          case ConnectionState.done:
+                            if (snapshot.hasError)
+                              return SobreroError(
+                                snapshotError: snapshot.error,
+                              );
+
+                            if (snapshot.data.length == 0)
+                              return SobreroError(
+                                snapshotError: "Previsioni non è disponibile fino a quando non è uscita la pagella del primo quadrimestre",
+                              );
+
+                            PagellaStructure pag1q = snapshot.data[0];
+                            double mediaPrevista = 0;
+                            List<Widget> previsioni = new List<Widget>();
+                            widget.situazione2Q.forEach((key, value) {
+                              try {
+                                double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
+                                double media1q = widget.situazione1Q[key].media;
+                                double media2q = value.media;
+                                double differenza = media1q - voto1q;
+                                double mediaProbabile = media2q + differenza;
+                                double parteDecMP = mediaProbabile % 1;
+                                int pagellaProbabile = -1;
+                                if (parteDecMP >= sogliaArrotondamento) pagellaProbabile = mediaProbabile.ceil();
+                                else pagellaProbabile = mediaProbabile.floor();
+                                if (pagellaProbabile > 10) pagellaProbabile = 10;
+                                mediaPrevista += pagellaProbabile;
+                                previsioni.add(_generaPrevisione(media2q, pagellaProbabile, voto1q, differenza, key));
+                              } catch (e){
+                                print("Errore in previsione!");
+                                print(e.toString());
+                              }
+                            });
+                            mediaPrevista /= widget.situazione2Q.length.toDouble();
+                            previsioni.insert(0,
+                              Column(
+                                children: [
+                                  Text(
+                                    mediaPrevista.toStringAsFixed(2),
+                                    style: TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
-                                selezionePeriodo != 2 ? ListView.builder(
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    itemCount: currentPeriodo.values.length,
-                                    itemBuilder: (context, index){
-                                      String materia = currentPeriodo.keys.elementAt(index);
-                                      double voto = currentPeriodo.values.elementAt(index).media;
-                                      int numVoti = currentPeriodo.values.elementAt(index).numeroVoti;
-                                      return InkWell(
-                                            child: _templateVoto(materia, voto, numVoti),
-                                            onTap: (){
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context){
-                                                    return cambiaObbiettivo(materia, obbiettivi.containsKey(materia) ? obbiettivi[materia] : 6);
-                                                  }
-                                              );
-                                            }
-                                      );
-                                    }
-                                ) : FutureBuilder<List<PagellaStructure>>(
-                                  future: _pagelle,
-                                  builder: (context, snapshot){
-                                    switch (snapshot.connectionState){
-                                      case ConnectionState.none:
-                                      case ConnectionState.active:
-                                      case ConnectionState.waiting:
-                                        return Padding(
-                                          padding: const EdgeInsets.all(15.0),
-                                          child: Center(
-                                            child: Column(
-                                              children: <Widget>[
-                                                SpinKitDualRing(
-                                                  color: Theme.of(context).textTheme.bodyText1.color,
-                                                  size: 40,
-                                                  lineWidth: 5,
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 8.0),
-                                                  child: Text("Calcolando le previsioni...", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      case ConnectionState.done:
-                                        if (snapshot.hasError) {
-                                          return Padding(
-                                            padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Icon(Icons.warning, size: 40, color: Theme.of(context).textTheme.bodyText1.color,),
-                                                Text("${snapshot.error}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                        if (snapshot.data.length == 0)
-                                          return Text("Previsioni non è disponibile fino a quando non è uscita la pagella del primo quadrimestre", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,);
-
-                                        PagellaStructure pag1q = snapshot.data[0];
-                                        double mediaPrevista = 0;
-                                        List<Widget> previsioni = new List<Widget>();
-                                        widget.situazione2Q.forEach((key, value) {
-                                          try {
-                                            double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
-                                            double media1q = widget.situazione1Q[key].media;
-                                            double media2q = value.media;
-                                            double differenza = media1q - voto1q;
-                                            double mediaProbabile = media2q + differenza;
-                                            double parteDecMP = mediaProbabile % 1;
-                                            int pagellaProbabile = -1;
-                                            if (parteDecMP >= sogliaArrotondamento) pagellaProbabile = mediaProbabile.ceil();
-                                            else pagellaProbabile = mediaProbabile.floor();
-                                            if (pagellaProbabile > 10) pagellaProbabile = 10;
-                                            mediaPrevista += pagellaProbabile;
-                                            previsioni.add(_generaPrevisione(media2q, pagellaProbabile, voto1q, differenza, key));
-                                          } catch (e){
-                                            print("Errore in previsione!");
-                                            print(e.toString());
-                                          }
-
-                                          //print("${key}: diff ${differenza} - media2q  ${media2q} - mediaProb ${mediaProbabile} - pag ${pagellaProbabile}");
-                                        });
-                                        mediaPrevista /= widget.situazione2Q.length.toDouble();
-                                        previsioni.insert(0,
-                                            Text("Media totale prevista: ${mediaPrevista.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)
-                                        );
-                                        return Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
-                                          child: ListView.builder(
-                                              primary: false,
-                                              shrinkWrap: true,
-                                              itemCount: previsioni.length,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: EdgeInsets.only(bottom: 10),
-                                                  child: previsioni[index],
-                                                );
-                                              }
-                                          ),
-                                        );
-                                        return ListView(
-                                            children: previsioni
-                                        );
-                                    }
-                                    return null;
-                                  },
-                                )
-                              ],
-                            ))
-                      ],
-                    ),
+                                  Text(
+                                    "Media totale prevista",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: ListView.builder(
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  itemCount: previsioni.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: previsioni[index],
+                                    );
+                                  }
+                              ),
+                            );
+                        }
+                        return null;
+                      },
+                    )
                   ),
-                ),
-              ),
-            ]),
-          ),
+                ],
+              ))
         ],
       ),
     );

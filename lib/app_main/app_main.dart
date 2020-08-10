@@ -2,6 +2,8 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -137,87 +139,177 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
             setProfileCallback: _updateProfilePicture,
             session: widget.apiInstance.getSession(),
           ),
-          body: PageView.builder(
-            controller: pageController,
-            onPageChanged: (index) => switchPage(false, index),
-            itemCount: 4,
-            itemBuilder: (context, i) {
-              var schermata;
-              if (i == 0) schermata = _homePageInstance;
-              if (i == 1) schermata = _votesPageInstance;
-              if (i == 2) schermata = _communicationsPageView;
-              if (i == 3) schermata = _morePageInstance;
-              return NotificationListener<ScrollNotification>(
-                onNotification: elaboraScroll,
-                child: schermata,
-              );
-            },
+          body: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              PageView.builder(
+                controller: pageController,
+                onPageChanged: (index) => switchPage(false, index),
+                itemCount: 4,
+                itemBuilder: (context, i) {
+                  var schermata;
+                  if (i == 0) schermata = _homePageInstance;
+                  if (i == 1) schermata = _votesPageInstance;
+                  if (i == 2) schermata = _communicationsPageView;
+                  if (i == 3) schermata = _morePageInstance;
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: elaboraScroll,
+                    child: schermata
+                  );
+                },
+              ),
+              // Il backdrop nel simulatore iOS è buggato, non su iDevice
+              ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: 15.0,
+                    sigmaY: 15.0,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor
+                          .withAlpha(220),
+                      border: Border(
+                        top: BorderSide(
+                          width: 2.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        child: GNav(
+                          gap: 8,
+                          color: Theme.of(context).disabledColor,
+                          activeColor: Theme.of(context).primaryColor,
+                          iconSize: 24,
+                          tabBackgroundColor: Colors.transparent,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 5,
+                          ),
+                          duration: Duration(milliseconds: 300),
+                          tabs: [
+                            GButton(
+                              icon: LineIcons.home,
+                              text: AppLocalizations.of(context).translate('home'),
+                              iconSize: 20,
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            GButton(
+                              icon: LineIcons.bar_chart,
+                              iconSize: 20,
+                              text: AppLocalizations.of(context).translate('marks'),
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            GButton(
+                              icon: LineIcons.envelope_o,
+                              iconSize: 20,
+                              text: AppLocalizations.of(context).translate('memos'),
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            GButton(
+                              icon: LineIcons.ellipsis_h,
+                              iconSize: 20,
+                              text: AppLocalizations.of(context).translate('more'),
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            )
+                          ],
+                          selectedIndex: _currentPageIndex,
+                          onTabChange: (index) => switchPage(true, index),
+                        ),
+                      ),
+                    )
+                  ),
+                ),
+              )
+            ],
           ),
-          bottomNavigationBar: Container(
-            decoration:
-            BoxDecoration(color: Theme.of(context).cardColor, boxShadow: [
+          /*bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                boxShadow: [
               BoxShadow(
                 color: Colors.black.withAlpha(50),
                 blurRadius: 10,
                 spreadRadius: 10,
               )
             ]),
-            child: SafeArea(
-              bottom: true,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: GNav(
-                    gap: 8,
-                    color: Theme.of(context).disabledColor,
-                    activeColor: Theme.of(context).primaryColor,
-                    iconSize: 24,
-                    tabBackgroundColor: Colors.transparent,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    duration: Duration(milliseconds: 300),
-                    tabs: [
-                      GButton(
-                        icon: LineIcons.home,
-                        text: AppLocalizations.of(context).translate('home'),
-                        iconSize: 20,
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10.0,
+                sigmaY: 10.0,
+              ),
+              child: SafeArea(
+                bottom: true,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  child: GNav(
+                      gap: 8,
+                      color: Theme.of(context).disabledColor,
+                      activeColor: Theme.of(context).primaryColor,
+                      iconSize: 24,
+                      tabBackgroundColor: Colors.transparent,
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      duration: Duration(milliseconds: 300),
+                      tabs: [
+                        GButton(
+                          icon: LineIcons.home,
+                          text: AppLocalizations.of(context).translate('home'),
+                          iconSize: 20,
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
-                      ),
-                      GButton(
-                        icon: LineIcons.bar_chart,
-                        iconSize: 20,
-                        text: AppLocalizations.of(context).translate('marks'),
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+                        GButton(
+                          icon: LineIcons.bar_chart,
+                          iconSize: 20,
+                          text: AppLocalizations.of(context).translate('marks'),
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
-                      ),
-                      GButton(
-                        icon: LineIcons.envelope_o,
-                        iconSize: 20,
-                        text: AppLocalizations.of(context).translate('memos'),
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+                        GButton(
+                          icon: LineIcons.envelope_o,
+                          iconSize: 20,
+                          text: AppLocalizations.of(context).translate('memos'),
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
-                      ),
-                      GButton(
-                        icon: LineIcons.ellipsis_h,
-                        iconSize: 20,
-                        text: AppLocalizations.of(context).translate('more'),
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      )
-                    ],
-                    selectedIndex: _currentPageIndex,
-                    onTabChange: (index) => switchPage(true, index),
+                        GButton(
+                          icon: LineIcons.ellipsis_h,
+                          iconSize: 20,
+                          text: AppLocalizations.of(context).translate('more'),
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        )
+                      ],
+                      selectedIndex: _currentPageIndex,
+                      onTabChange: (index) => switchPage(true, index),
+                  ),
                 ),
               ),
             ),
-          ),
+          ),*/
         ),
       ),
     );

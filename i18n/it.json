@@ -63,5 +63,26 @@
   "contributesNotTo": "Questa assenza non viene conteggiata",
   "delay": "Ritardo",
   "absence": "Assenza",
-  "earlyCK" : "Uscita anticipata"
+  "earlyCK" : "Uscita anticipata",
+  "settings": "Impostazioni",
+  "forecast": "Previsioni",
+
+  "ssoAuthorized" : "Accesso autorizzato",
+  "ssoNotAuthorized" : "Accesso non autorizzato",
+  "ssoInvalidrequest": "L'applicazione da autenticare ha generato una richesta non valida, per preservare la tua sicurezza il login è stato bloccato.",
+  "ssoSharedData" : "Verranno condivisi i tuoi dati anagrafici, la tua classe e il tuo numero di matricola. La tua password non verrà condivisa.",
+  "ssoDialog1": "Stai tentando di autenticarti su ",
+  "ssoDialog2" : " con il tuo account mySobrero, assicurati dell'attendibilità prima di autorizzare l'accesso.\n",
+  "ssoSuccess": "Hai effettuato il login con successo, tra qualche secondo verrai rediretto all'applicazione",
+  "ssoPointQR": "Inquadra il codice a matrice per autorizzare l'app",
+  "ssoNoHistory": "Nessun accesso effettuato",
+  "authorizeApp": "Autorizza App",
+  "scan": "Scansione",
+  "loginHistory": "Accessi recenti",
+  "authorize": "Autorizza",
+  "denyAccess": "Nega",
+  "askAuthorize": "Autorizzare l'accesso?",
+  "ipAddress": "\nIndirizzo IP: ",
+  "location": "\nLocalità: "
+
 }
