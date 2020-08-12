@@ -6,17 +6,24 @@ import 'dart:convert';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:mySobrero/cloud_connector/cloud2.dart';
-import 'package:mySobrero/common/pageswitcher.dart';
-import 'package:mySobrero/localization/localization.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'dart:io' show Platform;
+
 
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/dialogs.dart';
 import 'package:mySobrero/ui/toggle.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/common/pageswitcher.dart';
+import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/common/tiles.dart';
+import 'package:mySobrero/common/ui.dart';
+
+// TODO: sincronizzare accessi con il cloud
 
 class SSOProvider extends StatefulWidget {
   String session;
@@ -48,7 +55,7 @@ class _SSOProviderState extends State<SSOProvider> {
           ),
           title: AppLocalizations.of(context).translate("askAuthorize"),
           okButtonText: AppLocalizations.of(context).translate("authorize"),
-          abortButtonText: AppLocalizations.of(context).translate("deny"),
+          abortButtonText: AppLocalizations.of(context).translate("denyAccess"),
           okButtonCallback: () {
             CloudConnector.authorizeApp(
               guid: _req.session,
@@ -221,7 +228,7 @@ class _SSOProviderState extends State<SSOProvider> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          AppLocalizations.of(context).translate("no"),
+          AppLocalizations.of(context).translate("ssoPointQR"),
         ),
       ),
       Container(
@@ -230,17 +237,100 @@ class _SSOProviderState extends State<SSOProvider> {
     ],
   );
 
-  Widget historyView() => Column(
-    key: ValueKey<int>(11),
-    children: [
-      SobreroEmptyState(
-        emptyStateKey: "ssoNoHistory",
-      ),
-      Container(
-        width: double.infinity,
-      )
-    ],
-  );
+  Widget historyView() {
+    DateTime timestamp = DateTime.now();
+    final day = DateFormat.MMMMd(Platform.localeName).format(timestamp);
+    final time = DateFormat('hh:mm').format(timestamp);
+
+    return Column(
+      key: ValueKey<int>(11),
+      children: [
+        SobreroEmptyState(
+          emptyStateKey: "ssoNoHistory",
+        ),
+        GenericTile(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    ".com",
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                //Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        Text(day),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3),
+                          child: Icon(
+                            LineIcons.calendar_o,
+                            size: 18,
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(time),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 3),
+                          child: Icon(
+                            LineIcons.clock_o,
+                            size: 18,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Icon(
+                    LineIcons.paperclip,
+                    size: 20,
+                  ),
+                ),
+                Text("192.168.1.1"),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                Image.asset(
+                  'icons/flags/png/it.png',
+                  package: 'country_icons',
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text("Turin"),
+                ),
+              ],
+            ),
+          ],
+        ),
+        Container(
+          width: double.infinity,
+        )
+      ],
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +358,7 @@ class _SSOProviderState extends State<SSOProvider> {
                   .toList(),
               alignment: Alignment.topLeft,
             ),
-            duration: Duration(milliseconds: 700),
+            duration: Duration(milliseconds: UIHelper.pageAnimDuration),
             transitionBuilder: (c, p, s) => SharedAxisTransition(
               fillColor: Colors.transparent,
               animation: p,

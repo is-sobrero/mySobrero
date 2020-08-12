@@ -13,7 +13,6 @@ import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/login/login.dart';
 
 void main() {
-  //Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   //timeDilation = 3.0;
   runApp(MyApp());
@@ -56,11 +55,11 @@ class MyApp extends StatelessWidget {
       ),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarBrightness: Theme.of(context).brightness
+          statusBarColor: Colors.transparent,
+          statusBarBrightness: Theme.of(context).brightness,
         ),
         child: Scaffold(
-            body: AppLogin()
+          body: AppLogin(),
         ),
       ),
     );

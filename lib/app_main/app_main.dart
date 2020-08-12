@@ -168,7 +168,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).scaffoldBackgroundColor
-                          .withAlpha(220),
+                          .withAlpha(200),
                       border: Border(
                         top: BorderSide(
                           width: 2.0,

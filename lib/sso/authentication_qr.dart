@@ -9,12 +9,13 @@ class AuthenticationQR {
   String clientCountry;
   String clientCity;
 
-  AuthenticationQR(
-      {this.domain,
-        this.session,
-        this.clientIp,
-        this.clientCountry,
-        this.clientCity});
+  AuthenticationQR({
+    this.domain,
+    this.session,
+    this.clientIp,
+    this.clientCountry,
+    this.clientCity
+  });
 
   AuthenticationQR.fromJson(Map<String, dynamic> json) {
     domain = json['domain'];

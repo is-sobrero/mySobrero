@@ -28,8 +28,7 @@ class SobreroButton extends StatelessWidget {
 
   @override
   Widget build (BuildContext context){
-    UIHelper _uiHelper = UIHelper(context: context);
-    _textColor = _uiHelper.textColorByBackground(color);
+    _textColor = UIHelper.textColorByBackground(color);
     return Container(
         alignment: Alignment.centerLeft,
         margin: margin,

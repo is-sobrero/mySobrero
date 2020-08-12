@@ -17,7 +17,7 @@ class AppColorScheme {
   static Color darkScaffoldColor = Color(0xff000000);//Color(0xff121212);
   static Color darkCardColor = Color(0xff1c1c1c);//Color(0xff212121);
   static Color darkBottomNavColor = Color(0xff1c1c1c);//Color(0xff242424);
-  static Color darkCanvasColor = Color(0xff1c1c1c); //Color(0xff242424);
+  static Color darkCanvasColor = Color(0xff000000); //Color(0xff242424);
   static Color sectionColor = Color(0xFFfafafa);
   static Color darkSectionColor = Color(0xFF212121);
   static Color darkToggleColor = Color(0xFF515151);
@@ -64,8 +64,10 @@ class UIHelper {
     return columnCount;
   }
 
-  Color textColorByBackground (Color color) =>
+  static Color textColorByBackground (Color color) =>
     color.computeLuminance() > 0.45 ? Colors.black : Colors.white;
+
+  static int pageAnimDuration = 400;
 
 }
 
@@ -148,7 +150,7 @@ class _DetailViewState extends State<DetailView>
   @override
   Widget build(BuildContext context) {
     _defaultTextStyle = Theme.of(context).textTheme.bodyText1.copyWith(
-      color: _uiHelper.textColorByBackground(widget.backgroundColor),
+      color: UIHelper.textColorByBackground(widget.backgroundColor),
     );
     EdgeInsets _defaultPadding = EdgeInsets.fromLTRB(20, 10, 20, 20,);
     EdgeInsets _overridedPadding = EdgeInsets.zero;
@@ -318,7 +320,7 @@ class SobreroButton extends StatelessWidget {
   @override
   Widget build (BuildContext context){
     UIHelper _uiHelper = UIHelper(context: context);
-    _textColor = _uiHelper.textColorByBackground(color);
+    _textColor = UIHelper.textColorByBackground(color);
     return Container(
       alignment: Alignment.centerLeft,
       margin: margin,

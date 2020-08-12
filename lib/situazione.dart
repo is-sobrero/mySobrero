@@ -4,15 +4,14 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
+import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
-import 'package:mySobrero/ui/switch.dart';
 import 'package:mySobrero/ui/toggle.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:mySobrero/hud.dart';
@@ -289,11 +288,121 @@ class _SituazioneView extends State<SituazioneView> {
   }
 
   Widget _generaPrevisione(double mediaAttuale, int mediaPrevista, double media1Q, double scarto, String materia){
-    Color scartoColor = Theme.of(context).accentColor;
+    var scartoGrad = AppColorScheme.blueGradient;
+    var mediaGrad = AppColorScheme.greenGradient;
     Color mediaColor = Colors.green;
-    if (scarto > 0) scartoColor = Colors.green;
-    if (scarto < 0) scartoColor = Colors.red;
-    if (media1Q < 6) mediaColor = Colors.red;
+    if (scarto > 0) scartoGrad = AppColorScheme.greenGradient;
+    if (scarto < 0) scartoGrad = AppColorScheme.redGradient;
+    if (media1Q < 6) mediaGrad = AppColorScheme.redGradient;
+    return GenericTile(
+      children: [
+        Text(
+          materia,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Wrap(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5, right: 8, bottom: 5),
+              child: Text(
+                "Media prevista: ${mediaPrevista}",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text("Voto in pagella 1Q", textAlign: TextAlign.center),
+                    Container(
+                      margin: EdgeInsets.only(top: 8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(30),
+                            blurRadius: 10,
+                            spreadRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: mediaGrad,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        child: Text(
+                          media1Q.toStringAsFixed(1),
+                          style: TextStyle(
+                            color: UIHelper.textColorByBackground(mediaGrad[0]),
+                            fontSize: 20,
+                          ),
+                        ),
+                        backgroundColor: Colors.transparent,
+                        radius: 30,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Scarto rispetto alla media",
+                      textAlign: TextAlign.center,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(30),
+                            blurRadius: 10,
+                            spreadRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: scartoGrad,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        child: Text(
+                          scarto.toStringAsFixed(1),
+                          style: TextStyle(
+                            color: UIHelper.textColorByBackground(scartoGrad[0]),
+                            fontSize: 20,
+                          ),
+                        ),
+                        backgroundColor: Colors.transparent,
+                        radius: 30,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ],
+    );
     return Container(
         decoration: new BoxDecoration(
           //color: Theme.of(context).textTheme.body1.color.withAlpha(20),
@@ -313,92 +422,7 @@ class _SituazioneView extends State<SituazioneView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Row(
-                  children: <Widget>[
-                    Text(materia, style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
-                ),
-              ),
-              Wrap(children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Text(
-                      "Media prevista: ${mediaPrevista}",
-                      style: TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold)),
-                ),
-              ]),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text("Voto in pagella 1Q", textAlign: TextAlign.center),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black.withAlpha(30),
-                                          blurRadius: 10,
-                                          spreadRadius: 4,
-                                          offset: Offset(0, 2)
-                                      )
-                                    ]
-                                ),
-                                child: CircleAvatar(
-                                  child: Text(media1Q.toStringAsFixed(0), style: TextStyle(color: Colors.white, fontSize: 25)),
-                                  backgroundColor: mediaColor,
-                                  radius: 30,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text("Scarto rispetto alla media", textAlign: TextAlign.center),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black.withAlpha(30),
-                                          blurRadius: 10,
-                                          spreadRadius: 4,
-                                          offset: Offset(0, 2)
-                                      )
-                                    ]
-                                ),
-                                child: CircleAvatar(
-                                  child: Text(scarto.toStringAsFixed(1), style: TextStyle(color: Colors.white, fontSize: 20)),
-                                  backgroundColor: scartoColor,
-                                  radius: 30,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ),
+
             ],
           ),
         ));
@@ -439,7 +463,7 @@ class _SituazioneView extends State<SituazioneView> {
                           .toList(),
                       alignment: Alignment.topLeft,
                     ),
-                    duration: Duration(milliseconds: 700),
+                    duration: Duration(milliseconds: UIHelper.pageAnimDuration),
                     transitionBuilder: (c, p, s) => SharedAxisTransition(
                       fillColor: Colors.transparent,
                       animation: p,

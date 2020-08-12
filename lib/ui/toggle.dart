@@ -45,7 +45,7 @@ class _SobreroToggleState extends State<SobreroToggle> {
         children: [
           Container(
             decoration: ShapeDecoration(
-                color: Theme.of(context).canvasColor,
+                color: Theme.of(context).cardColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15))),
             width: widget.width,

@@ -69,9 +69,9 @@
 
   "ssoAuthorized" : "Access denied",
   "ssoNotAuthorized" : "Access granted",
-  "ssoInvalidrequest": "L'applicazione da autenticare ha generato una richesta non valida, per preservare la tua sicurezza il login è stato bloccato.",
+  "ssoInvalidrequest": "The client has generated an invalid request, to protect your security the procedure has been aborted.",
   "ssoSharedData" : "Verranno condivisi i tuoi dati anagrafici, la tua classe e il tuo numero di matricola. La tua password non verrà condivisa.",
-  "ssoDialog1": "You're trying to log into ",
+  "ssoDialog1": "You're trying logging into ",
   "ssoDialog2" : " with your mySobrero account, make sure the application is trusted before granting any access.\n",
   "ssoSuccess": "You have successfully logged in, You'll be redirected to the application in a few seconds.",
   "ssoPointQR": "Point your device at the QR code to authorize the application.",

@@ -8,13 +8,12 @@ import 'dart:convert';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info/package_info.dart';
 
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/StringData.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/utilities.dart';
-
-import 'package:package_info/package_info.dart';
 
 // TODO: implementare SSL pinning in tutto il CloudConnector
 

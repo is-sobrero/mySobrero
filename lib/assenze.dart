@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'dart:io' show Platform;
 
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/utilities.dart';
@@ -132,7 +133,7 @@ class _AssenzeState extends State<AssenzeView> {
     final f = new DateFormat('dd/MM/yyyy HH:mm:ss');
     DateTime timestamp = f.parse("${a.data} ${a.orario ?? "00:00:00"}");
 
-    final day = DateFormat.MMMMd().format(timestamp);
+    final day = DateFormat.MMMMd(Platform.localeName).format(timestamp);
     final time = DateFormat('hh:mm').format(timestamp);
     return GenericTile(
       //margin: EdgeInsets.only(top: 15),
