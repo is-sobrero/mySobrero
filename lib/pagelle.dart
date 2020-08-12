@@ -122,7 +122,7 @@ class _PagelleState extends State<PagelleView> {
                             itemBuilder: (context, index) {
                               VotoFinaleStructure mat = selectedPagella.materie.values.elementAt(index);
                               String materia = selectedPagella.materie.keys.elementAt(index);
-                              return GenericTile(
+                              return SobreroFlatTile(
                                 margin: EdgeInsets.only(bottom: 15),
                                 children: <Widget>[
                                   Row(

@@ -11,7 +11,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:io' show Platform;
 
-
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
@@ -38,6 +37,18 @@ class SSOProvider extends StatefulWidget {
 class _SSOProviderState extends State<SSOProvider> {
 
   QRViewController controller;
+
+  List<AuthenticationQR> _loggedAuths = List<AuthenticationQR>();
+
+  @override
+  void initState(){
+    super.initState();
+    CloudConnector.getLogHistory(token: widget. session).then(
+            (list) => setState(() {
+              _loggedAuths = list;
+            })
+    );
+  }
 
   void authorizeApp(String data){
     AuthenticationQR _req;
@@ -73,6 +84,13 @@ class _SSOProviderState extends State<SSOProvider> {
                 title: AppLocalizations.of(context).translate("ssoAuthorized"),
                 buttonText: "Ok",
                 buttonCallback: () {
+                  CloudConnector.setLogHistory(
+                    token: widget.session,
+                    callback: (list) => setState((){
+                      _loggedAuths = list;
+                    }),
+                    item: _req,
+                  );
                   Navigator.of(context).pop();
                   controller.resumeCamera();
                 },
@@ -241,88 +259,96 @@ class _SSOProviderState extends State<SSOProvider> {
     DateTime timestamp = DateTime.now();
     final day = DateFormat.MMMMd(Platform.localeName).format(timestamp);
     final time = DateFormat('hh:mm').format(timestamp);
-
     return Column(
       key: ValueKey<int>(11),
       children: [
-        SobreroEmptyState(
+        if (_loggedAuths.length == 0) SobreroEmptyState(
           emptyStateKey: "ssoNoHistory",
         ),
-        GenericTile(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    ".com",
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+        if (_loggedAuths.length > 0) ListView.builder(
+          primary: false,
+          shrinkWrap: true,
+          itemCount: _loggedAuths.length,
+          itemBuilder: (_, i) => SobreroFlatTile(
+            margin: EdgeInsets.only(bottom: 15),
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _loggedAuths[i].domain,
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                //Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Text(day),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: Icon(
-                            LineIcons.calendar_o,
-                            size: 18,
-                          ),
-                        )
+                  //Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            Text(day),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 3),
+                              child: Icon(
+                                LineIcons.calendar_o,
+                                size: 18,
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(time),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 3),
+                              child: Icon(
+                                LineIcons.clock_o,
+                                size: 18,
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(time),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 3),
-                          child: Icon(
-                            LineIcons.clock_o,
-                            size: 18,
-                          ),
-                        )
-                      ],
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Icon(
+                      LineIcons.laptop,
+                      size: 20,
                     ),
-                  ],
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Icon(
-                    LineIcons.paperclip,
-                    size: 20,
                   ),
-                ),
-                Text("192.168.1.1"),
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                Image.asset(
-                  'icons/flags/png/it.png',
-                  package: 'country_icons',
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text("Turin"),
-                ),
-              ],
-            ),
-          ],
+                  Text(_loggedAuths[i].clientIp),
+                ],
+              ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Image.asset(
+                    'icons/flags/png/${_loggedAuths[i].clientCountry.toLowerCase()}.png',
+                    package: 'country_icons',
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(_loggedAuths[i].clientCity),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         Container(
           width: double.infinity,
@@ -334,12 +360,13 @@ class _SSOProviderState extends State<SSOProvider> {
 
   @override
   Widget build(BuildContext context) {
+    print("ok");
     return SobreroDetailView(
       title: AppLocalizations.of(context).translate("authorizeApp"),
       child: Column(
         children: [
           SobreroToggle(
-            margin: EdgeInsets.only(top: 10),
+            margin: EdgeInsets.only(top: 10, bottom: 15),
             values: [
               AppLocalizations.of(context).translate("scan"),
               AppLocalizations.of(context).translate("loginHistory"),

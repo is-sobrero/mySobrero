@@ -88,7 +88,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
     String realSender = "Dirigente";
     if (element.mittente.toUpperCase() != "DIRIGENTE")
       realSender = "Gianni Rossi";
-    return GenericTile(
+    return SobreroFlatTile(
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 5),

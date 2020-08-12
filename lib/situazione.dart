@@ -294,7 +294,7 @@ class _SituazioneView extends State<SituazioneView> {
     if (scarto > 0) scartoGrad = AppColorScheme.greenGradient;
     if (scarto < 0) scartoGrad = AppColorScheme.redGradient;
     if (media1Q < 6) mediaGrad = AppColorScheme.redGradient;
-    return GenericTile(
+    return SobreroFlatTile(
       children: [
         Text(
           materia,

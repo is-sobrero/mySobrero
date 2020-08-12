@@ -8,12 +8,14 @@ import 'dart:convert';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/StringData.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/utilities.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO: implementare SSL pinning in tutto il CloudConnector
 
@@ -84,6 +86,22 @@ class CloudConnector {
     return tempReturn;
   }
 
+  static Future<List<AuthenticationQR>> getLogHistory({@required token}) async {
+    /*var res = await http.get(
+        cloudEndpoint + "getData.php?reference=goals&token=$token"
+    );
+    String data = StringData.fromJson(jsonDecode(res.body)).data;*/
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String data = _prefs.getString('loggedAuths');
+    List<AuthenticationQR> tempReturn = new List<AuthenticationQR>();
+    if (data == null) return tempReturn;
+    List<dynamic> _tempLogs = jsonDecode(data);
+    _tempLogs.forEach((value) =>
+        tempReturn.add(AuthenticationQR.fromJson(value))
+    );
+    return tempReturn;
+  }
+
   static Future<bool> authorizeApp({
     @required guid,
     @required token,
@@ -98,6 +116,24 @@ class CloudConnector {
   static Future<RemoteNews> getRemoteHeadingNews() async {
     var res = await http.get(cloudEndpoint + "getData.php?reference=config");
     return RemoteNews.fromJson(jsonDecode(res.body)['data']);
+  }
+
+  static Future<bool> setLogHistory({
+    AuthenticationQR item,
+    @required token,
+    Function(List<AuthenticationQR>) callback
+  }) async {
+    List<AuthenticationQR> _history = await getLogHistory(token: token);
+    _history.add(item);
+    if (_history.length > 25)
+      _history = _history.sublist(
+        _history.length - 25,
+        _history.length - 1,
+      );
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    await _prefs.setString('loggedAuths', jsonEncode(_history));
+    callback(_history);
+    return true;
   }
 
   static Future<bool> setGoals({

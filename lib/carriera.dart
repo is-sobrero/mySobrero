@@ -54,7 +54,7 @@ class _CarrieraState extends State<CarrieraView> {
     }
 
     Color txtColor = scaffoldColor == null ? Theme.of(context).textTheme.bodyText1.color : Colors.white;
-    return GenericTile(
+    return SobreroFlatTile(
       margin: EdgeInsets.only(bottom: 15),
       color: scaffoldColor,
       children: <Widget>[

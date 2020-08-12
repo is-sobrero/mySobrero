@@ -177,7 +177,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                                     ),
                                   ),
                                 ),
-                                if (mostra) GenericTile(
+                                if (mostra) SobreroFlatTile(
                                   margin: EdgeInsets.only(bottom: 15),
                                   children: [
                                     Text(currentSet[index].materia,
@@ -197,7 +197,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                             );
                           }
                           dataTemporanea = currentSet[index].data;
-                          return mostra ? GenericTile(
+                          return mostra ? SobreroFlatTile(
                             margin: EdgeInsets.only(bottom: 15),
                               children: [
                                 Text(currentSet[index].materia,

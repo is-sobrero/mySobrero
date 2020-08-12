@@ -135,7 +135,7 @@ class _AssenzeState extends State<AssenzeView> {
 
     final day = DateFormat.MMMMd(Platform.localeName).format(timestamp);
     final time = DateFormat('hh:mm').format(timestamp);
-    return GenericTile(
+    return SobreroFlatTile(
       //margin: EdgeInsets.only(top: 15),
       color: notJustified ? Colors.red : null,
       children: [

@@ -148,7 +148,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold,),
               ),
             ),
-            GenericTile(
+            SobreroFlatTile(
               margin: EdgeInsets.only(top: 15),
               children: <Widget>[
                 Padding(
@@ -257,7 +257,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                 ),
               ],
             ),
-            GenericTile(
+            SobreroFlatTile(
               margin: EdgeInsets.only(top: 10),
               children: [
                 Padding(

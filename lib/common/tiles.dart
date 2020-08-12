@@ -240,8 +240,8 @@ Widget ImageLinkTile({BuildContext context, Color highColor, Color lowColor, boo
   );
 }
 
-class GradientTile extends StatelessWidget {
-  GradientTile ({
+class GradientActionTile extends StatelessWidget {
+  GradientActionTile ({
     Key key,
     this.aspectRatio = 1,
     this.padding = EdgeInsets.zero,
@@ -314,7 +314,7 @@ class GradientTile extends StatelessWidget {
   }
 }
 
-class GradientToggleTile extends GradientTile {
+class GradientToggleTile extends GradientActionTile {
   GradientToggleTile({
     Key key,
     double aspectRatio = 1,
@@ -343,11 +343,11 @@ class GradientToggleTile extends GradientTile {
   @override
   GradientTileLayoutBuilder get layoutBuilder => (child) => ExpandedSection(
     expand: expand,
-    child: GradientTile.defaultLayoutBuilder(child),
+    child: GradientActionTile.defaultLayoutBuilder(child),
   );
 }
 
-class CounterTile extends GradientTile {
+class CounterTile extends GradientActionTile {
   CounterTile ({
     Key key,
     double aspectRatio = 1,
@@ -493,8 +493,8 @@ class IllustrationTile extends StatelessWidget {
   }
 }
 
-class GenericTile extends StatelessWidget {
-  GenericTile({
+class SobreroFlatTile extends StatelessWidget {
+  SobreroFlatTile({
     Key key,
     @required this.children,
     this.color,

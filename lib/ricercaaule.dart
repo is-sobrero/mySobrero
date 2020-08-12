@@ -146,13 +146,13 @@ class _RicercaAuleState extends State<RicercaAuleView> {
                                   IconData descriptiveIcon = snapshot.data[i2].denominazione.contains("Lab") ? LineIcons.gear : LineIcons.building_o;
                                   descriptiveIcon = snapshot.data[i2].denominazione.contains("Palestra") ? Icons.directions_run : descriptiveIcon;
                                   return ExpandableNotifier(
-                                    child: GenericTile(
+                                    child: SobreroFlatTile(
                                       overridePadding: true,
                                       margin: EdgeInsets.only(bottom: 15),
                                       children: <Widget>[
                                         Expandable(
                                           collapsed: ExpandableButton(
-                                            child: GenericTile(
+                                            child: SobreroFlatTile(
                                               showShadow: false,
                                               children: [
                                                 Row(
@@ -176,12 +176,12 @@ class _RicercaAuleState extends State<RicercaAuleView> {
                                               ],
                                             ),
                                           ),
-                                          expanded: GenericTile(
+                                          expanded: SobreroFlatTile(
                                             showShadow: false,
                                             overridePadding: true,
                                             children: <Widget>[
                                               ExpandableButton(
-                                                child: GenericTile(
+                                                child: SobreroFlatTile(
                                                   showShadow: false,
                                                   color: Colors.white,
                                                   children: <Widget>[

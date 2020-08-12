@@ -105,13 +105,13 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                 primary: false,
                                 shrinkWrap: true,
                                 itemCount: snapshot.data[index].cartelle.length,
-                                itemBuilder: (ctx, i) => GenericTile(
+                                itemBuilder: (ctx, i) => SobreroFlatTile(
                                     margin: EdgeInsets.only(bottom: 15),
                                     overridePadding: true,
                                     children: [ExpandableNotifier(
                                         child: Expandable(
                                           collapsed: ExpandableButton(
-                                            child: GenericTile(
+                                            child: SobreroFlatTile(
                                               showShadow: false,
                                               children: <Widget>[
                                                 Row(
@@ -143,7 +143,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                             child: Column(
                                               children: <Widget>[
                                                 ExpandableButton(
-                                                  child: GenericTile(
+                                                  child: SobreroFlatTile(
                                                     showShadow: false,
                                                     color: Colors.white,
                                                     children: <Widget>[

@@ -22,6 +22,7 @@
 
 - [Introduzione](#introduzione)
 - [Per gli studenti del Sobrero](#per-gli-studenti-del-sobrero)
+- [Identificatori delle release](#identificatori-delle-release)
 - [Installazione](#installazione)
   - [Framework Flutter](#framework-flutter)
   - [Clonazione del repository](#clonazione-del-repository)
@@ -50,6 +51,26 @@ Tutti i dati vengono salvati su cloud, garantendo oltre alla coerenza dei dati t
 mySobrero è un progetto enorme, in continua evoluzione dal 2015, e come aumentano gli studenti frequentanti il Sobrero di anno in anno, anche le esigenze aumentano. La varietà degli studenti del Sobrero non assicura la perfetta compatiblità con mySobrero, è per questo che la segnalazione degli errori al team di sviluppo è fondamentale per mantenere elevata l'esperienza utente.
 
 Se si è verificato un errore nell'applicazione oppure si ha qualche idea per l'applicazione, è disponibile il form di supporto a questo link: https://forms.gle/tDt4RZD1XWK5kkH39 (compilabile solo con account @sobrero)
+
+# Identificatori delle release
+Le release di mySobrero vengono distinte in 4 sottocategorie:
+
+## Internal / Master
+Le release col tag Internal sono le meno stabili, ma allo stesso tempo le più aggiornate e con features nuove.
+Spesso le build col tag Internal possono fallire nel CI (e anche in un ambiente locale).
+Sono sempre disponibili versioni per piattaforme non ancora disponibili al pubblico (iOS, macOS, web).
+
+## Alpha
+Le release col tag Alpha sono simili alle Internal ma con la sicurezza che possano essere compilate. Su queste build vengono effettuati più test e sono più stabili di quelle Internal.  
+Esse sono disponibili solo nella scheda Releases di Github, e possono essere compilate anche per piattaforme non ancora disponibili al pubblico.
+
+## Beta / Release Candidate
+Le release col tag Beta sono considerate stabili, con feature nuove. Esse sono intese per gli appassionati che vogliono sperimentare con le nuove funzioni dell'Applicazione.
+Esse sono disponibili solo negli store dei dispositivi (Apple App Store, Google Play Store)
+
+## Production
+Le release production sono quelle disponibili al pubblico, disponibili solo negli store.
+Una build per essere considerata Production deve passare tutte e 3 le fasi precedenti.
 
 # Installazione
 L'installazione di mySobrero prevede diversi step, sia per preparare l'ambiente di sviluppo che per preparare il dispositivo di destinazione.

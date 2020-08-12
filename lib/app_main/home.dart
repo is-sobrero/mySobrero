@@ -334,7 +334,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<
                             ),
                           ),
                         ),
-                        GradientTile(
+                        GradientActionTile(
                           aspectRatio: 2,
                           padding: EdgeInsets.fromLTRB(isWide ? 10 : 0, 10 , 0, 10),
                           flex: isWide ? 1 : 0,
