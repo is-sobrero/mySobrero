@@ -36,23 +36,25 @@ class SSOProvider extends StatefulWidget {
 
 class _SSOProviderState extends State<SSOProvider> {
 
-  QRViewController controller;
+  QRViewController _qrController;
 
   List<AuthenticationQR> _loggedAuths = List<AuthenticationQR>();
 
   @override
   void initState(){
     super.initState();
-    CloudConnector.getLogHistory(token: widget. session).then(
-            (list) => setState(() {
-              _loggedAuths = list;
-            })
-    );
+    CloudConnector.getLogHistory(token: widget.session).then(
+            (list) => _loggedAuths = list);
+  }
+
+  void closeDialog(){
+    _qrController.resumeCamera();
+    Navigator.of(context).pop();
   }
 
   void authorizeApp(String data){
     AuthenticationQR _req;
-    controller.pauseCamera();
+    _qrController.pauseCamera();
     try {
       var json = jsonDecode(data);
       _req = AuthenticationQR.fromJson(json);
@@ -91,8 +93,7 @@ class _SSOProviderState extends State<SSOProvider> {
                     }),
                     item: _req,
                   );
-                  Navigator.of(context).pop();
-                  controller.resumeCamera();
+                  closeDialog();
                 },
                 content: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +111,7 @@ class _SSOProviderState extends State<SSOProvider> {
           },
           abortButtonCallback: () {
             Navigator.of(context).pop();
-            controller.resumeCamera();
+            _qrController.resumeCamera();
           },
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +194,7 @@ class _SSOProviderState extends State<SSOProvider> {
           ),
           title: AppLocalizations.of(context).translate("ssoNotAuthorized"),
           buttonText: "Ok",
-          buttonCallback: () => Navigator.of(context).pop(),
+          buttonCallback: closeDialog,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -211,6 +212,12 @@ class _SSOProviderState extends State<SSOProvider> {
   }
 
   int _currentPage = 0;
+  
+  @override
+  void dispose(){
+    _qrController?.dispose();
+    super.dispose();
+  }
 
   Widget scanView() => Column(
     key: ValueKey<int>(10),
@@ -234,7 +241,7 @@ class _SSOProviderState extends State<SSOProvider> {
                 cutOutSize: 200,
               ),
               onQRViewCreated: (QRViewController controller) {
-                this.controller = controller;
+                this._qrController = controller;
                 controller.scannedDataStream.listen((scanData) {
                   authorizeApp(scanData);
                 });
@@ -357,10 +364,8 @@ class _SSOProviderState extends State<SSOProvider> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    print("ok");
     return SobreroDetailView(
       title: AppLocalizations.of(context).translate("authorizeApp"),
       child: Column(

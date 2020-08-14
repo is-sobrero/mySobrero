@@ -134,6 +134,7 @@ class CloudConnector {
     await _prefs.setString('loggedAuths', jsonEncode(_history));
     callback(_history);
     return true;
+
   }
 
   static Future<bool> setGoals({
