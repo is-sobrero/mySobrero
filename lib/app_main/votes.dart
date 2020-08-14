@@ -10,6 +10,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/ui/helper.dart';
+import 'package:mySobrero/ui/layouts.dart';
 import 'package:mySobrero/ui/toggle.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 import 'package:animations/animations.dart';
@@ -50,8 +52,6 @@ class _VotesPageState extends State<VotesPage>
 
   int periodFilter = 0, filterIndex = 0;
 
-  UIHelper _uiHelper;
-
   void initState(){
     super.initState();
     materie1q = _generateSubjectsList(widget.voti1q);
@@ -63,8 +63,6 @@ class _VotesPageState extends State<VotesPage>
     _goals = CloudConnector.getGoals(token: widget.apiInstance.getSession());
 
     if (widget.voti2q.length > 0) periodFilter = 1;
-
-    _uiHelper = UIHelper(context: context);
   }
 
   Map<String, SituazioneElement> _generateSituazioneMap(
@@ -317,10 +315,11 @@ class _VotesPageState extends State<VotesPage>
 
   // TODO: pulizia codice voti
 int customFilter = 0;
+
   @override
   Widget build(BuildContext context) {
     List<String> currentSubjects = periodFilter == 0 ? materie1q : materie2q;
-    return SobreroPage(
+    return SobreroLayout.rPage(
       children: [
         Stack(
           children: [
@@ -407,7 +406,7 @@ int customFilter = 0;
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: _uiHelper.isWide ? 0 : 40.0),
+              padding: EdgeInsets.only(top: UIHelper.isWide(context) ? 0 : 40.0),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 5, top: 3),
@@ -425,7 +424,6 @@ int customFilter = 0;
             ),
           ],
         ),
-
         SobreroDropdown(
           margin: EdgeInsets.only(top: 8, bottom: 20),
           value: currentSubjects[filterIndex],
@@ -461,7 +459,7 @@ int customFilter = 0;
           ),
           child: _generatePeriodView(
             periodFilter == 0 ? widget.voti1q : widget.voti2q,
-            _uiHelper.columnCount,
+            UIHelper.columnCount(context),
             periodFilter,
           ),
         ),

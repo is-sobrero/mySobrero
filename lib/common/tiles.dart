@@ -366,14 +366,14 @@ class CounterTile extends GradientActionTile {
         assert(showImage != null),
         assert(image != null),
         super(
-        key: key,
-        padding: padding,
-        flex: flex,
-        aspectRatio: aspectRatio,
-        onTap: onTap,
-        highColor: highColor,
-        lowColor: lowColor,
-      );
+          key: key,
+          padding: padding,
+          flex: flex,
+          aspectRatio: aspectRatio,
+          onTap: onTap,
+          highColor: highColor,
+          lowColor: lowColor,
+        );
 
   final String primaryText;
   final String secondaryText;

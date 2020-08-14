@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/ui/helper.dart';
 
 class SobreroButton extends StatelessWidget {
   EdgeInsets margin;
@@ -70,6 +71,76 @@ class SobreroButton extends StatelessWidget {
             onPressed: onPressed,
           ),
         )
+    );
+  }
+}
+
+class SobreroDrawerButton extends StatelessWidget {
+  EdgeInsets margin;
+  IconData suffixIcon;
+  String text;
+  Function onPressed;
+  String tooltip;
+  Color color, _textColor;
+  bool isSelected;
+
+  SobreroDrawerButton({
+    Key key,
+    this.margin = EdgeInsets.zero,
+    this.suffixIcon,
+    this.onPressed,
+    this.isSelected = false,
+    @required this.color,
+    this.tooltip,
+    @required this.text,
+  }) :  assert(margin != null),
+        assert(color != null),
+        assert(text != null),
+        super(key: key);
+
+  @override
+  Widget build (BuildContext context){
+    _textColor = UIHelper.textColorByBackground(color);
+    return GestureDetector(
+      onTap: onPressed,
+      child: AnimatedContainer(
+        alignment: Alignment.centerLeft,
+        duration: Duration(milliseconds: 200),
+        margin: margin,
+        decoration: BoxDecoration(
+          color: isSelected ? color : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            if (isSelected) BoxShadow(
+              color: color.withAlpha(20),
+              blurRadius: 10,
+              spreadRadius: 10,
+            ),
+          ],
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 15),
+                child: Icon(
+                  suffixIcon,
+                  color: isSelected ? _textColor : color,
+                ),
+              ),
+              Text(
+                text,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isSelected ? _textColor : color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

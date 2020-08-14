@@ -3,13 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:mySobrero/ui/helper.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'dart:io' show Platform;
 
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:mySobrero/ui/data_ui.dart';
@@ -44,7 +45,8 @@ class _SSOProviderState extends State<SSOProvider> {
   void initState(){
     super.initState();
     CloudConnector.getLogHistory(token: widget.session).then(
-            (list) => _loggedAuths = list);
+          (list) => _loggedAuths = list,
+    );
   }
 
   void closeDialog(){

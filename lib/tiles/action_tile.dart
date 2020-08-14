@@ -4,7 +4,10 @@
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:mySobrero/common/ui.dart';
+
 import 'package:mySobrero/tiles/basic_tile.dart';
+import 'package:mySobrero/ui/helper.dart';
 
 class ActionTile extends StatelessWidget {
   ActionTile({
@@ -49,7 +52,7 @@ class ActionTile extends StatelessWidget {
         context,
         PageRouteBuilder(
           pageBuilder: builder,
-          transitionDuration: Duration(milliseconds: 600),
+          transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
           transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
             animation: prim,
             secondaryAnimation: sec,

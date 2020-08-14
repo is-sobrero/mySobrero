@@ -8,15 +8,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:animations/animations.dart';
+
+import 'package:mySobrero/app_main/app_home.dart';
 
 import 'package:mySobrero/app_main/more.dart';
-import 'package:mySobrero/app_main/sobrero_appbar.dart';
 import 'package:mySobrero/app_main/votes.dart';
 import 'package:mySobrero/app_main/communications.dart';
 import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
+import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/sso/sso.dart';
+import 'package:mySobrero/ui/button.dart';
+import 'package:mySobrero/ui/helper.dart';
+import 'package:mySobrero/ui/layouts.dart';
+import 'package:mySobrero/ui/sobrero_appbar.dart';
+import 'package:mySobrero/ui/drawer.dart';
+
 
 
 class AppMain extends StatefulWidget {
@@ -49,6 +59,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
   VotesPage _votesPageInstance;
   CommunicationsPageView _communicationsPageView;
   MorePageView _morePageInstance;
+  Homepage _homepageNewInstance;
 
   PageController pageController = PageController();
 
@@ -95,6 +106,12 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
     );
+    _homepageNewInstance = Homepage(
+      unifiedLoginStructure: widget.unifiedLoginStructure,
+      apiInstance: widget.apiInstance,
+      feed: widget.feed,
+      switchPageCallback: (page) => switchPage(true, page),
+    );
     _communicationsPageView = CommunicationsPageView(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
@@ -120,6 +137,8 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     return true;
   }
 
+  // TODO: setState a rotazione schermo
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -129,187 +148,128 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
             statusBarColor: Colors.transparent,
             statusBarBrightness: Theme.of(context).brightness
         ),
-        child: Scaffold(
+        child: SobreroLayout.rScaffold(
+          isWide: UIHelper.isPad(context),
           appBar: SobreroAppBar(
-            context: context,
-            isBeta: widget.isBeta,
+            elevation: _globalScroll,
+            topCorrection: window.padding.top > 0 ? 3 : 0,
             profilePicUrl: _profileUrl,
-            scroll: _globalScroll,
             loginStructure: widget.unifiedLoginStructure,
-            setProfileCallback: _updateProfilePicture,
             session: widget.apiInstance.getSession(),
+            setProfileCallback: (url) => setState((){
+              _profileUrl = url;
+            }),
           ),
-          body: Stack(
-            alignment: Alignment.bottomCenter,
+          drawer: SobreroDrawer(
+            isPad: false,
             children: [
-              PageView.builder(
-                controller: pageController,
-                onPageChanged: (index) => switchPage(false, index),
-                itemCount: 4,
-                itemBuilder: (context, i) {
-                  var schermata;
-                  if (i == 0) schermata = _homePageInstance;
-                  if (i == 1) schermata = _votesPageInstance;
-                  if (i == 2) schermata = _communicationsPageView;
-                  if (i == 3) schermata = _morePageInstance;
-                  return NotificationListener<ScrollNotification>(
-                    onNotification: elaboraScroll,
-                    child: schermata
-                  );
-                },
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(top: 15),
+                suffixIcon: LineIcons.home,
+                text: AppLocalizations.of(context).translate('home'),
+                color: Theme.of(context).primaryColor,
+                isSelected: _currentPageIndex == 0,
+                onPressed: () => switchPage(true, 0),
               ),
-              // Il backdrop nel simulatore iOS è buggato, non su iDevice
-              ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: 15.0,
-                    sigmaY: 15.0,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor
-                          .withAlpha(200),
-                      border: Border(
-                        top: BorderSide(
-                          width: 2.0,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(top: 15),
+                suffixIcon: LineIcons.bar_chart,
+                text: AppLocalizations.of(context).translate('marks'),
+                color: Theme.of(context).primaryColor,
+                isSelected: _currentPageIndex == 1,
+                onPressed: () => switchPage(true, 1),
+              ),
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(top: 15),
+                suffixIcon: LineIcons.envelope_o,
+                text: AppLocalizations.of(context).translate('memos'),
+                color: Theme.of(context).primaryColor,
+                isSelected: _currentPageIndex == 2,
+                onPressed: () => switchPage(true, 2),
+              ),
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(top: 15, bottom: 10),
+                suffixIcon: LineIcons.ellipsis_h,
+                text: AppLocalizations.of(context).translate('more'),
+                color: Theme.of(context).primaryColor,
+                isSelected: _currentPageIndex == 3,
+                onPressed: () => switchPage(true, 3),
+              ),
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(top: 15),
+                suffixIcon: LineIcons.unlock_alt,
+                text: AppLocalizations.of(context).translate("authorizeApp"),
+                color: Theme.of(context).primaryColor,
+                onPressed: () => Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (a, b, c) => SSOProvider(
+                      session: widget.apiInstance.getSession(),
                     ),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        child: GNav(
-                          gap: 8,
-                          color: Theme.of(context).disabledColor,
-                          activeColor: Theme.of(context).primaryColor,
-                          iconSize: 24,
-                          tabBackgroundColor: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 5,
-                          ),
-                          duration: Duration(milliseconds: 300),
-                          tabs: [
-                            GButton(
-                              icon: LineIcons.home,
-                              text: AppLocalizations.of(context).translate('home'),
-                              iconSize: 20,
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            GButton(
-                              icon: LineIcons.bar_chart,
-                              iconSize: 20,
-                              text: AppLocalizations.of(context).translate('marks'),
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            GButton(
-                              icon: LineIcons.envelope_o,
-                              iconSize: 20,
-                              text: AppLocalizations.of(context).translate('memos'),
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            GButton(
-                              icon: LineIcons.ellipsis_h,
-                              iconSize: 20,
-                              text: AppLocalizations.of(context).translate('more'),
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            )
-                          ],
-                          selectedIndex: _currentPageIndex,
-                          onTabChange: (index) => switchPage(true, index),
-                        ),
-                      ),
-                    )
+                    transitionDuration: Duration(
+                      milliseconds: UIHelper.pageAnimDuration,
+                    ),
+                    transitionsBuilder: (_, p, s, c) => SharedAxisTransition(
+                      animation: p,
+                      secondaryAnimation: s,
+                      transitionType: SharedAxisTransitionType.scaled,
+                      child: c,
+                    ),
                   ),
                 ),
-              )
+              ),
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(bottom: 10),
+                suffixIcon: LineIcons.gear,
+                text: AppLocalizations.of(context).translate("settings"),
+                color: Theme.of(context).primaryColor,
+                onPressed: () => Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (a, b, c) => ImpostazioniView(
+                      unifiedLoginStructure: widget.unifiedLoginStructure,
+                      profileURL: _profileUrl,
+                      profileCallback: (url) => setState((){
+                        _profileUrl = url;
+                      }),
+                      session: widget.apiInstance.getSession(),
+                    ),
+                    transitionDuration: Duration(
+                      milliseconds: UIHelper.pageAnimDuration,
+                    ),
+                    transitionsBuilder: (_, p, s, c) => SharedAxisTransition(
+                      animation: p,
+                      secondaryAnimation: s,
+                      transitionType: SharedAxisTransitionType.scaled,
+                      child: c,
+                    ),
+                  ),
+                ),
+              ),
+              SobreroDrawerButton(
+                margin: EdgeInsets.only(top: 15),
+                suffixIcon: LineIcons.sign_out,
+                text: "Disconnettiti",
+                color: Colors.red,
+              ),
             ],
           ),
-          /*bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-                color: Colors.transparent,
-                boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(50),
-                blurRadius: 10,
-                spreadRadius: 10,
-              )
-            ]),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 10.0,
-                sigmaY: 10.0,
-              ),
-              child: SafeArea(
-                bottom: true,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: GNav(
-                      gap: 8,
-                      color: Theme.of(context).disabledColor,
-                      activeColor: Theme.of(context).primaryColor,
-                      iconSize: 24,
-                      tabBackgroundColor: Colors.transparent,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                      duration: Duration(milliseconds: 300),
-                      tabs: [
-                        GButton(
-                          icon: LineIcons.home,
-                          text: AppLocalizations.of(context).translate('home'),
-                          iconSize: 20,
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        GButton(
-                          icon: LineIcons.bar_chart,
-                          iconSize: 20,
-                          text: AppLocalizations.of(context).translate('marks'),
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        GButton(
-                          icon: LineIcons.envelope_o,
-                          iconSize: 20,
-                          text: AppLocalizations.of(context).translate('memos'),
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        GButton(
-                          icon: LineIcons.ellipsis_h,
-                          iconSize: 20,
-                          text: AppLocalizations.of(context).translate('more'),
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        )
-                      ],
-                      selectedIndex: _currentPageIndex,
-                      onTabChange: (index) => switchPage(true, index),
-                  ),
-                ),
-              ),
+          body: PageView.builder(
+              controller: pageController,
+              onPageChanged: (index) => switchPage(false, index),
+              itemCount: 4,
+              itemBuilder: (context, i) {
+                var schermata;
+                if (i == 0) schermata = _homepageNewInstance;
+                if (i == 1) schermata = _votesPageInstance;
+                if (i == 2) schermata = _communicationsPageView;
+                if (i == 3) schermata = _morePageInstance;
+                return NotificationListener<ScrollNotification>(
+                    onNotification: elaboraScroll,
+                    child: schermata
+                );
+              },
             ),
-          ),*/
         ),
       ),
     );

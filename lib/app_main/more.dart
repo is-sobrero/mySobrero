@@ -18,6 +18,8 @@ import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ricercaaule.dart';
 import 'package:mySobrero/sso/sso.dart';
 import 'package:mySobrero/tiles/action_tile.dart';
+import 'package:mySobrero/ui/helper.dart';
+import 'package:mySobrero/ui/layouts.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 class MorePageView extends StatefulWidget {
@@ -42,23 +44,24 @@ class _MorePageState extends State<MorePageView>
   @override
   bool get wantKeepAlive => true;
 
-  UIHelper _uiHelper;
-
-  @override
-  void initState(){
-    super.initState();
-    _uiHelper = UIHelper(context: context);
-  }
-
   @override
   Widget build(BuildContext context){
-    return MainViewSimpleContainer(
-      title: AppLocalizations.of(context).translate('more'),
+    return SobreroLayout.rPage(
       children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            AppLocalizations.of(context).translate('more'),
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 24,
+            ),
+          ),
+        ),
         WaterfallFlow.count(
           primary: false,
           shrinkWrap: true,
-          crossAxisCount: _uiHelper.columnCount,
+          crossAxisCount: UIHelper.columnCount(context),
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           children: [

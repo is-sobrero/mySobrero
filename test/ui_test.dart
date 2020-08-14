@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/ui/layouts.dart';
 
 void main(){
   MaterialApp app1 = MaterialApp(
     home: Scaffold(
-        body: MainViewSimpleContainer(
-            title: "MainViewSimpleContainer test",
+        body: SobreroLayout.rPage(
+            //title: "MainViewSimpleContainer test",
             children: [
               Text("Test child"),
               Text("Test child"),

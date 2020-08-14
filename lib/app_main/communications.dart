@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/ui/helper.dart';
+import 'package:mySobrero/ui/layouts.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 import 'package:mySobrero/common/tiles.dart';
@@ -35,14 +37,6 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
     with AutomaticKeepAliveClientMixin<CommunicationsPageView>{
   @override
   bool get wantKeepAlive => true;
-
-  UIHelper _uiHelper;
-
-  @override
-  void initState(){
-    super.initState();
-    _uiHelper = UIHelper(context: context);
-  }
 
   List<Widget> _displayAttachments(List<AllegatoStructure> allegati){
     List<Widget> list = new List<Widget>();
@@ -154,16 +148,25 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
 
   @override
   Widget build(BuildContext context) {
-    return MainViewSimpleContainer(
-      title: AppLocalizations.of(context).translate('allNotices'),
+    return SobreroLayout.rPage(
       children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            AppLocalizations.of(context).translate('allNotices'),
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 24,
+            ),
+          ),
+        ),
         WaterfallFlow.builder(
           primary: false,
           shrinkWrap: true,
           itemCount: widget.communications.length,
           itemBuilder: (_, i) => _displayCommunication(widget.communications[i]),
           gridDelegate: SliverWaterfallFlowDelegate(
-            crossAxisCount: _uiHelper.columnCount,
+            crossAxisCount: UIHelper.columnCount(context),
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10.0,
             lastChildLayoutTypeBuilder: (i) =>

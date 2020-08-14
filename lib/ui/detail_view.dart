@@ -34,8 +34,6 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
 
-  UIHelper _uiHelper;
-
   @override
   void initState(){
     super.initState();
@@ -57,8 +55,6 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity)
         setState(() {});
     });
-
-    _uiHelper = UIHelper(context: context);
   }
 
   @override

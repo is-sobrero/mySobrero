@@ -12,6 +12,7 @@ import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
+import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/toggle.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:mySobrero/hud.dart';

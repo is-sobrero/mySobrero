@@ -19,7 +19,7 @@ Widget CircularProfile ({String sender, double radius}){
       radius: radius,
     ) :
     CircleAvatar(
-      child: Text("GR", style: TextStyle(color: Colors.black)),
+      child: Text("S", style: TextStyle(color: Colors.black)),
       backgroundColor: Colors.white,
       radius: radius,
     ),

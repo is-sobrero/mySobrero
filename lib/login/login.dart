@@ -21,6 +21,7 @@ import 'package:mySobrero/app_main/app_main.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
+import 'package:mySobrero/ui/helper.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -180,7 +181,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         context,
         PageRouteBuilder(
           pageBuilder: (_, __, ___)  => AgreementScreen(),
-          transitionDuration: Duration(milliseconds: 1000),
+          transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
           transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
             animation: prim,
             secondaryAnimation: sec,
@@ -233,13 +234,13 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
             feed: feed,
             isBeta: isBeta,
           ),
-          transitionDuration: Duration(milliseconds: 1000),
+          transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return SharedAxisTransition(
               child: child,
               animation: animation,
               secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.vertical,
+              transitionType: SharedAxisTransitionType.scaled,
             );
           },
 

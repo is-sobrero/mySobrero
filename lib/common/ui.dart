@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/fade_slide_transition.dart';
+import 'package:mySobrero/ui/helper.dart';
 
 class AppColorScheme {
   static Color primaryColor = Color(0xFF0360e7);
@@ -47,28 +48,6 @@ class AppColorScheme {
     Color(0xff005C97),
     Color(0xff363795),
   ];
-}
-
-class UIHelper {
-  BuildContext context;
-
-  UIHelper({
-    @required this.context,
-  }) : assert(context != null);
-
-  bool get isWide => MediaQuery.of(context).size.width > 500;
-
-  int get columnCount {
-    int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
-    columnCount = MediaQuery.of(context).size.width > 900 ? 3 : columnCount;
-    return columnCount;
-  }
-
-  static Color textColorByBackground (Color color) =>
-    color.computeLuminance() > 0.45 ? Colors.black : Colors.white;
-
-  static int pageAnimDuration = 400;
-
 }
 
 class DetailView extends StatefulWidget {
@@ -136,8 +115,6 @@ class _DetailViewState extends State<DetailView>
       if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity)
         setState(() {});
     });
-
-    _uiHelper = UIHelper(context: context);
   }
 
   @override
@@ -319,7 +296,6 @@ class SobreroButton extends StatelessWidget {
 
   @override
   Widget build (BuildContext context){
-    UIHelper _uiHelper = UIHelper(context: context);
     _textColor = UIHelper.textColorByBackground(color);
     return Container(
       alignment: Alignment.centerLeft,
@@ -406,59 +382,6 @@ class HorizontalSectionList extends StatelessWidget {
       ],
     );
   }
-}
-
-class SobreroPage extends StatelessWidget {
-  SobreroPage({
-    Key key,
-    @required this.children,
-    this.padding = const EdgeInsets.fromLTRB(15, 0, 15, 10),
-  }) :  assert(children != null),
-        assert(padding != null),
-        super(key: key);
-
-  EdgeInsets padding;
-  List<Widget> children;
-  @override
-  Widget build(BuildContext context){
-    return SingleChildScrollView(
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: padding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class MainViewSimpleContainer extends SobreroPage {
-  MainViewSimpleContainer({
-    Key key,
-    List<Widget> children,
-    String title,
-  }) :  assert(title != null),
-        assert(children != null),
-        super(
-          key: key,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ...children,
-          ],
-        );
 }
 
 class SobreroDropdown extends StatelessWidget {
