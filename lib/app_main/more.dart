@@ -81,14 +81,6 @@ class _MorePageState extends State<MorePageView>
               color: Color(0xFF5352ed),
               icon: SobreroIcons2.edit,
             ),
-            ActionTile(
-              builder: (_,__,___) => SSOProvider(session: widget.apiInstance.getSession()),
-              title: "Autorizza app",
-              lightImage: "assets/images/argomenti_light.png",
-              darkImage: "assets/images/argomenti_dark.png",
-              color: Color(0xFF5352ed),
-              icon: LineIcons.unlock_alt,
-            ),
             /*ActionTile(
               builder: (_,__,___) => ListingsHomePage(),
               title: "Resell@Sobrero",

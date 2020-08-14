@@ -12,7 +12,7 @@ class UIHelper {
     return MediaQuery.of(context).size.width > 550;
   }
 
-  static bool isPad(context) => MediaQuery.of(context).size.width > 800;
+  static bool isPad(context) => MediaQuery.of(context).size.width > 900;
 
   static int columnCount (context) {
     int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
