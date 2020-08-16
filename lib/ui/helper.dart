@@ -5,7 +5,6 @@
 import 'package:flutter/material.dart';
 
 class UIHelper {
-
   static bool isWide(context) {
     if (isPad(context))
       return MediaQuery.of(context).size.width > 900;

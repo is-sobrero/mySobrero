@@ -14,7 +14,7 @@ description: La nuova app ufficiale del Sobrero per gli Studenti
 version: 2.0.2+27
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   http: ^0.12.0+2
@@ -51,7 +51,10 @@ dependencies:
   line_icons: ^0.2.0
   country_icons: ^1.1.1
   qr_code_scanner: ^0.0.13
-  wave: ^0.0.8 # <-- TODO: testarla sulla nuova home
+  wave: ^0.0.8
+  uni_links: ^0.4.0
+  flutter_map: ^0.10.1+1
+  latlong: ^0.6.1
 
   flutter:
     sdk: flutter
@@ -61,7 +64,7 @@ dependencies:
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.7.4
+  flutter_launcher_icons: ^0.7.5
   dependency_validator: ^1.0.0
   flutter_test:
     sdk: flutter
@@ -75,7 +78,6 @@ flutter_icons:
   adaptive_icon_foreground: assets/icon/ic_foreground.png
 
 flutter:
-
   uses-material-design: true
 
   assets:

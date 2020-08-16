@@ -1,7 +1,13 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mySobrero/common/pageswitcher.dart';
+import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'fade_slide_transition.dart';
+import 'package:mySobrero/ui/data_ui.dart';
+import 'package:mySobrero/ui/detail_view.dart';
+import 'package:mySobrero/ui/helper.dart';
+import 'package:mySobrero/ui/toggle.dart';
 
 class CompitiView extends StatefulWidget {
   List<CompitoStructure> compiti;
@@ -13,200 +19,82 @@ class CompitiView extends StatefulWidget {
   _CompitiState createState() => _CompitiState();
 }
 
-class _CompitiState extends State<CompitiView> with SingleTickerProviderStateMixin {
-  final double _listAnimationIntervalStart = 0.65;
-  final double _preferredAppBarHeight = 56.0;
-
-  AnimationController _fadeSlideAnimationController;
-  ScrollController _scrollController;
-  double _appBarElevation = 0.0;
-  double _appBarTitleOpacity = 0.0;
-
-  _CompitiState() {}
-
+class _CompitiState extends State<CompitiView> {
   Map<int, Widget> _children = const <int, Widget> {
     0: Text('Settimana', style: TextStyle(color: Colors.black)),
     1: Text('Tutti i compiti', style: TextStyle(color: Colors.black)),
   };
 
-  @override
-  void initState() {
-    super.initState();
-    _fadeSlideAnimationController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    )..forward();
-    _scrollController = ScrollController()..addListener(() {
-      double oldElevation = _appBarElevation;
-      double oldOpacity = _appBarTitleOpacity;
-      _appBarElevation = _scrollController.offset > _scrollController.initialScrollOffset ? 4.0 : 0.0;
-      _appBarTitleOpacity = _scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2 ? 1.0 : 0.0;
-      if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity) setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _fadeSlideAnimationController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   int selezioneCompiti = 0;
+
+
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-    tag: "compiti_background",
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          brightness: Brightness.light,
-          title: AnimatedOpacity(
-            opacity: _appBarTitleOpacity,
-            duration: const Duration(milliseconds: 250),
-            child: Text("Compiti", style: TextStyle(color: Colors.black)),
+    List<CompitoStructure> _selectedAssignments = selezioneCompiti == 0 ? widget.settimana : widget.compiti;
+    return SobreroDetailView(
+      title: "Compiti",
+      child: Column(
+        children: [
+          SobreroToggle(
+            values: ["Settimana", "Tutti"],
+            onToggleCallback: (val) => setState(() => selezioneCompiti = val),
+            selectedItem: selezioneCompiti,
+            width: 200,
+            margin: EdgeInsets.only(bottom: 20, top: 10),
           ),
-          backgroundColor: Color(0xFF43e97b),
-          elevation: _appBarElevation,
-          leading: BackButton(
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: Color(0xFF43e97b),
-        body: Stack(
-          children: <Widget>[
-            SafeArea(
-              bottom: false,
-              child: Column(children: <Widget>[
-                Expanded(
-                  child: ScrollConfiguration(
-                    behavior: ScrollBehavior(),
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20,),
-                      child: Column(
-                        children: <Widget>[
-                          FadeSlideTransition(
-                            controller: _fadeSlideAnimationController,
-                            slideAnimationTween: Tween<Offset>(
-                              begin: Offset(0.0, 0.5),
-                              end: Offset(0.0, 0.0),
-                            ),
-                            begin: 0.0,
-                            end: _listAnimationIntervalStart,
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  "Compiti",
-                                  style:
-                                      Theme.of(context).textTheme.title.copyWith(
-                                            fontSize: 32.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          FadeSlideTransition(
-                              controller: _fadeSlideAnimationController,
-                              slideAnimationTween: Tween<Offset>(
-                                begin: Offset(0.0, 0.05),
-                                end: Offset(0.0, 0.0),
-                              ),
-                              begin: _listAnimationIntervalStart - 0.15,
-                              child: Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 15),
-                                        child: CupertinoSlidingSegmentedControl(
-                                          thumbColor: Colors.white,
-                                          children: _children,
-                                          onValueChanged: (val){
-                                            setState((){
-                                              selezioneCompiti = val;
-                                            });
-                                          },
-                                          groupValue: selezioneCompiti,
-                                        ),
-                                      ),
-                                      (selezioneCompiti == 0 ? widget.settimana.length : widget.compiti.length) > 0 ? ListView.builder(
-                                        primary: false,
-                                        shrinkWrap: true,
-                                        itemCount: selezioneCompiti == 0 ? widget.settimana.length : widget.compiti.length,
-                                        itemBuilder: (context2, index2) {
-                                          List<CompitoStructure> current = selezioneCompiti == 0 ? widget.settimana : widget.compiti;
-                                          int i = selezioneCompiti == 0 ? index2 : current.length - index2 - 1;
-                                          return Padding(
-                                            padding: const EdgeInsets.only(bottom: 15),
-                                            child: Container(
-                                                decoration: new BoxDecoration(
-                                                    color: Color(0xFF43e97b),
-                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: Colors.black12.withAlpha(30),
-                                                          blurRadius: 10,
-                                                          spreadRadius: 10
-                                                      )
-                                                    ]
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(15.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.stretch,
-                                                    children: <Widget>[
-                                                      Text(current[i].materia,
-                                                          style: TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                              color: Colors.black)),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(bottom: 7.0),
-                                                        child: Text("Data: " + current[i].data.split(" ")[0],
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors.black)),
-                                                      ),
-                                                      Text(current[i].compito,
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              color: Colors.black)),
-
-                                                    ],
-                                                  ),
-                                                )),
-                                          );
-                                        },
-                                      ) :
-                                      Column(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.asset("assets/images/empty_state.png", width: 300,),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 15.0),
-                                            child: Text("Nessun compito da visualizzare per il periodo selezionato", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  )))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ]),
+          PageTransitionSwitcher2(
+            reverse: selezioneCompiti == 0,
+            layoutBuilder: (_entries) => Stack(
+              children: _entries
+                  .map<Widget>((entry) => entry.transition)
+                  .toList(),
+              alignment: Alignment.topLeft,
             ),
-          ],
-        ),
+            duration: Duration(milliseconds: UIHelper.pageAnimDuration),
+            transitionBuilder: (c, p, s) => SharedAxisTransition(
+              fillColor: Colors.transparent,
+              animation: p,
+              secondaryAnimation: s,
+              transitionType: SharedAxisTransitionType.horizontal,
+              child: c,
+            ),
+            child: Container(
+              key: ValueKey<int>(selezioneCompiti),
+              child: _selectedAssignments.length > 0 ? ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: _selectedAssignments.length,
+                itemBuilder: (_, i) {
+                  return SobreroFlatTile(
+                    margin: EdgeInsets.only(bottom: 15),
+                    children: [
+                      Text(_selectedAssignments[i].materia,
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight:
+                              FontWeight.bold,
+                              color: Colors.black)),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 7.0),
+                        child: Text("Data: " + _selectedAssignments[i].data.split(" ")[0],
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black)),
+                      ),
+                      Text(_selectedAssignments[i].compito,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black)),
+                    ],
+                  );
+                },
+              ) : SobreroEmptyState(
+                emptyStateKey: "noAssignments",
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

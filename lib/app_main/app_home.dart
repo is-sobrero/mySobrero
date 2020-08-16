@@ -9,8 +9,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:animations/animations.dart';
 
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/compiti.dart';
 import 'package:mySobrero/feed/feed_detail.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/expandedsection.dart';
@@ -132,6 +134,7 @@ class _HomepageState extends State<Homepage>
   @override
   Widget build(BuildContext context) => SobreroLayout.rPage(
     overridePadding: true,
+    overrideSafearea: true,
     children: [
       /// Avv. genitore, Intestazione usr, Intes. remota, Tiles
       SafeArea(
@@ -294,7 +297,22 @@ class _HomepageState extends State<Homepage>
                   ],
                 ),
                 right: SobreroRatioTile(
-                  onTap: () => widget.switchPageCallback(1),
+                  onTap: () => Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, a, b) => CompitiView(
+                        compiti: widget.unifiedLoginStructure.compiti,
+                        settimana: weekAssignments,
+                      ),
+                      transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                      transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
+                        animation: prim,
+                        secondaryAnimation: sec,
+                        transitionType: SharedAxisTransitionType.scaled,
+                        child: child,
+                      ),
+                    ),
+                  ),
                   margin: EdgeInsets.only(left: 7.5),
                   flex: 1,
                   colors : [

@@ -21,7 +21,6 @@ import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/common/ui.dart';
 
 // TODO: sincronizzare accessi con il cloud
 
@@ -253,9 +252,10 @@ class _SSOProviderState extends State<SSOProvider> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(15),
         child: Text(
           AppLocalizations.of(context).translate("ssoPointQR"),
+          textAlign: TextAlign.center,
         ),
       ),
       Container(
@@ -265,9 +265,6 @@ class _SSOProviderState extends State<SSOProvider> {
   );
 
   Widget historyView() {
-    DateTime timestamp = DateTime.now();
-    final day = DateFormat.MMMMd(Platform.localeName).format(timestamp);
-    final time = DateFormat('hh:mm').format(timestamp);
     return Column(
       key: ValueKey<int>(11),
       children: [
@@ -278,86 +275,94 @@ class _SSOProviderState extends State<SSOProvider> {
           primary: false,
           shrinkWrap: true,
           itemCount: _loggedAuths.length,
-          itemBuilder: (_, i) => SobreroFlatTile(
-            margin: EdgeInsets.only(bottom: 15),
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _loggedAuths[i].domain,
-                      overflow: TextOverflow.fade,
-                      maxLines: 1,
-                      softWrap: false,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+          itemBuilder: (_, i) {
+            DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(
+              _loggedAuths[i].timestamp * 1000,
+              isUtc: true
+            ).toLocal();
+            final day = DateFormat.MMMMd(Platform.localeName).format(timestamp);
+            final time = DateFormat('HH:mm').format(timestamp);
+            return SobreroFlatTile(
+              margin: EdgeInsets.only(bottom: 15),
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _loggedAuths[i].domain,
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  //Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: <Widget>[
-                            Text(day),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 3),
-                              child: Icon(
-                                LineIcons.calendar_o,
-                                size: 18,
-                              ),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(time),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 3),
-                              child: Icon(
-                                LineIcons.clock_o,
-                                size: 18,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                    //Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Text(day),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 3),
+                                child: Icon(
+                                  LineIcons.calendar_o,
+                                  size: 18,
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(time),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 3),
+                                child: Icon(
+                                  LineIcons.clock_o,
+                                  size: 18,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Icon(
+                        LineIcons.laptop,
+                        size: 20,
+                      ),
                     ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Icon(
-                      LineIcons.laptop,
-                      size: 20,
+                    Text(_loggedAuths[i].clientIp),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Image.asset(
+                      'icons/flags/png/${_loggedAuths[i].clientCountry.toLowerCase()}.png',
+                      package: 'country_icons',
+                      height: 20,
                     ),
-                  ),
-                  Text(_loggedAuths[i].clientIp),
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Image.asset(
-                    'icons/flags/png/${_loggedAuths[i].clientCountry.toLowerCase()}.png',
-                    package: 'country_icons',
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(_loggedAuths[i].clientCity),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(_loggedAuths[i].clientCity),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }
         ),
         Container(
           width: double.infinity,
@@ -375,8 +380,8 @@ class _SSOProviderState extends State<SSOProvider> {
           SobreroToggle(
             margin: EdgeInsets.only(top: 10, bottom: 15),
             values: [
-              AppLocalizations.of(context).translate("scan"),
               AppLocalizations.of(context).translate("loginHistory"),
+              AppLocalizations.of(context).translate("scan"),
             ],
             width: 300,
             selectedItem: _currentPage,
@@ -400,7 +405,7 @@ class _SSOProviderState extends State<SSOProvider> {
               transitionType: SharedAxisTransitionType.horizontal,
               child: c,
             ),
-            child: _currentPage == 0 ? scanView() : historyView(),
+            child: _currentPage == 1 ? scanView() : historyView(),
           )
         ],
       ),

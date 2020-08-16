@@ -42,11 +42,13 @@ class SobreroLayout {
   static _InternalRPage rPage ({
     Key key,
     @required children,
-    overridePadding = false
+    overridePadding = false,
+    overrideSafearea = false,
   }) => _InternalRPage(
     key: key,
     children: children,
     overridePadding: overridePadding,
+    overrideSafearea: overrideSafearea,
   );
 }
 
@@ -81,11 +83,13 @@ class SobreroPage extends StatelessWidget {
 class _InternalRPage extends StatelessWidget {
   List<Widget> children;
   bool overridePadding;
+  bool overrideSafearea;
 
   _InternalRPage ({
     Key key,
     @required this.children,
     this.overridePadding = false,
+    this.overrideSafearea = false,
   }) :  assert(children != null),
         super (key: key);
 
@@ -96,8 +100,8 @@ class _InternalRPage extends StatelessWidget {
       child: SafeArea(
         top: _isPad,
         bottom: false,
-        left: false,
-        right: false,
+        left: !overrideSafearea,
+        right: !overrideSafearea,
         child: Padding(
           padding: EdgeInsets.fromLTRB(
             overridePadding ? 0 : 15,

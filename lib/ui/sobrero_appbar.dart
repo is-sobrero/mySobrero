@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/impostazioni.dart';
-import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ui/helper.dart';
 

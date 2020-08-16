@@ -210,6 +210,8 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                               text: "Continua con il logout",
                               onPressed: (){
                                 Navigator.of(context).pop();
+                                _impostaBool("savedCredentials", false);
+                                _impostaBool("agreementAccepted", false);
                                 final snackBar = SnackBar(
                                   content: Text(
                                     "Verrai disconnesso da mySobrero alla chiusura completa dell'applicazione",
@@ -217,9 +219,8 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                                   ),
                                   duration: Duration(seconds: 3),
                                 );
-                                scaffoldKey.currentState.showSnackBar(snackBar);
-                                _impostaBool("savedCredentials", false);
-                                _impostaBool("agreementAccepted", false);
+                                Scaffold.of(context).showSnackBar(snackBar);
+                                //scaffoldKey.currentState.showSnackBar(snackBar);
                               },
                             ),
                           ),

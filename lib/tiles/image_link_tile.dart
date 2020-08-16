@@ -58,11 +58,11 @@ class ImageLinkTile extends StatelessWidget {
             ),
             Flexible(
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                      padding: const EdgeInsets.only(bottom: 8),
                       child: Text(
                         title,
                         style: new TextStyle(

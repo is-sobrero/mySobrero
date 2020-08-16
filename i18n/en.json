@@ -83,5 +83,6 @@
   "denyAccess": "Deny",
   "askAuthorize": "Autorizzare l'accesso?",
   "ipAddress": "\nIP Address: ",
-  "location": "\nLocation: "
+  "location": "\nLocation: ",
+  "noAssignments": "Nessun compito trovato per il periodo selezionato"
 }

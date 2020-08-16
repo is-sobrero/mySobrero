@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:animations/animations.dart';
@@ -18,15 +19,21 @@ import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/common/dialogs.dart';
 import 'package:mySobrero/app_main/app_main.dart';
+import 'package:mySobrero/intent/handler.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
+import 'package:mySobrero/intent/intent.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:mySobrero/globals.dart' as globals;
+
+import 'package:uni_links/uni_links.dart';
+import 'package:flutter/services.dart' show PlatformException;
+
 
 
 class AppLogin extends StatefulWidget {
@@ -49,14 +56,32 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
 
   String profilePicUrl, userID, userPassword, userFullName;
 
+  StreamSubscription _sub;
+  IntentHandler _handler;
+  reAPI3 apiInstance;
+
   @override
   void initState(){
     super.initState();
+    apiInstance = new reAPI3();
+    _handler = new IntentHandler (
+      context: context,
+      apiInstance: apiInstance
+    );
+
+    _sub = getLinksStream().listen(
+      _handler.handle,
+      onError: (err) => print("err uri"),
+    );
+
     initialProcedure().then((status) {
       // 0 = login in corso
       // 1 = credenziali non salvate
       // 2 = conferma password
+      // 3 = SSO in corso
       // -1 = versione non supportata
+      // -2 = errore app
+      // -3 = SSO non loggato
       switch(status){
         case 0:
           isLoginVisible = false;
@@ -85,6 +110,26 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   Future<int> initialProcedure () async {
+    String invokedURL;
+    try {
+      invokedURL = await getInitialLink();
+    } on PlatformException {
+      return 0; // return errore ?
+    }
+    if (invokedURL != null) {
+      if (UriIntent.isInvokingMethod(invokedURL)){
+        if (UriIntent.isMethodSupported(invokedURL)){
+          switch(UriIntent.getMethodName(invokedURL)){
+            case "idp":
+
+              break;
+
+          }
+        }
+        else
+          print("metodo non supportato");
+      }
+    }
     ConfigData _config = await CloudConnector.getServerConfig();
     if (!kIsWeb) {
       final PackageInfo info = await PackageInfo.fromPlatform();
@@ -152,7 +197,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   Future<void> doLogin() async {
-    reAPI3 apiInstance = new reAPI3();
     UnifiedLoginStructure loginStructure = await apiInstance.retrieveStartupData(userID, userPassword);
     if (loginStructure.statusHeader.code != 0){
       setState(() {
@@ -209,20 +253,13 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       token: apiInstance.getSession(),
     );
 
-    /*
-    setAnalyticsData(
-      userID: userID,
-      surname: loginStructure.user.cognome,
-      classe: loginStructure.user.classe,
-      sezione: loginStructure.user.sezione,
-      accountLevel: accountType,
-      corso: loginStructure.user.corso
-    );*/
-
     final feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sobrero.edu.it%2F%3Ffeed%3Drss2";
     final feedHTTP = await http.get(feedUrl);
     Map feedMap = jsonDecode(feedHTTP.body);
     var feed = SobreroFeed.fromJson(feedMap);
+
+    profilePicUrl = await CloudConnector.getProfilePicture(userID);
+    globals.profileURL = profilePicUrl;
 
     Navigator.push(
         context,

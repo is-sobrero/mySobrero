@@ -1,3 +1,7 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPL 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:mySobrero/ui/helper.dart';
 
@@ -21,19 +25,21 @@ class SobreroDrawer extends StatelessWidget {
           15,
           15,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/images/logo_sobrero_grad.png',
-                width: 40,
-                height: 40,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (UIHelper.isPad(context)) Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image.asset(
+                  'assets/images/logo_sobrero_grad.png',
+                  width: 40,
+                  height: 40,
+                ),
               ),
-            ),
-            ...children,
-          ]
+              ...children,
+            ]
+          ),
         )
       )
     ),

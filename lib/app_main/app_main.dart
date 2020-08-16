@@ -6,7 +6,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:animations/animations.dart';
 
@@ -15,7 +14,6 @@ import 'package:mySobrero/app_main/app_home.dart';
 import 'package:mySobrero/app_main/more.dart';
 import 'package:mySobrero/app_main/votes.dart';
 import 'package:mySobrero/app_main/communications.dart';
-import 'package:mySobrero/app_main/home.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/localization/localization.dart';
@@ -55,7 +53,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
 
   int _scrollThreshold = 100;
 
-  HomePage _homePageInstance;
   VotesPage _votesPageInstance;
   CommunicationsPageView _communicationsPageView;
   MorePageView _morePageInstance;
@@ -96,12 +93,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     super.initState();
     _profileUrl = widget.profileUrl;
     print(_profileUrl);
-    _homePageInstance = HomePage(
-        unifiedLoginStructure: widget.unifiedLoginStructure,
-        apiInstance: widget.apiInstance,
-        feed: widget.feed,
-        callback: (page) => switchPage(true, page),
-    );
     _votesPageInstance = VotesPage(
       unifiedLoginStructure: widget.unifiedLoginStructure,
       apiInstance: widget.apiInstance,
@@ -172,7 +163,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                 onPressed: () => switchPage(true, 0),
               ),
               SobreroDrawerButton(
-                margin: EdgeInsets.only(top: 15),
                 suffixIcon: LineIcons.bar_chart,
                 text: AppLocalizations.of(context).translate('marks'),
                 color: Theme.of(context).primaryColor,
@@ -180,7 +170,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                 onPressed: () => switchPage(true, 1),
               ),
               SobreroDrawerButton(
-                margin: EdgeInsets.only(top: 15),
                 suffixIcon: LineIcons.envelope_o,
                 text: AppLocalizations.of(context).translate('memos'),
                 color: Theme.of(context).primaryColor,
@@ -188,7 +177,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                 onPressed: () => switchPage(true, 2),
               ),
               SobreroDrawerButton(
-                margin: EdgeInsets.only(top: 15, bottom: 10),
+                margin: EdgeInsets.only(bottom: 10),
                 suffixIcon: LineIcons.ellipsis_h,
                 text: AppLocalizations.of(context).translate('more'),
                 color: Theme.of(context).primaryColor,

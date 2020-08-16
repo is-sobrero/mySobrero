@@ -2,7 +2,6 @@ matrix:
   fast_finish: true
   allow_failures:
   - env: JOB=APK
-  - env: JOB=IPA
   include:
   - env: JOB=APK
     os: linux
