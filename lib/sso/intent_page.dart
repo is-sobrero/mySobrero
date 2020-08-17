@@ -1,11 +1,27 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPL 3.0 license that can be
+// found in the LICENSE file.
+
+import 'package:animations/animations.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:line_icons/line_icons.dart';
+
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/sso/authentication_qr.dart';
+import 'package:mySobrero/ui/button.dart';
+import 'package:mySobrero/ui/helper.dart';
+
+class SSOIntentType {
+  static int backgroundStart = 0;
+  static int coldStart = 1;
+  static int qrCode = 2;
+}
 
 class SSOIntentPage extends StatefulWidget {
   AuthenticationQR request;
@@ -20,7 +36,9 @@ class SSOIntentPage extends StatefulWidget {
   _SSOIntentPageState createState() => _SSOIntentPageState();
 }
 
-class _SSOIntentPageState extends State<SSOIntentPage> {
+class _SSOIntentPageState extends State<SSOIntentPage>{
+  bool _hasBeenAuthorized = false;
+
   @override
   Widget build(BuildContext context){
     return WillPopScope(
@@ -51,151 +69,206 @@ class _SSOIntentPageState extends State<SSOIntentPage> {
                     ),
                     Icon(
                       LineIcons.unlock_alt,
-                      color: Colors.green,
+                      color: Color(0xff00CA71),
                       size: 35,
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8),
-                  child: Text(
-                    AppLocalizations.of(context).translate("askAuthorize"),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.center,
+                if(!_hasBeenAuthorized) Text(
+                  AppLocalizations.of(context).translate("askAuthorize"),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
+                  child: PageTransitionSwitcher2(
+                    reverse: false,
+                    layoutBuilder: (_entries) => Stack(
+                      children: _entries
+                          .map<Widget>((entry) => entry.transition)
+                          .toList(),
+                      alignment: Alignment.topLeft,
+                    ),
+                    duration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                    transitionBuilder: (c, p, s) => SharedAxisTransition(
+                      fillColor: Colors.transparent,
+                      animation: p,
+                      secondaryAnimation: s,
+                      transitionType: SharedAxisTransitionType.horizontal,
+                      child: c,
+                    ),
+                    child: _hasBeenAuthorized
+                        ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      key: ValueKey<int>(102),
                       children: [
-                        RichText(
-                          text: TextSpan(
-                            style: Theme.of(context).textTheme.bodyText1,
-                            children: [
-                              TextSpan(
-                                text: AppLocalizations.of(context)
-                                    .translate("ssoDialog1"),
-                              ),
-                              TextSpan(
-                                  text: widget.request.domain,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  )
-                              ),
-                              TextSpan(
-                                text: AppLocalizations.of(context)
-                                    .translate("ssoDialog2"),
-                              ),
-                            ],
+                        SizedBox(width: double.infinity),
+                        Container(
+                          width: 200,
+                          height: 200,
+                          child: FlareActor(
+                            "assets/animations/success.flr",
+                            alignment: Alignment.center,
+                            fit:BoxFit.contain,
+                            animation: "root",
                           ),
                         ),
-                        Container(
-                          height: 200,
-                          margin: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                //spreadRadius: 10
-                              )
-                            ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Applicazione autorizzata con successo",
+                            style: TextStyle(
+                              color: Color(0xff00CA71),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: FlutterMap(
-                              options: MapOptions(
-                                center: LatLng(
-                                  double.parse(widget.request.clientLat),
-                                  double.parse(widget.request.clientLog),
+                        ),
+                      ],
+                    )
+                        : SingleChildScrollView(
+                      key: ValueKey<int>(103),
+                      child: Column(
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyText1,
+                              children: [
+                                TextSpan(
+                                  text: AppLocalizations.of(context)
+                                      .translate("ssoDialog1"),
                                 ),
-                                zoom: 13.0,
-                              ),
-                              layers: [
-                                TileLayerOptions(
-                                    urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                    subdomains: ['a', 'b', 'c']
+                                TextSpan(
+                                    text: widget.request.domain,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    )
                                 ),
-                                MarkerLayerOptions(
-                                  markers: [
-                                    Marker(
-                                      width: 40.0,
-                                      height: 40.0,
-                                      point: LatLng(
-                                        double.parse(widget.request.clientLat),
-                                        double.parse(widget.request.clientLog),
-                                      ),
-                                      builder: (ctx) => Image.asset(
-                                        "assets/images/pin.png",
-                                      ),
-                                    ),
-                                  ],
+                                TextSpan(
+                                  text: AppLocalizations.of(context)
+                                      .translate("ssoDialog2"),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 5),
-                                child: Icon(LineIcons.laptop),
-                              ),
-                              Text(widget.request.clientIp),
-                              Spacer(),
-                              Text(widget.request.clientCity),
-                              Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Image.asset(
-                                  'icons/flags/png/${widget.request.clientCountry.toLowerCase()}.png',
-                                  package: 'country_icons',
-                                  height: 15,
+                          Container(
+                            height: 200,
+                            margin: EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10,
+                                  //spreadRadius: 10
+                                )
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: FlutterMap(
+                                options: MapOptions(
+                                  center: LatLng(
+                                    double.parse(widget.request.clientLat),
+                                    double.parse(widget.request.clientLog),
+                                  ),
+                                  zoom: 13.0,
                                 ),
+                                layers: [
+                                  TileLayerOptions(
+                                      urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                      subdomains: ['a', 'b', 'c']
+                                  ),
+                                  MarkerLayerOptions(
+                                    markers: [
+                                      Marker(
+                                        width: 40.0,
+                                        height: 40.0,
+                                        point: LatLng(
+                                          double.parse(widget.request.clientLat),
+                                          double.parse(widget.request.clientLog),
+                                        ),
+                                        builder: (ctx) => Image.asset(
+                                          "assets/images/pin.png",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                        Text(
-                          AppLocalizations.of(context).translate("ssoSharedData"),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 5),
+                                  child: Icon(LineIcons.laptop),
+                                ),
+                                Text(widget.request.clientIp),
+                                Spacer(),
+                                Text(widget.request.clientCity),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Image.asset(
+                                    'icons/flags/png/${widget.request.clientCountry.toLowerCase()}.png',
+                                    package: 'country_icons',
+                                    height: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(context).translate("ssoSharedData"),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
-                  child: SobreroButton(
-                    text: AppLocalizations.of(context).translate("authorize"),
-                    color: Colors.green,
-                    suffixIcon: Icon(LineIcons.unlock_alt),
-                    onPressed: () {
-                      CloudConnector.authorizeApp(
-                        guid: widget.request.session,
-                        token: widget.session,
-                      );
-                      CloudConnector.setLogHistory(
-                        token: widget.session,
-                        callback: (_) {},
-                        item: widget.request
-                      );
-                      Navigator.of(context).pop();
-                    }
-                  ),
+                if (!_hasBeenAuthorized) Column(
+                  children: [
+                    SobreroButton(
+                        margin: EdgeInsets.only(top: 15.0),
+                        text: AppLocalizations.of(context).translate("authorize"),
+                        color: Color(0xff00CA71),
+                        suffixIcon: Icon(LineIcons.unlock_alt),
+                        onPressed: () {
+                          CloudConnector.authorizeApp(
+                            guid: widget.request.session,
+                            token: widget.session,
+                          );
+                          CloudConnector.setLogHistory(
+                              token: widget.session,
+                              callback: (_) {},
+                              item: widget.request
+                          );
+                          setState(() {
+                            _hasBeenAuthorized = true;
+                          });
+                        }
+                    ),
+                    SobreroButton(
+                      margin: EdgeInsets.only(top: 5.0),
+                      text: AppLocalizations.of(context).translate("denyAccess"),
+                      color: Colors.red,
+                      suffixIcon: Icon(LineIcons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: SobreroButton(
-                    text: AppLocalizations.of(context).translate("denyAccess"),
-                    color: Colors.red,
-                    suffixIcon: Icon(LineIcons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                if (_hasBeenAuthorized) SobreroButton(
+                  margin: EdgeInsets.only(top: 5.0),
+                  text: "Ritorna alla home",
+                  color: Theme.of(context).primaryColor,
+                  suffixIcon: Icon(LineIcons.home),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),

@@ -212,6 +212,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                                 Navigator.of(context).pop();
                                 _impostaBool("savedCredentials", false);
                                 _impostaBool("agreementAccepted", false);
+                                _setString('loggedAuths', "");
                                 final snackBar = SnackBar(
                                   content: Text(
                                     "Verrai disconnesso da mySobrero alla chiusura completa dell'applicazione",
@@ -293,7 +294,6 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                   caption: "Scrivi un feedback o un suggerimento per l'app (solo con account @sobrero)",
                   icon: LineIcons.smile_o,
                 ),
-                //TODO: termini di utilizzo
                 SobreroListButton(
                   onPressed: () => Navigator.push(
                     context,
@@ -384,6 +384,11 @@ class _ImpostazioniState extends State<ImpostazioniView> {
   _impostaBool(String key, bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(key, value);
+  }
+
+  _setString(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
   }
 }
 

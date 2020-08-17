@@ -27,9 +27,8 @@ class SobreroDetailView extends StatefulWidget {
 class _SobreroDetailViewState extends State<SobreroDetailView>
     with SingleTickerProviderStateMixin {
 
-  //TextStyle _defaultTextStyle;
   final double _preferredAppBarHeight = 56.0;
-  final double _preferredAppBarElevation = 4;
+  final double _preferredAppBarElevation = 1;
   ScrollController _scrollController;
   double _appBarElevation = 0.0;
   double _appBarTitleOpacity = 0.0;
@@ -73,7 +72,7 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
     }
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         centerTitle: false,
         brightness: Theme.of(context).brightness,
         title: AnimatedOpacity(
@@ -95,6 +94,50 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
           ),
           tooltip: "Indietro",
           onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),*/
+      appBar: PreferredSize(
+        preferredSize: Size(double.infinity, 65),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(_appBarElevation * 0.1),
+                blurRadius: 10,
+                spreadRadius: 10,
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(5,3,20,3),
+              child: Row(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      LineIcons.angle_left,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
+                    tooltip: "Indietro",
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  AnimatedOpacity(
+                    opacity: _appBarTitleOpacity,
+                    duration: Duration(milliseconds: 250),
+                    child: Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
         ),
       ),
       body: Stack(

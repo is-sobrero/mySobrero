@@ -55,6 +55,7 @@ dependencies:
   uni_links: ^0.4.0
   flutter_map: ^0.10.1+1
   latlong: ^0.6.1
+  flare_flutter: ^1.8.3
 
   flutter:
     sdk: flutter
@@ -82,6 +83,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/animations/
     - assets/fonts/
     - i18n/en.json
     - i18n/it.json

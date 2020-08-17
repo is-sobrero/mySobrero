@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/custom/dropdown.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/toggle.dart';
@@ -129,7 +130,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                               setState(() {});
                             },
                             items: materie.map((String user) {
-                              return DropdownMenuItem<String>(
+                              return CustomDropdownMenuItem<String>(
                                 value: user,
                                 child: Text(
                                   user,

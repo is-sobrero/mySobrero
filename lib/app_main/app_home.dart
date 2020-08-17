@@ -21,11 +21,13 @@ import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/globals.dart' as globals;
+import 'package:mySobrero/tiles/gradient_tile.dart';
 import 'package:mySobrero/tiles/image_link_tile.dart';
 import 'package:mySobrero/tiles/news_tile.dart';
+import 'package:mySobrero/tiles/ratio_tile.dart';
+import 'package:mySobrero/tiles/wave_tile.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
-import 'package:mySobrero/ui/tiles.dart';
 import 'package:mySobrero/ui/user_header.dart';
 
 
@@ -217,6 +219,7 @@ class _HomepageState extends State<Homepage>
               ExpandedSection(
                 expand: _remoteNotice.headingNewsEnabled,
                 child: SobreroGradientTile(
+                  overridePadding: true,
                   padding: EdgeInsets.only(top: 15),
                   colors: [
                     Color(0xFFf09819),
@@ -224,41 +227,39 @@ class _HomepageState extends State<Homepage>
                   ],
                   children: [
                     Container(
-                      margin: EdgeInsets.only(bottom: 5),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.white,
-                            width: 1.0,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            LineIcons.warning,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                AppLocalizations.of(context).translate('studInfoTitle'),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                      color: Colors.white.withAlpha(90),
+                      child: Padding(
+                        padding:EdgeInsets.fromLTRB(15,8,15,7.5),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              LineIcons.warning,
+                              size: 25,
+                              color: Colors.black,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  AppLocalizations.of(context).translate('studInfoTitle'),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Text(
-                      _remoteNotice.headingNewsBody,
-                      style: TextStyle(color: Colors.white),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15,10,15,15),
+                      child: Text(
+                        _remoteNotice.headingNewsBody,
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),

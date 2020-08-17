@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/custom/dropdown.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
@@ -432,7 +433,7 @@ int customFilter = 0;
             setState(() {});
           },
           items: materie1q.map((String user) {
-            return DropdownMenuItem<String>(
+            return CustomDropdownMenuItem<String>(
               value: user,
               child: Text(
                 user,

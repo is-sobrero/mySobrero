@@ -84,5 +84,6 @@
   "askAuthorize": "Autorizzare l'accesso?",
   "ipAddress": "\nIP Address: ",
   "location": "\nLocation: ",
-  "noAssignments": "Nessun compito trovato per il periodo selezionato"
+  "noAssignments": "Nessun compito trovato per il periodo selezionato",
+  "loadingLogs": "Caricando gli accessi..."
 }

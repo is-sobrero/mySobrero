@@ -114,7 +114,7 @@ class SobreroListToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onChanged(!value),
+      onTap: () => enabled ? onChanged(!value) : null,
       child: Container(
         margin: EdgeInsets.only(bottom: showBorder ? 10 : 0),
         child: Padding(

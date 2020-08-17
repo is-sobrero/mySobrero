@@ -8,6 +8,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/agreement/license.dart';
 import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/ui/button.dart';
 
 class AgreementScreen extends StatefulWidget {
   final bool isInformative;

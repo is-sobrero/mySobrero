@@ -8,6 +8,8 @@ import 'package:mySobrero/common/tiles.dart';
 
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/listings/listings_detail.dart';
+import 'package:mySobrero/ui/button.dart';
+import 'package:mySobrero/ui/detail_view.dart';
 
 class ListingsHomePage extends StatefulWidget {
   ListingsHomePage({
@@ -21,11 +23,9 @@ class ListingsHomePage extends StatefulWidget {
 class _ListingsHomeState extends State<ListingsHomePage> {
   @override
   Widget build(BuildContext context){
-    return DetailView(
-      tag: "listings_home",
+    return SobreroDetailView(
       title: "Resell@Sobrero",
       overridePadding: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

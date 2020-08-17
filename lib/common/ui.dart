@@ -5,10 +5,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+
 import 'package:mySobrero/common/definitions.dart';
-import 'package:mySobrero/fade_slide_transition.dart';
-import 'package:mySobrero/ui/helper.dart';
+import 'package:mySobrero/custom/dropdown.dart';
 
 class AppColorScheme {
   static Color primaryColor = Color(0xFF0360e7);
@@ -48,176 +47,6 @@ class AppColorScheme {
     Color(0xff005C97),
     Color(0xff363795),
   ];
-}
-
-class DetailView extends StatefulWidget {
-  String title;
-  String tag;
-  Color backgroundColor;
-  Widget child;
-  bool animateOpening;
-  bool overridePadding;
-
-  DetailView({
-    Key key,
-    @required this.title,
-    @required this.tag,
-    @required this.child,
-    @required this.backgroundColor,
-    this.overridePadding = false,
-  }) :  assert(title != null),
-        assert(tag != null),
-        assert(child != null),
-        assert(backgroundColor != null),
-        super(key: key);
-
-  @override
-  _DetailViewState createState() => _DetailViewState();
-}
-
-class _DetailViewState extends State<DetailView>
-    with SingleTickerProviderStateMixin {
-
-  TextStyle _defaultTextStyle;
-  final double _listAnimationIntervalStart = 0.65;
-  final double _preferredAppBarHeight = 56.0;
-  final double _preferredAppBarElevation = 4;
-  AnimationController _fadeSlideAnimationController;
-  ScrollController _scrollController;
-  double _appBarElevation = 0.0;
-  double _appBarTitleOpacity = 0.0;
-
-  UIHelper _uiHelper;
-
-  @override
-  void initState(){
-    super.initState();
-
-    _fadeSlideAnimationController = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    )..forward();
-
-    _scrollController = ScrollController()..addListener(() {
-      double oldElevation = _appBarElevation;
-      double oldOpacity = _appBarTitleOpacity;
-
-      if (_scrollController.offset > _scrollController.initialScrollOffset)
-        _appBarElevation = _preferredAppBarElevation;
-      else
-        _appBarElevation = 0;
-
-      if (_scrollController.offset > _scrollController.initialScrollOffset + _preferredAppBarHeight / 2)
-        _appBarTitleOpacity = 1;
-      else
-        _appBarTitleOpacity = 0;
-
-      if (oldElevation != _appBarElevation || oldOpacity != _appBarTitleOpacity)
-        setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _fadeSlideAnimationController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _defaultTextStyle = Theme.of(context).textTheme.bodyText1.copyWith(
-      color: UIHelper.textColorByBackground(widget.backgroundColor),
-    );
-    EdgeInsets _defaultPadding = EdgeInsets.fromLTRB(20, 10, 20, 20,);
-    EdgeInsets _overridedPadding = EdgeInsets.zero;
-    if (widget.overridePadding) {
-      _defaultPadding = EdgeInsets.zero;
-      _overridedPadding = EdgeInsets.fromLTRB(20, 0, 20, 0,);
-    }
-
-    return Hero(
-      tag: widget.tag,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          brightness: Theme.of(context).brightness,
-          title: AnimatedOpacity(
-            opacity: _appBarTitleOpacity,
-            duration: Duration(milliseconds: 250),
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                color: _defaultTextStyle.color
-              ),
-            ),
-          ),
-          backgroundColor: widget.backgroundColor,
-          elevation: _appBarElevation,
-          leading: IconButton(
-            icon: Icon(
-              LineIcons.angle_left,
-              color: _defaultTextStyle.color,
-            ),
-            tooltip: "Indietro",
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        body: Stack(
-          children: [
-            Container(color: widget.backgroundColor),
-            SafeArea(
-              bottom: false,
-              // TODO: valutare il togliere la column
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      padding: _defaultPadding,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: _overridedPadding,
-                            child: FadeSlideTransition(
-                              controller: _fadeSlideAnimationController,
-                              slideAnimationTween: Tween<Offset>(
-                                begin: Offset(0.0, 0.5),
-                                end: Offset(0.0, 0.0),
-                              ),
-                              begin: 0.0,
-                              end: _listAnimationIntervalStart,
-                              child: Text(
-                                widget.title,
-                                style: _defaultTextStyle.copyWith(
-                                  fontSize: 32.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          FadeSlideTransition(
-                            controller: _fadeSlideAnimationController,
-                            slideAnimationTween: Tween<Offset>(
-                              begin: Offset(0.0, 0.05),
-                              end: Offset(0.0, 0.0),
-                            ),
-                            begin: _listAnimationIntervalStart - 0.15,
-                            child: widget.child,
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class SobreroTextField extends StatelessWidget {
@@ -269,60 +98,6 @@ class SobreroTextField extends StatelessWidget {
           hintText: hintText,
         ),
       ),
-    );
-  }
-}
-
-class SobreroButton extends StatelessWidget {
-  EdgeInsets margin;
-  Widget suffixIcon;
-  String text;
-  Function onPressed;
-  String tooltip;
-  Color color, _textColor;
-
-  SobreroButton({
-    Key key,
-    this.margin = EdgeInsets.zero,
-    this.suffixIcon,
-    this.onPressed,
-    @required this.color,
-    this.tooltip,
-    @required this.text,
-  }) :  assert(margin != null),
-        assert(color != null),
-        assert(text != null),
-        super(key: key);
-
-  @override
-  Widget build (BuildContext context){
-    _textColor = UIHelper.textColorByBackground(color);
-    return Container(
-      alignment: Alignment.centerLeft,
-      margin: margin,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: color.withAlpha(20),
-            blurRadius: 10,
-            spreadRadius: 10,
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: FlatButton.icon(
-          padding: EdgeInsets.zero,
-          icon: suffixIcon,
-          //padding: EdgeInsets.zero,
-          textColor: _textColor,
-          label: Text(text),
-          onPressed: onPressed,
-        ),
-      )
     );
   }
 }
@@ -422,11 +197,12 @@ class SobreroDropdown extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: DropdownButtonHideUnderline(
+          child: CustomDropdownButtonHideUnderline(
             child: Container(
               child: ButtonTheme(
                 alignedDropdown: true,
-                child: DropdownButton<String>(
+                child: CustomDropdownButton<String>(
+                  radius: 15,
                   icon: Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: Icon(
