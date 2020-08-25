@@ -212,7 +212,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                                 Navigator.of(context).pop();
                                 _impostaBool("savedCredentials", false);
                                 _impostaBool("agreementAccepted", false);
-                                _setString('loggedAuths', "");
+                                _setString('loggedAuths', null);
                                 final snackBar = SnackBar(
                                   content: Text(
                                     "Verrai disconnesso da mySobrero alla chiusura completa dell'applicazione",

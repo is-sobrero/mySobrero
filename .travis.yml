@@ -2,6 +2,7 @@ matrix:
   fast_finish: true
   allow_failures:
   - env: JOB=APK
+  - env: JOB=MAC
   include:
   - env: JOB=APK
     os: linux
@@ -82,6 +83,39 @@ matrix:
       api_key:
         secure: cY1PQI7nRhMzesTduvLavTAzlEz4NAP5VcGN0WrmJg1RP2pOMm+a7P5fx6GNzAuNpSiyUpQBVAt4JKCo74C5IeNgPCRzeo4I6GgNvpUfjV8meNf4MIXOpJSSlv5HkPLAyyFwCYbBG2/ma63PVXO15O/3prShGgkRgSsqKyxORtddeFhVdq++h2wbOtCGhybk29JtnrWe+QN7bi7LwHWC6LSinAXF6QjUv8WlcQBNeh8BmRQSa+8zFXgmEFTJD2A1qxkkos9wpH9ABWd464AlfIytedYfk1wGkXhgDVYN2PARxjbmyqlDVmdWho1ZbFZxpnSaUGcJv1VoWiIdzFPziB1Q2y8QFVmOz9CfVbpDx8D2R6Xmre+zaR/1LVMgrSSSZ0QyFG+x/CnO2j8FvM2BO4VjL0vdeUwgDshHZnt9YFKAY3zBRvpbEISiNpibHgsVSuxofyxEXeOybwAW9hZ91eV8DlT4z2J9WVRi4wckV09MjCsaGneSUOE4Hxy6u5IP86gK9PmczkJw/fIS94t/6XsdJpd5w/QikU9wOyCnYHZ/dC5yjbj6C4+oihYXW/uCAJI3Ihaw86cIml67Wv/5QacJsyzz0W05nQVWJDFoJdLHVDKWYPDb4G4GDfARDaliUOuE9DdFZMYqN6W1BibXfm7eH6i3yPyRx+PH0+y86SY=
       file: build/ios/iphoneos/app.ipa
+      skip_cleanup: true
+      on:
+        tags: true
+        repo: is-sobrero/mySobrero
+  - env: JOB=MAC
+    os: osx
+    osx_image: xcode11.3
+    language: generic
+    before_script:
+      - brew update
+      - brew install --HEAD usbmuxd
+      - brew unlink usbmuxd
+      - brew link usbmuxd
+      - brew install automake autoconf libtool wget libimobiledevice
+      - brew install ideviceinstaller
+      - brew install ios-deploy
+      - git clone https://github.com/flutter/flutter.git -b dev --depth 1
+      - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv -in lib/reapi3.dart.enc -out lib/reapi3.dart -d
+      - "./flutter/bin/flutter config --enable-macos-desktop"
+    script:
+      - "./flutter/bin/flutter -v build mac --release"
+    cache:
+      directories:
+        - "$HOME/.pub-cache"
+    before_deploy:
+      - pushd build/macos/Build/Products/Release
+      - zip -r app-macos.zip mySobrero.app/
+      - popd
+    deploy:
+      provider: releases
+      api_key:
+        secure: cY1PQI7nRhMzesTduvLavTAzlEz4NAP5VcGN0WrmJg1RP2pOMm+a7P5fx6GNzAuNpSiyUpQBVAt4JKCo74C5IeNgPCRzeo4I6GgNvpUfjV8meNf4MIXOpJSSlv5HkPLAyyFwCYbBG2/ma63PVXO15O/3prShGgkRgSsqKyxORtddeFhVdq++h2wbOtCGhybk29JtnrWe+QN7bi7LwHWC6LSinAXF6QjUv8WlcQBNeh8BmRQSa+8zFXgmEFTJD2A1qxkkos9wpH9ABWd464AlfIytedYfk1wGkXhgDVYN2PARxjbmyqlDVmdWho1ZbFZxpnSaUGcJv1VoWiIdzFPziB1Q2y8QFVmOz9CfVbpDx8D2R6Xmre+zaR/1LVMgrSSSZ0QyFG+x/CnO2j8FvM2BO4VjL0vdeUwgDshHZnt9YFKAY3zBRvpbEISiNpibHgsVSuxofyxEXeOybwAW9hZ91eV8DlT4z2J9WVRi4wckV09MjCsaGneSUOE4Hxy6u5IP86gK9PmczkJw/fIS94t/6XsdJpd5w/QikU9wOyCnYHZ/dC5yjbj6C4+oihYXW/uCAJI3Ihaw86cIml67Wv/5QacJsyzz0W05nQVWJDFoJdLHVDKWYPDb4G4GDfARDaliUOuE9DdFZMYqN6W1BibXfm7eH6i3yPyRx+PH0+y86SY=
+      file: build/macos/Build/Products/Release/app-macos.zip
       skip_cleanup: true
       on:
         tags: true

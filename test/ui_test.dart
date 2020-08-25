@@ -25,7 +25,7 @@ void main(){
     ),
   );
 
-  MaterialApp app2 = MaterialApp(
+ /* MaterialApp app2 = MaterialApp(
     home: Scaffold(
       body: Flex(
         direction: Axis.horizontal,
@@ -44,7 +44,7 @@ void main(){
         ],
       ),
     ),
-  );
+  );*/
 
 
   testWidgets("MainViewSimpleContainer test", (tester) async {
@@ -57,7 +57,7 @@ void main(){
     expect (find.byType(SafeArea), findsOneWidget);
   });
 
-  testWidgets("Homescreen CounterTile test", (tester) async {
+ /* testWidgets("Homescreen CounterTile test", (tester) async {
     await tester.pumpWidget(app2);
 
     final primaryFinder = find.text('777');
@@ -65,9 +65,9 @@ void main(){
 
     expect (primaryFinder, findsOneWidget);
     expect (secondaryFinder, findsOneWidget);
-    expect (find.byType(CounterTile), findsOneWidget);
+    //expect (find.byType(CounterTile), findsOneWidget);
     expect (find.byType(AutoSizeText), findsOneWidget);
     expect (find.byType(GestureDetector), findsOneWidget);
     expect (find.byType(AspectRatio), findsOneWidget);
-  });
+  });*/
 }

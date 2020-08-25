@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -35,8 +36,6 @@ import 'package:mySobrero/globals.dart' as globals;
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
-
-
 class AppLogin extends StatefulWidget {
   AppLogin({Key key}) : super(key: key);
 
@@ -70,10 +69,14 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       apiInstance: apiInstance
     );
 
-    _sub = getLinksStream().listen(
-      _handler.handle,
-      onError: (err) => print("err uri"),
-    );
+    if (!Platform.isMacOS) {
+      _sub = getLinksStream().listen(
+        _handler.handle,
+        onError: (err) => print("err uri"),
+      );
+    }
+
+
 
     initialProcedure().then((status) {
       // 0 = login in corso
@@ -111,24 +114,25 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   Future<int> initialProcedure () async {
-    String invokedURL;
-    try {
-      invokedURL = await getInitialLink();
-    } on PlatformException {
-      return 0; // return errore ?
-    }
-    if (invokedURL != null) {
-      if (UriIntent.isInvokingMethod(invokedURL)){
-        if (UriIntent.isMethodSupported(invokedURL)){
-          switch(UriIntent.getMethodName(invokedURL)){
-            case "idp":
-
-              break;
-
+    if (!kIsWeb && !Platform.isMacOS) {
+      String invokedURL;
+      try {
+        invokedURL = await getInitialLink();
+      } on PlatformException {
+        return 0; // return errore ?
+      }
+      print("1");
+      if (invokedURL != null) {
+        if (UriIntent.isInvokingMethod(invokedURL)) {
+          if (UriIntent.isMethodSupported(invokedURL)) {
+            switch (UriIntent.getMethodName(invokedURL)) {
+              case "idp":
+                break;
+            }
           }
+          else
+            print("metodo non supportato");
         }
-        else
-          print("metodo non supportato");
       }
     }
     ConfigData _config = await CloudConnector.getServerConfig();
@@ -162,7 +166,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     userID = prefs.getString('username') ?? "";
     userPassword = prefs.getString('password') ?? "";
     if (!areCredentialsSaved) return 1; // Le credenziali non sono salvate
-    if (kIsWeb) return 0; // Se su web accedi con le cred salvate
+    if (kIsWeb || Platform.isMacOS) return 0; // Se su web accedi con le cred salvate
     else {
       profilePicUrl = await CloudConnector.getProfilePicture(userID);
       globals.profileURL = profilePicUrl;

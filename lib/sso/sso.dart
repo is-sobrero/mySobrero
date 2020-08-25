@@ -299,8 +299,8 @@ class _SSOProviderState extends State<SSOProvider> {
           SobreroToggle(
             margin: EdgeInsets.only(top: 10, bottom: 15),
             values: [
-              AppLocalizations.of(context).translate("loginHistory"),
               AppLocalizations.of(context).translate("scan"),
+              AppLocalizations.of(context).translate("loginHistory"),
             ],
             width: 300,
             selectedItem: _currentPage,
@@ -323,7 +323,7 @@ class _SSOProviderState extends State<SSOProvider> {
               transitionType: SharedAxisTransitionType.horizontal,
               child: c,
             ),
-            child: _currentPage == 1 ? scanView() : historyView(),
+            child: _currentPage == 0 ? scanView() : historyView(),
           )
         ],
       ),
