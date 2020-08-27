@@ -7,12 +7,12 @@ import 'package:flutter/rendering.dart';
 import 'package:mySobrero/ui/helper.dart';
 
 class SobreroButton extends StatelessWidget {
-  EdgeInsets margin;
-  Widget suffixIcon;
-  String text;
-  Function onPressed;
-  String tooltip;
-  Color color, _textColor;
+  final EdgeInsets margin;
+  final Widget suffixIcon;
+  final String text;
+  final Function onPressed;
+  final String tooltip;
+  final Color color, _textColor;
 
   SobreroButton({
     Key key,
@@ -24,12 +24,12 @@ class SobreroButton extends StatelessWidget {
     @required this.text,
   }) :  assert(margin != null),
         assert(color != null),
+        _textColor = UIHelper.textColorByBackground(color),
         assert(text != null),
         super(key: key);
 
   @override
   Widget build (BuildContext context){
-    _textColor = UIHelper.textColorByBackground(color);
     return Container(
         alignment: Alignment.centerLeft,
         margin: margin,
@@ -104,25 +104,29 @@ class SobreroDrawerButton extends StatelessWidget {
   @override
   Widget build (BuildContext context){
     _textColor = UIHelper.textColorByBackground(color);
-    return AnimatedContainer(
-      alignment: Alignment.centerLeft,
-      duration: Duration(milliseconds: 200),
-      margin: margin,
-      decoration: BoxDecoration(
-        color: isSelected ? color : Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          if (isSelected) BoxShadow(
-            color: color.withAlpha(20),
-            blurRadius: 10,
-            spreadRadius: 10,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: (){
+          if (!UIHelper.isPad(context))
+            Navigator.of(context).pop();
+          onPressed();
+        },
+        child: AnimatedContainer(
+          alignment: Alignment.centerLeft,
+          duration: Duration(milliseconds: 200),
+          margin: margin,
+          decoration: BoxDecoration(
+            color: isSelected ? color : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              if (isSelected) BoxShadow(
+                color: color.withAlpha(20),
+                blurRadius: 10,
+                spreadRadius: 10,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: onPressed,
           child: SizedBox(
             width: double.infinity,
             height: 50,

@@ -61,8 +61,8 @@ class SobreroPage extends StatelessWidget {
         assert(padding != null),
         super(key: key);
 
-  EdgeInsets padding;
-  List<Widget> children;
+  final EdgeInsets padding;
+  final List<Widget> children;
   @override
   Widget build(BuildContext context){
     return SingleChildScrollView(
@@ -81,9 +81,9 @@ class SobreroPage extends StatelessWidget {
 }
 
 class _InternalRPage extends StatelessWidget {
-  List<Widget> children;
-  bool overridePadding;
-  bool overrideSafearea;
+  final List<Widget> children;
+  final bool overridePadding;
+  final bool overrideSafearea;
 
   _InternalRPage ({
     Key key,
@@ -120,10 +120,10 @@ class _InternalRPage extends StatelessWidget {
 }
 
 class _InternalrDrawer extends StatelessWidget {
-  bool isWide;
-  PreferredSizeWidget appBar;
-  Widget drawer;
-  Widget body;
+  final bool isWide;
+  final PreferredSizeWidget appBar;
+  final Widget drawer;
+  final Widget body;
 
   _InternalrDrawer({
     @required this.isWide,
@@ -152,9 +152,9 @@ class _InternalrDrawer extends StatelessWidget {
 }
 
 class _Internalr2x1w extends StatelessWidget {
-  bool isWide;
-  Widget left, right, bottom;
-  EdgeInsets margin;
+  final bool isWide;
+  final Widget left, right, bottom;
+  final EdgeInsets margin;
 
   _Internalr2x1w ({
     Key key,

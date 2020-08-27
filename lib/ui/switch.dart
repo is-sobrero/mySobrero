@@ -15,8 +15,8 @@ class SobreroSwitch extends StatelessWidget {
   final Function(bool) onChanged;
   final bool enabled;
 
-  Color _onColor = Color(0xff46E387);
-  Color _offColor = Colors.red;
+  final Color _onColor = Color(0xff46E387);
+  final Color _offColor = Colors.red;
 
   final Duration _animDuration = Duration(milliseconds: 250);
   final Curve _animCurve = Curves.easeInOut;

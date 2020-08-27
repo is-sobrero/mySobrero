@@ -54,7 +54,6 @@
   "openSettings": "Open app settings",
   "loadingAbsences": "Loading attendance data...",
   "notJustified": "Truancy",
-  "noAbsencesWOJustification":  "No truancy found, good job!",
   "absencesWithJustification": "Justified absences",
   "yes": "Yes",
   "no": "No",
@@ -75,7 +74,7 @@
   "ssoDialog2" : " with your mySobrero account, make sure the application is trusted before granting any access.\n",
   "ssoSuccess": "You have successfully logged in, You'll be redirected to the application in a few seconds.",
   "ssoPointQR": "Point your device at the QR code to authorize the application.",
-  "ssoNoHistory": "Nessun accesso effettuato",
+  "ssoNoHistory": "Nessun accesso eìffettuato",
   "authorizeApp": "Authorize app",
   "scan": "Scan",
   "loginHistory": "Login History",
@@ -85,5 +84,7 @@
   "ipAddress": "\nIP Address: ",
   "location": "\nLocation: ",
   "noAssignments": "Nessun compito trovato per il periodo selezionato",
-  "loadingLogs": "Caricando gli accessi..."
+  "loadingLogs": "Caricando gli accessi...",
+  "noMarks": "Nessun voto trovato per il periodo selezionato",
+  "noAbsences": "No absence found, good job!"
 }

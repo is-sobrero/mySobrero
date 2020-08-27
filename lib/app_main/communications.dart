@@ -81,7 +81,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
   Widget _displayCommunication(ComunicazioneStructure element){
     String realSender = "Dirigente";
     if (element.mittente.toUpperCase() != "DIRIGENTE")
-      realSender = "Gianni Rossi";
+      realSender = "Segreteria Amm.va";
     return SobreroFlatTile(
       children: [
         Padding(
@@ -107,7 +107,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
                     radius: 15,
                   ) :
                   CircleAvatar(
-                    child: Text("GR", style: TextStyle(color: Colors.white)),
+                    child: Text("S", style: TextStyle(color: Colors.white)),
                     backgroundColor: Theme.of(context).primaryColor,
                     radius: 15,
                   ),

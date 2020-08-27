@@ -4,8 +4,8 @@ import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/localization/localization.dart';
 
 class SobreroUserHeader extends StatelessWidget {
-  String name, year, section, course;
-  String profileURL;
+  final String name, year, section, course;
+  final String profileURL;
   SobreroUserHeader({
     Key key,
     @required this.name,

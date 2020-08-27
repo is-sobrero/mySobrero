@@ -16,10 +16,10 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final double elevation;
   final double topCorrection;
-  String profilePicUrl;
-  UnifiedLoginStructure loginStructure;
-  String session;
-  Function(String url) setProfileCallback;
+  final String profilePicUrl;
+  final UnifiedLoginStructure loginStructure;
+  final String session;
+  final Function(String url) setProfileCallback;
 
   SobreroAppBar({
     Key key,
@@ -65,7 +65,7 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: SizedBox(
                 width: 30,
                 height: 30,
-                child: Image.asset('assets/images/logo_sobrero_grad.png'),
+                child: Image.asset('assets/images/logo_sobrero_grad1.png'),
               ),
             ),
             Spacer(),

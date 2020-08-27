@@ -317,7 +317,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                 child: Container(
                   width: retypePassword ? 37 : 65,
                   height: retypePassword ? 37 : 65,
-                  child: Image.asset('assets/images/logo_sobrero_grad.png'),
+                  child: Image.asset('assets/images/logo_sobrero_grad1.png'),
                 ),
               ),
               // Retype Password Screen

@@ -56,7 +56,7 @@ class _SSOIntentPageState extends State<SSOIntentPage>{
                     Hero(
                       tag: "main_logosobre",
                       child: Image.asset(
-                        "assets/images/logo_sobrero_grad.png",
+                        "assets/images/logo_sobrero_grad1.png",
                         width: 35,
                         height: 35,
                       ),

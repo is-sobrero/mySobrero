@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 class SobreroToggle extends StatefulWidget {
   final List<String> values;
   final ValueChanged onToggleCallback;
-  int selectedItem;
-  EdgeInsets margin;
-  double width;
+  final int selectedItem;
+  final EdgeInsets margin;
+  final double width;
   SobreroToggle(
       {Key key,
         @required this.values,

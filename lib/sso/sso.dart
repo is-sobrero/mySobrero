@@ -155,7 +155,7 @@ class _SSOProviderState extends State<SSOProvider> {
           ),
           Container(
             width: double.infinity,
-          )
+          ),
         ],
       );
 
@@ -213,14 +213,13 @@ class _SSOProviderState extends State<SSOProvider> {
                                     ),
                                   ),
                                 ),
-                                //Spacer(),
                                 Padding(
                                   padding: EdgeInsets.only(left: 8.0),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Row(
-                                        children: <Widget>[
+                                        children: [
                                           Text(day),
                                           Padding(
                                             padding:
@@ -233,7 +232,7 @@ class _SSOProviderState extends State<SSOProvider> {
                                         ],
                                       ),
                                       Row(
-                                        children: <Widget>[
+                                        children: [
                                           Text(time),
                                           Padding(
                                             padding:

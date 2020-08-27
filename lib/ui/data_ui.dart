@@ -1,9 +1,11 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/ui/helper.dart';
 
 class SobreroLoading extends StatelessWidget{
-  String loadingStringKey;
+  final String loadingStringKey;
   SobreroLoading({
     Key key,
     @required this.loadingStringKey,
@@ -36,7 +38,7 @@ class SobreroLoading extends StatelessWidget{
 }
 
 class SobreroError extends StatelessWidget{
-  String snapshotError;
+  final String snapshotError;
   SobreroError({
     Key key,
     @required this.snapshotError,
@@ -66,17 +68,27 @@ class SobreroEmptyState extends StatelessWidget {
   }) :  assert(emptyStateKey != null),
         super(key: key);
 
-  String emptyStateKey;
+  final String emptyStateKey;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
+    return Center(
+      child: Flex(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        direction: UIHelper.isWide(context)
+            ? Axis.horizontal : Axis.vertical,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Image.asset("assets/images/empty_state.png", width: 200,),
+          Container(
+            width: 200,
+            height: 200,
+            child: FlareActor(
+              "assets/animations/empty.flr",
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+              animation: "idle",
+            ),
           ),
           Text(
             AppLocalizations.of(context).translate(emptyStateKey),

@@ -27,7 +27,7 @@
   "showLess" : "Per saperne di meno",
   "parentNotice" : "Utilizzando le credenziali da genitore mySobrero continua a funzionare, ma alcune funzionalità potrebbero non essere disponibili, come la selezione dello studente, i sondaggi interni o l'accesso a Resell@Sobrero.\\nSe sei uno studente e stai usando le credenziali dei tuoi genitori, richiedi le credenziali a te riservate in Segreteria Amministrativa per sfruttare al massimo mySobrero.",
   "class": "Classe",
-  "studInfoTitle": "Informazione per gli studenti",
+  "studInfoTitle": "Avviso per gli studenti",
   "noMarkFound": "Nessun voto inserito",
   "markTaken" : "Voto preso di $",
   "weekAssignments" : "Compiti per la settimana",
@@ -54,7 +54,6 @@
   "openSettings": "Apri le impostazioni dell'app",
   "loadingAbsences": "Sto caricando le assenze...",
   "notJustified": "Non giustificate",
-  "noAbsencesWOJustification":  "Nessuna assenza da giustificare, ottimo!",
   "absencesWithJustification": "Giustificate",
   "yes": "Sì",
   "no": "No",
@@ -85,6 +84,7 @@
   "ipAddress": "\nIndirizzo IP: ",
   "location": "\nLocalità: ",
   "noAssignments": "Nessun compito trovato per il periodo selezionato",
-  "loadingLogs": "Caricando gli accessi..."
-
+  "loadingLogs": "Caricando gli accessi...",
+  "noMarks": "Nessun voto trovato per il periodo selezionato",
+  "noAbsences": "Nessuna assenza trovata, ottimo!"
 }

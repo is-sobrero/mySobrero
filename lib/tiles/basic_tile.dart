@@ -14,17 +14,14 @@ class BasicTile extends StatelessWidget {
     this.height,
     this.width,
     this.overridePadding = false,
-    this.crossAxisAlignment = CrossAxisAlignment.stretch
-  }) :  assert(crossAxisAlignment != null),
-        assert(child != null),
+  }) :  assert(child != null),
         super(key: key);
 
-  CrossAxisAlignment crossAxisAlignment;
-  Widget child;
-  EdgeInsets margin;
-  Color color;
-  bool showShadow, overridePadding;
-  double width, height;
+  final Widget child;
+  final EdgeInsets margin;
+  final Color color;
+  final bool showShadow, overridePadding;
+  final double width, height;
 
   @override
   Widget build(BuildContext context) {

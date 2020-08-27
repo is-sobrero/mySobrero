@@ -103,7 +103,7 @@ matrix:
       - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv -in lib/reapi3.dart.enc -out lib/reapi3.dart -d
       - "./flutter/bin/flutter config --enable-macos-desktop"
     script:
-      - "./flutter/bin/flutter -v build mac --release"
+      - "./flutter/bin/flutter -v build macos --release"
     cache:
       directories:
         - "$HOME/.pub-cache"

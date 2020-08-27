@@ -1,9 +1,15 @@
+// Copyright 2020 I.S. "A. Sobrero". All rights reserved.
+// Use of this source code is governed by the GPL 3.0 license that can be
+// found in the LICENSE file.
+
 import 'package:animations/animations.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:mySobrero/common/pageswitcher.dart';
-import 'package:mySobrero/common/tiles.dart';
+//import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/tiles/basic_tile.dart';
+import 'package:mySobrero/tiles/date_time_tile.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/helper.dart';
@@ -13,38 +19,38 @@ class CompitiView extends StatefulWidget {
   List<CompitoStructure> compiti;
   List<CompitoStructure> settimana;
 
-  CompitiView({Key key, @required this.compiti, @required this.settimana}) {}
+  CompitiView({
+    Key key,
+    @required this.compiti,
+    @required this.settimana,
+  }) :  assert(compiti != null),
+        assert(settimana != null),
+        super(key: key);
 
   @override
   _CompitiState createState() => _CompitiState();
 }
 
 class _CompitiState extends State<CompitiView> {
-  Map<int, Widget> _children = const <int, Widget> {
-    0: Text('Settimana', style: TextStyle(color: Colors.black)),
-    1: Text('Tutti i compiti', style: TextStyle(color: Colors.black)),
-  };
-
-  int selezioneCompiti = 0;
-
-
+  int _periodSelector = 0;
 
   @override
   Widget build(BuildContext context) {
-    List<CompitoStructure> _selectedAssignments = selezioneCompiti == 0 ? widget.settimana : widget.compiti;
+    List<CompitoStructure> _selectedAssignments = _periodSelector == 0
+        ? widget.settimana : widget.compiti;
     return SobreroDetailView(
       title: "Compiti",
       child: Column(
         children: [
           SobreroToggle(
             values: ["Settimana", "Tutti"],
-            onToggleCallback: (val) => setState(() => selezioneCompiti = val),
-            selectedItem: selezioneCompiti,
+            onToggleCallback: (val) => setState(() => _periodSelector = val),
+            selectedItem: _periodSelector,
             width: 200,
             margin: EdgeInsets.only(bottom: 20, top: 10),
           ),
           PageTransitionSwitcher2(
-            reverse: selezioneCompiti == 0,
+            reverse: _periodSelector == 0,
             layoutBuilder: (_entries) => Stack(
               children: _entries
                   .map<Widget>((entry) => entry.transition)
@@ -60,35 +66,21 @@ class _CompitiState extends State<CompitiView> {
               child: c,
             ),
             child: Container(
-              key: ValueKey<int>(selezioneCompiti),
+              key: ValueKey<int>(_periodSelector),
               child: _selectedAssignments.length > 0 ? ListView.builder(
                 primary: false,
                 shrinkWrap: true,
                 itemCount: _selectedAssignments.length,
-                itemBuilder: (_, i) {
-                  return SobreroFlatTile(
-                    margin: EdgeInsets.only(bottom: 15),
-                    children: [
-                      Text(_selectedAssignments[i].materia,
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight:
-                              FontWeight.bold,
-                              color: Colors.black)),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 7.0),
-                        child: Text("Data: " + _selectedAssignments[i].data.split(" ")[0],
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black)),
-                      ),
-                      Text(_selectedAssignments[i].compito,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black)),
-                    ],
-                  );
-                },
+                itemBuilder: (_, i) => DateTimeTile(
+                  title: _selectedAssignments.reversed.toList()[i].materia,
+                  date: _selectedAssignments.reversed.toList()[i].data,
+                  children: [
+                    Text(
+                      _selectedAssignments.reversed.toList()[i].compito.trim(),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                )
               ) : SobreroEmptyState(
                 emptyStateKey: "noAssignments",
               ),

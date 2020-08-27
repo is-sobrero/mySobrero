@@ -11,6 +11,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/custom/dropdown.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
 import 'package:mySobrero/ui/toggle.dart';
@@ -34,8 +35,8 @@ class VotesPage extends StatefulWidget {
     @required this.apiInstance,
   }) :  assert(unifiedLoginStructure != null),
         assert(apiInstance != null),
-        voti1q = unifiedLoginStructure.voti1Q,
-        voti2q = unifiedLoginStructure.voti2Q,
+        voti1q = List<VotoStructure>(),//unifiedLoginStructure.voti1Q,
+        voti2q = List<VotoStructure>(), //unifiedLoginStructure.voti2Q,
         super(key: key);
 
   @override
@@ -229,7 +230,10 @@ class _VotesPageState extends State<VotesPage>
 
   Widget _generatePeriodView(List<VotoStructure> marks, int columns, int key){
     if (marks.isEmpty)
-      return Text("No voti");
+      return SobreroEmptyState(
+        emptyStateKey: "noMarks",
+      );
+      //return Text("No voti");
     // TODO: empty state decente per il no voti
 
     List<FlSpot> _marksSpots = new List();
@@ -334,7 +338,8 @@ int customFilter = 0;
                   ),
                 ),
                 Spacer(),
-                FutureBuilder<Map<String, int>>(
+                //TODO: se non c'è voti, nascondere il pulsante
+                if (true) FutureBuilder<Map<String, int>>(
                     future: _goals,
                     builder: (context, snapshot){
                       if (snapshot.hasData){
