@@ -35,8 +35,8 @@ class VotesPage extends StatefulWidget {
     @required this.apiInstance,
   }) :  assert(unifiedLoginStructure != null),
         assert(apiInstance != null),
-        voti1q = List<VotoStructure>(),//unifiedLoginStructure.voti1Q,
-        voti2q = List<VotoStructure>(), //unifiedLoginStructure.voti2Q,
+        voti1q = unifiedLoginStructure.voti1Q,
+        voti2q = unifiedLoginStructure.voti2Q,
         super(key: key);
 
   @override
@@ -233,8 +233,6 @@ class _VotesPageState extends State<VotesPage>
       return SobreroEmptyState(
         emptyStateKey: "noMarks",
       );
-      //return Text("No voti");
-    // TODO: empty state decente per il no voti
 
     List<FlSpot> _marksSpots = new List();
     int _x = 0;
@@ -319,11 +317,14 @@ class _VotesPageState extends State<VotesPage>
   }
 
   // TODO: pulizia codice voti
-int customFilter = 0;
+  int customFilter = 0;
 
   @override
   Widget build(BuildContext context) {
     List<String> currentSubjects = periodFilter == 0 ? materie1q : materie2q;
+    List<VotoStructure> _currentMarks = periodFilter == 0
+        ? widget.voti1q
+        : widget.voti2q;
     return SobreroLayout.rPage(
       children: [
         Stack(
@@ -338,8 +339,7 @@ int customFilter = 0;
                   ),
                 ),
                 Spacer(),
-                //TODO: se non c'è voti, nascondere il pulsante
-                if (true) FutureBuilder<Map<String, int>>(
+                if (!_currentMarks.isEmpty) FutureBuilder<Map<String, int>>(
                     future: _goals,
                     builder: (context, snapshot){
                       if (snapshot.hasData){
@@ -464,7 +464,7 @@ int customFilter = 0;
             child: c,
           ),
           child: _generatePeriodView(
-            periodFilter == 0 ? widget.voti1q : widget.voti2q,
+            _currentMarks,
             UIHelper.columnCount(context),
             periodFilter,
           ),

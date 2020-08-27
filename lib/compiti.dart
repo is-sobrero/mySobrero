@@ -6,9 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mySobrero/common/pageswitcher.dart';
-//import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/reapi3.dart';
-import 'package:mySobrero/tiles/basic_tile.dart';
 import 'package:mySobrero/tiles/date_time_tile.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
@@ -72,7 +70,9 @@ class _CompitiState extends State<CompitiView> {
                 shrinkWrap: true,
                 itemCount: _selectedAssignments.length,
                 itemBuilder: (_, i) => DateTimeTile(
-                  title: _selectedAssignments.reversed.toList()[i].materia,
+                  title: UIHelper.upperCaseFirst(
+                    _selectedAssignments.reversed.toList()[i].materia,
+                  ),
                   date: _selectedAssignments.reversed.toList()[i].data,
                   children: [
                     Text(

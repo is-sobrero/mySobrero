@@ -128,8 +128,6 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     return true;
   }
 
-  // TODO: setState a rotazione schermo
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

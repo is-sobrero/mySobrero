@@ -45,7 +45,6 @@ class _CarrieraState extends State<CarrieraView> {
 
   Widget _generaAnno(CurriculumStructure anno){
     Color scaffoldColor;
-    int shadowDepth = 20;
 
     if (!anno.esito.contains("AMMESS")){
       if (anno.credito.length == 0) scaffoldColor = Color(0xff0652DD);

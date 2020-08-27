@@ -85,15 +85,7 @@ class MyApp extends StatelessWidget {
         toggleableActiveColor: AppColorScheme.darkToggleColor,
         fontFamily: "Manrope",
       ),
-      home: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarBrightness: Theme.of(context).brightness,
-        ),
-        child: Scaffold(
-          body: AppLogin(),
-        ),
-      ),
+      home: AppLogin(),
     );
   }
 }

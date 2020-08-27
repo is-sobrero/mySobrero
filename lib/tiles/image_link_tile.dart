@@ -37,8 +37,6 @@ class ImageLinkTile extends StatelessWidget {
   String detailsUrl;
   EdgeInsets margin;
 
-  //TODO: rifare con flex
-
   @override
   Widget build(BuildContext context) {
     return BasicTile(
@@ -64,6 +62,7 @@ class ImageLinkTile extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),

@@ -24,4 +24,13 @@ class UIHelper {
       color.computeLuminance() > 0.45 ? Colors.black : Colors.white;
 
   static int pageAnimDuration = 400;
+
+  static String upperCaseFirst(String s) {
+    String builder = "";
+    s.split(" ").toList().forEach((sez){
+      String temp = (sez??'').length<1 ? '' : sez[0].toUpperCase() + sez.substring(1).toLowerCase();
+      builder = builder + temp + " ";
+    });
+    return builder.trim();
+  }
 }

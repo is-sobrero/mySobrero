@@ -6,6 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:line_icons/line_icons.dart';
@@ -25,6 +26,9 @@ import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/intent/intent.dart';
+import 'package:mySobrero/sso/authentication_qr.dart';
+import 'package:mySobrero/sso/authorize.dart';
+import 'package:mySobrero/sso/intent_page.dart';
 import 'package:mySobrero/ui/button.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:package_info/package_info.dart';
@@ -59,6 +63,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   StreamSubscription _sub;
   IntentHandler _handler;
   reAPI3 apiInstance;
+
+  bool _askedAuth = false;
 
   @override
   void initState(){
@@ -113,6 +119,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     });
   }
 
+  AuthenticationQR _req;
+
   Future<int> initialProcedure () async {
     if (!kIsWeb && !Platform.isMacOS) {
       String invokedURL;
@@ -125,8 +133,20 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       if (invokedURL != null) {
         if (UriIntent.isInvokingMethod(invokedURL)) {
           if (UriIntent.isMethodSupported(invokedURL)) {
-            switch (UriIntent.getMethodName(invokedURL)) {
+            switch (UriIntent.getMethodName(invokedURL)){
               case "idp":
+                print("IdP Richiesto, inizio convalida");
+                var reqBytes = base64Decode(UriIntent.getArgument(
+                  invokedURL, "idp",
+                ));
+                var str = String.fromCharCodes(reqBytes);
+                print(reqBytes);
+                print(str);
+                _req = SSOAuthorize.getDetails(data: str);
+                _askedAuth = _req != null;
+                break;
+              default:
+                print("?");
                 break;
             }
           }
@@ -266,6 +286,26 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     profilePicUrl = await CloudConnector.getProfilePicture(userID);
     globals.profileURL = profilePicUrl;
 
+    if (_askedAuth)
+      await Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___)  => SSOIntentPage(
+            request: _req,
+            session: apiInstance.getSession(),
+          ),
+          transitionDuration: Duration(
+            milliseconds: UIHelper.pageAnimDuration,
+          ),
+          transitionsBuilder: (_, p, s, c) => SharedAxisTransition(
+            animation: p,
+            secondaryAnimation: s,
+            transitionType: SharedAxisTransitionType.scaled,
+            child: c,
+          ),
+        ),
+      );
+
     Navigator.push(
         context,
         PageRouteBuilder(
@@ -304,157 +344,163 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: 340,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
-                tag: "main_logosobre",
-                child: Container(
-                  width: retypePassword ? 37 : 65,
-                  height: retypePassword ? 37 : 65,
-                  child: Image.asset('assets/images/logo_sobrero_grad1.png'),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Theme.of(context).brightness,
+      ),
+      child: Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 340,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Hero(
+                  tag: "main_logosobre",
+                  child: Container(
+                    width: retypePassword ? 37 : 65,
+                    height: retypePassword ? 37 : 65,
+                    child: Image.asset('assets/images/logo_sobrero_grad1.png'),
+                  ),
                 ),
-              ),
-              // Retype Password Screen
-              ExpandedSection(
-                expand: retypePassword,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: Container(
-                        decoration: new BoxDecoration(
-                          boxShadow: [BoxShadow(
-                              color: Colors.black.withAlpha(50),
-                              offset: Offset(0, 5),
-                              blurRadius: 10
-                          )],
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipOval(
-                          child: new Container(
-                              width: 80,
-                              height: 80,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              child: profilePicUrl != null ? CachedNetworkImage(
-                                imageUrl: profilePicUrl,
-                                placeholder: (context, url) => Skeleton(),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ) : Image.asset("assets/images/profile.jpg")
+                // Retype Password Screen
+                ExpandedSection(
+                  expand: retypePassword,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: Container(
+                          decoration: new BoxDecoration(
+                            boxShadow: [BoxShadow(
+                                color: Colors.black.withAlpha(50),
+                                offset: Offset(0, 5),
+                                blurRadius: 10
+                            )],
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child: new Container(
+                                width: 80,
+                                height: 80,
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                child: profilePicUrl != null ? CachedNetworkImage(
+                                  imageUrl: profilePicUrl,
+                                  placeholder: (context, url) => Skeleton(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ) : Image.asset("assets/images/profile.jpg")
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 15.0),
-                      child: Text(
-                        Utilities.formatLocalized(
-                          AppLocalizations.of(context).translate('loginAs'),
-                          userFullName ?? "",
-                        ),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 19,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SobreroTextField(
-                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      hintText: AppLocalizations.of(context).translate('password'),
-                      controller: retypePwdController,
-                      obscureText: true,
-                    ),
-                    SobreroButton(
-                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      text: AppLocalizations.of(context).translate('loginButton'),
-                      suffixIcon: Icon(LineIcons.unlock),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () => buttonLoginOnClick(
-                        userID,
-                        retypePwdController.text,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => setState((){
-                        retypePassword = false;
-                        isLoginVisible = true;
-                      }),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 15.0),
                         child: Text(
-                          AppLocalizations.of(context).translate('loginWithAnotherAccount'),
+                          Utilities.formatLocalized(
+                            AppLocalizations.of(context).translate('loginAs'),
+                            userFullName ?? "",
+                          ),
                           style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Theme.of(context).primaryColor),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 19,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              // Login screen
-              ExpandedSection(
-                expand: isLoginVisible,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        AppLocalizations.of(context).translate('loginToMySobrero'),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: Theme.of(context).primaryColor,
+                      SobreroTextField(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        hintText: AppLocalizations.of(context).translate('password'),
+                        controller: retypePwdController,
+                        obscureText: true,
+                      ),
+                      SobreroButton(
+                        margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        text: AppLocalizations.of(context).translate('loginButton'),
+                        suffixIcon: Icon(LineIcons.unlock),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () => buttonLoginOnClick(
+                          userID,
+                          retypePwdController.text,
                         ),
                       ),
-                    ),
-                    SobreroTextField(
-                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                      hintText: AppLocalizations.of(context).translate('studentID'),
-                      controller: userController,
-                    ),
-                    SobreroTextField(
-                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      hintText: AppLocalizations.of(context).translate('password'),
-                      controller: loginPwdController,
-                      obscureText: true,
-                    ),
-                    SobreroButton(
-                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      text: AppLocalizations.of(context).translate('loginButton'),
-                      suffixIcon: Icon(LineIcons.unlock),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () => buttonLoginOnClick(
-                        userController.text,
-                        loginPwdController.text,
+                      InkWell(
+                        onTap: () => setState((){
+                          retypePassword = false;
+                          isLoginVisible = true;
+                        }),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            AppLocalizations.of(context).translate('loginWithAnotherAccount'),
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              // Loading screen
-              ExpandedSection(
-                expand: isProgressVisible,
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0, bottom: 5),
-                    child: SpinKitDualRing(
-                      color: Theme.of(context).primaryColor,
-                      size: 30,
-                      lineWidth: 5,
-                    )
+                // Login screen
+                ExpandedSection(
+                  expand: isLoginVisible,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          AppLocalizations.of(context).translate('loginToMySobrero'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      SobreroTextField(
+                        margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                        hintText: AppLocalizations.of(context).translate('studentID'),
+                        controller: userController,
+                      ),
+                      SobreroTextField(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        hintText: AppLocalizations.of(context).translate('password'),
+                        controller: loginPwdController,
+                        obscureText: true,
+                      ),
+                      SobreroButton(
+                        margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        text: AppLocalizations.of(context).translate('loginButton'),
+                        suffixIcon: Icon(LineIcons.unlock),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () => buttonLoginOnClick(
+                          userController.text,
+                          loginPwdController.text,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                // Loading screen
+                ExpandedSection(
+                  expand: isProgressVisible,
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0, bottom: 5),
+                      child: SpinKitDualRing(
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                        lineWidth: 5,
+                      )
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      )
+        )
+      ),
     );
   }
 
