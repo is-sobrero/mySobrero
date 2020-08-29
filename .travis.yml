@@ -7,10 +7,6 @@ matrix:
   - env: JOB=APK
     os: linux
     language: android
-    licenses:
-    - android-sdk-preview-license-.+
-    - android-sdk-license-.+
-    - google-gdk-license-.+
     android:
       components:
       - tools
@@ -21,6 +17,10 @@ matrix:
       - extra-android-m2repository
       - extra-google-m2repository
       - extra-google-android-support
+      licenses:
+        - android-sdk-preview-license-.+
+        - android-sdk-license-.+
+        - google-gdk-license-.+
     jdk: oraclejdk8
     sudo: false
     addons:
@@ -102,6 +102,7 @@ matrix:
       - git clone https://github.com/flutter/flutter.git -b dev --depth 1
       - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv -in lib/reapi3.dart.enc -out lib/reapi3.dart -d
       - "./flutter/bin/flutter config --enable-macos-desktop"
+      - "./flutter/bin/flutter pub get"
     script:
       - "./flutter/bin/flutter -v build macos --release"
     cache:

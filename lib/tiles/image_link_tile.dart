@@ -74,7 +74,9 @@ class ImageLinkTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(body),
+                    Expanded(
+                      child: Text(body),
+                    ),
                     FlatButton(
                       child: Row(
                         children: [

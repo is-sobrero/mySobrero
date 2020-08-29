@@ -364,7 +364,7 @@ class _VotesPageState extends State<VotesPage>
                                     setState(() {});
                                   },
                                 ),
-                                transitionDuration: Duration(milliseconds: 700),
+                                transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                   var begin = Offset(0.0, 1.0);
                                   var end = Offset.zero;
@@ -374,7 +374,7 @@ class _VotesPageState extends State<VotesPage>
                                     child: child,
                                     animation: animation,
                                     secondaryAnimation: secondaryAnimation,
-                                    transitionType: SharedAxisTransitionType.vertical,
+                                    transitionType: SharedAxisTransitionType.scaled,
                                   );
                                 },
 

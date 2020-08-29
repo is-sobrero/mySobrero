@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/common/tiles.dart';
+import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'reapi3.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -73,17 +74,11 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                         ),
                       );
                     case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                          child: Column(
-                            children: <Widget>[
-                              Icon(LineIcons.warning, size: 40),
-                              Text("${snapshot.error}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-                            ],
-                          ),
+                      if (snapshot.hasError)
+                        return SobreroError(
+                          snapshotError: snapshot.error,
                         );
-                      }
+
                       return ListView.builder(
                         primary: false,
                         shrinkWrap: true,

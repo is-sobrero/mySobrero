@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/toggle.dart';
 
@@ -81,17 +82,10 @@ class _PagelleState extends State<PagelleView> {
                         ),
                       );
                     case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                          child: Column(
-                            children: <Widget>[
-                              Icon(Icons.warning, size: 40,),
-                              Text("${snapshot.error}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-                            ],
-                          ),
+                      if (snapshot.hasError)
+                        return SobreroError(
+                          snapshotError: snapshot.error,
                         );
-                      }
                       if (selezionaPagella == snapshot.data.length) selectedPagella = null;
                       else selectedPagella = snapshot.data[selezionaPagella];
 

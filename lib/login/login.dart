@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -19,7 +19,6 @@ import 'package:mySobrero/common/skeleton.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/expandedsection.dart';
-import 'package:mySobrero/common/dialogs.dart';
 import 'package:mySobrero/app_main/app_main.dart';
 import 'package:mySobrero/intent/handler.dart';
 import 'package:mySobrero/localization/localization.dart';
@@ -30,15 +29,16 @@ import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:mySobrero/sso/authorize.dart';
 import 'package:mySobrero/sso/intent_page.dart';
 import 'package:mySobrero/ui/button.dart';
+import 'package:mySobrero/ui/dialogs.dart';
 import 'package:mySobrero/ui/helper.dart';
-import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:mySobrero/globals.dart' as globals;
 
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart' show PlatformException;
+import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 
 class AppLogin extends StatefulWidget {
   AppLogin({Key key}) : super(key: key);
@@ -54,7 +54,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
 
   bool isLoginVisible = false;
   bool retypePassword = false;
-  bool isProgressVisible = false;
+  //bool isProgressVisible = false;
 
   bool isBeta = false;
 
@@ -95,23 +95,23 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       switch(status){
         case 0:
           isLoginVisible = false;
-          isProgressVisible = true;
           retypePassword = false;
+          _logoAnimName = "start";
           doLogin();
           break;
         case 1:
           isLoginVisible = true;
-          isProgressVisible = false;
+          _logoAnimName = "idle";
           retypePassword = false;
           break;
         case 2:
           isLoginVisible = false;
-          isProgressVisible = false;
+          _logoAnimName = "end";
           retypePassword = true;
           break;
         default:
           isLoginVisible = false;
-          isProgressVisible = false;
+          _logoAnimName = "idle";
           retypePassword = false;
           break;
       }
@@ -164,21 +164,20 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         showDialog(
             context: context,
             barrierDismissible: false,
-            builder: (context) => singleButtonDialog(
-                headingImage: 'assets/images/update.png',
-                title: AppLocalizations.of(context).translate('appUpdateAvailable'),
-                content: AppLocalizations.of(context).translate('appUpdateDesc'),
-                buttonText: AppLocalizations.of(context).translate('appUpdateButton'),
-                buttonCallback: () => LaunchReview.launch(),
-                context: context
-            )
+            builder: (context) => SobreroDialogSingle(
+              headingImage: 'assets/images/update.png',
+              title: AppLocalizations.of(context).translate('appUpdateAvailable'),
+              content: Text(
+                AppLocalizations.of(context).translate('appUpdateDesc'),
+              ),
+              buttonText: AppLocalizations.of(context).translate('appUpdateButton'),
+              buttonCallback: () => LaunchReview.launch(),
+            ),
         );
         return -1;
       }
-      if (_config.data.latestVersion < currentVersion){
-        // Versione beta
+      if (_config.data.latestVersion < currentVersion)
         isBeta = true;
-      }
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool areCredentialsSaved = prefs.getBool('savedCredentials') ?? false;
@@ -225,19 +224,19 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     UnifiedLoginStructure loginStructure = await apiInstance.retrieveStartupData(userID, userPassword);
     if (loginStructure.statusHeader.code != 0){
       setState(() {
+        _logoAnimName = "end";
         isLoginVisible = true;
-        isProgressVisible = false;
+        //isProgressVisible = false;
         retypePassword = false;
       });
       showDialog(
         context: context,
-        builder: (context) => singleButtonDialog(
+        builder: (context) => SobreroDialogSingle(
           headingImage: 'assets/images/errore.png',
           title: AppLocalizations.of(context).translate('loginError'),
-          content: loginStructure.statusHeader.description,
+          content: Text(loginStructure.statusHeader.description),
           buttonText: AppLocalizations.of(context).translate('retryButton'),
           buttonCallback: () => Navigator.of(context).pop(),
-          context: context
         )
       );
       return;
@@ -336,11 +335,14 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     userPassword = password;
     setState(() {
       isLoginVisible = false;
-      isProgressVisible = true;
+      //isProgressVisible = true;
+      _logoAnimName = "start";
       retypePassword = false;
     });
     doLogin();
   }
+
+  String _logoAnimName = "idle";
 
   @override
   Widget build(BuildContext context) {
@@ -362,7 +364,22 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                   child: Container(
                     width: retypePassword ? 37 : 65,
                     height: retypePassword ? 37 : 65,
-                    child: Image.asset('assets/images/logo_sobrero_grad1.png'),
+                    child: FlareActor(
+                      "assets/animations/soloader.flr",
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
+                      animation: _logoAnimName,
+                      callback: (name) {
+                        if (name == "start")
+                          setState(() {
+                            _logoAnimName = "loading";
+                          });
+                        if (name == "end")
+                          setState(() {
+                            _logoAnimName = "idle";
+                          });
+                      },
+                    ),
                   ),
                 ),
                 // Retype Password Screen
@@ -482,18 +499,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                         ),
                       ),
                     ],
-                  ),
-                ),
-                // Loading screen
-                ExpandedSection(
-                  expand: isProgressVisible,
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 20.0, bottom: 5),
-                      child: SpinKitDualRing(
-                        color: Theme.of(context).primaryColor,
-                        size: 30,
-                        lineWidth: 5,
-                      )
                   ),
                 ),
               ],

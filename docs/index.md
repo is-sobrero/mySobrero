@@ -1,37 +1,51 @@
-## Welcome to GitHub Pages
+## Installazione di mySobrero su iPhone con AltStore
+mySobrero non è ancora disponibile nell'Apple App Store. Per provare l'app senza dover scaricare tutti i pacchetti e ricompilare, è possibile eseguire questa procedura.
 
-You can use the [editor on GitHub](https://github.com/is-sobrero/mySobrero/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+### Cos'è AltStore
+AltStore è negozio delle applicazioni per iOS che permette l’installazione di app e giochi senza avere il jailbreak.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+AltStore è diverso da tutti gli altri perché non viene mai bloccato e funziona sempre, anche se Apple blocca le firme. Infatti in pochi minuti tutto viene ripristinato, poiché la modifica è fatta direttamente sull’account master che abilitata tutti gli account Apple a diventare sviluppatori, per ripristinare il funzionamento senza blocchi.
 
-### Markdown
+Per installare app da fonti esterni all’AppStore usando un account sviluppatore, è possibile farlo senza jailbreak e senza limiti per 7 giorni ed AltStore non fa altro che rinnovare in maniera illimitata questo tempo. Così facendo funzionano sempre e senza limiti, senza essere mai bloccate.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Prima di iniziare
+#### Se stai usando Windows
+Installa una versione di iTunes e iCloud (non da Microsoft Store) prima di continuare.
+[Link Windows x64](https://www.apple.com/itunes/download/win64)
+[Link Windows x32](https://www.apple.com/itunes/download/win32)
+[iCloud](https://support.apple.com/it-it/HT204283)
+#### Se stai usando macOS Big Sur Beta
+AltServer 1.3 non funziona su Big Sur, è disponibile una beta di AltServer 1.4 compatibile, che
+però richiede la disattivazione di importanti misure di sicurezza di macOS.
+[Download versione 1.4 Big Sur](https://altstore.io/altserver/beta/)
 
-```markdown
-Syntax highlighted code block
+### Installazione AltServer
+Scarica AltServer dal [Sito ufficiale](https://altstore.io/) e installalo.
 
-# Header 1
-## Header 2
-### Header 3
+Una volta finito il setup dovresti vedere una icona a forma di rombo
+- In alto a destra su macOS
+- In basso a destra, nell'area delle notifiche, su Windows
 
-- Bulleted
-- List
+### Installazione AltStore su iPhone
+Collega iPhone al computer con un cavo originale.
 
-1. Numbered
-2. List
+Clicca sull'icona a forma di rombo, e recati sul sottomenu "Install AltStore", da qui seleziona il tuo iPhone
+![install_ip.png](img/install_ip.png)
 
-**Bold** and _Italic_ and `Code` text
+Inserisci l’email e la password del tuo ID Apple, ora dovrai attendere qualche secondo affinché AltStore venga installato sul tuo iPhone.
 
-[Link](url) and ![Image](src)
-```
+### Installazione mySobrero su iPhone
+Recarsi sull'iPhone su [https://github.com/is-sobrero/mySobrero/releases](https://github.com/is-sobrero/mySobrero/releases) con Safari e scaricare l'ultima
+release disponibile di mySobrero.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+<img src="img/gh_ios.PNG" width="200">&nbsp;
+<img src="img/dw_ios.PNG" width="200">
 
-### Jekyll Themes
+Aprire AltStore e cliccare sul pulsante "+" in alto a destra, selezionare il file "app.ipa" precedentemente scaricato, ora AltStore installerà mySobrero.
+E' possibile che venga richiesto l'ID Apple.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/is-sobrero/mySobrero/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+<img src="img/as_ios.PNG" width="200">
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Durata installazione
+L'installazione con ID Apple Sviluppatore gratuito dura 7 giorni, AltStore manderà una notifica, prima che scada il termine, per invitarvi a rinnovare
+la durata dell'installazione.

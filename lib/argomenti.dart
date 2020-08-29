@@ -12,6 +12,7 @@ import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/custom/dropdown.dart';
 import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/toggle.dart';
 
@@ -97,17 +98,10 @@ class _ArgomentiState extends State<ArgomentiView> {
                     ),
                   );
                 case ConnectionState.done:
-                  if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-                      child: Column(
-                        children: <Widget>[
-                          Icon(Icons.warning, size: 40, color: Colors.white,),
-                          Text("${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                        ],
-                      ),
+                  if (snapshot.hasError)
+                    return SobreroError(
+                      snapshotError: snapshot.error,
                     );
-                  }
                   List<ArgomentoStructure> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
                   return Column(
                     children: <Widget>[

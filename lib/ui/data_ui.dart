@@ -38,7 +38,7 @@ class SobreroLoading extends StatelessWidget{
 }
 
 class SobreroError extends StatelessWidget{
-  final String snapshotError;
+  final snapshotError;
   SobreroError({
     Key key,
     @required this.snapshotError,
@@ -46,13 +46,29 @@ class SobreroError extends StatelessWidget{
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
-    child: Column(
-      children: <Widget>[
-        Icon(Icons.warning, size: 40,),
-        Text(snapshotError,
-          style: TextStyle(fontSize: 16),
+  Widget build(BuildContext context) => Center(
+    child: Flex(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      direction: UIHelper.isWide(context)
+          ? Axis.horizontal : Axis.vertical,
+      children: [
+        Container(
+          width: 200,
+          height: 200,
+          child: FlareActor(
+            "assets/animations/error.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
+            animation: "idle",
+          ),
+        ),
+        Text(
+          snapshotError.toString(),
+          style: TextStyle(
+              fontSize: 20
+          ),
           textAlign: TextAlign.center,
         ),
       ],

@@ -32,7 +32,7 @@ class SobreroDrawer extends StatelessWidget {
               if (UIHelper.isPad(context)) Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Image.asset(
-                  'assets/images/logo_sobrero_grad.png',
+                  'assets/images/logo_sobrero_grad1.png',
                   width: 40,
                   height: 40,
                 ),

@@ -443,6 +443,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = it.edu.mysobrero;
 				PRODUCT_NAME = mySobrero;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -575,6 +576,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = it.edu.mysobrero;
 				PRODUCT_NAME = mySobrero;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -601,6 +603,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = it.edu.mysobrero;
 				PRODUCT_NAME = mySobrero;
 				PROVISIONING_PROFILE_SPECIFIER = "";
