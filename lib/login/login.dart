@@ -12,6 +12,12 @@ import 'package:launch_review/launch_review.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:flutter/services.dart' show PlatformException;
+import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:mySobrero/agreement/agreement_dialog.dart';
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
@@ -33,13 +39,6 @@ import 'package:mySobrero/ui/dialogs.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/globals.dart' as globals;
 
-import 'package:uni_links/uni_links.dart';
-import 'package:flutter/services.dart' show PlatformException;
-import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
-
 class AppLogin extends StatefulWidget {
   AppLogin({Key key}) : super(key: key);
 
@@ -54,7 +53,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
 
   bool isLoginVisible = false;
   bool retypePassword = false;
-  //bool isProgressVisible = false;
 
   bool isBeta = false;
 
@@ -88,10 +86,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       // 0 = login in corso
       // 1 = credenziali non salvate
       // 2 = conferma password
-      // 3 = SSO in corso
       // -1 = versione non supportata
       // -2 = errore app
-      // -3 = SSO non loggato
       switch(status){
         case 0:
           isLoginVisible = false;
@@ -122,6 +118,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   AuthenticationQR _req;
 
   Future<int> initialProcedure () async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool areCredentialsSaved = prefs.getBool('savedCredentials') ?? false;
     if (!kIsWeb && !Platform.isMacOS) {
       String invokedURL;
       try {
@@ -129,7 +127,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       } on PlatformException {
         return 0; // return errore ?
       }
-      print("1");
       if (invokedURL != null) {
         if (UriIntent.isInvokingMethod(invokedURL)) {
           if (UriIntent.isMethodSupported(invokedURL)) {
@@ -143,7 +140,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                 print(reqBytes);
                 print(str);
                 _req = SSOAuthorize.getDetails(data: str);
-                _askedAuth = _req != null;
+                _askedAuth = _req != null && areCredentialsSaved;
                 break;
               default:
                 print("?");
@@ -179,8 +176,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       if (_config.data.latestVersion < currentVersion)
         isBeta = true;
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool areCredentialsSaved = prefs.getBool('savedCredentials') ?? false;
+
     userFullName = prefs.getString('user') ?? "";
     userID = prefs.getString('username') ?? "";
     userPassword = prefs.getString('password') ?? "";
@@ -273,6 +269,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       name: loginStructure.user.nome,
       surname: loginStructure.user.cognome,
       currentClass: userClasse,
+      course: loginStructure.user.corso,
       level: accountType,
       token: apiInstance.getSession(),
     );

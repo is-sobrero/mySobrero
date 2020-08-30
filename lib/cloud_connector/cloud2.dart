@@ -28,6 +28,7 @@ class CloudConnector {
     @required String surname,
     @required String currentClass,
     @required String level,
+    @required String course,
     @required String token,
   }) async {
     PackageInfo info;
@@ -53,6 +54,7 @@ class CloudConnector {
         'class': currentClass,
         'lvl': level,
         'platform': systemPlatform,
+        'course': course,
         'ver': kIsWeb ? "webclient" : info.buildNumber
       },
     );
