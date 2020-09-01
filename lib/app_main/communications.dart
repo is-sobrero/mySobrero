@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -160,7 +161,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
             ),
           ),
         ),
-        WaterfallFlow.builder(
+        if (widget.communications.length > 0) WaterfallFlow.builder(
           primary: false,
           shrinkWrap: true,
           itemCount: widget.communications.length,
@@ -173,6 +174,8 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
               i == widget.communications.length ? LastChildLayoutType.foot
                   : LastChildLayoutType.none,
           ),
+        ) else SobreroEmptyState(
+          emptyStateKey: "noNotices",
         ),
       ],
     );

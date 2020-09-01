@@ -102,6 +102,10 @@ class _ArgomentiState extends State<ArgomentiView> {
                     return SobreroError(
                       snapshotError: snapshot.error,
                     );
+                  if (snapshot.data.isEmpty)
+                    return SobreroEmptyState(
+                      emptyStateKey: "noTopics",
+                    );
                   List<ArgomentoStructure> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
                   return Column(
                     children: <Widget>[

@@ -86,5 +86,9 @@
   "noAssignments": "Nessun compito trovato per il periodo selezionato",
   "loadingLogs": "Caricando gli accessi...",
   "noMarks": "Nessun voto trovato per il periodo selezionato",
-  "noAbsences": "Nessuna assenza trovata, ottimo!"
+  "noAbsences": "Nessuna assenza trovata, ottimo!",
+  "noNotices": "Nessuna comunicazione trovata",
+  "noTopics": "Nessun argomento trovato per il periodo selezionato",
+  "noHandouts": "Nessun materiale didattico trovato",
+  "noReports": "Pagella non disponibile per il periodo selezionato"
 }

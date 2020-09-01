@@ -86,10 +86,17 @@ class _PagelleState extends State<PagelleView> {
                         return SobreroError(
                           snapshotError: snapshot.error,
                         );
+                      if (snapshot.data.isEmpty)
+                        return SobreroEmptyState(
+                          emptyStateKey: "noReports",
+                        );
                       if (selezionaPagella == snapshot.data.length) selectedPagella = null;
                       else selectedPagella = snapshot.data[selezionaPagella];
-
-                      return selectedPagella != null ? Column(
+                      if (selectedPagella == null)
+                        return SobreroEmptyState(
+                          emptyStateKey: "noReports",
+                        );
+                      return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text("Media pagella",),
@@ -131,8 +138,8 @@ class _PagelleState extends State<PagelleView> {
                                           Text(materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,)),
                                           Text("Ore di assenza: ${mat.assenze}",
                                               style: TextStyle(
-                                                  fontSize: 16,
-                                                  )),
+                                                fontSize: 16,
+                                              )),
                                         ],
                                       ))
                                     ],
@@ -142,8 +149,7 @@ class _PagelleState extends State<PagelleView> {
                             },
                           )
                         ],
-                      ) : new Text("Pagella non disponibile per il periodo selezionato", style: TextStyle(
-                          fontSize: 20,),);
+                      );
                   }
                   return null;
                 },

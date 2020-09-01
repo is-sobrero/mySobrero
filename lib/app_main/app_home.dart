@@ -352,45 +352,57 @@ class _HomepageState extends State<Homepage>
                     Color(0xFFaa68d2),
                   ],
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: <Widget>[
-                          CircularProfile(
-                            sender: lastNoticeSender,
-                            radius: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              lastNoticeSender,
-                              //toBeginningOfSentenceCase("lastCircularSender"),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white
-                              ),
+                    if (lastNoticeSender != null) Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: <Widget>[
+                            CircularProfile(
+                              sender: lastNoticeSender,
+                              radius: 15,
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                lastNoticeSender,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    AutoSizeText(
-                      lastCircular,
-                      minFontSize: 12,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: new TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: AutoSizeText(
-                        AppLocalizations.of(context).translate('lastNotice'),
-                        style: new TextStyle(color: Color(0xFFFFFFFF)),
+                    if (lastNoticeSender != null) AutoSizeText(
+                        lastCircular,
+                        minFontSize: 12,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: new TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                    )
+                    if (lastNoticeSender != null) Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: AutoSizeText(
+                          AppLocalizations.of(context).translate('lastNotice'),
+                          style: new TextStyle(color: Color(0xFFFFFFFF)),
+                        ),
+                      ),
+                    if (lastNoticeSender == null)
+                      Icon(
+                        LineIcons.paper_plane_o,
+                        size: 70,
+                        color: Colors.white,
+                      ),
+                    if (lastNoticeSender == null)
+                      Text(
+                        AppLocalizations.of(context).translate("noNotices"),
+                        style: TextStyle(
+                            color: Colors.white,
+                        ),
+                      ),
                   ],
                 ),
               ),

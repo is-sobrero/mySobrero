@@ -79,6 +79,11 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                           snapshotError: snapshot.error,
                         );
 
+                      if (snapshot.data.isEmpty)
+                        return SobreroEmptyState(
+                          emptyStateKey: "noHandouts",
+                        );
+
                       return ListView.builder(
                         primary: false,
                         shrinkWrap: true,
