@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mySobrero/common/skeleton.dart';
+import 'package:mySobrero/ui/skeleton.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:animations/animations.dart';
 import 'package:mySobrero/tiles/basic_tile.dart';

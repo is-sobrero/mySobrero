@@ -6,7 +6,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:animations/animations.dart';
 
 import 'package:mySobrero/app_main/app_home.dart';
@@ -24,8 +23,7 @@ import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
 import 'package:mySobrero/ui/sobrero_appbar.dart';
 import 'package:mySobrero/ui/drawer.dart';
-
-
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class AppMain extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;
@@ -154,21 +152,21 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
             children: [
               SobreroDrawerButton(
                 margin: EdgeInsets.only(top: 15),
-                suffixIcon: LineIcons.home,
+                suffixIcon: TablerIcons.home,
                 text: AppLocalizations.of(context).translate('home'),
                 color: Theme.of(context).primaryColor,
                 isSelected: _currentPageIndex == 0,
                 onPressed: () => switchPage(true, 0),
               ),
               SobreroDrawerButton(
-                suffixIcon: LineIcons.bar_chart,
+                suffixIcon: TablerIcons.trending_up,
                 text: AppLocalizations.of(context).translate('marks'),
                 color: Theme.of(context).primaryColor,
                 isSelected: _currentPageIndex == 1,
                 onPressed: () => switchPage(true, 1),
               ),
               SobreroDrawerButton(
-                suffixIcon: LineIcons.envelope_o,
+                suffixIcon: TablerIcons.mail,
                 text: AppLocalizations.of(context).translate('memos'),
                 color: Theme.of(context).primaryColor,
                 isSelected: _currentPageIndex == 2,
@@ -176,7 +174,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               ),
               SobreroDrawerButton(
                 margin: EdgeInsets.only(bottom: 10),
-                suffixIcon: LineIcons.ellipsis_h,
+                suffixIcon: TablerIcons.dots,
                 text: AppLocalizations.of(context).translate('more'),
                 color: Theme.of(context).primaryColor,
                 isSelected: _currentPageIndex == 3,
@@ -184,7 +182,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               ),
               SobreroDrawerButton(
                 margin: EdgeInsets.only(top: 15),
-                suffixIcon: LineIcons.unlock_alt,
+                suffixIcon: TablerIcons.lock_open,
                 text: AppLocalizations.of(context).translate("authorizeApp"),
                 color: Theme.of(context).primaryColor,
                 onPressed: () => Navigator.push(
@@ -207,7 +205,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               ),
               SobreroDrawerButton(
                 margin: EdgeInsets.only(bottom: 10),
-                suffixIcon: LineIcons.gear,
+                suffixIcon: TablerIcons.settings,
                 text: AppLocalizations.of(context).translate("settings"),
                 color: Theme.of(context).primaryColor,
                 onPressed: () => Navigator.push(
@@ -235,7 +233,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               ),
               SobreroDrawerButton(
                 margin: EdgeInsets.only(top: 15),
-                suffixIcon: LineIcons.sign_out,
+                suffixIcon: TablerIcons.logout,
                 text: "Disconnettiti",
                 color: Colors.red,
               ),

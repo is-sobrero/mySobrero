@@ -3,15 +3,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:animations/animations.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/ui/textfield.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:package_info/package_info.dart';
@@ -21,7 +24,7 @@ import 'package:http/http.dart' as http;
 import 'package:mySobrero/agreement/agreement_dialog.dart';
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
-import 'package:mySobrero/common/skeleton.dart';
+import 'package:mySobrero/ui/skeleton.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/expandedsection.dart';
@@ -63,10 +66,117 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   reAPI3 apiInstance;
 
   bool _askedAuth = false;
+  int _status = 0;
+  List<DateTime> _events = [];
+
+  Future<void> initAutomaticSync() async {
+    BackgroundFetch.configure(BackgroundFetchConfig(
+      minimumFetchInterval: 5,
+      stopOnTerminate: false,
+      enableHeadless: false,
+      requiresBatteryNotLow: false,
+      requiresCharging: false,
+      requiresStorageNotLow: false,
+      requiresDeviceIdle: false,
+      requiredNetworkType: NetworkType.ANY,
+    ), (taskID) async {
+      Utilities.initNotifications(); // <- trovare un modo per non richiamarlo
+      if (Utilities.isInternalBuild){
+        Utilities.sendNotification(
+          title: "[⚙️ DEBUG] BGTask triggerato",
+          body: "Il sistema operativo ha richiesto una sincronizzazione in background di mySobrero, Task ID: $taskID",
+        );
+      }
+      print("[reSYNC] Richiesto aggiornamento dal SO, inizio procedura");
+      if (apiInstance == null){
+        print("[reSYNC] API non istanziata");
+        apiInstance = new reAPI3();
+      }
+      // rifacciamo il login a prescindere
+      // TODO: implementare in reAPI i metodi getCompiti, getVoti, getComunicazioni
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool areCredentialsSaved = prefs.getBool('savedCredentials') ?? false;
+      if (!areCredentialsSaved) {
+        print("[reSYNC] Credenziali non salvate, procedura terminata");
+        BackgroundFetch.finish(taskID);
+        return;
+      }
+      userID = prefs.getString('username') ?? "";
+      userPassword = prefs.getString('password') ?? "";
+      loginStructure = await apiInstance.retrieveStartupData(
+        userID,
+        userPassword,
+      );
+
+      int mark1Count = prefs.getInt("marks1Count") ?? 0;
+      int mark2Count = prefs.getInt("marks2Count") ?? 0;
+      int assignmentsCount = prefs.getInt("assignmentsCount") ?? 0;
+      int noticesCount = prefs.getInt("noticesCount") ?? 0;
+      //print("[reSYNC] Session id: ${apiInstance.getSession()}");
+      if (loginStructure.voti1Q.length > mark1Count){
+        print("[reSYNC] Nuovi voti 1Q presenti, invio LN");
+        String _prof = loginStructure.voti1Q[0].docente;
+        String _subject = loginStructure.voti1Q[0].materia;
+        String _mark = loginStructure.voti1Q[0].voto;
+        Utilities.sendNotification(
+          title: "Nuovo voto di $_subject inserito",
+          body: "$_prof ti ha assegnato il voto $_mark nella materia $_subject",
+          channelID: "it.edu.mysobrero.nc.marks",
+          channelName: "Nuovi voti",
+          channelDesc: "Invia notifiche ogni volta che un nuovo voto è inserito",
+        );
+      }
+      if (loginStructure.voti2Q.length > mark2Count){
+        print("[reSYNC] Nuovi voti 2Q presenti, invio LN");
+        String _prof = loginStructure.voti2Q[0].docente;
+        String _subject = loginStructure.voti2Q[0].materia;
+        String _mark = loginStructure.voti2Q[0].voto;
+        Utilities.sendNotification(
+          title: "Nuovo voto di $_subject inserito",
+          body: "$_prof ti ha assegnato il voto $_mark nella materia $_subject",
+          channelID: "it.edu.mysobrero.nc.marks",
+          channelName: "Nuovi voti",
+          channelDesc: "Invia notifiche ogni volta che un nuovo voto è inserito",
+        );
+      }
+      if (loginStructure.compiti.length > assignmentsCount){
+        print("[reSYNC] Nuovi compiti presenti, invio LN");
+        String _subject = loginStructure.compiti[0].materia;
+        Utilities.sendNotification(
+          title: "Nuovo compito assegnato",
+          body: "Hai un nuovo compito assegnato di $_subject",
+          channelID: "it.edu.mysobrero.nc.assignments",
+          channelName: "Nuovi compiti",
+          channelDesc: "Invia notifiche ogni volta che un nuovo compito è stato assegnato",
+        );
+      }
+      if (loginStructure.comunicazioni.length > noticesCount){
+        print("[reSYNC] Nuove comunicazioni presenti, invio LN");
+        String _sender = loginStructure.comunicazioni[0].mittente;
+        String _title = loginStructure.comunicazioni[0].titolo;
+        Utilities.sendNotification(
+          title: "Nuova comunicazione ricevuta",
+          body: "$_sender ha inviato una nuova comunicazione: $_title",
+          channelID: "it.edu.mysobrero.nc.notices",
+          channelName: "Nuove comunicazione",
+          channelDesc: "Invia notifiche ogni volta che ricevi una comunicazione",
+        );
+      }
+
+      prefs.setInt('marks1Count', loginStructure.voti1Q.length);
+      prefs.setInt('marks2Count', loginStructure.voti2Q.length);
+      prefs.setInt('assignmentsCount', loginStructure.compiti.length);
+      prefs.setInt('noticesCount', loginStructure.comunicazioni.length);
+
+      BackgroundFetch.finish(taskID);
+    });
+  }
 
   @override
   void initState(){
     super.initState();
+    initAutomaticSync();
+
     apiInstance = new reAPI3();
     _handler = new IntentHandler (
       context: context,
@@ -79,8 +189,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         onError: (err) => print("err uri"),
       );
     }
-
-
 
     initialProcedure().then((status) {
       // 0 = login in corso
@@ -116,6 +224,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   AuthenticationQR _req;
+  UnifiedLoginStructure loginStructure;
 
   Future<int> initialProcedure () async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -217,7 +326,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   }
 
   Future<void> doLogin() async {
-    UnifiedLoginStructure loginStructure = await apiInstance.retrieveStartupData(userID, userPassword);
+    loginStructure = await apiInstance.retrieveStartupData(userID, userPassword);
     if (loginStructure.statusHeader.code != 0){
       setState(() {
         _logoAnimName = "end";
@@ -260,6 +369,10 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     prefs.setString('username', userID);
     prefs.setString('password', userPassword);
     prefs.setString('user', loginStructure.user.nomeCompleto);
+    prefs.setInt('marks1Count', loginStructure.voti1Q.length);
+    prefs.setInt('marks2Count', loginStructure.voti2Q.length);
+    prefs.setInt('assignmentsCount', loginStructure.compiti.length);
+    prefs.setInt('noticesCount', loginStructure.comunicazioni.length);
 
     final accountType = loginStructure.user.livello == "4" ? "student" : "parent";
     final userClasse = "${loginStructure.user.classe} ${loginStructure.user.sezione}";

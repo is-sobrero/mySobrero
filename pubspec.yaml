@@ -11,7 +11,7 @@ description: La nuova app ufficiale del Sobrero per gli Studenti
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1+29
+version: 2.1+30
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -51,6 +51,11 @@ dependencies:
   flutter_map: ^0.10.1+1
   latlong: ^0.6.1
   flare_flutter: ^1.8.3
+  flutter_tabler_icons: ^1.0.2
+  #workmanager: ^0.2.0
+  background_fetch: ^0.6.0
+  flutter_local_notifications: ^1.4.4+4
+
 
   flutter:
     sdk: flutter
@@ -85,9 +90,6 @@ flutter:
 
   fonts:
 
-    - family: CustomIcons
-      fonts:
-        - asset: assets/fonts/CustomIcons.ttf
     - family: SobreroIcons2
       fonts:
         - asset: assets/fonts/SobreroIcons2.ttf
@@ -99,15 +101,6 @@ flutter:
           weight: 400
         - asset: assets/fonts/Manrope-ExtraBold.ttf
           weight: 800
-
-
-#        - asset: assets/fonts/SF-Pro-Display-Medium.otf
-#          weight: 500
-
-#        - asset: assets/fonts/SF-Pro-Display-MediumItalic.otf
-#          weight: 500
-#          style: italic
-
 
   # To add assets to your application, add an assets section, like this:
   # assets:

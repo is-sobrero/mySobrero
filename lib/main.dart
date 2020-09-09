@@ -2,6 +2,7 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -9,45 +10,30 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:mySobrero/common/ui.dart';
+import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/login/login.dart';
 
-import 'dart:async';
-import 'dart:io';
-
-import 'package:uni_links/uni_links.dart';
-import 'package:flutter/services.dart' show PlatformException;
-
-StreamSubscription _sub;
-
-Future<Null> initUniLinks() async {
-  // Platform messages may fail, so we use a try/catch PlatformException.
-  try {
-    String initialLink = await getInitialLink();
-    print("Schema da cold start");
-    print(initialLink);
-    // Parse the link and warn the user, if it is not correct,
-    // but keep in mind it could be `null`.
-  } on PlatformException {
-    print("Schema da cold start");
-    // Handle exception by warning the user their action did not succeed
-    // return?
-  }
-
-  _sub = getLinksStream().listen((String link) {
-    // Parse the link and warn the user, if it is not correct
-    print("Schema da background");
-    print(link);
-  }, onError: (err) {
-    print("Schema da background");
-    // Handle exception by warning the user their action did not succeed
-  });
+void backgroundFetchHeadlessTask(String taskId) async {
+  print('[BackgroundFetch] Headless event received.');
+  BackgroundFetch.finish(taskId);
 }
 
 void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  /// Togliere il commento in caso di debug delle animazioni
   //timeDilation = 3.0;
+  WidgetsFlutterBinding.ensureInitialized();
+  Utilities.initNotifications();
   runApp(MyApp());
+  BackgroundFetch.registerHeadlessTask(
+    backgroundFetchHeadlessTask,
+  );
+  /*BackgroundFetch.scheduleTask(TaskConfig(
+    taskId: "it.edu.mysobrero.resync",
+    delay: 1000 * 60 * 15,
+    periodic: true,
+  ));*/
 }
 
 class MyApp extends StatelessWidget {

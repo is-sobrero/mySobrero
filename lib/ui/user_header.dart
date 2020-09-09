@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mySobrero/common/skeleton.dart';
+import 'package:mySobrero/ui/skeleton.dart';
 import 'package:mySobrero/localization/localization.dart';
 
 class SobreroUserHeader extends StatelessWidget {

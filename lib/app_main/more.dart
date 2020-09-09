@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/argomenti.dart';
@@ -71,7 +72,7 @@ class _MorePageState extends State<MorePageView>
               lightImage: "assets/images/assenze_light.png",
               darkImage: "assets/images/assenze_dark.png",
               color: Color(0xffff9692),
-              icon: LineIcons.bed,
+              icon: TablerIcons.bed,
             ),
             ActionTile(
               builder: (_,__,___) => ArgomentiView(apiInstance: widget.apiInstance),
@@ -79,7 +80,7 @@ class _MorePageState extends State<MorePageView>
               lightImage: "assets/images/argomenti_light.png",
               darkImage: "assets/images/argomenti_dark.png",
               color: Color(0xFF5352ed),
-              icon: SobreroIcons2.edit,
+              icon: TablerIcons.edit,
             ),
             /*ActionTile(
               builder: (_,__,___) => ListingsHomePage(),
@@ -95,7 +96,7 @@ class _MorePageState extends State<MorePageView>
               lightImage: "assets/images/materiale_light.png",
               darkImage: "assets/images/materiale_dark.png",
               color: Color(0xffe55039),
-              icon: LineIcons.hdd_o,
+              icon: TablerIcons.cloud_download,
             ),
             ActionTile(
               builder: (_,__,___) => RicercaAuleView(),
@@ -103,7 +104,7 @@ class _MorePageState extends State<MorePageView>
               lightImage: "assets/images/aula_light.png",
               darkImage: "assets/images/aula_dark.png",
               color: Color(0xffF86925),
-              icon: SobreroIcons2.map,
+              icon: TablerIcons.map_2,
             ),
             ActionTile(
               builder: (_,__,___) => PagelleView(apiInstance: widget.apiInstance),
@@ -111,7 +112,7 @@ class _MorePageState extends State<MorePageView>
               lightImage: "assets/images/pagelle_light.png",
               darkImage: "assets/images/pagelle_dark.png",
               color: Color(0xff38ada9),
-              icon: SobreroIcons2.alternate_list,
+              icon: TablerIcons.list,
             ),
             ActionTile(
               builder: (_,__,___) => CarrieraView(
@@ -121,7 +122,7 @@ class _MorePageState extends State<MorePageView>
               lightImage: "assets/images/carriera_light.png",
               darkImage: "assets/images/carriera_dark.png",
               color: Color(0xff45BF6D),
-              icon: LineIcons.history,
+              icon: TablerIcons.history,
             ),
           ],
         ),

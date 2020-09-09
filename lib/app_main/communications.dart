@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/helper.dart';
@@ -61,7 +61,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
             avatar: CircleAvatar(
               backgroundColor: Colors.transparent,
               child: Icon(
-                LineIcons.paperclip,
+                TablerIcons.paperclip,
                 color: Colors.white,
                 size: 20,
               ),

@@ -14,7 +14,7 @@ import 'globals.dart' as globals;
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:mySobrero/hud.dart';
+import 'package:mySobrero/ui/hud.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/common/tiles.dart';

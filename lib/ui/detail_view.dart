@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:mySobrero/common/ui.dart';
 
 class SobreroDetailView extends StatefulWidget {
   String title;
@@ -72,30 +71,6 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
     }
 
     return Scaffold(
-      /*appBar: AppBar(
-        centerTitle: false,
-        brightness: Theme.of(context).brightness,
-        title: AnimatedOpacity(
-          opacity: _appBarTitleOpacity,
-          duration: Duration(milliseconds: 250),
-          child: Text(
-            widget.title,
-            style: TextStyle(
-                color: Theme.of(context).textTheme.bodyText1.color
-            ),
-          ),
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: _appBarElevation,
-        leading: IconButton(
-          icon: Icon(
-            LineIcons.angle_left,
-            color: Theme.of(context).textTheme.bodyText1.color,
-          ),
-          tooltip: "Indietro",
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),*/
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 65),
         child: Container(

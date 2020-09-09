@@ -15,6 +15,7 @@ import 'package:mySobrero/ui/detail_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mySobrero/ui/textfield.dart';
 
 class RicercaAuleView extends StatefulWidget {
 

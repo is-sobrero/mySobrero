@@ -7,11 +7,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/custom/dropdown.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/ui/data_ui.dart';
+import 'package:mySobrero/ui/dropdown.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
 import 'package:mySobrero/ui/toggle.dart';
@@ -349,7 +350,7 @@ class _VotesPageState extends State<VotesPage>
                               Text(AppLocalizations.of(context).translate('goals'), style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
                               Padding(
                                 padding: const EdgeInsets.only(left: 5.0),
-                                child: Icon(LineIcons.flag, size: 20, color: Theme.of(context).primaryColor,),
+                                child: Icon(TablerIcons.flag, size: 20, color: Theme.of(context).primaryColor,),
                               ),
                             ],
                           ),

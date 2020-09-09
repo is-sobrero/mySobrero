@@ -2,11 +2,8 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/ui/layouts.dart';
 
 void main(){

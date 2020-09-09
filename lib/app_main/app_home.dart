@@ -7,8 +7,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:animations/animations.dart';
 
 import 'package:mySobrero/cloud_connector/cloud2.dart';
@@ -161,7 +161,7 @@ class _HomepageState extends State<Homepage>
                       Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: Icon(
-                          LineIcons.warning,
+                          TablerIcons.alert_triangle,
                           size: 25,
                           color: Colors.white,
                         ),
@@ -233,7 +233,7 @@ class _HomepageState extends State<Homepage>
                         child: Row(
                           children: <Widget>[
                             Icon(
-                              LineIcons.warning,
+                              TablerIcons.info_circle,
                               size: 25,
                               color: Colors.black,
                             ),
@@ -286,7 +286,7 @@ class _HomepageState extends State<Homepage>
                       ),
                     ),
                     if (_marksMean < 0) Icon(
-                      LineIcons.dropbox,
+                      TablerIcons.border_none,
                       size: 70,
                       color: Colors.black,
                     ),
@@ -392,7 +392,7 @@ class _HomepageState extends State<Homepage>
                       ),
                     if (lastNoticeSender == null)
                       Icon(
-                        LineIcons.paper_plane_o,
+                        TablerIcons.message_circle,
                         size: 70,
                         color: Colors.white,
                       ),
@@ -419,7 +419,7 @@ class _HomepageState extends State<Homepage>
             Padding(
               padding: EdgeInsets.only(left: 15, right: 8),
               child: Icon(
-                LineIcons.newspaper_o,
+                TablerIcons.news,
                 size: 30,
                 color: Colors.red,
               ),

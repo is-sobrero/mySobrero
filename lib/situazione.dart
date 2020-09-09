@@ -15,7 +15,7 @@ import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/toggle.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:mySobrero/hud.dart';
+import 'package:mySobrero/ui/hud.dart';
 import 'package:mySobrero/common/definitions.dart';
 
 class DialogoObbiettivo extends StatefulWidget {
@@ -404,29 +404,6 @@ class _SituazioneView extends State<SituazioneView> {
         ),
       ],
     );
-    return Container(
-        decoration: new BoxDecoration(
-          //color: Theme.of(context).textTheme.body1.color.withAlpha(20),
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            //border: Border.all(width: 0.0, color: Color(0xFFCCCCCC)),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black12.withAlpha(12),
-                  blurRadius: 10,
-                  spreadRadius: 10
-              )
-            ]
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-
-            ],
-          ),
-        ));
   }
 
   bool _reverseAnim = false;

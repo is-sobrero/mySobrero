@@ -39,3 +39,4 @@ lib/reapi3.dart
 android/key.properties
 ios/Flutter/.last_build_id
 export.jsp
+.gradle/

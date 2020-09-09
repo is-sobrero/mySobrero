@@ -7,7 +7,7 @@
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mySobrero/common/skeleton.dart';
+import 'package:mySobrero/ui/skeleton.dart';
 
 class LeadingImageTile extends StatelessWidget {
   LeadingImageTile({

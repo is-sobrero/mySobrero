@@ -11,7 +11,6 @@ import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
-import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:mySobrero/ui/button.dart';
