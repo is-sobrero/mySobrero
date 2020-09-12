@@ -192,17 +192,23 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _hasTutorialShown = prefs.getBool('tutorialShown') ?? false;
     if (!_hasTutorialShown) {
-      _initTutorialTargets();
-      TutorialCoachMark(
-        context,
-        targets: _targets,
-        colorShadow: Colors.black,
-        textSkip: AppLocalizations.of(context).translate("skip"),
-        paddingFocus: 7,
-        opacityShadow: 0.8,
-        onFinish: () => prefs.setBool('tutorialShown', true),
-        onClickSkip: () => prefs.setBool('tutorialShown', true),
-      )..show();
+      Future.delayed(
+        Duration(milliseconds: 700),
+            (){
+              _initTutorialTargets();
+              TutorialCoachMark(
+                context,
+                targets: _targets,
+                colorShadow: Colors.black,
+                textSkip: AppLocalizations.of(context).translate("skip"),
+                paddingFocus: 7,
+                opacityShadow: 0.8,
+                onFinish: () => prefs.setBool('tutorialShown', true),
+                onClickSkip: () => prefs.setBool('tutorialShown', true),
+              )..show();
+          },
+      );
+
     }
   }
 

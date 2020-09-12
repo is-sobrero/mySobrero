@@ -2,7 +2,10 @@
 // Use of this source code is governed by the GPG 3.0 license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:animations/animations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -12,7 +15,10 @@ import 'package:mySobrero/ui/helper.dart';
 
 class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
-  Size get preferredSize => Size(double.infinity, 65);
+  Size get preferredSize => Size(
+      double.infinity,
+      Platform.isMacOS ? 100 : 66
+  );
 
   final double elevation;
   final double topCorrection;
@@ -52,7 +58,12 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
     ),
     child: SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(20,3 - topCorrection,20,3 + topCorrection),
+        padding: EdgeInsets.fromLTRB(
+          20,
+          (Platform.isMacOS ? 47 : 3) - topCorrection,
+          20,
+          3 + topCorrection,
+        ),
         child: Row(
           children: [
             IconButton(
