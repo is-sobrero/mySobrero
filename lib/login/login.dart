@@ -64,8 +64,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
   reAPI3 apiInstance;
 
   bool _askedAuth = false;
-  int _status = 0;
-  List<DateTime> _events = [];
 
   Future<void> initAutomaticSync() async {
     BackgroundFetch.configure(BackgroundFetchConfig(

@@ -340,7 +340,7 @@ class _VotesPageState extends State<VotesPage>
                   ),
                 ),
                 Spacer(),
-                if (!_currentMarks.isEmpty) FutureBuilder<Map<String, int>>(
+                if (_currentMarks.isNotEmpty) FutureBuilder<Map<String, int>>(
                     future: _goals,
                     builder: (context, snapshot){
                       if (snapshot.hasData){
@@ -367,10 +367,6 @@ class _VotesPageState extends State<VotesPage>
                                 ),
                                 transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  var begin = Offset(0.0, 1.0);
-                                  var end = Offset.zero;
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOutExpo));
-                                  var offsetAnimation = animation.drive(tween);
                                   return SharedAxisTransition(
                                     child: child,
                                     animation: animation,
