@@ -9,9 +9,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mySobrero/ui/textfield.dart';
@@ -25,7 +24,6 @@ import 'package:mySobrero/agreement/agreement_dialog.dart';
 import 'package:mySobrero/cloud_connector/ConfigData.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/ui/skeleton.dart';
-import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/expandedsection.dart';
 import 'package:mySobrero/app_main/app_main.dart';
@@ -547,7 +545,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                       SobreroButton(
                         margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         text: AppLocalizations.of(context).translate('loginButton'),
-                        suffixIcon: Icon(LineIcons.unlock),
+                        suffixIcon: Icon(TablerIcons.lock_open),
                         color: Theme.of(context).primaryColor,
                         onPressed: () => buttonLoginOnClick(
                           userID,
@@ -602,7 +600,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                       SobreroButton(
                         margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         text: AppLocalizations.of(context).translate('loginButton'),
-                        suffixIcon: Icon(LineIcons.unlock),
+                        suffixIcon: Icon(TablerIcons.lock_open),
                         color: Theme.of(context).primaryColor,
                         onPressed: () => buttonLoginOnClick(
                           userController.text,

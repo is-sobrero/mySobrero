@@ -4,7 +4,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/tiles/basic_tile.dart';
@@ -80,17 +80,19 @@ class ImageLinkTile extends StatelessWidget {
                     FlatButton(
                       child: Row(
                         children: [
-                          Text(
-                            detailsText,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Text(
+                              detailsText,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          Icon(LineIcons.arrow_right),
+                          Icon(TablerIcons.arrow_right_circle),
                         ],
                       ),
                       onPressed: () => openURL(context, detailsUrl),
-                      padding: EdgeInsets.zero,
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ],

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class SobreroDetailView extends StatefulWidget {
   String title;
@@ -92,7 +92,7 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
                   IconButton(
                     padding: EdgeInsets.zero,
                     icon: Icon(
-                      LineIcons.angle_left,
+                      TablerIcons.chevron_left,
                       color: Theme.of(context).textTheme.bodyText1.color,
                     ),
                     tooltip: "Indietro",

@@ -3,8 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:mySobrero/common/tiles.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/listings/listings_detail.dart';
@@ -35,7 +34,7 @@ class _ListingsHomeState extends State<ListingsHomePage> {
             hintText: "Cerca qualcosa",
             margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
             suffixIcon: IconButton(
-              icon: Icon(LineIcons.search),
+              icon: Icon(TablerIcons.search),
               color: Theme.of(context).primaryColor,
               onPressed: () => print("ok"),
             ),
@@ -48,7 +47,7 @@ class _ListingsHomeState extends State<ListingsHomePage> {
                   margin: EdgeInsets.only(right: 5, left: 15),
                   text: "Aggiungi",
                   color: Theme.of(context).primaryColor,
-                  suffixIcon: Icon(LineIcons.plus),
+                  suffixIcon: Icon(TablerIcons.check),
                   onPressed: () => print("ok"),
                 ),
               ),
@@ -57,7 +56,7 @@ class _ListingsHomeState extends State<ListingsHomePage> {
                   text: "Gestisci",
                   margin: EdgeInsets.fromLTRB(5,0,15,15),
                   color: Theme.of(context).primaryColor,
-                  suffixIcon: Icon(LineIcons.list),
+                  suffixIcon: Icon(TablerIcons.list_check),
                   onPressed: () => print("ok"),
                 ),
               ),

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import 'package:mySobrero/ui/button.dart';
 
@@ -161,7 +161,7 @@ class SobreroDialogAbort extends Dialog {
                         child: SobreroButton(
                           margin: EdgeInsets.only(right: 5, left: 10),
                           text: okButtonText,
-                          suffixIcon: Icon(LineIcons.check),
+                          suffixIcon: Icon(TablerIcons.check),
                           color: Theme.of(context).primaryColor,
                           onPressed: okButtonCallback,
                         ),
@@ -169,7 +169,7 @@ class SobreroDialogAbort extends Dialog {
                       Flexible(
                         child: SobreroButton(
                           text: abortButtonText,
-                          suffixIcon: Icon(LineIcons.ban),
+                          suffixIcon: Icon(TablerIcons.ban),
                           margin: EdgeInsets.fromLTRB(5,0,10,10),
                           color: Colors.red,
                           onPressed: abortButtonCallback

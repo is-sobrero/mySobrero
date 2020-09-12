@@ -8,9 +8,8 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -79,7 +78,7 @@ class _RicercaAuleState extends State<RicercaAuleView> {
                 hintText: "Aula da cercare",
                 controller: _searchController,
                 suffixIcon: IconButton(
-                  icon: Icon(LineIcons.search),
+                  icon: Icon(TablerIcons.search),
                   color: Theme.of(context).primaryColor,
                   onPressed: () => setState(() {
                     _risultatoAule = _ottieniAule(
@@ -99,7 +98,7 @@ class _RicercaAuleState extends State<RicercaAuleView> {
                             padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
                             child: Column(
                               children: <Widget>[
-                                Icon(LineIcons.search, size: 40,),
+                                Icon(TablerIcons.search, size: 40,),
                                 Text("Premi il tasto di ricerca per iniziare", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
                               ],
                             ),
@@ -144,8 +143,8 @@ class _RicercaAuleState extends State<RicercaAuleView> {
                                 shrinkWrap: true,
                                 itemCount: snapshot.data.length,
                                 itemBuilder: (c, i2){
-                                  IconData descriptiveIcon = snapshot.data[i2].denominazione.contains("Lab") ? LineIcons.gear : LineIcons.building_o;
-                                  descriptiveIcon = snapshot.data[i2].denominazione.contains("Palestra") ? Icons.directions_run : descriptiveIcon;
+                                  IconData descriptiveIcon = snapshot.data[i2].denominazione.contains("Lab") ? TablerIcons.artboard : TablerIcons.building;
+                                  descriptiveIcon = snapshot.data[i2].denominazione.contains("Palestra") ? TablerIcons.ball_basketball : descriptiveIcon;
                                   return ExpandableNotifier(
                                     child: SobreroFlatTile(
                                       overridePadding: true,

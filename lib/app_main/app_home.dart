@@ -289,7 +289,7 @@ class _HomepageState extends State<Homepage>
                       ),
                     ),
                     if (_marksMean < 0) Icon(
-                      TablerIcons.border_none,
+                      TablerIcons.stack,
                       size: 70,
                       color: Colors.black,
                     ),
@@ -378,8 +378,8 @@ class _HomepageState extends State<Homepage>
                       ),
                     if (lastNoticeSender != null) AutoSizeText(
                         lastCircular,
-                        minFontSize: 12,
-                        maxLines: 4,
+                        minFontSize: 10,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: new TextStyle(
                             fontSize: 18,

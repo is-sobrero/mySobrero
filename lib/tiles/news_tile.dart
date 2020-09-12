@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/ui/skeleton.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:animations/animations.dart';
 import 'package:mySobrero/tiles/basic_tile.dart';
 
@@ -62,7 +62,7 @@ class SobreroNewsTile extends StatelessWidget {
                   color: Theme.of(context).textTheme.bodyText1.color.withAlpha(40),
                   width: 300,
                   child: Center(
-                    child: Icon(LineIcons.chain_broken, size: 70),
+                    child: Icon(TablerIcons.anchor, size: 70),
                   ),
                 ),
                 fit: BoxFit.cover,

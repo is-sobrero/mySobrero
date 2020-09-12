@@ -4,7 +4,7 @@
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -58,7 +58,7 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               key: menuGlobalKey,
               icon: Icon(
-                LineIcons.bars,
+                TablerIcons.menu,
                 color: Theme.of(context).primaryColor,
               ),
               //iconSize: 25,
@@ -77,7 +77,7 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               key: settingsGlobalKey,
               icon: Icon(
-                LineIcons.gear,
+                TablerIcons.settings,
                 color: Theme.of(context).primaryColor,
               ),
               //iconSize: 25,

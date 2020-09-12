@@ -5,21 +5,27 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/tiles/basic_tile.dart';
 import 'package:mySobrero/ui/helper.dart';
+
+typedef DateTimeTileHeaderLayoutBuilder = Widget Function(
+    String title,
+    Color color,
+);
 
 class DateTimeTile extends StatelessWidget {
   DateTimeTile({
     Key key,
     @required this.title,
-    this.color = null,
+    this.color,
     this.dateFormat = 'dd/MM/yyyy HH:mm:ss',
     @required this.date,
     this.showHour = true,
     this.overridePadding = false,
     this.showShadow = true,
+    this.headerLayoutBuilder = defaultHeaderLayoutBuilder,
     this.margin = const EdgeInsets.only(bottom: 15),
     @required this.children,
   }) :  assert(title != null),
@@ -35,6 +41,17 @@ class DateTimeTile extends StatelessWidget {
   final EdgeInsets margin;
   final bool showShadow, overridePadding;
   final List<Widget> children;
+  final DateTimeTileHeaderLayoutBuilder headerLayoutBuilder;
+
+  static Widget defaultHeaderLayoutBuilder (title, color) => Text(
+    title,
+    style: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      color: color == null
+          ? null : UIHelper.textColorByBackground(color),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +71,7 @@ class DateTimeTile extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: color == null
-                        ? null : UIHelper.textColorByBackground(color),
-                  ),
-                ),
+                child: headerLayoutBuilder(title, color),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 8.0),
@@ -81,7 +90,7 @@ class DateTimeTile extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 3),
                           child: Icon(
-                            LineIcons.calendar_o,
+                            TablerIcons.calendar,
                             size: 18,
                             color: color == null
                                 ? null : UIHelper.textColorByBackground(color),
@@ -101,7 +110,7 @@ class DateTimeTile extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 3),
                           child: Icon(
-                            LineIcons.clock_o,
+                            TablerIcons.clock,
                             size: 18,
                             color: color == null
                                 ? null : UIHelper.textColorByBackground(color),

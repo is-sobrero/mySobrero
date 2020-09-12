@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:mySobrero/common/definitions.dart';
 
 class AppColorScheme {
-  static Color primaryColor = Color(0xFF0360e7);
-  static Color secondaryColor = Color(0xFF0360e7);
+  static Color primaryColor = Color(0xFF0281EF);
+  static Color secondaryColor = Color(0xFF0281EF);
   static Color scaffoldColor = Colors.white;
   static Color toggleColor = Colors.white;
   static Color darkScaffoldColor = Color(0xff000000);//Color(0xff121212);
@@ -23,8 +23,8 @@ class AppColorScheme {
   static Color canvasColor = Color(0xFFEEEEEE);
 
   static List<Color> appGradient = [
-    const Color(0xFF0287d1),
-    const Color(0xFF0335ff),
+    const Color(0xFF00C6FF),
+    const Color(0xFF0360E7),
   ];
 
   static List<Color> greenGradient = [

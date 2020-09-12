@@ -4,10 +4,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import 'package:mySobrero/agreement/license.dart';
-import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/ui/button.dart';
 
 class AgreementScreen extends StatefulWidget {
@@ -54,11 +53,11 @@ class _AgreementState extends State<AgreementScreen> {
   @override
   Widget build(BuildContext context) {
     String buttonText = "Torna indietro";
-    IconData buttonIcon = LineIcons.arrow_left;
+    IconData buttonIcon = TablerIcons.arrow_left;
     Color buttonColor = Theme.of(context).primaryColor;
     if (!widget.isInformative){
       buttonText = _end ? "Accetta i termini" : "Leggi i termini";
-      buttonIcon = _end ? LineIcons.check : LineIcons.ban;
+      buttonIcon = _end ? TablerIcons.check : TablerIcons.ban;
       if (!_end) buttonColor = Color(0xFF555555);
     }
 
@@ -73,7 +72,7 @@ class _AgreementState extends State<AgreementScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Icon(
-                  SobreroIcons2.handshake,
+                  TablerIcons.mist,
                   color: Theme.of(context).primaryColor,
                   size: 35,
                 ),

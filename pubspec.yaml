@@ -27,7 +27,6 @@ dependencies:
   firebase_messaging: ^6.0.9
   firebase_crashlytics: ^0.1.2+4
   local_auth: ^0.6.1
-  #device_preview: ^0.2.6
   auto_size_text: ^2.1.0
   cached_network_image: ^2.0.0
   image_picker: ^0.6.3+1
@@ -43,7 +42,6 @@ dependencies:
   animations: ^1.1.1
   quick_actions: ^0.4.0+2
   flutter_html: ^0.11.1
-  line_icons: ^0.2.0
   country_icons: ^1.1.1
   qr_code_scanner: ^0.0.13
   wave: ^0.0.8
@@ -52,11 +50,9 @@ dependencies:
   latlong: ^0.6.1
   flare_flutter: ^1.8.3
   flutter_tabler_icons: ^1.0.2
-  #workmanager: ^0.2.0
   background_fetch: ^0.6.0
   flutter_local_notifications: ^1.4.4+4
   tutorial_coach_mark: ^0.5.1
-
 
   flutter:
     sdk: flutter
@@ -90,10 +86,6 @@ flutter:
     - i18n/it.json
 
   fonts:
-
-    - family: SobreroIcons2
-      fonts:
-        - asset: assets/fonts/SobreroIcons2.ttf
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope-Bold.ttf

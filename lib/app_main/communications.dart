@@ -5,16 +5,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
+
+import 'package:mySobrero/common/utilities.dart';
+import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/tiles/date_time_tile.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
-import 'package:waterfall_flow/waterfall_flow.dart';
 
-import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/common/ui.dart';
-import 'package:mySobrero/common/utilities.dart';
-import 'package:mySobrero/reapi3.dart';
 
 class CommunicationsPageView extends StatefulWidget {
   UnifiedLoginStructure unifiedLoginStructure;
@@ -83,48 +83,46 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
     String realSender = "Dirigente";
     if (element.mittente.toUpperCase() != "DIRIGENTE")
       realSender = "Segreteria Amm.va";
-    return SobreroFlatTile(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(right: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(50),
-                      blurRadius: 10,
-                      spreadRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
+    return DateTimeTile(
+      title: realSender,
+      date: element.data,
+      dateFormat: 'dd/MM/yyyy',
+      showHour: false,
+      headerLayoutBuilder: (title, color) => Row(
+        children: [
+          Container(
+            margin: EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  blurRadius: 10,
+                  spreadRadius: 4,
+                  offset: Offset(0, 2),
                 ),
-                child: realSender == "Dirigente" ?
-                  CircleAvatar(
-                    backgroundImage: AssetImage("assets/images/rota.png"),
-                    radius: 15,
-                  ) :
-                  CircleAvatar(
-                    child: Text("S", style: TextStyle(color: Colors.white)),
-                    backgroundColor: Theme.of(context).primaryColor,
-                    radius: 15,
-                  ),
-
-              ),
-              Text(
-                realSender,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+              ],
+            ),
+            child: title == "Dirigente"
+                ? CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/rota.png"),
+                  radius: 15,
+                )
+                : CircleAvatar(
+                  child: Text("S", style: TextStyle(color: Colors.white)),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  radius: 15,
                 ),
-              ),
-              Spacer(),
-              Text(element.data)
-            ],
           ),
-        ),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      children: [
         Text(
           toBeginningOfSentenceCase(element.titolo),
           style: TextStyle(
@@ -142,7 +140,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _displayAttachments(element.allegati),
-        )
+        ),
       ],
     );
   }

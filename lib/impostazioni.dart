@@ -4,8 +4,9 @@
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/ui/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'skeleton.dart';
@@ -16,7 +17,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:mySobrero/ui/hud.dart';
 import 'package:mySobrero/cloud_connector/cloud2.dart';
-import 'package:mySobrero/common/sobreroicons.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/reapi3.dart';
@@ -120,7 +120,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                     elevation: 5.0,
                     fillColor: Theme.of(context).primaryColor,
                     child: Icon(
-                      LineIcons.pencil,
+                      TablerIcons.pencil,
                       color: Colors.white,
                       size: 20,
                     ),
@@ -158,7 +158,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                       Padding(
                         padding: const EdgeInsets.only(right: 7),
                         child: Icon(
-                          LineIcons.user,
+                          TablerIcons.user,
                           size: 25,
                           color: Theme.of(context).primaryColor,
                         ),
@@ -177,7 +177,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                 SobreroListButton(
                   title: "Logout",
                   caption: "Cancella l'account memorizzato da mySobrero",
-                  icon: LineIcons.sign_out,
+                  icon: TablerIcons.logout,
                   onPressed: () => showModalBottomSheet(
                     isDismissible: false,
                     context: context,
@@ -254,7 +254,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                   caption: lenBio > 0 ?
                     "Accedi all'app tramite autenticazione biometrica" :
                     "Nessun metodo di accesso configurato",
-                  icon: LineIcons.lock,
+                  icon: TablerIcons.face_id,
                   enabled: lenBio > 0,
                   showBorder: false,
                 ),
@@ -270,7 +270,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                       Padding(
                         padding: const EdgeInsets.only(right: 7),
                         child: Icon(
-                          LineIcons.gears,
+                          TablerIcons.adjustments,
                           size: 25,
                           color: Theme.of(context).primaryColor,
                         ),
@@ -293,7 +293,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                   ),
                   title: "Lascia un feedback",
                   caption: "Scrivi un feedback o un suggerimento per l'app (solo con account @sobrero)",
-                  icon: LineIcons.smile_o,
+                  icon: TablerIcons.mood_smile,
                 ),
                 SobreroListButton(
                   onPressed: () => Navigator.push(
@@ -302,7 +302,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                       pageBuilder: (_, __, ___)  => AgreementScreen(
                         isInformative: true,
                       ),
-                      transitionDuration: Duration(milliseconds: 1000),
+                      transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
                       transitionsBuilder: (ctx, prim, sec, child) =>
                           SharedAxisTransition(
                         animation: prim,
@@ -314,7 +314,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                   ),
                   title: "Termini di utilizzo",
                   caption: "Consulta i termini di utilizzo di mySobrero",
-                  icon: SobreroIcons2.handshake,
+                  icon: TablerIcons.mist,
                 ),
                 SobreroListButton(
                   onPressed: () => showDialog(
@@ -322,7 +322,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                     builder: (context) => SobreroDialogSingle(
                       title: "Informazioni su mySobrero",
                       headingWidget: Icon(
-                        LineIcons.info,
+                        TablerIcons.info_circle,
                         size: 40,
                         color: Theme.of(context).primaryColor,
                       ),
@@ -370,7 +370,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                   ),
                   title: "Informazioni su mySobrero",
                   caption: "Ottieni informazioni sull'app",
-                  icon: LineIcons.info,
+                  icon: TablerIcons.info_circle,
                   showBorder: false,
 
                 ),

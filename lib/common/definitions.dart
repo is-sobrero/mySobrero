@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:mySobrero/common/ui.dart';
 
 class RemoteNews {
   bool headingNewsEnabled = false;

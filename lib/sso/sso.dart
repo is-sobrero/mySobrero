@@ -6,8 +6,8 @@ import 'dart:io' show Platform;
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:mySobrero/sso/authorize.dart';
 import 'package:mySobrero/sso/intent_page.dart';
 import 'package:mySobrero/ui/helper.dart';
@@ -64,7 +64,7 @@ class _SSOProviderState extends State<SSOProvider> {
         context: context,
         builder: (context) => SobreroDialogSingle(
           headingWidget: Icon(
-            LineIcons.qrcode,
+            TablerIcons.qrcode,
             size: 40,
             color: Colors.red,
           ),
@@ -225,7 +225,7 @@ class _SSOProviderState extends State<SSOProvider> {
                                             padding:
                                                 const EdgeInsets.only(left: 3),
                                             child: Icon(
-                                              LineIcons.calendar_o,
+                                              TablerIcons.calendar,
                                               size: 18,
                                             ),
                                           )
@@ -238,7 +238,7 @@ class _SSOProviderState extends State<SSOProvider> {
                                             padding:
                                                 const EdgeInsets.only(left: 3),
                                             child: Icon(
-                                              LineIcons.clock_o,
+                                              TablerIcons.clock,
                                               size: 18,
                                             ),
                                           )
@@ -254,7 +254,7 @@ class _SSOProviderState extends State<SSOProvider> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 8),
                                   child: Icon(
-                                    LineIcons.laptop,
+                                    TablerIcons.device_laptop,
                                     size: 20,
                                   ),
                                 ),

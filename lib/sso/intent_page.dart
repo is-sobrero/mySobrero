@@ -6,8 +6,8 @@ import 'package:animations/animations.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:latlong/latlong.dart';
-import 'package:line_icons/line_icons.dart';
 
 import 'package:mySobrero/cloud_connector/cloud2.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
@@ -67,7 +67,7 @@ class _SSOIntentPageState extends State<SSOIntentPage>{
                       margin: EdgeInsets.only(left: 10, right: 8),
                     ),
                     Icon(
-                      LineIcons.unlock_alt,
+                      TablerIcons.lock,
                       color: Color(0xff00CA71),
                       size: 35,
                     ),
@@ -207,7 +207,7 @@ class _SSOIntentPageState extends State<SSOIntentPage>{
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(right: 5),
-                                  child: Icon(LineIcons.laptop),
+                                  child: Icon(TablerIcons.device_laptop),
                                 ),
                                 Text(widget.request.clientIp),
                                 Spacer(),
@@ -237,7 +237,7 @@ class _SSOIntentPageState extends State<SSOIntentPage>{
                         margin: EdgeInsets.only(top: 15.0),
                         text: AppLocalizations.of(context).translate("authorize"),
                         color: Color(0xff00CA71),
-                        suffixIcon: Icon(LineIcons.unlock_alt),
+                        suffixIcon: Icon(TablerIcons.lock_open),
                         onPressed: () {
                           CloudConnector.authorizeApp(
                             guid: widget.request.session,
@@ -257,7 +257,7 @@ class _SSOIntentPageState extends State<SSOIntentPage>{
                       margin: EdgeInsets.only(top: 5.0),
                       text: AppLocalizations.of(context).translate("denyAccess"),
                       color: Colors.red,
-                      suffixIcon: Icon(LineIcons.close),
+                      suffixIcon: Icon(TablerIcons.ban),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -266,7 +266,7 @@ class _SSOIntentPageState extends State<SSOIntentPage>{
                   margin: EdgeInsets.only(top: 5.0),
                   text: "Ritorna alla home",
                   color: Theme.of(context).primaryColor,
-                  suffixIcon: Icon(LineIcons.home),
+                  suffixIcon: Icon(TablerIcons.home),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],

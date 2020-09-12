@@ -8,7 +8,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
@@ -118,7 +118,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                   children: <Widget>[
                                                     Padding(
                                                       padding: const EdgeInsets.only(right: 5),
-                                                      child: Icon(LineIcons.folder),
+                                                      child: Icon(TablerIcons.folder),
                                                     ),
                                                     Expanded(
                                                       child: Text(
@@ -151,7 +151,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                         children: <Widget>[
                                                           Padding(
                                                             padding: const EdgeInsets.only(right: 5),
-                                                            child: Icon(LineIcons.folder_open, color: Colors.black),
+                                                            child: Icon(TablerIcons.folder, color: Colors.black),
                                                           ),
                                                           Expanded(
                                                             child: Text(
@@ -189,7 +189,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                     children: <Widget>[
                                                                       Padding(
                                                                         padding: const EdgeInsets.only(right: 8.0),
-                                                                        child: Icon(LineIcons.file),
+                                                                        child: Icon(TablerIcons.file),
                                                                       ),
                                                                       Expanded(child: Text(snapshot.data[i2].nome,)),
                                                                     ],
@@ -204,7 +204,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                           padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 15),
                                                           child: Column(
                                                             children: <Widget>[
-                                                              Icon(LineIcons.cloud, size: 40,),
+                                                              Icon(TablerIcons.cloud, size: 40,),
                                                               Text("La cartella è vuota", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
                                                             ],
                                                           ),
