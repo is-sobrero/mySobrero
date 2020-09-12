@@ -36,6 +36,7 @@ class Homepage extends StatefulWidget {
   reAPI3 apiInstance;
   SobreroFeed feed;
   SwitchPageCallback switchPageCallback;
+  GlobalKey marksGlobalKey;
 
   Homepage({
     Key key,
@@ -43,6 +44,7 @@ class Homepage extends StatefulWidget {
     @required this.apiInstance,
     @required this.feed,
     @required this.switchPageCallback,
+    @required this.marksGlobalKey,
   }) :  assert(unifiedLoginStructure != null),
         assert(apiInstance != null),
         assert(feed != null),
@@ -268,6 +270,7 @@ class _HomepageState extends State<Homepage>
                 margin: EdgeInsets.only(top: 15),
                 isWide: UIHelper.isWide(context),
                 left: SobreroWaveTile(
+                  key: widget.marksGlobalKey,
                   color: _marksMean < 0 ? Colors.blue
                       : (_marksMean >= 6)
                       ? ((_marksMean >= 7) ? Color(0xFF23cba7)

@@ -139,6 +139,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
           channelDesc: "Invia notifiche ogni volta che un nuovo voto è inserito",
         );
       }
+      // TODO: Evidentemente le comunicazioni scompaiono... implementare un hashing
       if (loginStructure.compiti.length > assignmentsCount){
         print("[reSYNC] Nuovi compiti presenti, invio LN");
         String _subject = loginStructure.compiti[0].materia;

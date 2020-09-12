@@ -212,6 +212,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                                 Navigator.of(context).pop();
                                 _impostaBool("savedCredentials", false);
                                 _impostaBool("agreementAccepted", false);
+                                _impostaBool('tutorialShown', false);
                                 _setString('loggedAuths', null);
                                 final snackBar = SnackBar(
                                   content: Text(

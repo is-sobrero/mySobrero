@@ -65,7 +65,6 @@
   "earlyCK" : "Uscita anticipata",
   "settings": "Impostazioni",
   "forecast": "Previsioni",
-
   "ssoAuthorized" : "Accesso autorizzato",
   "ssoNotAuthorized" : "Accesso non autorizzato",
   "ssoInvalidrequest": "L'applicazione da autenticare ha generato una richesta non valida, per preservare la tua sicurezza il login è stato bloccato.",
@@ -90,5 +89,14 @@
   "noNotices": "Nessuna comunicazione trovata",
   "noTopics": "Nessun argomento trovato per il periodo selezionato",
   "noHandouts": "Nessun materiale didattico trovato",
-  "noReports": "Pagella non disponibile per il periodo selezionato"
+  "noReports": "Pagella non disponibile per il periodo selezionato",
+  "skip": "Salta tutorial",
+  "actionsMenu": "Menu funzioni",
+  "actionsMenuDesc": "Utilizza questo menu per cambiare pagina ed accedere a tutte le funzioni avanzate di mySobrero.",
+  "clickToContinue": "Clicca sull'area evidenziata per continuare il tutorial",
+  "summaryButtons": "Pulsanti riepilogo",
+  "summaryButtonsDesc": "Oltre a fornire informazioni rapide, i pulsanti della Schermata Home forniscono una scorciatoia a tutti i dati collegati: clicca il pulsante per aprire la pagina corrispondente.",
+  "settingsButton": "Pulsante impostazioni",
+  "settingsButtonDesc": "Clicca questo pulsante per accedere a tutte le impostazioni dell'Applicazione.",
+  "clickToEnd": "Clicca sull'area evidenziata per finire il tutorial"
 }

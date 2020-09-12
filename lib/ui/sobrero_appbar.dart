@@ -20,6 +20,8 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
   final UnifiedLoginStructure loginStructure;
   final String session;
   final Function(String url) setProfileCallback;
+  final GlobalKey settingsGlobalKey;
+  final GlobalKey menuGlobalKey;
 
   SobreroAppBar({
     Key key,
@@ -28,7 +30,9 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
     @required this.profilePicUrl,
     @required this.loginStructure,
     @required this.session,
-    @required this.setProfileCallback
+    @required this.setProfileCallback,
+    @required this.settingsGlobalKey,
+    @required this.menuGlobalKey,
   }) :  assert(elevation != null),
         assert(elevation >= 0),
         assert(elevation <= 1),
@@ -52,6 +56,7 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             IconButton(
+              key: menuGlobalKey,
               icon: Icon(
                 LineIcons.bars,
                 color: Theme.of(context).primaryColor,
@@ -70,6 +75,7 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             Spacer(),
             IconButton(
+              key: settingsGlobalKey,
               icon: Icon(
                 LineIcons.gear,
                 color: Theme.of(context).primaryColor,

@@ -17,7 +17,7 @@ import Flutter
     GeneratedPluginRegistrant.register(with: self)
     
     // TODO: impostare un intervallo più decente
-    UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
+    UIApplication.shared.setMinimumBackgroundFetchInterval(600)
     
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
