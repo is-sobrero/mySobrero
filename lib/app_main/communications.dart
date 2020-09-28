@@ -5,10 +5,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
+import 'package:mySobrero/ui/list_button.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 import 'package:mySobrero/common/utilities.dart';
-import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/tiles/date_time_tile.dart';
 import 'package:mySobrero/ui/data_ui.dart';
@@ -17,18 +19,9 @@ import 'package:mySobrero/ui/layouts.dart';
 
 
 class CommunicationsPageView extends StatefulWidget {
-  UnifiedLoginStructure unifiedLoginStructure;
-  reAPI3 apiInstance;
-  List<ComunicazioneStructure> communications;
-
   CommunicationsPageView({
     Key key,
-    @required this.unifiedLoginStructure,
-    @required this.apiInstance,
-  }) :  assert(unifiedLoginStructure != null),
-        communications = unifiedLoginStructure.comunicazioni,
-        assert(apiInstance != null),
-        super(key: key);
+  }) :  super(key: key);
 
   @override
   _CommunicationsPageState createState() => _CommunicationsPageState();
@@ -39,55 +32,57 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
   @override
   bool get wantKeepAlive => true;
 
-  List<Widget> _displayAttachments(List<AllegatoStructure> allegati){
-    List<Widget> list = new List<Widget>();
-    allegati.forEach((element) {
-      list.add(
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(500),
-            boxShadow: [
-              BoxShadow(
-                  color: Theme.of(context).primaryColor.withAlpha(50),
-                  blurRadius: 10,
-                  spreadRadius: 1,
-                  offset: Offset(0,3)
-              ),
-            ],
-          ),
-          child: ActionChip(
-            backgroundColor: Theme.of(context).primaryColor,
-            onPressed: () => openURL(context, element.url),
-            avatar: CircleAvatar(
-              backgroundColor: Colors.transparent,
+  List<Widget> _displayAttachments(List<Attachment> attachment){
+    List<Widget> list = [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10, top: 10),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 7),
               child: Icon(
                 TablerIcons.paperclip,
-                color: Colors.white,
-                size: 20,
+                size: 25,
+                color: Theme.of(context).primaryColor,
               ),
             ),
-            label: Text(
-              element.nome,
+            Text(
+              "Allegati",
               style: TextStyle(
-                color: Colors.white,
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold
               ),
             ),
-          ),
-        )
+          ],
+        ),
+      ),
+    ];
+    attachment.forEach((element) {
+      list.add(
+        SobreroListButton(
+          icon: TablerIcons.file,
+          onPressed: () => openURL(context, element.url),
+          title: element.name,
+          isBold: false,
+          color: Theme.of(context).textTheme.bodyText1.color,
+          showBorder: element != attachment.last
+        ),
       );
     });
     return list;
   }
 
-  Widget _displayCommunication(ComunicazioneStructure element){
+  Widget _displayCommunication(Notice element){
     String realSender = "Dirigente";
-    if (element.mittente.toUpperCase() != "DIRIGENTE")
+    if (element.sender.toUpperCase() != "DIRIGENTE")
       realSender = "Segreteria Amm.va";
     return DateTimeTile(
       title: realSender,
-      date: element.data,
+      date: element.date,
       dateFormat: 'dd/MM/yyyy',
       showHour: false,
+      margin: EdgeInsets.zero,
       headerLayoutBuilder: (title, color) => Row(
         children: [
           Container(
@@ -124,7 +119,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
       ),
       children: [
         Text(
-          toBeginningOfSentenceCase(element.titolo),
+          toBeginningOfSentenceCase(element.object),
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -133,13 +128,13 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 8),
           child: Text(
-            element.contenuto,
+            element.body,
             style: TextStyle(fontSize: 16),
           ),
         ),
-        Column(
+        if (element.attachments.length > 0) Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: _displayAttachments(element.allegati),
+          children: _displayAttachments(element.attachments),
         ),
       ],
     );
@@ -159,17 +154,21 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
             ),
           ),
         ),
-        if (widget.communications.length > 0) WaterfallFlow.builder(
+        if (reAPI4.instance.getStartupCache().notices.length > 0) 
+          WaterfallFlow.builder(
           primary: false,
           shrinkWrap: true,
-          itemCount: widget.communications.length,
-          itemBuilder: (_, i) => _displayCommunication(widget.communications[i]),
+          itemCount: reAPI4.instance.getStartupCache().notices.length,
+          itemBuilder: (_, i) => _displayCommunication(
+              reAPI4.instance.getStartupCache().notices[i]
+          ),
           gridDelegate: SliverWaterfallFlowDelegate(
             crossAxisCount: UIHelper.columnCount(context),
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10.0,
             lastChildLayoutTypeBuilder: (i) =>
-              i == widget.communications.length ? LastChildLayoutType.foot
+              i == reAPI4.instance.getStartupCache().notices.length 
+                  ? LastChildLayoutType.foot
                   : LastChildLayoutType.none,
           ),
         ) else SobreroEmptyState(

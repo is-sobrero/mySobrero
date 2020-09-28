@@ -6,7 +6,6 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:mySobrero/common/ui.dart';
@@ -14,13 +13,13 @@ import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/login/login.dart';
 
+
 void backgroundFetchHeadlessTask(String taskId) async {
   print('[BackgroundFetch] Headless event received.');
   BackgroundFetch.finish(taskId);
 }
 
 void main() {
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
   /// Togliere il commento in caso di debug delle animazioni
   //timeDilation = 3.0;
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,18 +28,12 @@ void main() {
   BackgroundFetch.registerHeadlessTask(
     backgroundFetchHeadlessTask,
   );
-  /*BackgroundFetch.scheduleTask(TaskConfig(
-    taskId: "it.edu.mysobrero.resync",
-    delay: 1000 * 60 * 15,
-    periodic: true,
-  ));*/
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       supportedLocales: [
         Locale('en', 'US'),
         Locale('it', 'IT'),

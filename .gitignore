@@ -35,7 +35,7 @@ lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-lib/reapi3.dart
+lib/reAPI/reapi.dart
 android/key.properties
 ios/Flutter/.last_build_id
 export.jsp

@@ -39,7 +39,14 @@ class SobreroWaveTile extends SobreroRatioTile {
   double numberMark;
 
   @override
-  TileLayoutBuilder get layoutBuilder => (child) => Expanded(
+  TileLayoutBuilder get layoutBuilder => (
+      EdgeInsets padding,
+      bool showShadow,
+      List<Color> colors,
+      bool overrideGradient,
+      bool overridePadding,
+      Widget child,
+  ) => Expanded(
     flex: flex,
     child: Container(
       margin: margin,
@@ -83,7 +90,10 @@ class SobreroWaveTile extends SobreroRatioTile {
                   ),
                 ),
               ),
-              child,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: child,
+              ),
             ],
           ),
         ),

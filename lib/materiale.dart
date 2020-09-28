@@ -10,26 +10,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/common/tiles.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
-import 'reapi3.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// TODO: pulizia codice materiale
+
 class MaterialeView extends StatefulWidget {
-  reAPI3 apiInstance;
-  MaterialeView({Key key, @required this.apiInstance}) : super(key: key);
+  MaterialeView({Key key}) : super(key: key);
 
   @override
   _MaterialeState createState() => _MaterialeState();
 }
 
 class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStateMixin {
-  Future<List<DocenteStructure>> _materiale;
+  Future<List<Professor>> _materiale;
 
   @override
   void initState() {
     super.initState();
-    _materiale = widget.apiInstance.retrieveMateriale();
+    _materiale = reAPI4.instance.getHandouts();
   }
 
   _launchURL(String uri) async {
@@ -48,7 +50,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
           padding: EdgeInsets.only(top: 10),
           child: Column(
             children: <Widget>[
-              FutureBuilder<List<DocenteStructure>>(
+              FutureBuilder<List<Professor>>(
                 future: _materiale,
                 builder: (context, snapshot){
                   switch (snapshot.connectionState){
@@ -95,7 +97,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 10, top: 5),
                                 child: Text(
-                                    snapshot.data[index].docente,
+                                    snapshot.data[index].name,
                                     style: TextStyle(
                                         fontSize: 24,
                                     )
@@ -104,7 +106,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                               ListView.builder(
                                 primary: false,
                                 shrinkWrap: true,
-                                itemCount: snapshot.data[index].cartelle.length,
+                                itemCount: snapshot.data[index].folders.length,
                                 itemBuilder: (ctx, i) => SobreroFlatTile(
                                     margin: EdgeInsets.only(bottom: 15),
                                     overridePadding: true,
@@ -122,7 +124,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                     ),
                                                     Expanded(
                                                       child: Text(
-                                                          snapshot.data[index].cartelle[i].descrizione,
+                                                          snapshot.data[index].folders[i].name,
                                                           style: TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
@@ -155,7 +157,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                                snapshot.data[index].cartelle[i].descrizione,
+                                                                snapshot.data[index].folders[i].name,
                                                                 style: TextStyle(
                                                                     fontSize: 18,
                                                                     fontWeight:
@@ -170,8 +172,11 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                     ],
                                                   ),
                                                 ),
-                                                FutureBuilder<List<FileStructure>>(
-                                                    future: widget.apiInstance.retrieveContenutiCartella(snapshot.data[index].id, snapshot.data[index].cartelle[i].idCartella),
+                                                FutureBuilder<List<File>>(
+                                                    future: reAPI4.instance.getFolderContents(
+                                                      profID: snapshot.data[index].id,
+                                                      folderID: snapshot.data[index].folders[i].id,
+                                                    ),
                                                     builder: (context, snapshot){
                                                       if (snapshot.hasData){
                                                         return snapshot.data.length > 0 ?ListView.builder(
@@ -179,7 +184,6 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                           shrinkWrap: true,
                                                           itemCount: snapshot.data.length,
                                                           itemBuilder: (c, i2){
-                                                            //return Text(snapshot.data[i2].nome);
                                                             return FlatButton(
                                                                 padding: EdgeInsets.zero,
                                                                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -191,7 +195,7 @@ class _MaterialeState extends State<MaterialeView> with SingleTickerProviderStat
                                                                         padding: const EdgeInsets.only(right: 8.0),
                                                                         child: Icon(TablerIcons.file),
                                                                       ),
-                                                                      Expanded(child: Text(snapshot.data[i2].nome,)),
+                                                                      Expanded(child: Text(snapshot.data[i2].name,)),
                                                                     ],
                                                                   ),
                                                                 ),

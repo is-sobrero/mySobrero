@@ -96,7 +96,10 @@
   "clickToContinue": "Clicca sull'area evidenziata per continuare il tutorial",
   "summaryButtons": "Pulsanti riepilogo",
   "summaryButtonsDesc": "Oltre a fornire informazioni rapide, i pulsanti della Schermata Home forniscono una scorciatoia a tutti i dati collegati: clicca il pulsante per aprire la pagina corrispondente.",
-  "settingsButton": "Pulsante impostazioni",
-  "settingsButtonDesc": "Clicca questo pulsante per accedere a tutte le impostazioni dell'Applicazione.",
-  "clickToEnd": "Clicca sull'area evidenziata per finire il tutorial"
+  "settingsButton": "Pulsante aggiorna",
+  "settingsButtonDesc": "Clicca questo pulsante per ricaricare i dati visualizzati dall'Applicazione.",
+  "clickToEnd": "Clicca sull'area evidenziata per finire il tutorial",
+  "NOT_DEFINED": "Non specificato",
+  "SESSION_EXPIRED": "La sessione è scaduta",
+  "ANOTHER_DEVICE_CONNECTED": "Un'altro dispositivo ha effettuato l'accesso a mySobrero, per preservare la tua sicurezza questa sessione è stata interrotta. Per continuare ad usare l'app, chiudere e riaprire l'app per effettuare di nuovo l'accesso"
 }

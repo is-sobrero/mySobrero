@@ -36,7 +36,7 @@ matrix:
     - export GRADLE_HOME=$PWD/gradle-3.5
     - export PATH=$GRADLE_HOME/bin:$PATH
     - git clone https://github.com/flutter/flutter.git -b stable --depth 1
-    - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv -in lib/reapi3.dart.enc -out lib/reapi3.dart -d
+    - openssl aes-256-cbc -K $encrypted_b578e77943ec_key -iv $encrypted_b578e77943ec_iv -in lib/reAPI/reapi.dart.enc -out lib/reAPI/reapi.dart -d
     script:
     - "./flutter/bin/flutter -v build apk"
     cache:
@@ -64,7 +64,7 @@ matrix:
     - brew install ideviceinstaller
     - brew install ios-deploy
     - git clone https://github.com/flutter/flutter.git -b stable --depth 1
-    - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv -in lib/reapi3.dart.enc -out lib/reapi3.dart -d
+    - openssl aes-256-cbc -K $encrypted_b578e77943ec_key -iv $encrypted_b578e77943ec_iv -in lib/reAPI/reapi.dart.enc -out lib/reAPI/reapi.dart -d
     script:
     - "./flutter/bin/flutter -v build ios --release --no-codesign"
     cache:
@@ -100,7 +100,7 @@ matrix:
       - brew install ideviceinstaller
       - brew install ios-deploy
       - git clone https://github.com/flutter/flutter.git -b dev --depth 1
-      - openssl aes-256-cbc -K $encrypted_df0fe7c6235c_key -iv $encrypted_df0fe7c6235c_iv -in lib/reapi3.dart.enc -out lib/reapi3.dart -d
+      - openssl aes-256-cbc -K $encrypted_b578e77943ec_key -iv $encrypted_b578e77943ec_iv -in lib/reAPI/reapi.dart.enc -out lib/reAPI/reapi.dart -d
       - "./flutter/bin/flutter config --enable-macos-desktop"
       - "./flutter/bin/flutter pub get"
     script:

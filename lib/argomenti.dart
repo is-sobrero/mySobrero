@@ -6,12 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-
 import 'package:flutter/material.dart';
+
 import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/custom/dropdown.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/dropdown.dart';
@@ -20,40 +20,40 @@ import 'package:mySobrero/ui/toggle.dart';
 // TODO: pulizia codice argomenti
 
 class ArgomentiView extends StatefulWidget {
-  reAPI3 apiInstance;
 
-  ArgomentiView({Key key, @required this.apiInstance}) : super(key: key);
+  ArgomentiView({Key key}) : super(key: key);
 
   @override
   _ArgomentiState createState() => _ArgomentiState();
 }
 
 class _ArgomentiState extends State<ArgomentiView> {
-  List<ArgomentoStructure> regclasse;
+  List<Topic> regclasse;
 
   List<String> materie;
-  List<ArgomentoStructure> argSettimana;
-  Future<List<ArgomentoStructure>> _argomenti;
+  List<Topic> argSettimana;
+  Future<List<Topic>> _argomenti;
 
   @override
   void initState() {
     super.initState();
-    _argomenti = widget.apiInstance.retrieveArgomenti().then((argomenti){
-      this.argSettimana = List<ArgomentoStructure>();
-      for (int i = 0; i < argomenti.length; i++) {
-        var currentGiorno = formatter.parse(argomenti[i].data.split(" ")[0]);
+    _argomenti = reAPI4.instance.getTopics();
+    _argomenti.then((topics){
+      this.argSettimana = List<Topic>();
+      for (int i = 0; i < topics.length; i++) {
+        var currentGiorno = formatter.parse(topics[i].date.split(" ")[0]);
         if (currentGiorno.compareTo(inizioSettimana) >= 0){
-          this.argSettimana.add(argomenti[i]);
+          this.argSettimana.add(topics[i]);
           print("Futuri argomenti: ${formatter.format(currentGiorno)}");
         }
         materie = new List();
         materie.add("Tutte le materie");
-        for (int i = 0; i < argomenti.length; i++) {
-          String m = argomenti[i].materia;
+        for (int i = 0; i < topics.length; i++) {
+          String m = topics[i].subject;
           if (!materie.contains(m)) materie.add(m);
         }
       }
-      return argomenti;
+      return _argomenti;
     });
 
     inizioSettimana = today.subtract(new Duration(days: today.weekday - 1));
@@ -73,7 +73,7 @@ class _ArgomentiState extends State<ArgomentiView> {
       title: "Argomenti",
       child: Padding(
           padding: EdgeInsets.only(top: 10),
-          child: FutureBuilder<List<ArgomentoStructure>>(
+          child: FutureBuilder<List<Topic>>(
             future: _argomenti,
             builder: (context, snapshot){
               switch (snapshot.connectionState){
@@ -107,7 +107,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                     return SobreroEmptyState(
                       emptyStateKey: "noTopics",
                     );
-                  List<ArgomentoStructure> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
+                  List<Topic> currentSet = selezioneArgomenti == 0 ? argSettimana : snapshot.data.reversed.toList();
                   return Column(
                     children: <Widget>[
                       Padding(
@@ -149,17 +149,17 @@ class _ArgomentiState extends State<ArgomentiView> {
                           var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile",
                             "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
                             "Ottobre", "Novembre", "Dicembre"];
-                          var tempString = currentSet[index].data.split(" ")[0].split("/");
+                          var tempString = currentSet[index].date.split(" ")[0].split("/");
                           String formattedDate = "${tempString[0]} ${mesi[int.parse(tempString[1]) - 1]}";
                           bool mostraGiornata = true;
-                          final bool mostra = filterIndex == 0 ? true : currentSet[index].materia == materie[filterIndex];
-                          if (dataTemporanea != currentSet[index].data){
-                            dataTemporanea = currentSet[index].data;
+                          final bool mostra = filterIndex == 0 ? true : currentSet[index].subject == materie[filterIndex];
+                          if (dataTemporanea != currentSet[index].date){
+                            dataTemporanea = currentSet[index].date;
                             if (filterIndex != 0){
                               mostraGiornata = false;
                               print("filtro giornate attivo");
                               for (int i = 0; i < currentSet.length; i++) {
-                                if (currentSet[i].materia == materie[filterIndex] && currentSet[i].data == dataTemporanea) {
+                                if (currentSet[i].subject == materie[filterIndex] && currentSet[i].date == dataTemporanea) {
                                   mostraGiornata = true;
                                   break;
                                 }
@@ -180,7 +180,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                                 if (mostra) SobreroFlatTile(
                                   margin: EdgeInsets.only(bottom: 15),
                                   children: [
-                                    Text(currentSet[index].materia,
+                                    Text(currentSet[index].subject,
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight:
@@ -188,7 +188,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                                             )
                                     ),
                                     Text(
-                                        currentSet[index].descrizione.trim(),
+                                        currentSet[index].description.trim(),
                                         style: TextStyle(fontSize: 16)
                                     ),
                                   ]
@@ -196,11 +196,11 @@ class _ArgomentiState extends State<ArgomentiView> {
                               ],
                             );
                           }
-                          dataTemporanea = currentSet[index].data;
+                          dataTemporanea = currentSet[index].date;
                           return mostra ? SobreroFlatTile(
                             margin: EdgeInsets.only(bottom: 15),
                               children: [
-                                Text(currentSet[index].materia,
+                                Text(currentSet[index].subject,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight:
@@ -208,7 +208,7 @@ class _ArgomentiState extends State<ArgomentiView> {
                                     )
                                 ),
                                 Text(
-                                    currentSet[index].descrizione.trim(),
+                                    currentSet[index].description.trim(),
                                     style: TextStyle(fontSize: 16)
                                 ),
                               ]

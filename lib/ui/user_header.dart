@@ -4,18 +4,16 @@ import 'package:mySobrero/ui/skeleton.dart';
 import 'package:mySobrero/localization/localization.dart';
 
 class SobreroUserHeader extends StatelessWidget {
-  final String name, year, section, course;
+  final String name, fullclass, course;
   final String profileURL;
   SobreroUserHeader({
     Key key,
     @required this.name,
-    @required this.year,
-    @required this.section,
+    @required this.fullclass,
     @required this.course,
     @required this.profileURL
   }) :  assert(name != null),
-        assert(year != null),
-        assert(section != null),
+        assert(fullclass != null),
         assert(course != null),
         super(key: key);
 
@@ -34,8 +32,8 @@ class SobreroUserHeader extends StatelessWidget {
               ),
             ),
             Text(
-              AppLocalizations.of(context).translate('class') +
-                " $year $section - $course"
+              AppLocalizations.of(context).translate('class')
+                  + " $fullclass - $course"
             ),
           ],
         ),

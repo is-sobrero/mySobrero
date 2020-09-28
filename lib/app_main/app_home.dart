@@ -11,7 +11,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:animations/animations.dart';
 
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/compiti.dart';
 import 'package:mySobrero/feed/feed_detail.dart';
 import 'package:mySobrero/common/definitions.dart';
@@ -19,7 +19,8 @@ import 'package:mySobrero/common/expandedsection.dart';
 import 'package:mySobrero/common/profiles.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/localization/localization.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/globals.dart' as globals;
 import 'package:mySobrero/tiles/gradient_tile.dart';
 import 'package:mySobrero/tiles/image_link_tile.dart';
@@ -32,22 +33,16 @@ import 'package:mySobrero/ui/user_header.dart';
 
 
 class Homepage extends StatefulWidget {
-  UnifiedLoginStructure unifiedLoginStructure;
-  reAPI3 apiInstance;
   SobreroFeed feed;
   SwitchPageCallback switchPageCallback;
   GlobalKey marksGlobalKey;
 
   Homepage({
     Key key,
-    @required this.unifiedLoginStructure,
-    @required this.apiInstance,
     @required this.feed,
     @required this.switchPageCallback,
     @required this.marksGlobalKey,
-  }) :  assert(unifiedLoginStructure != null),
-        assert(apiInstance != null),
-        assert(feed != null),
+  }) :  assert(feed != null),
         assert(switchPageCallback != null),
         super(key: key);
 
@@ -68,37 +63,37 @@ class _HomepageState extends State<Homepage>
   String lastCircular = "", lastNoticeSender;
   bool studentAccount;
 
-  List<CompitoStructure> weekAssignments = List<CompitoStructure>();
+  List<Assignment> weekAssignments = List<Assignment>();
 
   @override
   void initState(){
     super.initState();
     double _marksWeights = 0;
-    if (widget.unifiedLoginStructure.voti1Q.length > 0){
+    if (reAPI4.instance.getStartupCache().marks_firstperiod.length > 0){
       _marksMean = 0;
       _marksWeights = 0;
-      widget.unifiedLoginStructure.voti1Q.forEach((element) {
-        _marksMean += element.votoValore * element.pesoValore;
-        _marksWeights += element.pesoValore;
+      reAPI4.instance.getStartupCache().marks_firstperiod.forEach((element) {
+        _marksMean += element.mark * element.weight;
+        _marksWeights += element.weight;
       });
       _marksMean /= _marksWeights;
     }
-    if (widget.unifiedLoginStructure.voti2Q.length > 0){
+    if (reAPI4.instance.getStartupCache().marks_finalperiod.length > 0){
       _marksMean = 0;
       _marksWeights = 0;
-      widget.unifiedLoginStructure.voti2Q.forEach((element) {
-        _marksMean += element.votoValore * element.pesoValore;
-        _marksWeights += element.pesoValore;
+      reAPI4.instance.getStartupCache().marks_finalperiod.forEach((element) {
+        _marksMean += element.mark * element.weight;
+        _marksWeights += element.weight;
       });
       _marksMean /= _marksWeights;
     }
 
-    if (widget.unifiedLoginStructure.comunicazioni.length > 0){
-      lastCircular = widget.unifiedLoginStructure.comunicazioni[0].contenuto;
+    if (reAPI4.instance.getStartupCache().notices.length > 0){
+      lastCircular = reAPI4.instance.getStartupCache().notices[0].body;
       if (lastCircular.length > 100)
         lastCircular = lastCircular.substring(0, 100) + "...";
-      lastNoticeSender = widget.unifiedLoginStructure.comunicazioni[0].mittente;
-      String _sender = widget.unifiedLoginStructure.comunicazioni[0].mittente;
+      lastNoticeSender = reAPI4.instance.getStartupCache().notices[0].sender;
+      String _sender = reAPI4.instance.getStartupCache().notices[0].sender;
       if (_sender.toUpperCase() == "DIRIGENTE")
         lastNoticeSender = "Dirigente";
       else lastNoticeSender = "Segreteria Amm.va";
@@ -108,25 +103,22 @@ class _HomepageState extends State<Homepage>
     bool isCurrentWeek = false;
     var weekStart = today.subtract(new Duration(days: today.weekday - 1));
     var formatter = new DateFormat('DD/MM/yyyy');
-    weekAssignments = List<CompitoStructure>();
-    widget.unifiedLoginStructure.compiti.forEach((element) {
-      DateTime assignmentDate = formatter.parse(element.data);
+    reAPI4.instance.getStartupCache().assignments.forEach((element) {
+      DateTime assignmentDate = formatter.parse(element.date);
       isCurrentWeek = assignmentDate.compareTo(weekStart) >= 0;
       if (isCurrentWeek) this.weekAssignments.add(element);
     });
 
-    CloudConnector.getRemoteHeadingNews().then(
-            (value) => setState((){
-          _remoteNotice = value;
-        })
-    );
+    CloudConnector.getRemoteHeadingNews().then((value) => setState((){
+      _remoteNotice = value;
+    }));
 
     _parentNoticeRecognizer = TapGestureRecognizer()..onTap = (){
       setState((){
         expandedParentNotice = !expandedParentNotice;
       });
     };
-    studentAccount = widget.unifiedLoginStructure.user.livello == "4";
+    studentAccount = reAPI4.instance.getStartupCache().user.level == "4";
   }
 
   @override
@@ -211,10 +203,9 @@ class _HomepageState extends State<Homepage>
               ),
               /// Intestazione utente
               SobreroUserHeader(
-                name: widget.unifiedLoginStructure.user.nome,
-                year: widget.unifiedLoginStructure.user.classe,
-                section: widget.unifiedLoginStructure.user.sezione,
-                course: widget.unifiedLoginStructure.user.corso,
+                name: reAPI4.instance.getStartupCache().user.name,
+                fullclass: reAPI4.instance.getStartupCache().user.fullclass,
+                course: reAPI4.instance.getStartupCache().user.course,
                 profileURL: globals.profileURL,
               ),
               /// Intestazione remota
@@ -305,7 +296,7 @@ class _HomepageState extends State<Homepage>
                     context,
                     PageRouteBuilder(
                       pageBuilder: (_, a, b) => CompitiView(
-                        compiti: widget.unifiedLoginStructure.compiti,
+                        //compiti: reAPI4.instance.getStartupCache().assignments,
                         settimana: weekAssignments,
                       ),
                       transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
@@ -379,7 +370,7 @@ class _HomepageState extends State<Homepage>
                     if (lastNoticeSender != null) AutoSizeText(
                         lastCircular,
                         minFontSize: 10,
-                        maxLines: 3,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: new TextStyle(
                             fontSize: 18,

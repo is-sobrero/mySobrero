@@ -8,13 +8,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class CarrieraView extends StatefulWidget {
-  UnifiedLoginStructure unifiedLoginStructure;
-  CarrieraView({Key key, @required this.unifiedLoginStructure}) : super(key: key);
+  CarrieraView({Key key}) : super(key: key);
   @override
   _CarrieraState createState() => _CarrieraState();
 }
@@ -27,11 +27,10 @@ class _CarrieraState extends State<CarrieraView> {
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.unifiedLoginStructure.user.curriculum.length; i++){
-      final CurriculumStructure item = widget.unifiedLoginStructure.user.curriculum[i];
-      final int anno = int.parse(item.classe);
+    reAPI4.instance.getStartupCache().user.curriculum.forEach((item) {
+      final int anno = int.parse(item.fullclass.substring(0, 1));
       int credito = -1;
-      if (item.credito.length > 0) credito = int.parse(item.credito.trim());
+      if (item.points.length > 0) credito = int.parse(item.points.trim());
       int maxCredito = 12;
       if (anno == 4) maxCredito = 13;
       if (anno == 5) maxCredito = 15;
@@ -39,16 +38,16 @@ class _CarrieraState extends State<CarrieraView> {
         creditiNonPresiTotali += (maxCredito - credito);
         creditiPresiTotali += credito;
       }
-    }
-    print("Crediti presi: ${creditiPresiTotali}, Crediti non presi: ${creditiNonPresiTotali}");
+    });
+    print("Crediti presi: $creditiPresiTotali, Crediti non presi: $creditiNonPresiTotali");
   }
 
-  Widget _generaAnno(CurriculumStructure anno){
+  Widget _generaAnno(Curriculum anno){
     Color scaffoldColor;
 
-    if (!anno.esito.contains("AMMESS")){
-      if (anno.credito.length == 0) scaffoldColor = Color(0xff0652DD);
-      else if (anno.esito.length == 0) scaffoldColor = null;
+    if (!anno.outcome.contains("AMMESS")){
+      if (anno.points.length == 0) scaffoldColor = Color(0xff0652DD);
+      else if (anno.outcome.length == 0) scaffoldColor = null;
       else scaffoldColor = Colors.red;
     }
 
@@ -61,7 +60,7 @@ class _CarrieraState extends State<CarrieraView> {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Row(
             children: <Widget>[
-              Text("Classe ${anno.classe} ${anno.sezione.trim()}",
+              Text("Classe ${anno.fullclass}",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: txtColor
                 ),
               ),
@@ -77,7 +76,10 @@ class _CarrieraState extends State<CarrieraView> {
                     ]
                 ),
                 child: Chip(
-                  label: Text(anno.credito.length == 0 ? "Anno in corso" : "${anno.credito} crediti", style: TextStyle(color: Colors.black),),
+                  label: Text(
+                    anno.points.length == 0 ? "Anno in corso" : "${anno.points} crediti",
+                    style: TextStyle(color: Colors.black),
+                  ),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   backgroundColor: Colors.white,
                 ),
@@ -85,13 +87,13 @@ class _CarrieraState extends State<CarrieraView> {
             ],
           ),
         ),
-        Text(anno.corso,
+        Text(anno.course,
             style: TextStyle(fontSize: 16, color: txtColor, fontWeight: FontWeight.bold,)),
-        Text("Anno scolastico ${anno.anno}",
+        Text("Anno scolastico ${anno.year}",
             style: TextStyle(fontSize: 16, color: txtColor)),
-        anno.esito.length > 0 ? Padding(
+        anno.outcome.length > 0 ? Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Text(anno.esito,
+          child: Text(anno.outcome,
               style: TextStyle(fontSize: 16, color: txtColor)),
         ) : Container(),
       ],
@@ -163,8 +165,10 @@ class _CarrieraState extends State<CarrieraView> {
                   addAutomaticKeepAlives: true,
                   primary: false,
                   shrinkWrap: true,
-                  itemCount: widget.unifiedLoginStructure.user.curriculum.length,
-                  itemBuilder: (context, index) => _generaAnno(widget.unifiedLoginStructure.user.curriculum[index]),
+                  itemCount: reAPI4.instance.getStartupCache().user.curriculum.length,
+                  itemBuilder: (context, i) => _generaAnno(
+                    reAPI4.instance.getStartupCache().user.curriculum[i],
+                  ),
                 ),
               )
             ],

@@ -6,7 +6,8 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mySobrero/common/pageswitcher.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/tiles/date_time_tile.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
@@ -14,15 +15,12 @@ import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/toggle.dart';
 
 class CompitiView extends StatefulWidget {
-  List<CompitoStructure> compiti;
-  List<CompitoStructure> settimana;
+  List<Assignment> settimana;
 
   CompitiView({
     Key key,
-    @required this.compiti,
     @required this.settimana,
-  }) :  assert(compiti != null),
-        assert(settimana != null),
+  }) :  assert(settimana != null),
         super(key: key);
 
   @override
@@ -32,10 +30,12 @@ class CompitiView extends StatefulWidget {
 class _CompitiState extends State<CompitiView> {
   int _periodSelector = 0;
 
+  List<Assignment> _assignments = reAPI4.instance.getStartupCache().assignments;
+
   @override
   Widget build(BuildContext context) {
-    List<CompitoStructure> _selectedAssignments = _periodSelector == 0
-        ? widget.settimana : widget.compiti;
+    List<Assignment> _selectedAssignments = _periodSelector == 0
+        ? widget.settimana : _assignments;
     return SobreroDetailView(
       title: "Compiti",
       child: Column(
@@ -71,12 +71,12 @@ class _CompitiState extends State<CompitiView> {
                 itemCount: _selectedAssignments.length,
                 itemBuilder: (_, i) => DateTimeTile(
                   title: UIHelper.upperCaseFirst(
-                    _selectedAssignments.reversed.toList()[i].materia,
+                    _selectedAssignments.reversed.toList()[i].subject,
                   ),
-                  date: _selectedAssignments.reversed.toList()[i].data,
+                  date: _selectedAssignments.reversed.toList()[i].date,
                   children: [
                     Text(
-                      _selectedAssignments.reversed.toList()[i].compito.trim(),
+                      _selectedAssignments.reversed.toList()[i].description.trim(),
                       style: TextStyle(fontSize: 16),
                     ),
                   ],

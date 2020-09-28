@@ -4,6 +4,7 @@
 
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
@@ -16,9 +17,11 @@ import 'package:mySobrero/app_main/communications.dart';
 import 'package:mySobrero/feed/sobrero_feed.dart';
 import 'package:mySobrero/impostazioni.dart';
 import 'package:mySobrero/localization/localization.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/sso/sso.dart';
 import 'package:mySobrero/ui/button.dart';
+import 'package:mySobrero/ui/dialogs.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
 import 'package:mySobrero/ui/sobrero_appbar.dart';
@@ -29,19 +32,16 @@ import 'package:tutorial_coach_mark/animated_focus_light.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class AppMain extends StatefulWidget {
-  UnifiedLoginStructure unifiedLoginStructure;
-  reAPI3 apiInstance;
   SobreroFeed feed;
   String profileUrl;
   bool isBeta = false;
 
   AppMain({
     Key key,
-    @required this.unifiedLoginStructure,
     @required this.feed,
     @required this.profileUrl,
     @required this.isBeta,
-    @required this.apiInstance}) : super(key: key);
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AppMainState();
@@ -65,7 +65,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
 
   GlobalKey _menuGK = GlobalKey();
   GlobalKey _marksGK = GlobalKey();
-  GlobalKey _settingsGK = GlobalKey();
+  GlobalKey _refreshGK = GlobalKey();
 
   void _initTutorialTargets(){
     _targets.add(
@@ -149,7 +149,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     );
     _targets.add(
       TargetFocus(
-        keyTarget: _settingsGK,
+        keyTarget: _refreshGK,
         contents: [
           ContentTarget(
               align: AlignContent.bottom,
@@ -245,41 +245,68 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     super.initState();
     _profileUrl = widget.profileUrl;
     print(_profileUrl);
-    _votesPageInstance = VotesPage(
-      unifiedLoginStructure: widget.unifiedLoginStructure,
-      apiInstance: widget.apiInstance,
-    );
     _homepageNewInstance = Homepage(
-      unifiedLoginStructure: widget.unifiedLoginStructure,
-      apiInstance: widget.apiInstance,
-      feed: widget.feed,
-      switchPageCallback: (page) => switchPage(true, page),
-      marksGlobalKey: _marksGK
+        feed: widget.feed,
+        switchPageCallback: (page) => switchPage(true, page),
+        marksGlobalKey: _marksGK
     );
-    _communicationsPageView = CommunicationsPageView(
-      unifiedLoginStructure: widget.unifiedLoginStructure,
-      apiInstance: widget.apiInstance,
-    );
-    _morePageInstance = MorePageView(
-      unifiedLoginStructure: widget.unifiedLoginStructure,
-      apiInstance: widget.apiInstance,
-    );
+    _votesPageInstance = VotesPage();
+    _communicationsPageView = CommunicationsPageView();
+    _morePageInstance = MorePageView();
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
   bool elaboraScroll(ScrollNotification scrollNotification) {
     if (scrollNotification is ScrollUpdateNotification) {
-      double oldScroll = _globalScroll;
-      _globalScroll = scrollNotification.metrics.pixels;
-      if (_globalScroll < 0)
-        _globalScroll = 0;
-      else if (_globalScroll > _scrollThreshold)
-        _globalScroll = 1;
-      else
-        _globalScroll /= _scrollThreshold;
-      if (oldScroll - _globalScroll != 0) setState(() {});
+      if (scrollNotification.metrics.axis == Axis.vertical){
+        double oldScroll = _globalScroll;
+        _globalScroll = scrollNotification.metrics.pixels;
+        if (_globalScroll < 0)
+          _globalScroll = 0;
+        else if (_globalScroll > _scrollThreshold)
+          _globalScroll = 1;
+        else
+          _globalScroll /= _scrollThreshold;
+        if (oldScroll - _globalScroll != 0) setState(() {});
+
+      }
     }
     return true;
+  }
+
+  Future<bool> _refreshAppContents() async {
+    try {
+      await reAPI4.instance.updateAssignmentsCache();
+      await reAPI4.instance.updateMarksCache();
+      await reAPI4.instance.updateNoticesCache();
+      setState((){});
+    } on REAPIException catch (e) {
+      if (e.code == -1) showDialog(
+        context: context,
+        builder: (context) => SobreroDialogSingle(
+          headingWidget: Icon(
+            TablerIcons.alert_triangle,
+            size: 40,
+            color: Colors.red,
+          ),
+          title: AppLocalizations.of(context).translate("SESSION_EXPIRED"),
+          buttonText: "Ok",
+          buttonCallback: () => Navigator.of(context).pop(),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  AppLocalizations.of(context).translate("ANOTHER_DEVICE_CONNECTED"),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+      return false;
+    }
   }
 
   @override
@@ -296,13 +323,10 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
           appBar: SobreroAppBar(
             elevation: _globalScroll,
             topCorrection: window.padding.top > 0 ? 3 : 0,
-            profilePicUrl: _profileUrl,
-            loginStructure: widget.unifiedLoginStructure,
-            session: widget.apiInstance.getSession(),
-            setProfileCallback: (url) => setState((){
-              _profileUrl = url;
-            }),
-            settingsGlobalKey: _settingsGK,
+            onRefresh: (){
+              _refreshAppContents();
+            },
+            refreshGlobalKey: _refreshGK,
             menuGlobalKey: _menuGK
           ),
           drawer: SobreroDrawer(
@@ -347,7 +371,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (a, b, c) => SSOProvider(
-                      session: widget.apiInstance.getSession(),
+                      session: reAPI4.instance.getSession(),
                     ),
                     transitionDuration: Duration(
                       milliseconds: UIHelper.pageAnimDuration,
@@ -370,12 +394,10 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (a, b, c) => ImpostazioniView(
-                      unifiedLoginStructure: widget.unifiedLoginStructure,
                       profileURL: _profileUrl,
                       profileCallback: (url) => setState((){
                         _profileUrl = url;
                       }),
-                      session: widget.apiInstance.getSession(),
                     ),
                     transitionDuration: Duration(
                       milliseconds: UIHelper.pageAnimDuration,
@@ -398,21 +420,21 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
             ],
           ),
           body: PageView.builder(
-              controller: pageController,
-              onPageChanged: (index) => switchPage(false, index),
-              itemCount: 4,
-              itemBuilder: (context, i) {
-                var schermata;
-                if (i == 0) schermata = _homepageNewInstance;
-                if (i == 1) schermata = _votesPageInstance;
-                if (i == 2) schermata = _communicationsPageView;
-                if (i == 3) schermata = _morePageInstance;
-                return NotificationListener<ScrollNotification>(
-                    onNotification: elaboraScroll,
-                    child: schermata
-                );
-              },
-            ),
+            controller: pageController,
+            onPageChanged: (index) => switchPage(false, index),
+            itemCount: 4,
+            itemBuilder: (context, i) {
+              var schermata;
+              if (i == 0) schermata = _homepageNewInstance;
+              if (i == 1) schermata = _votesPageInstance;
+              if (i == 2) schermata = _communicationsPageView;
+              if (i == 3) schermata = _morePageInstance;
+              return NotificationListener<ScrollNotification>(
+                  onNotification: elaboraScroll,
+                  child: schermata
+              );
+            },
+          ),
         ),
       ),
     );

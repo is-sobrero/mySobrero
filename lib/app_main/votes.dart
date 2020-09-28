@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/custom/dropdown.dart';
 import 'package:mySobrero/localization/localization.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/dropdown.dart';
 import 'package:mySobrero/ui/helper.dart';
@@ -22,23 +24,12 @@ import 'package:animations/animations.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/common/ui.dart';
-import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/situazione.dart';
 
 class VotesPage extends StatefulWidget {
-  List<VotoStructure> voti1q, voti2q;
-  UnifiedLoginStructure unifiedLoginStructure;
-  reAPI3 apiInstance;
-
   VotesPage({
     Key key,
-    @required this.unifiedLoginStructure,
-    @required this.apiInstance,
-  }) :  assert(unifiedLoginStructure != null),
-        assert(apiInstance != null),
-        voti1q = unifiedLoginStructure.voti1Q,
-        voti2q = unifiedLoginStructure.voti2Q,
-        super(key: key);
+  }) :  super(key: key);
 
   @override
   _VotesPageState createState() => _VotesPageState();
@@ -49,40 +40,41 @@ class _VotesPageState extends State<VotesPage>
   @override
   bool get wantKeepAlive => true;
 
-  Map<String, SituazioneElement> situazione1Q, situazione2Q;
-  List<String> materie1q, materie2q;
+  Map<String, SituazioneElement> _goals1t, _goals2t;
+  List<String> _subj1t, _subj2t;
   Future<Map<String, int>> _goals;
 
   int periodFilter = 0, filterIndex = 0;
 
   void initState(){
     super.initState();
-    materie1q = _generateSubjectsList(widget.voti1q);
-    materie2q = _generateSubjectsList(widget.voti2q);
+    _subj1t = _getSubjects(reAPI4.instance.getStartupCache().marks_firstperiod);
+    _subj2t = _getSubjects(reAPI4.instance.getStartupCache().marks_finalperiod);
 
-    situazione1Q = _generateSituazioneMap(widget.voti1q);
-    situazione2Q = _generateSituazioneMap(widget.voti2q);
+    _goals1t = _getGoalsMap(reAPI4.instance.getStartupCache().marks_firstperiod);
+    _goals2t = _getGoalsMap(reAPI4.instance.getStartupCache().marks_finalperiod);
 
-    _goals = CloudConnector.getGoals(token: widget.apiInstance.getSession());
+    _goals = CloudConnector.getGoals(token: reAPI4.instance.getSession());
 
-    if (widget.voti2q.length > 0) periodFilter = 1;
+    if (reAPI4.instance.getStartupCache().marks_finalperiod.length > 0)
+      periodFilter = 1;
   }
 
-  Map<String, SituazioneElement> _generateSituazioneMap(
-      List<VotoStructure> votes){
+  Map<String, SituazioneElement> _getGoalsMap(
+      List<Mark> votes){
     Map<String, double> votesSum = new Map<String, double>();
     Map<String, double> votesCount = new Map<String, double>();
     Map<String, SituazioneElement> tempReturn =
       new Map<String, SituazioneElement>();
 
     votes.forEach((mark) {
-      if (!votesSum.containsKey(mark.materia)){
-        votesSum[mark.materia] = 0;
-        votesCount[mark.materia] = 0;
+      if (!votesSum.containsKey(mark.subject)){
+        votesSum[mark.subject] = 0;
+        votesCount[mark.subject] = 0;
       }
-      if (mark.votoValore > 0){
-        votesSum[mark.materia] += mark.votoValore * mark.pesoValore;
-        votesCount[mark.materia] += mark.pesoValore;
+      if (mark.mark > 0){
+        votesSum[mark.subject] += mark.mark * mark.weight;
+        votesCount[mark.subject] += mark.weight;
       }
     });
 
@@ -96,30 +88,30 @@ class _VotesPageState extends State<VotesPage>
     return tempReturn;
   }
 
-  List<String> _generateSubjectsList (List<VotoStructure> marks) {
+  List<String> _getSubjects (List<Mark> marks) {
     List<String> tempReturn = new List<String>();
-    // TODO: fix context loc
+    // TODO: fix context localization
     tempReturn.add("Tutte le materie");
 
     marks.forEach((mark) {
-      String m = mark.materia;
+      String m = mark.subject;
       if (!tempReturn.contains(m)) tempReturn.add(m);
     });
     return tempReturn;
   }
 
-  Widget _generateMarkTile(VotoStructure mark){
+  Widget _generateMarkTile(Mark mark){
     List<Color> _entryBackground = AppColorScheme.greenGradient;
-    if (mark.votoValore >= 6 && mark.votoValore < 7)
+    if (mark.mark >= 6 && mark.mark < 7)
       _entryBackground = AppColorScheme.yellowGradient;
-    if (mark.votoValore < 6)
+    if (mark.mark < 6)
       _entryBackground = AppColorScheme.redGradient;
-    if (mark.votoValore == 0)
+    if (mark.mark == 0)
       _entryBackground = AppColorScheme.blueGradient;
 
     double _overallLuminance = _entryBackground[1].computeLuminance();
     Color _textColor =  _overallLuminance > 0.45 ? Colors.black : Colors.white;
-    var _comment = mark.commento ?? AppLocalizations.of(context).translate('noComment');
+    var _comment = mark.comment ?? AppLocalizations.of(context).translate('noComment');
 
     return ExpandableNotifier(
       child: Container (
@@ -147,7 +139,7 @@ class _VotesPageState extends State<VotesPage>
                   Padding(
                     padding: const EdgeInsets.only(right: 15),
                     child: Text(
-                      mark.votoTXT,
+                      mark.mark.toString(), //TODO: implementare vototxt
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -157,7 +149,7 @@ class _VotesPageState extends State<VotesPage>
                   ),
                   Expanded(
                     child: Text(
-                      mark.materia,
+                      mark.subject,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -180,7 +172,7 @@ class _VotesPageState extends State<VotesPage>
                       Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Text(
-                          mark.votoTXT,
+                          mark.mark.toString(), //TODO: implementare vototxt
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -190,7 +182,7 @@ class _VotesPageState extends State<VotesPage>
                       ),
                       Expanded(
                         child: Text(
-                          mark.materia,
+                          mark.subject,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -201,7 +193,7 @@ class _VotesPageState extends State<VotesPage>
                     ],
                   ),
                   Text(
-                      "${AppLocalizations.of(context).translate('markDate')}: ${mark.data}",
+                      "${AppLocalizations.of(context).translate('markDate')}: ${mark.date}",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
@@ -209,11 +201,11 @@ class _VotesPageState extends State<VotesPage>
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
-                      "${AppLocalizations.of(context).translate('markProf')}: ${mark.docente}",
+                      "${AppLocalizations.of(context).translate('markProf')}: ${mark.professor}",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
-                      "${AppLocalizations.of(context).translate('markWeight')}: ${mark.peso}\n",
+                      "${AppLocalizations.of(context).translate('markWeight')}: ${mark.weight}\n",
                       style: TextStyle(color: _textColor,),
                   ),
                   Text(
@@ -229,7 +221,7 @@ class _VotesPageState extends State<VotesPage>
     );
   }
 
-  Widget _generatePeriodView(List<VotoStructure> marks, int columns, int key){
+  Widget _generatePeriodView(List<Mark> marks, int columns, int key){
     if (marks.isEmpty)
       return SobreroEmptyState(
         emptyStateKey: "noMarks",
@@ -238,17 +230,17 @@ class _VotesPageState extends State<VotesPage>
     List<FlSpot> _marksSpots = new List();
     int _x = 0;
 
-    String _filterString = materie1q[filterIndex];
-    if (periodFilter != 0) _filterString = materie2q[filterIndex];
+    String _filterString = _subj1t[filterIndex];
+    if (periodFilter != 0) _filterString = _subj2t[filterIndex];
 
-    List<VotoStructure> _filteredList = new List<VotoStructure>();
+    List<Mark> _filteredList = new List<Mark>();
     marks.forEach((mark) {
-      if (mark.materia == _filterString || filterIndex == 0){
-        if (mark.pesoValore > 0)
+      if (mark.subject == _filterString || filterIndex == 0){
+        if (mark.mark > 0)
           _marksSpots.add(
             FlSpot(
               200 - (_x++).toDouble(),
-              mark.votoValore,
+              mark.mark,
             ),
           );
         _filteredList.add(mark);
@@ -322,10 +314,10 @@ class _VotesPageState extends State<VotesPage>
 
   @override
   Widget build(BuildContext context) {
-    List<String> currentSubjects = periodFilter == 0 ? materie1q : materie2q;
-    List<VotoStructure> _currentMarks = periodFilter == 0
-        ? widget.voti1q
-        : widget.voti2q;
+    List<String> currentSubjects = periodFilter == 0 ? _subj1t : _subj2t;
+    List<Mark> _currentMarks = periodFilter == 0
+        ? reAPI4.instance.getStartupCache().marks_firstperiod
+        : reAPI4.instance.getStartupCache().marks_finalperiod;
     return SobreroLayout.rPage(
       children: [
         Stack(
@@ -355,27 +347,28 @@ class _VotesPageState extends State<VotesPage>
                             ],
                           ),
                           onPressed: () => Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (_, __, ___)  => SituazioneView(
-                                  situazione1Q: situazione1Q, situazione2Q: situazione2Q,
-                                  apiInstance: widget.apiInstance,
-                                  obbiettivi: snapshot.data, onObbiettiviChange: (_nob){
-                                    _goals = CloudConnector.getGoals(token: widget.apiInstance.getSession());
-                                    setState(() {});
-                                  },
-                                ),
-                                transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return SharedAxisTransition(
-                                    child: child,
-                                    animation: animation,
-                                    secondaryAnimation: secondaryAnimation,
-                                    transitionType: SharedAxisTransitionType.scaled,
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___)  => SituazioneView(
+                                situazione1Q: _goals1t, situazione2Q: _goals2t,
+                                obbiettivi: snapshot.data,
+                                onObbiettiviChange: (_nob){
+                                  _goals = CloudConnector.getGoals(
+                                      token: reAPI4.instance.getSession()
                                   );
+                                  setState(() {});
+                                  },
+                              ),
+                              transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return SharedAxisTransition(
+                                  child: child,
+                                  animation: animation,
+                                  secondaryAnimation: secondaryAnimation,
+                                  transitionType: SharedAxisTransitionType.scaled,
+                                );
                                 },
-
-                              )
+                            ),
                           ),
                           padding: EdgeInsets.zero,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -434,7 +427,7 @@ class _VotesPageState extends State<VotesPage>
             filterIndex = currentSubjects.indexOf(value);
             setState(() {});
           },
-          items: materie1q.map((String user) {
+          items: _subj1t.map((String user) {
             return CustomDropdownMenuItem<String>(
               value: user,
               child: Text(

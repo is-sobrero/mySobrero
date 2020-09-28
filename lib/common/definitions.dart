@@ -49,7 +49,15 @@ class RemoteNews {
 
 typedef SwitchPageCallback = void Function(int page);
 
-typedef TileLayoutBuilder = Function(Widget child);
+typedef TileLayoutBuilder = Function(
+    EdgeInsets padding,
+    bool showShadow,
+    List<Color> colors,
+    bool overrideGradient,
+    bool overridePadding,
+    Widget child,
+);
+
 typedef GradientTileLayoutBuilder = Function(Widget child);
 typedef GradientTileRootBuilder = Function(double aspectRatio, Widget child);
 typedef HorizontalSectionListItemBuilder = Function(bool safeLeft, bool safeRight, int index);

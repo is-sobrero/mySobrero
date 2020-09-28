@@ -4,12 +4,13 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/ui.dart';
 import 'package:mySobrero/localization/localization.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/helper.dart';
@@ -149,9 +150,14 @@ class SituazioneView extends StatefulWidget {
   Map<String, SituazioneElement> situazione1Q, situazione2Q;
   Map<String, int> obbiettivi;
   Function(Map<String, int>) onObbiettiviChange;
-  reAPI3 apiInstance;
 
-  SituazioneView({Key key, @required this.situazione1Q, @required this.situazione2Q, @required this.obbiettivi, @required this.onObbiettiviChange, @required this.apiInstance}) : super(key: key);
+  SituazioneView({
+    Key key,
+    @required this.situazione1Q,
+    @required this.situazione2Q,
+    @required this.obbiettivi,
+    @required this.onObbiettiviChange
+  }) : super(key: key);
 
   @override
   _SituazioneView createState() => _SituazioneView();
@@ -167,7 +173,7 @@ class SituaMateria{
 }
 
 class _SituazioneView extends State<SituazioneView> {
-  Future<List<PagellaStructure>> _pagelle;
+  Future<List<Report>> _reports;
 
   int selezionePeriodo = 0;
 
@@ -175,7 +181,7 @@ class _SituazioneView extends State<SituazioneView> {
   void initState() {
     super.initState();
     obbiettivi = widget.obbiettivi;
-    _pagelle = widget.apiInstance.retrievePagelle();
+    _reports = reAPI4.instance.getReports();
   }
 
   final sogliaArrotondamento = 0.6;
@@ -262,7 +268,7 @@ class _SituazioneView extends State<SituazioneView> {
   }
 
   Future<bool> aggiornaObbiettivi (g) async => CloudConnector.setGoals(
-    token: widget.apiInstance.getSession(),
+    token: reAPI4.instance.getSession(),
     goals: g,
   );
 
@@ -470,9 +476,9 @@ class _SituazioneView extends State<SituazioneView> {
                               }
                           );
                         }
-                    ) : FutureBuilder<List<PagellaStructure>>(
+                    ) : FutureBuilder<List<Report>>(
                       key: ValueKey<int>(selezionePeriodo),
-                      future: _pagelle,
+                      future: _reports,
                       builder: (context, snapshot){
                         switch (snapshot.connectionState){
                           case ConnectionState.none:
@@ -492,12 +498,12 @@ class _SituazioneView extends State<SituazioneView> {
                                 snapshotError: "Previsioni non è disponibile fino a quando non è uscita la pagella del primo quadrimestre",
                               );
 
-                            PagellaStructure pag1q = snapshot.data[0];
+                            Report pag1q = snapshot.data[0];
                             double mediaPrevista = 0;
                             List<Widget> previsioni = new List<Widget>();
                             widget.situazione2Q.forEach((key, value) {
                               try {
-                                double voto1q = pag1q.materie[key.toUpperCase()].voto.toDouble();
+                                double voto1q = pag1q.subjects[key.toUpperCase()].mark.toDouble();
                                 double media1q = widget.situazione1Q[key].media;
                                 double media2q = value.media;
                                 double differenza = media1q - voto1q;

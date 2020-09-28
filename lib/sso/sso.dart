@@ -18,7 +18,7 @@ import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/dialogs.dart';
 import 'package:mySobrero/ui/toggle.dart';
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/common/tiles.dart';

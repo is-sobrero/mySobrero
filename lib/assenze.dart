@@ -5,21 +5,20 @@
 import 'package:flutter/material.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/common/utilities.dart';
 import 'package:mySobrero/localization/localization.dart';
-import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/tiles/date_time_tile.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/helper.dart';
 
 // TODO: pulizia codice assenze
-// TODO: empty state
 
 class AssenzeView extends StatefulWidget {
-  reAPI3 apiInstance;
 
-  AssenzeView({Key key, @required this.apiInstance}) : super(key: key);
+  AssenzeView({Key key}) : super(key: key);
   @override
   _AssenzeState createState() => _AssenzeState();
 }
@@ -29,16 +28,16 @@ class _AssenzeState extends State<AssenzeView> {
   @override
   void initState() {
     super.initState();
-    _assenze = widget.apiInstance.retrieveAssenze();
+    _assenze = reAPI4.instance.getAbsences();
   }
 
-  Future<AssenzeStructure> _assenze;
+  Future<OverallAbsences> _assenze;
 
   @override
   Widget build(BuildContext context) {
     return SobreroDetailView(
       title: AppLocalizations.of(context).translate('absences'),
-      child: FutureBuilder<AssenzeStructure>(
+      child: FutureBuilder<OverallAbsences>(
         future: _assenze,
         builder: (context, snapshot){
           switch (snapshot.connectionState){
@@ -53,14 +52,15 @@ class _AssenzeState extends State<AssenzeView> {
                   return SobreroError(
                     snapshotError: snapshot.error,
                   );
-                if (snapshot.data.giustificate.isEmpty & snapshot.data.nongiustificate.isEmpty)
+                if (snapshot.data.justified.isEmpty
+                & snapshot.data.wo_justification.isEmpty)
                   return SobreroEmptyState(
                     emptyStateKey: "noAbsences",
                   );
                 return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (snapshot.data.nongiustificate.length > 0)
+                      if (snapshot.data.wo_justification.length > 0)
                         Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 15),
                           child: Text(
@@ -70,13 +70,13 @@ class _AssenzeState extends State<AssenzeView> {
                             ),
                           ),
                         ),
-                      if (snapshot.data.nongiustificate.length > 0)
+                      if (snapshot.data.wo_justification.length > 0)
                         WaterfallFlow.builder(
                           primary: false,
                           shrinkWrap: true,
-                          itemCount: snapshot.data.nongiustificate.length,
+                          itemCount: snapshot.data.wo_justification.length,
                           itemBuilder: (_, i) => _displayAbsence(
-                            snapshot.data.nongiustificate[i],
+                            snapshot.data.wo_justification[i],
                             true,
                           ),
                           gridDelegate: SliverWaterfallFlowDelegate(
@@ -84,11 +84,11 @@ class _AssenzeState extends State<AssenzeView> {
                             mainAxisSpacing: 15.0,
                             crossAxisSpacing: 15.0,
                             lastChildLayoutTypeBuilder: (i) =>
-                            i == snapshot.data.nongiustificate.length ? LastChildLayoutType.foot
+                            i == snapshot.data.wo_justification.length ? LastChildLayoutType.foot
                                 : LastChildLayoutType.none,
                           ),
                         ),
-                      if (snapshot.data.giustificate.length > 0)
+                      if (snapshot.data.justified.length > 0)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
@@ -98,13 +98,13 @@ class _AssenzeState extends State<AssenzeView> {
                             style: TextStyle(fontSize: 24),
                           ),
                         ),
-                      if (snapshot.data.giustificate.length > 0)
+                      if (snapshot.data.justified.length > 0)
                         WaterfallFlow.builder(
                         primary: false,
                         shrinkWrap: true,
-                        itemCount: snapshot.data.giustificate.length,
+                        itemCount: snapshot.data.justified.length,
                         itemBuilder: (_, i) => _displayAbsence(
-                          snapshot.data.giustificate[i],
+                          snapshot.data.justified[i],
                           false,
                         ),
                         gridDelegate: SliverWaterfallFlowDelegate(
@@ -112,7 +112,7 @@ class _AssenzeState extends State<AssenzeView> {
                           mainAxisSpacing: 15.0,
                           crossAxisSpacing: 15.0,
                           lastChildLayoutTypeBuilder: (i) =>
-                          i == snapshot.data.giustificate.length ? LastChildLayoutType.foot
+                          i == snapshot.data.justified.length ? LastChildLayoutType.foot
                               : LastChildLayoutType.none,
                         ),
                       ),
@@ -125,24 +125,27 @@ class _AssenzeState extends State<AssenzeView> {
     );
   }
 
-  Widget _displayAbsence(AssenzaStructure a, bool notJustified) {
+  Widget _displayAbsence(Absence a, bool notJustified) {
     Color txtColor = notJustified ? Colors.white : null;
 
     String typeID = AppLocalizations.of(context).translate('absence');
-    if (a.tipologia == "Ritardo")
+    if (a.type == "Ritardo")
       typeID = AppLocalizations.of(context).translate('delay');
-    if (a.tipologia == "Uscita")
+    if (a.type == "Uscita")
       typeID = AppLocalizations.of(context).translate('earlyCK');
     return DateTimeTile(
       title: typeID,
-      date: "${a.data} ${a.orario ?? "00:00:00"}",
+      date: "${a.date} ${a.hour ?? "00:00:00"}",
       color: notJustified ? Colors.red : null,
       margin: EdgeInsets.zero,
+      showHour: a.type != "Assenza",
       children: [
         Text(
           Utilities.formatLocalized(
             AppLocalizations.of(context).translate('reasonString'),
-            a.motivazione,
+            a.reason.length > 0
+                ? a.reason
+                : AppLocalizations.of(context).translate('NOT_DEFINED'),
           ),
           style: TextStyle(
             fontSize: 16,
@@ -152,7 +155,7 @@ class _AssenzeState extends State<AssenzeView> {
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Text(
-            a.calcolo == "0" ?
+            a.contributes == "0" ?
             AppLocalizations.of(context).translate('contributesNotTo') :
             AppLocalizations.of(context).translate('contributesTo'),
             style: TextStyle(

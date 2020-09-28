@@ -6,6 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,10 +17,9 @@ import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:mySobrero/ui/hud.dart';
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/common/tiles.dart';
 import 'package:mySobrero/common/utilities.dart';
-import 'package:mySobrero/reapi3.dart';
 import 'package:mySobrero/ui/button.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/dialogs.dart';
@@ -27,15 +27,11 @@ import 'package:mySobrero/ui/list_button.dart';
 import 'package:mySobrero/agreement/agreement_dialog.dart';
 
 class ImpostazioniView extends StatefulWidget {
-  String session;
   String profileURL;
   Function(String url) profileCallback;
-  UnifiedLoginStructure unifiedLoginStructure;
 
   ImpostazioniView ({
     Key key,
-    @required this.session,
-    @required this.unifiedLoginStructure,
     @required this.profileURL,
     @required this.profileCallback
   }) : super(key: key);
@@ -56,7 +52,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
   _configuraSalvate() async {
     var localAuth = LocalAuthentication();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool bio = await prefs.getBool("biometric_auth") ?? false;
+    bool bio = prefs.getBool("biometric_auth") ?? false;
     List<BiometricType> availableBiometrics = await localAuth.getAvailableBiometrics();
     setState(() {
       bioAuth = bio;
@@ -71,7 +67,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
 
   Future<bool> cambiaProfilo(image) async {
     bool res = await CloudConnector.setProfilePicture(
-      token: widget.session,
+      token: reAPI4.instance.getSession(),
       image: image,
     );
 
@@ -144,7 +140,7 @@ class _ImpostazioniState extends State<ImpostazioniView> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                widget.unifiedLoginStructure.user.nomeCompleto,
+                reAPI4.instance.getStartupCache().user.fullname,
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold,),
               ),
             ),
@@ -326,7 +322,6 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                         size: 40,
                         color: Theme.of(context).primaryColor,
                       ),
-                      //headingImage: "assets/images/errore.png",
                       buttonCallback: () => Navigator.of(context).pop(),
                       buttonText: "Chiudi",
                       content: RichText(

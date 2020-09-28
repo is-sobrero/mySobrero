@@ -12,17 +12,20 @@ class SobreroListButton extends StatelessWidget {
   final Function onPressed;
   final bool showBorder;
   final bool enabled;
+   Color color;
+   bool isBold;
 
   SobreroListButton({Key key,
     @required this.icon,
     @required this.title,
     this.showBorder = true,
     this.enabled = true,
-    @required this.caption,
+    this.caption,
+    this.isBold = true,
+    this.color,
     @required this.onPressed,
   }) :  assert (icon != null),
         assert(title != null),
-        assert(caption != null),
         assert(onPressed != null),
         super(key: key);
 
@@ -42,8 +45,9 @@ class SobreroListButton extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: 25,
-                  color: enabled ? Theme.of(context).primaryColor :
-                  Theme.of(context).disabledColor,
+                  color: enabled
+                      ? color ?? Theme.of(context).primaryColor
+                      : Theme.of(context).disabledColor,
                 ),
               ),
               Expanded(
@@ -53,12 +57,13 @@ class SobreroListButton extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: enabled ? Theme.of(context).primaryColor :
-                        Theme.of(context).disabledColor,
-                        fontWeight: FontWeight.bold,
+                        color: enabled
+                            ? color ?? Theme.of(context).primaryColor
+                            : Theme.of(context).disabledColor,
+                        fontWeight: isBold ? FontWeight.bold : null,
                       ),
                     ),
-                    Padding(
+                    if (caption != null) Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         caption,

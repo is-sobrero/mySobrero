@@ -96,7 +96,10 @@
   "clickToContinue": "Touch the highlighted area to continue the tutorial.",
   "summaryButtons": "Summary Tiles",
   "summaryButtonsDesc": "These tiles show a brief summary of the corresponding category, touching them opens the linked detail page.",
-  "settingsButton": "Settings button",
-  "settingsButtonDesc": "Touch this button to view all the Application settings",
-  "clickToEnd": "Touch the highlighted area to end the tutorial."
+  "settingsButton": "Refresh button",
+  "settingsButtonDesc": "Touch this button to reload all data shown in the Application.",
+  "clickToEnd": "Touch the highlighted area to end the tutorial.",
+  "NOT_DEFINED": "Not defined",
+  "SESSION_EXPIRED": "This session is expired",
+  "ANOTHER_DEVICE_CONNECTED": "Another device has signed in mySobrero, to preserve your security, this session has been terminated. To continue using the app, reopen it and do the login."
 }

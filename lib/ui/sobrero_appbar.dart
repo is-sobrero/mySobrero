@@ -4,14 +4,9 @@
 
 import 'dart:io';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-
-import 'package:mySobrero/impostazioni.dart';
-import 'package:mySobrero/reapi3.dart';
-import 'package:mySobrero/ui/helper.dart';
 
 class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -22,23 +17,17 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final double elevation;
   final double topCorrection;
-  final String profilePicUrl;
-  final UnifiedLoginStructure loginStructure;
-  final String session;
-  final Function(String url) setProfileCallback;
-  final GlobalKey settingsGlobalKey;
+  final GlobalKey refreshGlobalKey;
   final GlobalKey menuGlobalKey;
+  final Function onRefresh;
 
   SobreroAppBar({
     Key key,
     this.elevation = 0,
     this.topCorrection = 0,
-    @required this.profilePicUrl,
-    @required this.loginStructure,
-    @required this.session,
-    @required this.setProfileCallback,
-    @required this.settingsGlobalKey,
+    @required this.refreshGlobalKey,
     @required this.menuGlobalKey,
+    @required this.onRefresh,
   }) :  assert(elevation != null),
         assert(elevation >= 0),
         assert(elevation <= 1),
@@ -86,32 +75,13 @@ class SobreroAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             Spacer(),
             IconButton(
-              key: settingsGlobalKey,
+              key: refreshGlobalKey,
               icon: Icon(
-                TablerIcons.settings,
+                TablerIcons.refresh,
                 color: Theme.of(context).primaryColor,
               ),
               //iconSize: 25,
-              onPressed: () => Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (a, b, c) => ImpostazioniView(
-                    unifiedLoginStructure: loginStructure,
-                    profileURL: profilePicUrl,
-                    profileCallback: setProfileCallback,
-                    session: session,
-                  ),
-                  transitionDuration: Duration(
-                    milliseconds: UIHelper.pageAnimDuration,
-                  ),
-                  transitionsBuilder: (_, p, s, c) => SharedAxisTransition(
-                    animation: p,
-                    secondaryAnimation: s,
-                    transitionType: SharedAxisTransitionType.scaled,
-                    child: c,
-                  ),
-                ),
-              ),
+              onPressed: onRefresh,
             ),
           ],
         ),

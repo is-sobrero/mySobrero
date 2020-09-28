@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:mySobrero/intent/intent.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:mySobrero/sso/authorize.dart';
 import 'package:mySobrero/sso/intent_page.dart';
@@ -15,11 +15,9 @@ import 'package:mySobrero/ui/helper.dart';
 
 class IntentHandler {
   BuildContext context;
-  reAPI3 apiInstance;
 
   IntentHandler ({
     @required this.context,
-    @required this.apiInstance,
   });
 
   void handle(String uri){
@@ -43,7 +41,7 @@ class IntentHandler {
               PageRouteBuilder(
                 pageBuilder: (_, __, ___)  => SSOIntentPage(
                   request: _req,
-                  session: apiInstance.getSession(),
+                  session: reAPI4.instance.getSession(),
                 ),
                 transitionDuration: Duration(
                   milliseconds: UIHelper.pageAnimDuration,

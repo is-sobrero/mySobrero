@@ -9,15 +9,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mySobrero/common/tiles.dart';
-import 'package:mySobrero/reapi3.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/reAPI/types.dart';
 import 'package:mySobrero/ui/data_ui.dart';
 import 'package:mySobrero/ui/detail_view.dart';
 import 'package:mySobrero/ui/toggle.dart';
 
 class PagelleView extends StatefulWidget {
-  reAPI3 apiInstance;
-
-  PagelleView({Key key, @required this.apiInstance}) : super(key: key);
+  PagelleView({Key key}) : super(key: key);
 
   @override
   _PagelleState createState() => _PagelleState();
@@ -30,14 +29,14 @@ class _PagelleState extends State<PagelleView> {
   @override
   void initState() {
     super.initState();
-    _pagelle = widget.apiInstance.retrievePagelle();
+    _pagelle = reAPI4.instance.getReports();
   }
 
   int selezionaPagella = 0;
 
-  Future<List<PagellaStructure>> _pagelle;
+  Future<List<Report>> _pagelle;
 
-  PagellaStructure selectedPagella;
+  Report selectedPagella;
 
   int filterIndex = 0;
 
@@ -56,7 +55,7 @@ class _PagelleState extends State<PagelleView> {
                 selectedItem: selezionaPagella,
                 width: 200,
               ),
-              FutureBuilder<List<PagellaStructure>>(
+              FutureBuilder<List<Report>>(
                 future: _pagelle,
                 builder: (context, snapshot){
                   switch (snapshot.connectionState){
@@ -101,7 +100,7 @@ class _PagelleState extends State<PagelleView> {
                         children: [
                           Text("Media pagella",),
                           Text(
-                            selectedPagella.media.toStringAsFixed(2),
+                            selectedPagella.average.toStringAsFixed(2),
                             style: TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
@@ -111,7 +110,7 @@ class _PagelleState extends State<PagelleView> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
-                              selectedPagella.esito != "" ?  selectedPagella.esito  : "Esito non specificato",
+                              selectedPagella.outcome != "" ?  selectedPagella.outcome  : "Esito non specificato",
                               style: TextStyle(fontSize: 20,),
                               textAlign: TextAlign.center,
                             ),
@@ -119,10 +118,10 @@ class _PagelleState extends State<PagelleView> {
                           ListView.builder(
                             primary: false,
                             shrinkWrap: true,
-                            itemCount: selectedPagella.materie.length,
+                            itemCount: selectedPagella.subjects.length,
                             itemBuilder: (context, index) {
-                              VotoFinaleStructure mat = selectedPagella.materie.values.elementAt(index);
-                              String materia = selectedPagella.materie.keys.elementAt(index);
+                              FinalMark mat = selectedPagella.subjects.values.elementAt(index);
+                              String materia = selectedPagella.subjects.keys.elementAt(index);
                               return SobreroFlatTile(
                                 margin: EdgeInsets.only(bottom: 15),
                                 children: <Widget>[
@@ -130,13 +129,13 @@ class _PagelleState extends State<PagelleView> {
                                     children: <Widget>[
                                       Padding(
                                         padding: const EdgeInsets.only(right: 15),
-                                        child: Text(mat.voto.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,)),
+                                        child: Text(mat.mark.toString(), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,)),
                                       ),
                                       Expanded(child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(materia, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,)),
-                                          Text("Ore di assenza: ${mat.assenze}",
+                                          Text("Ore di assenza: ${mat.absences}",
                                               style: TextStyle(
                                                 fontSize: 16,
                                               )),

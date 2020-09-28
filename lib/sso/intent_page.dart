@@ -9,7 +9,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:latlong/latlong.dart';
 
-import 'package:mySobrero/cloud_connector/cloud2.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/common/pageswitcher.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/sso/authentication_qr.dart';

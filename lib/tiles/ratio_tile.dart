@@ -37,15 +37,54 @@ class SobreroRatioTile extends SobreroGradientTile {
   final EdgeInsets margin;
 
   @override
-  TileLayoutBuilder get layoutBuilder => (child) => Expanded(
+  TileLayoutBuilder get layoutBuilder => (
+      EdgeInsets padding,
+      bool showShadow,
+      List<Color> colors,
+      bool overrideGradient,
+      bool overridePadding,
+      Widget child,
+  ) => Expanded(
     flex: flex,
     child: Container(
       margin: margin,
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: colors[1].withOpacity(0.4),
+              blurRadius: 10,
+            ),
+          ]
+      ),
       child: GestureDetector(
         onTap: onTap,
         child: AspectRatio(
-            aspectRatio: aspectRatio,
-            child: child
+          aspectRatio: aspectRatio,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              margin: padding,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  if (showShadow) BoxShadow(
+                    color: colors[0].withOpacity(0.4),
+                    blurRadius: 10,
+                    //spreadRadius: 10,
+                  ),
+                ],
+                gradient: !overrideGradient ? LinearGradient(
+                    begin: FractionalOffset.topRight,
+                    end: FractionalOffset.bottomRight,
+                    colors: colors
+                ) : null,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(overridePadding ? 0 : 15),
+                child: child,
+              ),
+            ),
+          ),
         ),
       ),
     ),
