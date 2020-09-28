@@ -1,11 +1,11 @@
 {
-    "name": "mysobrero",
-    "short_name": "mysobrero",
+    "name": "mySobrero",
+    "short_name": "mySobrero",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "L'app ufficiale per gli studenti del Sobrero.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

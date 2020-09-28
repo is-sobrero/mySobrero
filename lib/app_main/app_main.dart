@@ -274,13 +274,23 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
     return true;
   }
 
+  bool _isRefreshing = false;
+
   Future<bool> _refreshAppContents() async {
+    setState((){
+      _isRefreshing = true;
+    });
     try {
       await reAPI4.instance.updateAssignmentsCache();
       await reAPI4.instance.updateMarksCache();
       await reAPI4.instance.updateNoticesCache();
-      setState((){});
+      setState((){
+        _isRefreshing = false;
+      });
     } on REAPIException catch (e) {
+      setState((){
+        _isRefreshing = false;
+      });
       if (e.code == -1) showDialog(
         context: context,
         builder: (context) => SobreroDialogSingle(
@@ -327,7 +337,8 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
               _refreshAppContents();
             },
             refreshGlobalKey: _refreshGK,
-            menuGlobalKey: _menuGK
+            menuGlobalKey: _menuGK,
+            isLoading: _isRefreshing,
           ),
           drawer: SobreroDrawer(
             isPad: false,
