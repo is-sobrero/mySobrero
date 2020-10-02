@@ -101,5 +101,8 @@
   "clickToEnd": "Touch the highlighted area to end the tutorial.",
   "NOT_DEFINED": "Not defined",
   "SESSION_EXPIRED": "This session is expired",
-  "ANOTHER_DEVICE_CONNECTED": "Another device has signed in mySobrero, to preserve your security, this session has been terminated. To continue using the app, reopen it and do the login."
+  "ANOTHER_DEVICE_CONNECTED": "Another device has signed in mySobrero, to preserve your security, this session has been terminated. To continue using the app, reopen it and do the login.",
+  "COVID19_INFO_NOT_ACCEPTED": "Daily COVID informative not accepted",
+  "COVID19_INFO_DESC": "Login to Axios Web with a parent account to accept the daily COVID-19 informative and access school."
+
 }

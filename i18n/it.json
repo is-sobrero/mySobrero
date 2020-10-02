@@ -101,5 +101,7 @@
   "clickToEnd": "Clicca sull'area evidenziata per finire il tutorial",
   "NOT_DEFINED": "Non specificato",
   "SESSION_EXPIRED": "La sessione è scaduta",
-  "ANOTHER_DEVICE_CONNECTED": "Un'altro dispositivo ha effettuato l'accesso a mySobrero, per preservare la tua sicurezza questa sessione è stata interrotta. Per continuare ad usare l'app, chiudere e riaprire l'app per effettuare di nuovo l'accesso"
+  "ANOTHER_DEVICE_CONNECTED": "Un'altro dispositivo ha effettuato l'accesso a mySobrero, per preservare la tua sicurezza questa sessione è stata interrotta. Per continuare ad usare l'app, chiudere e riaprire l'app per effettuare di nuovo l'accesso",
+  "COVID19_INFO_NOT_ACCEPTED": "Informativa COVID giornaliera non accettata",
+  "COVID19_INFO_DESC": "Passa ad Axios Web con un account genitore per accettare l'informativa COVID-19 giornaliera ed accedere in Istituto."
 }

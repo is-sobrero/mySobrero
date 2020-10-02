@@ -31,7 +31,6 @@ import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
 import 'package:mySobrero/ui/user_header.dart';
 
-
 class Homepage extends StatefulWidget {
   SobreroFeed feed;
   SwitchPageCallback switchPageCallback;
@@ -207,6 +206,45 @@ class _HomepageState extends State<Homepage>
                 fullclass: reAPI4.instance.getStartupCache().user.fullclass,
                 course: reAPI4.instance.getStartupCache().user.course,
                 profileURL: globals.profileURL,
+              ),
+              /// Avviso COVID non firmato
+              ExpandedSection(
+                expand: reAPI4.instance.getStartupCache().covid19info.data_accettazione == null,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Image.asset(
+                          "assets/images/covid_alert.png",
+                          width: 27,
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context).translate("COVID19_INFO_NOT_ACCEPTED"),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xffFF4B2B),
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context).translate("COVID19_INFO_DESC"),
+                              style: TextStyle(
+                                color: Color(0xffFF4B2B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ),
               /// Intestazione remota
               ExpandedSection(

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
 
 class REAPIException implements Exception {
@@ -17,6 +18,7 @@ class StartupData {
   List<Mark> marks_firstperiod, marks_finalperiod;
   List<Notice> notices;
   List<Assignment> assignments;
+  COVID19Info covid19info;
 }
 
 class User {
@@ -182,6 +184,37 @@ class Professor {
 class File {
   String name, url;
   File({@required this.name, @required this.url});
+}
+
+class COVID19Info {
+  String fam_enabled;
+  String fam_required;
+  String fam_file;
+  String fam_pin;
+  String fam_text;
+  String fam_url;
+  String data_accettazione;
+
+  COVID19Info({
+    this.fam_enabled,
+    this.fam_required,
+    this.fam_file,
+    this.fam_pin,
+    this.fam_text,
+    this.fam_url,
+    this.data_accettazione
+  });
+
+  COVID19Info.fromJSON(Map<String, dynamic> json) {
+    fam_enabled = json["fam_enabled"];
+    fam_required = json["fam_required"];
+    fam_file = json["fam_file"];
+    fam_pin = json["fam_pin"];
+    fam_text = utf8.decode(base64.decode(json["fam_text"]));
+    fam_url = json["fam_url"];
+    data_accettazione = json["data_accettazione"];
+  }
+
 }
 
 
