@@ -2,7 +2,7 @@
   "appUpdateAvailable": "Aggiornamento dell'App disponibile",
   "appUpdateDesc": "Una nuova versione di mySobrero è disponibile sullo store, aggiorna per avere le ultime funzionalità subito.",
   "appUpdateButton": "AGGIORNA",
-  "authenticateToLogin": "Autenticati per accedere a mySobrero come $USER",
+  "authenticateToLogin": "Autenticati per accedere a mySobrero come $",
   "cancelButton": "ANNULLA",
   "fingerprintNotRecognized": "Impronta non riconosciuta",
   "fingerprintRequired" : "Impronta richiesta",
@@ -103,5 +103,15 @@
   "SESSION_EXPIRED": "La sessione è scaduta",
   "ANOTHER_DEVICE_CONNECTED": "Un'altro dispositivo ha effettuato l'accesso a mySobrero, per preservare la tua sicurezza questa sessione è stata interrotta. Per continuare ad usare l'app, chiudere e riaprire l'app per effettuare di nuovo l'accesso",
   "COVID19_INFO_NOT_ACCEPTED": "Informativa COVID giornaliera non accettata",
-  "COVID19_INFO_DESC": "Passa ad Axios Web con un account genitore per accettare l'informativa COVID-19 giornaliera ed accedere in Istituto."
+  "COVID19_INFO_DESC": "L'accettazione dell'informativa è obbligatoria per accedere ai locali dell'Istituto",
+  "COVID19_POLICY_TITLE": "Informativa COVID-19",
+  "COVID19_POLICY_READ_CAREFULLY": "Leggi attentamente la seguente informativa",
+  "COVID19_POLICY_TERMS" : "Cliccando il pulsante accetta, dichiari di essere a conoscenza e di aver letto l'informativa COVID-19 dell'Istituto Sobrero",
+  "COVID19_ACCEPT_POLICY": "Accetta informativa",
+  "COVID19_WAIT_SECONDS": "Attendi $0 second$1",
+  "COVID19_PLURAL" : "i",
+  "COVID19_SINGULAR": "o",
+  "COVID19_ACCEPT_SCREEN_BUTTON": "Accetta l'informativa",
+  "COVID19_LOADING_POLICY": "Sto scaricando l'informativa"
+
 }

@@ -141,9 +141,9 @@ class _AssenzeState extends State<AssenzeView> {
       showHour: a.type != "Assenza",
       children: [
         Text(
-          Utilities.formatLocalized(
+          Utilities.formatArgumentString(
             AppLocalizations.of(context).translate('reasonString'),
-            a.reason.length > 0
+            arg: a.reason.length > 0
                 ? a.reason
                 : AppLocalizations.of(context).translate('NOT_DEFINED'),
           ),

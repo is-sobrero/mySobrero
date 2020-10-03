@@ -46,8 +46,19 @@ class Utilities {
     return base64UrlEncode(values);
   }
 
-  static String formatLocalized (String loc, String arg){
-    return loc.replaceAll("\$", arg);
+  static String formatArgumentString (String loc, {String arg, List<String>args}){
+    if (args != null) {
+      String _res = loc;
+      int _i = 0;
+      args.forEach((element) {
+        _res = _res.replaceAll("\$$_i", element);
+        _i++;
+      });
+      return _res;
+    }
+    if (arg != null)
+      return loc.replaceAll("\$", arg);
+    return null;
   }
 
   static bool get isInternalBuild {
@@ -59,7 +70,6 @@ class Utilities {
   static bool initNotifications(){
     FlutterLocalNotificationsPlugin _lnP = FlutterLocalNotificationsPlugin();
     //TODO: impostare il drawable su Android
-    //TODO: configurare il plugin per Android
     var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestSoundPermission: true,

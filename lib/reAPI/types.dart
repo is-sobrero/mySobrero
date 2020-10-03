@@ -95,6 +95,7 @@ class Notice {
   final String body;
   final String read;
   final String object;
+  final int id;
   List<Attachment> attachments;
 
   Notice({
@@ -103,6 +104,7 @@ class Notice {
     @required this.body,
     @required this.read,
     @required this.object,
+    @required this.id,
   });
 }
 

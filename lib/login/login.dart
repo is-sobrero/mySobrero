@@ -294,9 +294,9 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         print("cancheck");
         bool didAuthenticate = await localAuth.authenticateWithBiometrics(
           localizedReason:
-              Utilities.formatLocalized(
+              Utilities.formatArgumentString(
                 AppLocalizations.of(context).translate('authenticateToLogin'),
-                userFullName
+                arg: userFullName
               ),
           stickyAuth: false,
           androidAuthStrings: AndroidAuthMessages(
@@ -520,9 +520,9 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0, bottom: 15.0),
                         child: Text(
-                          Utilities.formatLocalized(
+                          Utilities.formatArgumentString(
                             AppLocalizations.of(context).translate('loginAs'),
-                            userFullName ?? "",
+                            arg: userFullName ?? "",
                           ),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,

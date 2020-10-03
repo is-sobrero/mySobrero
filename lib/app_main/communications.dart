@@ -74,6 +74,7 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
   }
 
   Widget _displayCommunication(Notice element){
+    print(element.id);
     String realSender = "Dirigente";
     if (element.sender.toUpperCase() != "DIRIGENTE")
       realSender = "Segreteria Amm.va";
@@ -118,6 +119,11 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
         ],
       ),
       children: [
+        FlatButton(
+          onPressed: () => reAPI4.instance.markNoticeAsRead(element.id),
+          child: Text("Conferma lettura"),
+        ),
+
         Text(
           toBeginningOfSentenceCase(element.object),
           style: TextStyle(

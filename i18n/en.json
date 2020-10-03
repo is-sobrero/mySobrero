@@ -103,6 +103,14 @@
   "SESSION_EXPIRED": "This session is expired",
   "ANOTHER_DEVICE_CONNECTED": "Another device has signed in mySobrero, to preserve your security, this session has been terminated. To continue using the app, reopen it and do the login.",
   "COVID19_INFO_NOT_ACCEPTED": "Daily COVID informative not accepted",
-  "COVID19_INFO_DESC": "Login to Axios Web with a parent account to accept the daily COVID-19 informative and access school."
-
+  "COVID19_INFO_DESC": "Acceptance of the policy is mandatory to access to school permises.",
+  "COVID19_POLICY_TITLE": "COVID-19 Policy",
+  "COVID19_POLICY_READ_CAREFULLY": "Please read carefully the following policy",
+  "COVID19_POLICY_TERMS" : "By clicking the accept button you're acknowledging and agreeing the Sobrero's COVID-19 Policy",
+  "COVID19_ACCEPT_POLICY": "Accept policy",
+  "COVID19_WAIT_SECONDS": "Wait $0 second$1",
+  "COVID19_PLURAL" : "s",
+  "COVID19_SINGULAR": "",
+  "COVID19_ACCEPT_SCREEN_BUTTON": "Agree the policy",
+  "COVID19_LOADING_POLICY": "Downloading the policy"
 }

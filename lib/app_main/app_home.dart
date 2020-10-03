@@ -13,6 +13,7 @@ import 'package:animations/animations.dart';
 
 import 'package:mySobrero/cloud_connector/cloud.dart';
 import 'package:mySobrero/compiti.dart';
+import 'package:mySobrero/covid19_policy.dart';
 import 'package:mySobrero/feed/feed_detail.dart';
 import 'package:mySobrero/common/definitions.dart';
 import 'package:mySobrero/common/expandedsection.dart';
@@ -209,7 +210,9 @@ class _HomepageState extends State<Homepage>
               ),
               /// Avviso COVID non firmato
               ExpandedSection(
-                expand: reAPI4.instance.getStartupCache().covid19info.data_accettazione == null,
+                expand: reAPI4.showCovidNotice(
+                  reAPI4.instance.getStartupCache().covid19info,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Row(
@@ -227,17 +230,56 @@ class _HomepageState extends State<Homepage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppLocalizations.of(context).translate("COVID19_INFO_NOT_ACCEPTED"),
+                              AppLocalizations.of(context).translate(
+                                "COVID19_INFO_NOT_ACCEPTED",
+                              ),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xffFF4B2B),
                               ),
                             ),
                             Text(
-                              AppLocalizations.of(context).translate("COVID19_INFO_DESC"),
+                              AppLocalizations.of(context).translate(
+                                "COVID19_INFO_DESC",
+                              ),
                               style: TextStyle(
                                 color: Color(0xffFF4B2B),
                               ),
+                            ),
+                            FlatButton(
+                              textColor: Color(0xffFF4B2B),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context).translate(
+                                        "COVID19_ACCEPT_SCREEN_BUTTON"
+                                      ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(TablerIcons.arrow_right_circle),
+                                ],
+                              ),
+                              onPressed: () => Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (a, b, c)  => Covid19Policy(),
+                                  transitionDuration: Duration(
+                                    milliseconds: UIHelper.pageAnimDuration,
+                                  ),
+                                  transitionsBuilder: (ctx, p, s, c) => SharedAxisTransition(
+                                    animation: p,
+                                    secondaryAnimation: s,
+                                    transitionType: SharedAxisTransitionType.scaled,
+                                    child: c,
+                                  ),
+                                ),
+                              ),
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                           ],
                         ),
