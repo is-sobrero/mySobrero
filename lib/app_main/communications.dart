@@ -119,11 +119,11 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
         ],
       ),
       children: [
-        FlatButton(
+        //TODO: implementare lettura circolari
+        /*FlatButton(
           onPressed: () => reAPI4.instance.markNoticeAsRead(element.id),
           child: Text("Conferma lettura"),
-        ),
-
+        ),*/
         Text(
           toBeginningOfSentenceCase(element.object),
           style: TextStyle(

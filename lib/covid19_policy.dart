@@ -42,7 +42,9 @@ class _Covid19PolicyState extends State<Covid19Policy> {
 
   _acceptPolicy(){
     reAPI4.instance.acceptCovid19Informative();
+    reAPI4.instance.updateCovid19InfoCache();
     Navigator.of(context).pop();
+    setState((){});
   }
 
   @override
