@@ -54,6 +54,8 @@ class _VotesPageState extends State<VotesPage>
     _goals1t = _getGoalsMap(reAPI4.instance.getStartupCache().marks_firstperiod);
     _goals2t = _getGoalsMap(reAPI4.instance.getStartupCache().marks_finalperiod);
 
+    reAPI4.instance.setMarksCallback(() => setState((){}));
+
     _goals = CloudConnector.getGoals(token: reAPI4.instance.getSession());
 
     if (reAPI4.instance.getStartupCache().marks_finalperiod.length > 0)

@@ -14,6 +14,8 @@ import 'package:mySobrero/ui/data_ui.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'dart:async';
 
+//TODO: accettare la policy con l'autenticazione biometrica
+
 class Covid19Policy extends StatefulWidget {
   @override
   _Covid19PolicyState createState() => _Covid19PolicyState();
@@ -25,7 +27,7 @@ class _Covid19PolicyState extends State<Covid19Policy> {
 
   Future<PdfController> _fetchPolicy() async {
     final response = await http.get(
-      reAPI4.instance.getStartupCache().covid19info.fam_url,
+      reAPI4.instance.getStartupCache().covid19info.policyURL,
     );
     return PdfController(
         document: PdfDocument.openData(response.bodyBytes),
@@ -44,7 +46,6 @@ class _Covid19PolicyState extends State<Covid19Policy> {
     reAPI4.instance.acceptCovid19Informative();
     reAPI4.instance.updateCovid19InfoCache();
     Navigator.of(context).pop();
-    setState((){});
   }
 
   @override

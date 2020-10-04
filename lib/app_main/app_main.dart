@@ -285,6 +285,7 @@ class _AppMainState extends State<AppMain> with SingleTickerProviderStateMixin {
       await reAPI4.instance.updateMarksCache();
       await reAPI4.instance.updateNoticesCache();
       await reAPI4.instance.updateCovid19InfoCache();
+      reAPI4.instance.reloadScreens();
       setState((){
         _isRefreshing = false;
       });

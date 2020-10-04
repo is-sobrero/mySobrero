@@ -147,6 +147,12 @@ class _CommunicationsPageState extends State<CommunicationsPageView>
   }
 
   @override
+  void initState(){
+    super.initState();
+    reAPI4.instance.setNoticeCallback(() => setState((){}));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SobreroLayout.rPage(
       children: [

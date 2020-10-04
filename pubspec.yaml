@@ -49,11 +49,8 @@ dependencies:
   background_fetch: ^0.6.0
   flutter_local_notifications: ^1.4.4+4
   tutorial_coach_mark: ^0.5.1
-  pdf_flutter: ^1.1.3
-  flutter_cached_pdfview: ^0.2.3+4
-  webview_flutter: ^1.0.0
-  pdf_viewer_plugin: ^1.0.0+2
   native_pdf_view: ^3.8.0
+  flutter_bloc: ^6.0.5
 
   flutter:
     sdk: flutter
