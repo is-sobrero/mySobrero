@@ -69,8 +69,7 @@ class Utilities {
 
   static bool initNotifications(){
     FlutterLocalNotificationsPlugin _lnP = FlutterLocalNotificationsPlugin();
-    //TODO: impostare il drawable su Android
-    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    var initializationSettingsAndroid = AndroidInitializationSettings('ic_sobrero_noty');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
