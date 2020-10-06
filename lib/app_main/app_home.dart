@@ -212,7 +212,8 @@ class _HomepageState extends State<Homepage>
                   profileURL: globals.profileURL,
                 ),
                 /// Avviso COVID non firmato
-                ExpandedSection(
+                /// HACK: disabilitato fino a nuove disposizioni del dirigente
+                /*ExpandedSection(
                     expand: reAPI4.showCovidNotice(
                       reAPI4.instance.getStartupCache().covid19info,
                     ),
@@ -290,7 +291,7 @@ class _HomepageState extends State<Homepage>
                         ],
                       ),
                     )
-                ),
+                ),*/
                 /// Intestazione remota
                 ExpandedSection(
                   expand: _remoteNotice.headingNewsEnabled,
