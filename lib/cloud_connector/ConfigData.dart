@@ -21,16 +21,6 @@ class ConfigData {
     _code = json['code'];
     _data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this._status;
-    data['code'] = this._code;
-    if (this._data != null) {
-      data['data'] = this._data.toJson();
-    }
-    return data;
-  }
 }
 
 class Data {
@@ -43,54 +33,22 @@ class Data {
   String _trailingNoticeContent;
   String _trailingNoticeAction;
   String _trailingNoticeRedirect;
-
-  Data(
-      {int latestVersion,
-        bool headingNoticeEnabled,
-        String headingNoticeContent,
-        bool trailingNoticeEnabled,
-        String trailingNoticeTitle,
-        String trailingNoticeImg,
-        String trailingNoticeContent,
-        String trailingNoticeAction,
-        String trailingNoticeRedirect}) {
-    this._latestVersion = latestVersion;
-    this._headingNoticeEnabled = headingNoticeEnabled;
-    this._headingNoticeContent = headingNoticeContent;
-    this._trailingNoticeEnabled = trailingNoticeEnabled;
-    this._trailingNoticeTitle = trailingNoticeTitle;
-    this._trailingNoticeImg = trailingNoticeImg;
-    this._trailingNoticeContent = trailingNoticeContent;
-    this._trailingNoticeAction = trailingNoticeAction;
-    this._trailingNoticeRedirect = trailingNoticeRedirect;
-  }
+  String _stopEnabled;
+  String _stopType;
+  String _stopDescription;
 
   int get latestVersion => _latestVersion;
-  set latestVersion(int latestVersion) => _latestVersion = latestVersion;
   bool get headingNoticeEnabled => _headingNoticeEnabled;
-  set headingNoticeEnabled(bool headingNoticeEnabled) =>
-      _headingNoticeEnabled = headingNoticeEnabled;
   String get headingNoticeContent => _headingNoticeContent;
-  set headingNoticeContent(String headingNoticeContent) =>
-      _headingNoticeContent = headingNoticeContent;
   bool get trailingNoticeEnabled => _trailingNoticeEnabled;
-  set trailingNoticeEnabled(bool trailingNoticeEnabled) =>
-      _trailingNoticeEnabled = trailingNoticeEnabled;
   String get trailingNoticeTitle => _trailingNoticeTitle;
-  set trailingNoticeTitle(String trailingNoticeTitle) =>
-      _trailingNoticeTitle = trailingNoticeTitle;
   String get trailingNoticeImg => _trailingNoticeImg;
-  set trailingNoticeImg(String trailingNoticeImg) =>
-      _trailingNoticeImg = trailingNoticeImg;
   String get trailingNoticeContent => _trailingNoticeContent;
-  set trailingNoticeContent(String trailingNoticeContent) =>
-      _trailingNoticeContent = trailingNoticeContent;
   String get trailingNoticeAction => _trailingNoticeAction;
-  set trailingNoticeAction(String trailingNoticeAction) =>
-      _trailingNoticeAction = trailingNoticeAction;
   String get trailingNoticeRedirect => _trailingNoticeRedirect;
-  set trailingNoticeRedirect(String trailingNoticeRedirect) =>
-      _trailingNoticeRedirect = trailingNoticeRedirect;
+  String get stopEnabled => _stopEnabled;
+  String get stopType => _stopType;
+  String get stopDescription => _stopDescription;
 
   Data.fromJson(Map<String, dynamic> json) {
     _latestVersion = json['latest_version'];
@@ -102,19 +60,9 @@ class Data {
     _trailingNoticeContent = json['trailing_notice_content'];
     _trailingNoticeAction = json['trailing_notice_action'];
     _trailingNoticeRedirect = json['trailing_notice_redirect'];
+    _stopEnabled = json['stop_enabled'];
+    _stopType = json['stop_type'];
+    _stopDescription = json['stop_description'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['latest_version'] = this._latestVersion;
-    data['heading_notice_enabled'] = this._headingNoticeEnabled;
-    data['heading_notice_content'] = this._headingNoticeContent;
-    data['trailing_notice_enabled'] = this._trailingNoticeEnabled;
-    data['trailing_notice_title'] = this._trailingNoticeTitle;
-    data['trailing_notice_img'] = this._trailingNoticeImg;
-    data['trailing_notice_content'] = this._trailingNoticeContent;
-    data['trailing_notice_action'] = this._trailingNoticeAction;
-    data['trailing_notice_redirect'] = this._trailingNoticeRedirect;
-    return data;
-  }
 }

@@ -86,6 +86,76 @@ class SobreroDialogSingle extends Dialog {
   }
 }
 
+class SobreroDialogNoAction extends Dialog {
+  SobreroDialogNoAction({
+    Key key,
+    this.headingImage,
+    this.headingWidget,
+    @required this.title,
+    @required this.content,
+  }) : super (key: key);
+
+  final String headingImage;
+  final String title;
+  final Widget headingWidget;
+  final Widget content;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), //this right here
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 300),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (headingImage != null )ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(headingImage),
+            ),
+            if (headingWidget != null) Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: headingWidget,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                  10,
+                  headingWidget == null ? 10 : 0,
+                  10,10
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: content,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SobreroDialogAbort extends Dialog {
   SobreroDialogAbort({
     Key key,

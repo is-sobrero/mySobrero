@@ -254,6 +254,25 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       }
     }
     ConfigData _config = await CloudConnector.getServerConfig();
+    print(_config.data.stopEnabled);
+    if (_config.data.stopEnabled == "1" && Utilities.isInternalBuild){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => SobreroDialogNoAction(
+          headingWidget: Icon(
+            TablerIcons.info_circle,
+            color: Theme.of(context).primaryColor,
+            size: 35,
+          ),
+          title: "mySobrero è ${_config.data.stopType}",
+          content: Text(
+            _config.data.stopDescription
+          ),
+        ),
+      );
+      return -1;
+    }
     if (!kIsWeb) {
       final PackageInfo info = await PackageInfo.fromPlatform();
       int currentVersion = int.parse(info.buildNumber);
