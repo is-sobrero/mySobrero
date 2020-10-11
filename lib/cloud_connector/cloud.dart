@@ -8,6 +8,8 @@ import 'dart:convert';
 import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:mySobrero/cloud_connector/int_data.dart';
+import 'package:mySobrero/snacks/snacks_list.dart';
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:package_info/package_info.dart';
 
@@ -86,6 +88,22 @@ class CloudConnector {
       tempReturn[key] = int.parse(value.toString());
     });
     return tempReturn;
+  }
+
+  static Future<int> getSnacksBalance({@required token}) async {
+    var res = await http.get(
+        cloudEndpoint + "getData.php?reference=snacks_balance&token=$token"
+    );
+    int balance = IntData.fromJson(jsonDecode(res.body)).data;
+    return balance;
+  }
+
+  static Future<List<Snack>> getAvailableSnacks () async {
+    var res = await http.get(
+        cloudEndpoint + "getData.php?reference=snacks_list"
+    );
+    SnacksResponse _res = SnacksResponse.fromJson(jsonDecode(res.body));
+    return _res.snacks;
   }
 
   static Future<List<AuthenticationQR>> getLogHistory({@required token}) async {

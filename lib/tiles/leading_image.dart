@@ -20,6 +20,7 @@ class LeadingImageTile extends StatelessWidget {
     this.title = '',
     this.tappable = false,
     this.showTitle = true,
+    this.padding = const EdgeInsets.only(right: 15),
     this.detailView
   }) :  assert(safeRight != null),
         assert(safeLeft != null),
@@ -29,13 +30,14 @@ class LeadingImageTile extends StatelessWidget {
         assert(tappable != null),
         super(key: key);
 
-  bool safeLeft, safeRight;
-  bool showTitle;
-  String leadingImageUrl;
-  double width, height;
-  StatefulWidget detailView;
-  bool tappable;
-  String title;
+  final bool safeLeft, safeRight;
+  final bool showTitle;
+  final String leadingImageUrl;
+  final double width, height;
+  final StatefulWidget detailView;
+  final bool tappable;
+  final String title;
+  final EdgeInsets padding;
 
   @override
   Widget build (BuildContext context){
@@ -45,7 +47,7 @@ class LeadingImageTile extends StatelessWidget {
       right: safeRight,
       top: false,
       child: Padding(
-        padding: EdgeInsets.only(right: 15),
+        padding: padding,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -62,51 +64,45 @@ class LeadingImageTile extends StatelessWidget {
           height: height,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: OpenContainer(
-              closedColor: Theme.of(context).scaffoldBackgroundColor,
-              openColor: Theme.of(context).scaffoldBackgroundColor,
-              closedBuilder: (c, action) => Stack(
-                alignment: Alignment.bottomLeft,
-                children: [
-                  Positioned.fill(
-                    child: CachedNetworkImage(
-                      imageUrl: leadingImageUrl,
-                      placeholder: (context, url) => Skeleton(),
-                      errorWidget: (context, url, error) => Container(
-                        color: Theme.of(context).textTheme.bodyText1.color.withAlpha(40),
-                        width: width,
-                        child: Center(
-                          child: Icon(Icons.broken_image, size: 70),
-                        ),
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl: leadingImageUrl,
+                    placeholder: (context, url) => Skeleton(),
+                    errorWidget: (context, url, error) => Container(
+                      color: Theme.of(context).textTheme.bodyText1.color.withAlpha(40),
+                      width: width,
+                      child: Center(
+                        child: Icon(Icons.broken_image, size: 70),
                       ),
-                      fit: BoxFit.cover,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                if (showTitle) Container(
+                  width: width,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.black87, Colors.transparent],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
                     ),
                   ),
-                  if (showTitle) Container(
-                    width: width,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.black87, Colors.transparent],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15,30,15,25),
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 24,
-                            color: Colors.white
-                        ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10,30,15,15),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                          color: Colors.white
                       ),
                     ),
                   ),
-                ],
-              ),
-              openBuilder: (c, action) => detailView,
-              tappable: tappable,
+                ),
+              ],
             ),
           ),
         ),

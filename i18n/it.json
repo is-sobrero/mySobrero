@@ -112,6 +112,10 @@
   "COVID19_PLURAL" : "i",
   "COVID19_SINGULAR": "o",
   "COVID19_ACCEPT_SCREEN_BUTTON": "Accetta l'informativa",
-  "COVID19_LOADING_POLICY": "Sto scaricando l'informativa"
-
+  "COVID19_LOADING_POLICY": "Sto scaricando l'informativa",
+  "SNACKS_SEARCH": "Cerca un panino",
+  "SNACKS_ORDER_HISTORY": "Ordini recenti",
+  "SNACKS_DEPOSIT_POINTS": "Acquista punti",
+  "SNACKS_LOADING": "Sto caricando gli snack...",
+  "SNACKS_NO_SNACK_FOUND": "Nessuno snack trovato"
 }

@@ -12,6 +12,7 @@ import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/materiale.dart';
 import 'package:mySobrero/pagelle.dart';
 import 'package:mySobrero/ricercaaule.dart';
+import 'package:mySobrero/snacks/snacks_view.dart';
 import 'package:mySobrero/tiles/action_tile.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:mySobrero/ui/layouts.dart';
@@ -69,14 +70,14 @@ class _MorePageState extends State<MorePageView>
               color: Color(0xFF5352ed),
               icon: TablerIcons.edit,
             ),
-            /*ActionTile(
-              builder: (_,__,___) => ListingsHomePage(),
-              title: "Resell@Sobrero",
-              lightImage: "assets/images/argomenti.png",
-              darkImage: "assets/images/argomenti.png",
+            ActionTile(
+              builder: (_,__,___) => SnacksView(),
+              title: "Snacks@Sobrero",
+              lightImage: "assets/images/argomenti_light.png",
+              darkImage: "assets/images/argomenti_dark.png",
               color: Color(0xFF5352ed),
-              icon: Icons.cloud,
-            ),*/
+              icon: Icons.fastfood,
+            ),
             ActionTile(
               builder: (_,__,___) => MaterialeView(),
               title: AppLocalizations.of(context).translate('handouts'),

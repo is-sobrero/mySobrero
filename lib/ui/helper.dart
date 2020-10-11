@@ -13,7 +13,12 @@ class UIHelper {
 
   static bool isPad(context) => MediaQuery.of(context).size.width > 900;
 
-  static int columnCount (context) {
+  static int columnCount (context, {double tileWidth: -1}) {
+    if (tileWidth > 0) {
+      double _precisionSize = (MediaQuery.of(context).size.width - 30) / tileWidth;
+      print( _precisionSize);
+      return _precisionSize.floor();
+    }
     int columnCount = MediaQuery.of(context).size.width > 550 ? 2 : 1;
     columnCount = MediaQuery.of(context).size.width > 1080 ? 3 : columnCount;
 

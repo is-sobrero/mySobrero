@@ -255,7 +255,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     }
     ConfigData _config = await CloudConnector.getServerConfig();
     print(_config.data.stopEnabled);
-    if (_config.data.stopEnabled == "1" && Utilities.isInternalBuild){
+    if (_config.data.stopEnabled == "1" && !Utilities.isInternalBuild){
       showDialog(
         context: context,
         barrierDismissible: false,

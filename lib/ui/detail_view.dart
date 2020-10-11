@@ -5,19 +5,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
+typedef SobreroDetailViewAppbarBuilder = PreferredSize Function(
+   BuildContext context, double elevation, double opacity, String title);
+
 class SobreroDetailView extends StatefulWidget {
-  String title;
-  Widget child;
-  bool overridePadding;
+  final String title;
+  final Widget child;
+  final bool overridePadding;
+  final SobreroDetailViewAppbarBuilder appbarBuilder;
 
   SobreroDetailView({
     Key key,
     @required this.title,
     @required this.child,
+    this.appbarBuilder = defautAppBarBuilder,
     this.overridePadding = false,
   }) :  assert(title != null),
         assert(child != null),
         super(key: key);
+
+  static PreferredSize defautAppBarBuilder(context, elevation, opacity, title){
+    return PreferredSize(
+      preferredSize: Size(double.infinity, 65),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(elevation * 0.1),
+              blurRadius: 10,
+              spreadRadius: 10,
+            ),
+          ],
+        ),
+        child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(5,3,20,3),
+              child: Row(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      TablerIcons.chevron_left,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
+                    tooltip: "Indietro",
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  AnimatedOpacity(
+                    opacity: opacity,
+                    duration: Duration(milliseconds: 250),
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ),
+      ),
+    );
+  }
 
   @override
   _SobreroDetailViewState createState() => _SobreroDetailViewState();
@@ -71,49 +123,11 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
     }
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 65),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(_appBarElevation * 0.1),
-                blurRadius: 10,
-                spreadRadius: 10,
-              ),
-            ],
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(5,3,20,3),
-              child: Row(
-                children: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      TablerIcons.chevron_left,
-                      color: Theme.of(context).textTheme.bodyText1.color,
-                    ),
-                    tooltip: "Indietro",
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  AnimatedOpacity(
-                    opacity: _appBarTitleOpacity,
-                    duration: Duration(milliseconds: 250),
-                    child: Text(
-                      widget.title,
-                      style: Theme.of(context).textTheme.headline6.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ),
-        ),
+      appBar: widget.appbarBuilder(
+        context,
+        _appBarElevation,
+        _appBarTitleOpacity,
+        widget.title,
       ),
       body: Stack(
         children: [
