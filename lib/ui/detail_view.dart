@@ -13,6 +13,7 @@ class SobreroDetailView extends StatefulWidget {
   final Widget child;
   final bool overridePadding;
   final SobreroDetailViewAppbarBuilder appbarBuilder;
+  final Widget bottom;
 
   SobreroDetailView({
     Key key,
@@ -20,6 +21,7 @@ class SobreroDetailView extends StatefulWidget {
     @required this.child,
     this.appbarBuilder = defautAppBarBuilder,
     this.overridePadding = false,
+    this.bottom,
   }) :  assert(title != null),
         assert(child != null),
         super(key: key);
@@ -158,7 +160,11 @@ class _SobreroDetailViewState extends State<SobreroDetailView>
                       ],
                     ),
                   ),
-                )
+                ),
+                if (widget.bottom != null) SafeArea(
+                  top: false,
+                  child: widget.bottom,
+                ),
               ],
             ),
           )

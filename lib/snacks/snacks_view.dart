@@ -2,14 +2,15 @@
 // Use of this source code is governed by the GPL 3.0 license that can be
 // found in the LICENSE file.
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/cloud_connector/cloud.dart';
-import 'package:mySobrero/common/ui.dart';
-import 'package:mySobrero/listings/listings_detail.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reAPI/reapi.dart';
+import 'package:mySobrero/snacks/snacks_detail.dart';
+import 'package:mySobrero/snacks/snacks_history.dart';
 import 'package:mySobrero/snacks/snacks_list.dart';
 import 'package:mySobrero/tiles/leading_image.dart';
 import 'package:mySobrero/ui/button.dart';
@@ -165,7 +166,18 @@ class _SnacksListState extends State<SnacksView> {
                   ),
                   color: Theme.of(context).primaryColor,
                   suffixIcon: Icon(TablerIcons.history),
-                  onPressed: () => print("ok"),
+                  onPressed: () => Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (a, b, c) => SnacksHistoryView(),
+                      transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                      transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
+                        animation: prim,
+                        secondaryAnimation: sec,
+                        transitionType: SharedAxisTransitionType.scaled,
+                        child: child,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Flexible(
@@ -209,6 +221,21 @@ class _SnacksListState extends State<SnacksView> {
                       padding: EdgeInsets.zero,
                       leadingImageUrl: snapshot.data[i].image,
                       title: snapshot.data[i].name,
+                      onTap: () =>  Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (a, b, c) => SnackDetail(
+                            snack: snapshot.data[i],
+                          ),
+                          transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                          transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
+                            animation: prim,
+                            secondaryAnimation: sec,
+                            transitionType: SharedAxisTransitionType.scaled,
+                            child: child,
+                          ),
+                        ),
+                      ),
                     ),
                     gridDelegate: SliverWaterfallFlowDelegate(
                       crossAxisCount: UIHelper.columnCount(

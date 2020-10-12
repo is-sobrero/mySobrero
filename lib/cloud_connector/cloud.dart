@@ -9,6 +9,7 @@ import 'package:async/async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mySobrero/cloud_connector/int_data.dart';
+import 'package:mySobrero/snacks/snack_history_model.dart';
 import 'package:mySobrero/snacks/snacks_list.dart';
 import 'package:mySobrero/sso/authentication_qr.dart';
 import 'package:package_info/package_info.dart';
@@ -98,11 +99,23 @@ class CloudConnector {
     return balance;
   }
 
+  static Future<OrderHistory> getSnacksHistory({@required token}) async {
+    var res = await http.get(
+        cloudEndpoint + "getData.php?reference=snacks_history&token=$token"
+    );
+    OrderHistory _res = OrderHistory.fromJson(jsonDecode(res.body));
+
+    return _res;
+  }
+
   static Future<List<Snack>> getAvailableSnacks () async {
     var res = await http.get(
         cloudEndpoint + "getData.php?reference=snacks_list"
     );
     SnacksResponse _res = SnacksResponse.fromJson(jsonDecode(res.body));
+    if (_res.code != 0) throw new Exception(
+        _res.status
+    );
     return _res.snacks;
   }
 
@@ -130,6 +143,26 @@ class CloudConnector {
         cloudEndpoint + "authorize.php?&guid=$guid&token=$token"
     );
     return true;
+  }
+
+  static Future<bool> authorizeTransaction({
+    @required int snackId,
+    @required String token,
+  }) async {
+    var response = await http.post(
+      cloudEndpoint + "pushData.php",
+      body: {
+        'token': token,
+        'id': snackId.toString(),
+        'reference': "snack_transaction",
+      },
+    );
+    StringData _res = StringData.fromJson(jsonDecode(response.body));
+    if (_res.code != 0) throw new Exception(
+      _res.status
+    );
+
+    return _res.code == 0;
   }
 
   static Future<RemoteNews> getRemoteHeadingNews() async {

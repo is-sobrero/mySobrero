@@ -231,7 +231,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       if (invokedURL != null) {
         if (UriIntent.isInvokingMethod(invokedURL)) {
           if (UriIntent.isMethodSupported(invokedURL)) {
-            switch (UriIntent.getMethodName(invokedURL)){
+            switch (UriIntent.getMethodName(invokedURL)) {
               case "idp":
                 print("IdP Richiesto, inizio convalida");
                 var reqBytes = base64Decode(UriIntent.getArgument(
@@ -254,8 +254,14 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       }
     }
     ConfigData _config = await CloudConnector.getServerConfig();
-    print(_config.data.stopEnabled);
-    if (_config.data.stopEnabled == "1" && !Utilities.isInternalBuild){
+    int currentVersion = 0;
+    if (!kIsWeb){
+      final PackageInfo info = await PackageInfo.fromPlatform();
+      currentVersion = int.parse(info.buildNumber);
+      if (_config.data.latestVersion < currentVersion)
+        isBeta = true;
+    }
+    if (_config.data.stopEnabled == "1" && !isBeta){
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -274,8 +280,6 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
       return -1;
     }
     if (!kIsWeb) {
-      final PackageInfo info = await PackageInfo.fromPlatform();
-      int currentVersion = int.parse(info.buildNumber);
       if (_config.data.latestVersion > currentVersion){
         // Se la versione dell'app non è aggiornata, obbliga l'utente ad aggiornare
         showDialog(
@@ -293,8 +297,7 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         );
         return -1;
       }
-      if (_config.data.latestVersion < currentVersion)
-        isBeta = true;
+
     }
 
     userFullName = prefs.getString('user') ?? "";

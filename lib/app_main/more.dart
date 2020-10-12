@@ -11,6 +11,7 @@ import 'package:mySobrero/carriera.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/materiale.dart';
 import 'package:mySobrero/pagelle.dart';
+import 'package:mySobrero/reAPI/reapi.dart';
 import 'package:mySobrero/ricercaaule.dart';
 import 'package:mySobrero/snacks/snacks_view.dart';
 import 'package:mySobrero/tiles/action_tile.dart';
@@ -70,7 +71,8 @@ class _MorePageState extends State<MorePageView>
               color: Color(0xFF5352ed),
               icon: TablerIcons.edit,
             ),
-            ActionTile(
+            // Blocchiamo l'accesso a Snacks@Sobrero a chi non è studente
+            if (reAPI4.instance.getStartupCache().user.level == "4") ActionTile(
               builder: (_,__,___) => SnacksView(),
               title: "Snacks@Sobrero",
               lightImage: "assets/images/argomenti_light.png",

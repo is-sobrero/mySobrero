@@ -19,6 +19,7 @@ class LeadingImageTile extends StatelessWidget {
     this.height,
     this.title = '',
     this.tappable = false,
+    this.onTap,
     this.showTitle = true,
     this.padding = const EdgeInsets.only(right: 15),
     this.detailView
@@ -38,6 +39,7 @@ class LeadingImageTile extends StatelessWidget {
   final bool tappable;
   final String title;
   final EdgeInsets padding;
+  final Function onTap;
 
   @override
   Widget build (BuildContext context){
@@ -64,45 +66,48 @@ class LeadingImageTile extends StatelessWidget {
           height: height,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                Positioned.fill(
-                  child: CachedNetworkImage(
-                    imageUrl: leadingImageUrl,
-                    placeholder: (context, url) => Skeleton(),
-                    errorWidget: (context, url, error) => Container(
-                      color: Theme.of(context).textTheme.bodyText1.color.withAlpha(40),
-                      width: width,
-                      child: Center(
-                        child: Icon(Icons.broken_image, size: 70),
+            child: GestureDetector(
+              onTap: onTap,
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  Positioned.fill(
+                    child: CachedNetworkImage(
+                      imageUrl: leadingImageUrl,
+                      placeholder: (context, url) => Skeleton(),
+                      errorWidget: (context, url, error) => Container(
+                        color: Theme.of(context).textTheme.bodyText1.color.withAlpha(40),
+                        width: width,
+                        child: Center(
+                          child: Icon(Icons.broken_image, size: 70),
+                        ),
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  if (showTitle) Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.black87, Colors.transparent],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
                       ),
                     ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                if (showTitle) Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.black87, Colors.transparent],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10,30,15,15),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                          color: Colors.white
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10,30,15,15),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 16,
+                            color: Colors.white
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
