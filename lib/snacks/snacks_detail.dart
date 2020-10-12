@@ -24,9 +24,11 @@ class SnackDetail extends StatefulWidget {
   SnackDetail({
     Key key,
     @required this.snack,
+    @required this.onOrderCompleted,
   }) : super(key: key);
 
   final Snack snack;
+  final Function onOrderCompleted;
 
   @override
   _SnackDetailState createState() => _SnackDetailState();
@@ -226,6 +228,7 @@ class _SnackDetailState extends State<SnackDetail> {
                                     return SobreroError(
                                       snapshotError: snapshot.error,
                                     );
+                                  widget.onOrderCompleted();
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
