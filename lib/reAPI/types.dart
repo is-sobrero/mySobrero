@@ -150,11 +150,13 @@ class Absence {
   String date, reason, type, hour, contributes;
   Absence({
     @required this.date,
-    @required this.reason,
+    @required String reason,
     @required this.type,
     @required this.hour,
     @required this.contributes,
-  });
+  }) : this.reason = reason.length > 3
+      ? reason.substring(2, reason.length-1)
+      : reason;
 }
 
 class OverallAbsences {

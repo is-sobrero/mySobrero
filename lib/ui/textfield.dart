@@ -10,12 +10,18 @@ class SobreroTextField extends StatelessWidget {
   Widget suffixIcon;
   String hintText;
   TextEditingController controller;
+  TextInputType keyboardType;
+  int maxLines;
+  double height;
 
   SobreroTextField({
     Key key,
     this.margin = EdgeInsets.zero,
     this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+    this.maxLines = 1,
     this.suffixIcon,
+    this.height,
     this.controller,
     this.hintText,
   }) :  assert(margin != null),
@@ -27,6 +33,7 @@ class SobreroTextField extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       margin: margin,
+      height: height,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
@@ -41,6 +48,9 @@ class SobreroTextField extends StatelessWidget {
       child: TextField(
         obscureText: obscureText,
         controller: controller,
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        expands: maxLines != 1,
         decoration: InputDecoration(
           isDense: false,
           border: InputBorder.none,

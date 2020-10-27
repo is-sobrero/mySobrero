@@ -189,6 +189,21 @@ class CloudConnector {
 
   }
 
+  static Future<bool> sendRadar({
+    String studentID,
+    String radar
+  }) async {
+    var response = await http.post(
+      cloudEndpoint + "pushData.php",
+      body: {
+        'id': studentID,
+        'data': radar,
+        'reference': "radar",
+      },
+    );
+    return response.statusCode == 200;
+  }
+
   static Future<bool> setGoals({
     @required String token,
     @required String goals

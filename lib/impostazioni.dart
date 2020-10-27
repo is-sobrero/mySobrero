@@ -6,10 +6,12 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mySobrero/radar.dart';
 import 'package:mySobrero/reAPI/reapi.dart';
 import 'package:mySobrero/ui/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'localization/localization.dart';
 import 'skeleton.dart';
 import 'package:image_picker/image_picker.dart';
 import 'globals.dart' as globals;
@@ -301,6 +303,24 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                       transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
                       transitionsBuilder: (ctx, prim, sec, child) =>
                           SharedAxisTransition(
+                            animation: prim,
+                            secondaryAnimation: sec,
+                            transitionType: SharedAxisTransitionType.scaled,
+                            child: child,
+                          ),
+                    ),
+                  ),
+                  title: "Termini e condizioni",
+                  caption: "Visualizza i termini e le condizioni dell'app",
+                  icon: TablerIcons.mist,
+                ),
+                SobreroListButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___)  => FileARadarView(),
+                      transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                      transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(
                         animation: prim,
                         secondaryAnimation: sec,
                         transitionType: SharedAxisTransitionType.scaled,
@@ -308,9 +328,13 @@ class _ImpostazioniState extends State<ImpostazioniView> {
                       ),
                     ),
                   ),
-                  title: "Termini di utilizzo",
-                  caption: "Consulta i termini di utilizzo di mySobrero",
-                  icon: TablerIcons.mist,
+                  title: AppLocalizations.of(context).translate(
+                    "RADAR_FILE_A",
+                  ),
+                  caption: AppLocalizations.of(context).translate(
+                    "RADAR_DESC",
+                  ),
+                  icon: TablerIcons.bug,
                 ),
                 SobreroListButton(
                   onPressed: () => showDialog(

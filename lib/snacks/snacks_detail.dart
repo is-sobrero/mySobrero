@@ -24,11 +24,9 @@ class SnackDetail extends StatefulWidget {
   SnackDetail({
     Key key,
     @required this.snack,
-    @required this.onOrderCompleted,
   }) : super(key: key);
 
   final Snack snack;
-  final Function onOrderCompleted;
 
   @override
   _SnackDetailState createState() => _SnackDetailState();
@@ -56,248 +54,244 @@ class _SnackDetailState extends State<SnackDetail> {
       isDismissible: false,
         enableDrag: false,
         context: context,
+        shape : RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20),
+          ),
+        ),
         builder: (BuildContext bc){
           return WillPopScope(
             onWillPop: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(15),
-                    topRight: const Radius.circular(15),
-                  ),
-              ),
-              child: SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: StatefulBuilder(
-                    builder: (context, setState){
-                      Widget _confirmState = Wrap(
-                        key: ValueKey<int>(0),
-                        children: <Widget>[
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  Utilities.formatArgumentString(
-                                    AppLocalizations.of(context).translate(
-                                        "SNACKS_BUY_HEADING"
-                                    ),
-                                    args: [
-                                      widget.snack.name,
-                                    ],
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: StatefulBuilder(
+                  builder: (context, setState){
+                    Widget _confirmState = Wrap(
+                      key: ValueKey<int>(0),
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                Utilities.formatArgumentString(
+                                  AppLocalizations.of(context).translate(
+                                    "SNACKS_BUY_HEADING",
                                   ),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                  ),
+                                  args: [
+                                    widget.snack.name,
+                                  ],
+                                ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0,
                                 ),
                               ),
-                              Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(50),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12.withAlpha(12),
-                                        blurRadius: 10,
-                                        spreadRadius: 10,
+                            ),
+                            Container(
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(50),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12.withAlpha(12),
+                                      blurRadius: 10,
+                                      spreadRadius: 10,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8.0),
+                                        child: Text(widget.snack.cost.toString()),
+                                      ),
+                                      Image.asset("assets/images/snack_coin.png",
+                                        width: 30,
                                       ),
                                     ],
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 8.0),
-                                          child: Text(widget.snack.cost.toString()),
-                                        ),
-                                        Image.asset("assets/images/snack_coin.png",
-                                          width: 30,
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                )
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0, top: 8),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Icon(
+                                  _sufficentFounds
+                                      ? TablerIcons.check
+                                      : TablerIcons.ban,
+                                  color: _sufficentFounds
+                                      ? Colors.green
+                                      : Colors.red,
+                                  size: 25,
+                                ),
+                              ),
+                              Text(
+                                AppLocalizations.of(context).translate(
+                                  _sufficentFounds
+                                      ? "SNACKS_OK_TO_BUY"
+                                      : "SNACKS_NO_FOUNDS",
+                                ),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: _sufficentFounds
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
-                                  child: Icon(
-                                    _sufficentFounds
-                                        ? TablerIcons.check
-                                        : TablerIcons.ban,
-                                    color: _sufficentFounds
-                                        ? Colors.green
-                                        : Colors.red,
-                                    size: 25,
-                                  ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Icon(
+                                  TablerIcons.calendar,
+                                  size: 25,
                                 ),
-                                Text(
+                              ),
+                              Expanded(
+                                child: Text(
                                   AppLocalizations.of(context).translate(
-                                    _sufficentFounds
-                                        ? "SNACKS_OK_TO_BUY"
-                                        : "SNACKS_NO_FOUNDS",
+                                      "SNACKS_ORDER_POLICY"
                                   ),
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: _sufficentFounds
-                                        ? Colors.green
-                                        : Colors.red,
+                                      fontSize: 16
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
-                                  child: Icon(
-                                    TablerIcons.calendar,
-                                    size: 25,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    AppLocalizations.of(context).translate(
-                                      "SNACKS_ORDER_POLICY"
-                                    ),
-                                    style: TextStyle(
-                                        fontSize: 16
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                        ),
+                        SobreroButton(
+                          text: AppLocalizations.of(context).translate(
+                            _sufficentFounds
+                                ? "SNACKS_CONFIRM_BUY"
+                                : "SNACKS_NO_FOUNDS",
                           ),
-                          SobreroButton(
-                            text: AppLocalizations.of(context).translate(
-                              _sufficentFounds
-                                  ? "SNACKS_CONFIRM_BUY"
-                                  : "SNACKS_NO_FOUNDS",
-                            ),
-                            color: _sufficentFounds
-                                ? Color(0xff00CA71)
-                                : Colors.grey,
-                            suffixIcon: Icon(TablerIcons.shopping_cart),
-                            onPressed: _sufficentFounds ? () => setState(() {
-                              _transactionStatus = CloudConnector.authorizeTransaction(
-                                snackId: widget.snack.id,
-                                token: reAPI4.instance.getSession(),
-                              );
-                              _modalState = 1;
-                            }) : null,
-                            margin: EdgeInsets.only(top:15, bottom: 10),
-                          ),
-                          SobreroButton(
-                            text: AppLocalizations.of(context).translate(
+                          color: _sufficentFounds
+                              ? Color(0xff00CA71)
+                              : Colors.grey,
+                          suffixIcon: Icon(TablerIcons.shopping_cart),
+                          onPressed: _sufficentFounds ? () => setState(() {
+                            _transactionStatus = CloudConnector.authorizeTransaction(
+                              snackId: widget.snack.id,
+                              token: reAPI4.instance.getSession(),
+                            );
+                            _modalState = 1;
+                          }) : null,
+                          margin: EdgeInsets.only(top:15, bottom: 10),
+                        ),
+                        SobreroButton(
+                          text: AppLocalizations.of(context).translate(
                               "SNACKS_GO_BACK"
-                            ),
-                            color: Colors.red,
-                            suffixIcon: Icon(TablerIcons.arrow_back),
-                            onPressed: () => Navigator.pop(context),
-                            margin: EdgeInsets.only(bottom: 15),
                           ),
-                        ],
-                      );
-                      Widget _processState = Wrap(
-                        key: ValueKey<int>(1),
-                        children: [
-                          FutureBuilder<bool>(
-                            future: _transactionStatus,
-                            builder: (context, snapshot){
-                              switch (snapshot.connectionState){
-                                case ConnectionState.none:
-                                case ConnectionState.active:
-                                case ConnectionState.waiting:
-                                  return SobreroLoading(
-                                    loadingStringKey: "SNACKS_AUTHORIZING_TRANSACTION",
+                          color: Colors.red,
+                          suffixIcon: Icon(TablerIcons.arrow_back),
+                          onPressed: () => Navigator.pop(context),
+                          margin: EdgeInsets.only(bottom: 15),
+                        ),
+                      ],
+                    );
+                    Widget _processState = Wrap(
+                      key: ValueKey<int>(1),
+                      children: [
+                        FutureBuilder<bool>(
+                          future: _transactionStatus,
+                          builder: (context, snapshot){
+                            switch (snapshot.connectionState){
+                              case ConnectionState.none:
+                              case ConnectionState.active:
+                              case ConnectionState.waiting:
+                                return SobreroLoading(
+                                  loadingStringKey: "SNACKS_AUTHORIZING_TRANSACTION",
+                                );
+                              case ConnectionState.done:
+                                if (snapshot.hasError)
+                                  return SobreroError(
+                                    snapshotError: snapshot.error,
                                   );
-                                case ConnectionState.done:
-                                  if (snapshot.hasError)
-                                    return SobreroError(
-                                      snapshotError: snapshot.error,
-                                    );
-                                  widget.onOrderCompleted();
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    key: ValueKey<int>(102),
-                                    children: [
-                                      SizedBox(width: double.infinity),
-                                      Container(
-                                        width: 200,
-                                        height: 200,
-                                        child: FlareActor(
-                                          "assets/animations/success.flr",
-                                          alignment: Alignment.center,
-                                          fit:BoxFit.contain,
-                                          animation: "root",
-                                        ),
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  key: ValueKey<int>(102),
+                                  children: [
+                                    SizedBox(width: double.infinity),
+                                    Container(
+                                      width: 200,
+                                      height: 200,
+                                      child: FlareActor(
+                                        "assets/animations/success.flr",
+                                        alignment: Alignment.center,
+                                        fit:BoxFit.contain,
+                                        animation: "root",
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          AppLocalizations.of(context).translate(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        AppLocalizations.of(context).translate(
                                             "SNACKS_AUTHORIZED"
-                                          ),
-                                          style: TextStyle(
-                                            color: Color(0xff00CA71),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 24,
-                                          ),
-                                          textAlign: TextAlign.center,
                                         ),
-                                      ),
-                                      SobreroButton(
-                                        text: AppLocalizations.of(context).translate(
-                                          "SNACKS_GO_BACK",
+                                        style: TextStyle(
+                                          color: Color(0xff00CA71),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
                                         ),
-                                        color: Color(0xff00CA71),
-                                        suffixIcon: Icon(TablerIcons.arrow_back),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                        margin: EdgeInsets.only(top: 10, bottom: 10),
+                                        textAlign: TextAlign.center,
                                       ),
-                                    ],
-                                  );
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      );
-                      return PageTransitionSwitcher2(
-                        layoutBuilder: (_entries) => Stack(
-                          children: _entries
-                              .map<Widget>((entry) => entry.transition)
-                              .toList(),
-                          alignment: Alignment.topLeft,
+                                    ),
+                                    SobreroButton(
+                                      text: AppLocalizations.of(context).translate(
+                                        "SNACKS_GO_BACK",
+                                      ),
+                                      color: Color(0xff00CA71),
+                                      suffixIcon: Icon(TablerIcons.arrow_back),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      },
+                                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                                    ),
+                                  ],
+                                );
+                            }
+                            return null;
+                          },
                         ),
-                        duration: Duration(milliseconds: UIHelper.pageAnimDuration),
-                        transitionBuilder: (c, p, s) => SharedAxisTransition(
-                          fillColor: Colors.transparent,
-                          animation: p,
-                          secondaryAnimation: s,
-                          transitionType: SharedAxisTransitionType.horizontal,
-                          child: c,
-                        ),
-                        child: _modalState == 0 ? _confirmState : _processState,
-                      );
-                    },
-                  ),
+                      ],
+                    );
+                    return PageTransitionSwitcher2(
+                      layoutBuilder: (_entries) => Stack(
+                        children: _entries
+                            .map<Widget>((entry) => entry.transition)
+                            .toList(),
+                        alignment: Alignment.topLeft,
+                      ),
+                      duration: Duration(milliseconds: UIHelper.pageAnimDuration),
+                      transitionBuilder: (c, p, s) => SharedAxisTransition(
+                        fillColor: Colors.transparent,
+                        animation: p,
+                        secondaryAnimation: s,
+                        transitionType: SharedAxisTransitionType.horizontal,
+                        child: c,
+                      ),
+                      child: _modalState == 0 ? _confirmState : _processState,
+                    );
+                  },
                 ),
               ),
             ),

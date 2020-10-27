@@ -6,6 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
+}
+
 String get getSystemPlatform {
   String systemPlatform = "webclient";
   if (!kIsWeb){

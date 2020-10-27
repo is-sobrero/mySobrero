@@ -226,14 +226,6 @@ class _SnacksListState extends State<SnacksView> {
                         PageRouteBuilder(
                           pageBuilder: (a, b, c) => SnackDetail(
                             snack: snapshot.data[i],
-                            onOrderCompleted: () => Future.delayed(
-                              Duration(milliseconds: 500),
-                                () =>  setState((){
-                                  _snackBalance = CloudConnector.getSnacksBalance(
-                                    token: reAPI4.instance.getSession(),
-                                  );
-                                })
-                            ),
                           ),
                           transitionDuration: Duration(milliseconds: UIHelper.pageAnimDuration),
                           transitionsBuilder: (ctx, prim, sec, child) => SharedAxisTransition(

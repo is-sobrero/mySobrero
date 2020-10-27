@@ -39,7 +39,9 @@ dependencies:
   quick_actions: ^0.4.0+2
   flutter_html: ^0.11.1
   country_icons: ^1.1.1
-  qr_code_scanner: ^0.0.13
+  qr_code_scanner:
+    git:
+      url: git://github.com/juliuscanute/qr_code_scanner.git
   wave: ^0.0.8
   uni_links: ^0.4.0
   flutter_map: ^0.10.1+1
@@ -50,6 +52,9 @@ dependencies:
   flutter_local_notifications: ^1.4.4+4
   tutorial_coach_mark: ^0.5.1
   native_pdf_view: ^3.8.0
+  googleapis: any
+  googleapis_auth: any
+  device_info: ^0.4.2+9
 
   flutter:
     sdk: flutter
