@@ -11,8 +11,10 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:mySobrero/localization/localization.dart';
 import 'package:mySobrero/reAPI/reapi.dart';
 import 'package:mySobrero/ui/button.dart';
+import 'package:mySobrero/ui/hud.dart';
 import 'package:mySobrero/ui/textfield.dart';
 import 'package:package_info/package_info.dart';
+import 'package:mySobrero/cloud_connector/cloud.dart';
 
 
 class FileARadarView extends StatefulWidget {
@@ -21,7 +23,7 @@ class FileARadarView extends StatefulWidget {
 }
 
 class _RadarState extends State<FileARadarView> {
-
+  TextEditingController _controller;
   Future<String> _generateDebugData () async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     PackageInfo info = await PackageInfo.fromPlatform();
@@ -49,11 +51,26 @@ class _RadarState extends State<FileARadarView> {
     _bugData['device_version'] = _version;
     _bugData['mysobrero_versionMajor'] = info.version;
     _bugData['mysobrero_versionMinor'] = info.buildNumber;
+    _bugData['user_bug_detail'] = _controller.text;
     _bugData['marksResponse'] = _marksResponse;
     _bugData['noticesResponse'] = _noticesResponse;
     _bugData['assignmentResponse'] = _assignmentsResponse;
     print(jsonEncode(_bugData));
     return jsonEncode(_bugData);
+  }
+
+  Future<bool>_sendRadar () async {
+    String _radar = await _generateDebugData();
+    return CloudConnector.sendRadar(
+      studentID: reAPI4.instance.getStartupCache().user.matricola,
+      radar: _radar,
+    );
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _controller = new TextEditingController();
   }
 
   @override
@@ -100,6 +117,7 @@ class _RadarState extends State<FileARadarView> {
                         ),
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
+                        controller: _controller,
                         height: 200,
                       ),
                       Row(
@@ -197,7 +215,17 @@ class _RadarState extends State<FileARadarView> {
                       suffixIcon: Icon(
                         TablerIcons.check,
                       ),
-                      onPressed: () => _generateDebugData(),
+                      onPressed: () => showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (c) => dialogoHUD(
+                          future: _sendRadar(),
+                          titolo: AppLocalizations.of(context).translate(
+                            "RADAR_SENDING_BUG"
+                          ),
+                          onCompletion: () => Navigator.of(context).pop(),
+                        ),
+                      ),
                     ),
                   ),
                   Flexible(

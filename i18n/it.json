@@ -150,6 +150,7 @@
   "RADAR_DATA_DEVICEID": "Identificatori del dispositivo (marca, modello, versione s.o. ecc.)",
   "RADAR_DATA_STUDENTID": "Il tuo ID Studente",
   "RADAR_DATA_SESSION": "Dati della sessione attuale, come le comunicazioni, i voti e i compiti. Nessun dato sensibile (credenziali) verrà trasmesso.",
-  "RADAR_FILE_DO": "Invia radar",
+  "RADAR_FILE_DO": "Invia Radar",
+  "RADAR_SENDING_BUG": "Sto inviando il Radar...",
   "UNI_GO_BACK": "Torna indietro"
 }

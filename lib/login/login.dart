@@ -166,6 +166,8 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     });
   }
 
+  ConfigData _config;
+
   @override
   void initState(){
     super.initState();
@@ -253,31 +255,13 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
         }
       }
     }
-    ConfigData _config = await CloudConnector.getServerConfig();
+    _config = await CloudConnector.getServerConfig();
     int currentVersion = 0;
     if (!kIsWeb){
       final PackageInfo info = await PackageInfo.fromPlatform();
       currentVersion = int.parse(info.buildNumber);
       if (_config.data.latestVersion < currentVersion)
         isBeta = true;
-    }
-    if (_config.data.stopEnabled == "1" && !isBeta){
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => SobreroDialogNoAction(
-          headingWidget: Icon(
-            TablerIcons.info_circle,
-            color: Theme.of(context).primaryColor,
-            size: 35,
-          ),
-          title: "mySobrero è ${_config.data.stopType}",
-          content: Text(
-            _config.data.stopDescription
-          ),
-        ),
-      );
-      return -1;
     }
     if (!kIsWeb) {
       if (_config.data.latestVersion > currentVersion){
@@ -339,7 +323,30 @@ class _AppLoginState extends State<AppLogin> with SingleTickerProviderStateMixin
     }
   }
 
+  bool _isUserExcludedFromStop (String user)
+    => _config.data.stopExceptions.indexOf(int.parse(userID)) >= 0;
+
   Future<void> doLogin() async {
+    if (_config.data.stopEnabled == "1"
+        && !_isUserExcludedFromStop(userID)){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => SobreroDialogNoAction(
+          headingWidget: Icon(
+            TablerIcons.info_circle,
+            color: Theme.of(context).primaryColor,
+            size: 35,
+          ),
+          title: "mySobrero è ${_config.data.stopType}",
+          content: Text(
+              _config.data.stopDescription
+          ),
+        ),
+      );
+      return;
+    }
+
     loginStructure = await reAPI4.instance.getStartupData(
       username: userID,
       password: userPassword,

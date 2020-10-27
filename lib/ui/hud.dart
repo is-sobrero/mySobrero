@@ -5,11 +5,18 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class dialogoHUD extends StatelessWidget{
   Future<bool> future;
   String titolo;
-  dialogoHUD({Key key, @required this.titolo, @required this.future}) : super(key: key);
+  Function onCompletion;
+  dialogoHUD({
+    Key key,
+    @required this.titolo,
+    @required this.future,
+    this.onCompletion,
+  }) : super(key: key);
 
   @override
   Widget build (BuildContext context){
     future.then((bool){
+      if (onCompletion != null) onCompletion();
       Navigator.of(context).pop();
     });
 

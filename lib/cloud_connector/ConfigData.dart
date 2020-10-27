@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ConfigData {
   String _status;
   int _code;
@@ -36,6 +38,7 @@ class Data {
   String _stopEnabled;
   String _stopType;
   String _stopDescription;
+  List<int> _stopExceptions;
 
   int get latestVersion => _latestVersion;
   bool get headingNoticeEnabled => _headingNoticeEnabled;
@@ -49,6 +52,7 @@ class Data {
   String get stopEnabled => _stopEnabled;
   String get stopType => _stopType;
   String get stopDescription => _stopDescription;
+  List<int> get stopExceptions => _stopExceptions;
 
   Data.fromJson(Map<String, dynamic> json) {
     _latestVersion = json['latest_version'];
@@ -63,6 +67,7 @@ class Data {
     _stopEnabled = json['stop_enabled'];
     _stopType = json['stop_type'];
     _stopDescription = json['stop_description'];
+    _stopExceptions = jsonDecode(json['stop_exceptions']).cast<int>();
   }
 
 }

@@ -201,6 +201,7 @@ class CloudConnector {
         'reference': "radar",
       },
     );
+    print(response.body);
     return response.statusCode == 200;
   }
 
